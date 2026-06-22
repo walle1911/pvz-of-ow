@@ -73,6 +73,7 @@ enum PlantType {
 	P048CobCannon,
 
 	P049PeaShooterDoubleReverse,
+	P050PeaShooterSoldier76,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -521,6 +522,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_049_pea_shooter_double_reverse.tscn")
+		},
+	PlantType.P050PeaShooterSoldier76: {
+		PlantInfoAttribute.PlantName: "PeaShooterSoldier76",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 100,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_050_pea_shooter_soldier76.tscn")
 		},
 
 	## 模仿者

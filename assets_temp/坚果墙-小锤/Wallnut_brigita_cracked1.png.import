@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2xupbhenlt0w"
-path="res://.godot/imported/Wallnut_brigita_cracked2.png-83d167f785160a3d146cc33373450c8c.ctex"
+uid="uid://c722cglma4v6k"
+path="res://.godot/imported/Wallnut_brigita_cracked1.png-2ba06c19ec2949765f4c4027efeef98e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets_temp/Wallnut_brigita_cracked2.png"
-dest_files=["res://.godot/imported/Wallnut_brigita_cracked2.png-83d167f785160a3d146cc33373450c8c.ctex"]
+source_file="res://assets_temp/坚果墙-小锤/Wallnut_brigita_cracked1.png"
+dest_files=["res://.godot/imported/Wallnut_brigita_cracked1.png-2ba06c19ec2949765f4c4027efeef98e.ctex"]
 
 [params]
 

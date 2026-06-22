@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ykit5g8n53us"
-path="res://.godot/imported/Wallnut_brigita_cracked1.png-64f4a51d7193f001ee5f159b5b046ed9.ctex"
+uid="uid://ct66fcdplr1t7"
+path="res://.godot/imported/PeaShooter_76_Hair.png-f30693e69b69668ea0605a67acc95e03.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets_temp/Wallnut_brigita_cracked1.png"
-dest_files=["res://.godot/imported/Wallnut_brigita_cracked1.png-64f4a51d7193f001ee5f159b5b046ed9.ctex"]
+source_file="res://assets_temp/draft/PeaShooter_76_Hair.png"
+dest_files=["res://.godot/imported/PeaShooter_76_Hair.png-f30693e69b69668ea0605a67acc95e03.ctex"]
 
 [params]
 
