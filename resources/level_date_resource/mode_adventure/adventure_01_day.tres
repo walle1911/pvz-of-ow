@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ResourceLevelData" load_steps=3 format=3 uid="uid://cdcg662one7df"]
+
+[ext_resource type="Script" uid="uid://bke3sg5otco7s" path="res://scripts/resources/level/pre_plant_in_level.gd" id="1_2lsmm"]
+[ext_resource type="Script" uid="uid://bjt3l56exxmdw" path="res://scripts/resources/level/level_data.gd" id="1_ma3wb"]
+
+[resource]
+script = ExtResource("1_ma3wb")
+metadata/_custom_type_script = "uid://bjt3l56exxmdw"

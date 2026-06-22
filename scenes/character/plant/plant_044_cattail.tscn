@@ -1,0 +1,220 @@
+[gd_scene format=3 uid="uid://btpwt2i0rieim"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_5hnsj"]
+[ext_resource type="Script" uid="uid://brpddpuqk6usu" path="res://scripts/character/plant/plant_044_cattail.gd" id="2_7npfu"]
+[ext_resource type="Texture2D" uid="uid://dk1nraow67nfq" path="res://assets/reanim/Cattail_paw2.png" id="2_kbe0y"]
+[ext_resource type="Texture2D" uid="uid://yeq0wkhh7ocq" path="res://assets/reanim/Cattail_paw3.png" id="3_2hp7h"]
+[ext_resource type="Texture2D" uid="uid://imy0eqi3xw8o" path="res://assets/reanim/Cattail_tail.png" id="4_eckv1"]
+[ext_resource type="Texture2D" uid="uid://b7n0a7ih4mvcr" path="res://assets/reanim/Cattail_tail2.png" id="5_7npfu"]
+[ext_resource type="Texture2D" uid="uid://dgj32utlkf8f0" path="res://assets/reanim/Cattail_spike.png" id="6_sqd6c"]
+[ext_resource type="Texture2D" uid="uid://djx3mvue4t6nu" path="res://assets/reanim/Cattail_tail2_overlay.png" id="7_pcdgd"]
+[ext_resource type="Texture2D" uid="uid://dikvd4i8v635g" path="res://assets/reanim/Cattail_head.png" id="8_v1yv0"]
+[ext_resource type="Texture2D" uid="uid://ch4khbbbwhh0d" path="res://assets/reanim/Cattail_paw1.png" id="9_va78y"]
+[ext_resource type="Texture2D" uid="uid://bpm3pvlhwnqxk" path="res://assets/reanim/Cattail_hat.png" id="10_kl7ow"]
+[ext_resource type="Texture2D" uid="uid://xmsfwuavj25e" path="res://assets/reanim/Cattail_blink1.png" id="11_eckv1"]
+[ext_resource type="Texture2D" uid="uid://j427peyuyp0f" path="res://assets/reanim/Cattail_eyebrow1.png" id="12_nsrdc"]
+[ext_resource type="Texture2D" uid="uid://del4hhtgqb4fr" path="res://assets/reanim/Cattail_eyebrow2.png" id="13_s7ymc"]
+[ext_resource type="Animation" uid="uid://cu5g771k54tb7" path="res://animation/character/plant/044_cattail/Cattail_idle.tres" id="14_8r44m"]
+[ext_resource type="Animation" uid="uid://brrvac8kn6vqi" path="res://animation/character/plant/044_cattail/Cattail_shooting.tres" id="15_p11vv"]
+[ext_resource type="Script" uid="uid://gxh0w2813np7" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="16_2hp7h"]
+[ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="17_eckv1"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_55v01"]
+_data = {
+&"Cattail_idle": ExtResource("14_8r44m"),
+&"Cattail_shooting": ExtResource("15_p11vv")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kbe0y"]
+animation = &"Cattail_idle"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_2hp7h"]
+fadein_time = 0.2
+fadeout_time = 0.2
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_eckv1"]
+animation = &"Cattail_shooting"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7npfu"]
+animation = &"Cattail_shooting"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sqd6c"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pcdgd"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_v1yv0"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_va78y"]
+states/Cattail_shooting/node = SubResource("AnimationNodeAnimation_7npfu")
+states/Cattail_shooting/position = Vector2(406, 100)
+"states/Cattail_shooting 2/node" = SubResource("AnimationNodeAnimation_eckv1")
+"states/Cattail_shooting 2/position" = Vector2(622, 100)
+states/End/position = Vector2(861, 100)
+transitions = ["Start", "Cattail_shooting", SubResource("AnimationNodeStateMachineTransition_sqd6c"), "Cattail_shooting", "Cattail_shooting 2", SubResource("AnimationNodeStateMachineTransition_pcdgd"), "Cattail_shooting 2", "End", SubResource("AnimationNodeStateMachineTransition_v1yv0")]
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_kl7ow"]
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_wsgec"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_nsrdc"]
+graph_offset = Vector2(-351.124, 163.355)
+nodes/output/position = Vector2(760, 200)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_kbe0y")
+nodes/Animation/position = Vector2(40, 120)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_2hp7h")
+nodes/OneShot/position = Vector2(300, 140)
+nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_va78y")
+nodes/StateMachine/position = Vector2(-220, 340)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_wsgec")
+nodes/TimeScale/position = Vector2(560, 160)
+"nodes/TimeScale 2/node" = SubResource("AnimationNodeTimeScale_kl7ow")
+"nodes/TimeScale 2/position" = Vector2(60, 320)
+node_connections = [&"output", 0, &"TimeScale", &"OneShot", 0, &"Animation", &"OneShot", 1, &"TimeScale 2", &"TimeScale", 0, &"OneShot", &"TimeScale 2", 0, &"StateMachine"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eckv1"]
+size = Vector2(200, 5)
+
+[node name="Plant044Cattail" unique_id=385976623 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_5hnsj")]
+script = ExtResource("2_7npfu")
+plant_type = 44
+node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
+
+[node name="BodyCorrect" parent="Body" index="0"]
+position = Vector2(-42, -66)
+
+[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=657554597]
+visible = false
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1559437386]
+centered = false
+
+[node name="Anim_shooting" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1547201439]
+visible = false
+centered = false
+
+[node name="Cattail_paw2" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1282812708]
+position = Vector2(6.1458287, 54)
+scale = Vector2(0.8093126, 0.8)
+texture = ExtResource("2_kbe0y")
+centered = false
+
+[node name="Cattail_paw3" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1732583199]
+position = Vector2(57.622913, 50.6)
+scale = Vector2(0.8287085, 0.8)
+texture = ExtResource("3_2hp7h")
+centered = false
+
+[node name="Cattail_tail" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=648025246]
+position = Vector2(0.16040015, 36.47086)
+rotation = -0.0914853
+scale = Vector2(0.80277085, 0.7962291)
+skew = 0.0026909385
+texture = ExtResource("4_eckv1")
+centered = false
+
+[node name="Cattail_tail2" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1870622292]
+position = Vector2(-12.252171, 11.858399)
+rotation = -0.28841814
+scale = Vector2(0.8, 0.798)
+skew = -0.029416306
+texture = ExtResource("5_7npfu")
+centered = false
+
+[node name="Cattail_spike" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=377601864]
+position = Vector2(-3.537599, 7.5188)
+rotation = -0.28841814
+scale = Vector2(0.8, 0.798)
+skew = -0.029416306
+texture = ExtResource("6_sqd6c")
+centered = false
+
+[node name="Cattail_tail2_overlay" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=963372881]
+position = Vector2(-10.243828, 15.527143)
+rotation = -0.28841814
+scale = Vector2(0.8, 0.798)
+skew = -0.029416306
+texture = ExtResource("7_pcdgd")
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=1437053630]
+position = Vector2(25.522915, 25.654173)
+scale = Vector2(0.81939596, 0.7889166)
+texture = ExtResource("8_v1yv0")
+centered = false
+
+[node name="Cattail_paw1" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=1553305865]
+position = Vector2(30.922915, 59.477085)
+scale = Vector2(0.8610834, 0.86562514)
+texture = ExtResource("9_va78y")
+centered = false
+
+[node name="Cattail_hat" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=1144708347]
+position = Vector2(11.045829, 10.031258)
+scale = Vector2(0.81939596, 0.7889166)
+texture = ExtResource("10_kl7ow")
+centered = false
+
+[node name="Cattail_blink" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=313898547]
+visible = false
+position = Vector2(41.1, 33.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("11_eckv1")
+centered = false
+
+[node name="Cattail_eyebrow1" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=1872974420]
+position = Vector2(38.5, 34.93126)
+scale = Vector2(0.81939596, 0.7889166)
+texture = ExtResource("12_nsrdc")
+centered = false
+
+[node name="Cattail_eyebrow2" type="Sprite2D" parent="Body/BodyCorrect" index="14" unique_id=80723802]
+position = Vector2(61.377087, 32.308346)
+scale = Vector2(0.81939596, 0.7889166)
+texture = ExtResource("13_s7ymc")
+centered = false
+
+[node name="Marker2D" type="Marker2D" parent="Body/BodyCorrect" index="15" unique_id=1506866243]
+position = Vector2(31, 2)
+
+[node name="SleepComponent" parent="." index="4"]
+is_enable_default = null
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=63343279]
+libraries/ = SubResource("AnimationLibrary_55v01")
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1266354388]
+tree_root = SubResource("AnimationNodeBlendTree_nsrdc")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../AnimationPlayer")
+parameters/OneShot/active = false
+parameters/OneShot/internal_active = false
+parameters/OneShot/request = 0
+parameters/TimeScale/scale = 1.5
+"parameters/TimeScale 2/scale" = 2.0
+
+[node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=316347668 node_paths=PackedStringArray("markers_2d_bullet")]
+script = ExtResource("16_2hp7h")
+attack_bullet_type = 14
+markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2D")]
+
+[node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=1690781932]
+
+[node name="DetectComponent" type="Node2D" parent="AttackComponent" index="1" unique_id=248054501]
+script = ExtResource("17_eckv1")
+
+[node name="Area2D" type="Area2D" parent="AttackComponent/DetectComponent" index="0" unique_id=534995025]
+position = Vector2(0, -25)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackComponent/DetectComponent/Area2D" index="0" unique_id=68370923]
+position = Vector2(100, 0)
+shape = SubResource("RectangleShape2D_eckv1")
+
+[connection signal="timeout" from="AttackComponent/BulletAttackCdTimer" to="AttackComponent" method="_on_bullet_attack_cd_timer_timeout"]

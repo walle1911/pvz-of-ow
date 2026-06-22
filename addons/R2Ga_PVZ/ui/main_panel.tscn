@@ -1,0 +1,311 @@
+[gd_scene format=3 uid="uid://bf6l3c7007wrf"]
+
+[ext_resource type="Script" uid="uid://wer0bo0v0mvd" path="res://addons/R2Ga_PVZ/ui/main_panel.gd" id="1_w5nb0"]
+[ext_resource type="StyleBox" uid="uid://bhbqbh8iaph0s" path="res://addons/R2Ga_PVZ/ui/new_style_box_flat.tres" id="2_5a7i0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5a7i0"]
+bg_color = Color(0.23392546, 0.23392549, 0.23392531, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_30bg7"]
+bg_color = Color(0.145098, 0.145098, 0.145098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.101961, 0.101961, 0.101961, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="MainPanel" type="PanelContainer" unique_id=2032795529]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 244.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_w5nb0")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1659311793]
+layout_mode = 2
+
+[node name="PluginIntroductionPanel2" type="PanelContainer" parent="HBoxContainer" unique_id=602134166]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(740, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5a7i0")
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="HBoxContainer/PluginIntroductionPanel2" unique_id=1791832916]
+layout_mode = 2
+vertical_scroll_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2" unique_id=1313848301]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer" unique_id=505813947]
+layout_mode = 2
+
+[node name="FirstParaPanelContainer" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2" unique_id=1641278511]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer" unique_id=1093248257]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer" unique_id=172228302]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer" unique_id=1390385514]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=56178960]
+layout_mode = 2
+text = "PVZ原始动画文件路径（*.reanim）"
+
+[node name="file_path_box" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=625444190]
+layout_mode = 2
+
+[node name="file_path_option" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer/file_path_box" unique_id=994455321]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 6.0
+tooltip_text = "E:/000GodotPVZ/R2Ga/r-2-ga-pvz/assets/all_reanim/Cabbagepult.reanim"
+clip_text = true
+selected = 0
+item_count = 2
+popup/item_0/text = "E:/000GodotPVZ/R2Ga/r-2-ga-pvz/assets/all_reanim/Cabbagepult.reanim"
+popup/item_0/id = 0
+popup/item_1/text = "E:/000GodotPVZ/R2Ga/r-2-ga-pvz/assets/all_reanim/Blover.reanim"
+popup/item_1/id = 1
+
+[node name="file_select_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer/file_path_box" unique_id=408958911]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "选择PVZ原始动画文件"
+
+[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer" unique_id=916511828]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer2" unique_id=671602969]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1544375349]
+layout_mode = 2
+text = "输出文件（场景文件/动画文件）路径"
+
+[node name="anim_path_box" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=373610410]
+layout_mode = 2
+
+[node name="anim_path_option" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/anim_path_box" unique_id=606433412]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 6.0
+tooltip_text = "res://anim/"
+clip_text = true
+selected = 0
+item_count = 1
+popup/item_0/text = "res://anim/"
+popup/item_0/id = 0
+
+[node name="anim_select_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/anim_path_box" unique_id=1354045853]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "选择动画文件夹"
+
+[node name="PanelContainer3" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer" unique_id=680725368]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer3" unique_id=860737287]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=2030716544]
+layout_mode = 2
+text = "素材文件夹路径"
+
+[node name="asset_path_box" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer3/VBoxContainer" unique_id=1841090965]
+layout_mode = 2
+
+[node name="asset_path_option" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer3/VBoxContainer/asset_path_box" unique_id=2042583774]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 6.0
+tooltip_text = "res://assets/reanim/"
+clip_text = true
+selected = 0
+item_count = 1
+popup/item_0/text = "res://assets/reanim/"
+popup/item_0/id = 0
+
+[node name="asset_select_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/PanelContainer3/VBoxContainer/asset_path_box" unique_id=1688575326]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "选择素材文件夹"
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer" unique_id=1210888732]
+layout_mode = 2
+theme_override_constants/margin_left = 450
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 5
+
+[node name="run_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/FirstParaPanelContainer/VBoxContainer/MarginContainer" unique_id=936015371]
+unique_name_in_owner = true
+layout_mode = 2
+text = "运行"
+
+[node name="ChooseParaPanelContainer" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2" unique_id=1734232754]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer" unique_id=1011983026]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer" unique_id=541565268]
+layout_mode = 2
+text = "其他可选参数"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer" unique_id=847707073]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer" unique_id=215834447]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=475743218]
+layout_mode = 2
+text = "配置文件路径："
+
+[node name="file_path_box" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer" unique_id=400290302]
+layout_mode = 2
+
+[node name="config_file_path_option" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer/file_path_box" unique_id=2085846973]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(540, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 6.0
+clip_text = true
+
+[node name="config_file_select_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer/VBoxContainer/file_path_box" unique_id=259886932]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "选择配置文件"
+
+[node name="PanelContainer2" type="PanelContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer" unique_id=957993121]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("2_5a7i0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2" unique_id=1438530337]
+layout_mode = 2
+
+[node name="output_mode" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1868259725]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/output_mode" unique_id=1047577186]
+layout_mode = 2
+text = "输出模式："
+
+[node name="OutputModeOptionButton" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/output_mode" unique_id=1535988231]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "auto"
+popup/item_0/id = 0
+popup/item_1/text = "tscn_by_anim"
+popup/item_1/id = 1
+popup/item_2/text = "anim_tres"
+popup/item_2/id = 2
+
+[node name="interpolation_mode" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1479120394]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/interpolation_mode" unique_id=1706332541]
+layout_mode = 2
+text = "插值模式："
+
+[node name="InterpolationModeOptionButton" type="OptionButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/interpolation_mode" unique_id=926402012]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "linear"
+popup/item_0/id = 0
+popup/item_1/text = "nearest"
+popup/item_1/id = 1
+popup/item_2/text = "cubic"
+popup/item_2/id = 2
+
+[node name="blend_mode" type="HBoxContainer" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1828178006]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/blend_mode" unique_id=1469239048]
+layout_mode = 2
+text = "开启混合模式："
+
+[node name="BlendModeCheckButton" type="CheckButton" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer2/MarginContainer/VBoxContainer2/ChooseParaPanelContainer/VBoxContainer/PanelContainer2/VBoxContainer/blend_mode" unique_id=1941123736]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PluginIntroductionPanel" type="PanelContainer" parent="HBoxContainer" unique_id=1411727537]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_30bg7")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/PluginIntroductionPanel" unique_id=1149632621]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PluginIntroductionPanel/ScrollContainer" unique_id=1632610289]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/PluginIntroductionPanel/ScrollContainer/VBoxContainer" unique_id=1099383833]
+layout_mode = 2
+text = "R2Ga_PVZ"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/PluginIntroductionPanel/ScrollContainer/VBoxContainer" unique_id=49937145]
+layout_mode = 2
+text = "开发者：HYTomZ、hsk-dream"
+vertical_alignment = 1
+
+[node name="Label5" type="Label" parent="HBoxContainer/PluginIntroductionPanel/ScrollContainer/VBoxContainer" unique_id=1382628572]
+layout_mode = 2
+text = "版本：v2.0.0"
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="HBoxContainer/PluginIntroductionPanel/ScrollContainer/VBoxContainer" unique_id=1123211114]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "插件简介：
+1、使用G2Ra 4.0将PVZ原始动画文件（reanim）转换为Godot游戏引擎所支持的动画格式。
+2、动画转换完成后，自动刷新资源目录
+3、每次运行时存档可选参数
+4、UI设计参考Todo Controller"
+vertical_alignment = 1
+autowrap_mode = 3

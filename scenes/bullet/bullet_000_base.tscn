@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnfv6m0ut4477"]
+
+[ext_resource type="Script" uid="uid://b3il3lcwtmdd0" path="res://scripts/bullet/bullet_000_base.gd" id="1_stuyg"]
+[ext_resource type="Texture2D" uid="uid://c54er6fxpmcc8" path="res://assets/image/projectile/pea_shadows.png" id="2_ouobi"]
+
+[node name="Bullet000Base" type="Node2D"]
+script = ExtResource("1_stuyg")
+
+[node name="BulletShadow" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, 50)
+texture = ExtResource("2_ouobi")
+hframes = 2
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="BulletBody" type="Sprite2D" parent="Body"]

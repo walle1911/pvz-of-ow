@@ -1,0 +1,724 @@
+[gd_scene load_steps=9 format=3 uid="uid://c3ee00a8amm7c"]
+
+[ext_resource type="Script" uid="uid://l2fxjwa55mwe" path="res://addons/todo_controller/ui/todo_controller_panel.gd" id="1_17i0j"]
+[ext_resource type="Texture2D" uid="uid://bt4621enrdft2" path="res://addons/todo_controller/icon/icon.png" id="2_a6d4f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hmdan"]
+bg_color = Color(0.145098, 0.145098, 0.145098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.101961, 0.101961, 0.101961, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="LabelSettings" id="LabelSettings_hmdan"]
+font_size = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chqw5"]
+bg_color = Color(0.105882, 0.105882, 0.105882, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a6d4f"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.556863)
+shadow_size = 2
+shadow_offset = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17i0j"]
+bg_color = Color(0.117647, 0.117647, 0.117647, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vste2"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing_size = 2.0
+
+[node name="TodoControllerPanel" type="TabContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 1
+script = ExtResource("1_17i0j")
+
+[node name="AnnotationPanelContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+metadata/_tab_name = "TODO管理器"
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = -2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = -2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="AnnotationPanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = -2
+theme_override_constants/autohide = 1
+
+[node name="ScrpitListHSplit" type="HSplitContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = -2
+theme_override_constants/autohide = 1
+split_offset = 351
+
+[node name="ScriptPanel" type="PanelContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="IconTexture" type="TextureRect" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 8
+texture = ExtResource("2_a6d4f")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "脚本列表"
+label_settings = SubResource("LabelSettings_hmdan")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_right = 4
+
+[node name="PanelContainer" type="PanelContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_chqw5")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TreeVBox" type="VBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="StarScriptTree" type="Tree" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/ScrollContainer/TreeVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+allow_reselect = true
+allow_rmb_select = true
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+
+[node name="ScriptTree" type="Tree" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/ScriptPanel/MarginContainer/VBoxContainer/MarginContainer/PanelContainer/ScrollContainer/TreeVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+allow_reselect = true
+allow_rmb_select = true
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+
+[node name="PanelContainer2" type="PanelContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScratchEdit" type="LineEdit" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_a6d4f")
+placeholder_text = "请输入要搜索的内容"
+clear_button_enabled = true
+
+[node name="CaseSensitiveButton" type="CheckButton" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "区分大小写"
+
+[node name="PanelContainer" type="PanelContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_17i0j")
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="AnnotationCodeTree" type="Tree" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/ScrpitListHSplit/PanelContainer2/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer"]
+visible = false
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="AnnotationPanelContainer/MarginContainer/HSplitContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "类型过滤器"
+label_settings = SubResource("LabelSettings_hmdan")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EX_Control" type="Control" parent="AnnotationPanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="SettingPanelContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+metadata/_tab_index = 1
+metadata/_tab_name = "设置"
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = -2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = -2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ButtonVBox" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InterfaceDisplayButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+disabled = true
+text = "界面显示设置"
+alignment = 0
+
+[node name="BlacklistButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "文件黑名单"
+alignment = 0
+
+[node name="ThemeButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "插件主题设置"
+alignment = 0
+
+[node name="RecoveryButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "恢复默认设置"
+alignment = 0
+
+[node name="UpdateButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+tooltip_text = "点击后跳转到Github的版本界面"
+text = "更新日志"
+alignment = 0
+
+[node name="IssueButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/ScrollContainer/ButtonVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+tooltip_text = "点击后跳转到Github的Issue界面"
+text = "错误提交"
+alignment = 0
+
+[node name="ContextPanelContainer" type="PanelContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer"]
+layout_mode = 2
+
+[node name="ContextScrollContainer" type="ScrollContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InterfaceDisplayVBox" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "基础设置"
+
+[node name="LineNumberDisplaySetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/LineNumberDisplaySetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/LineNumberDisplaySetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "是否显示行号"
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/LineNumberDisplaySetting/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LineNumberShowSettingCheck" type="CheckButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/LineNumberDisplaySetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "开启/关闭"
+
+[node name="CompletePathSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CompletePathSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CompletePathSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "是否显示完整路径"
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CompletePathSetting/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CompletePathCheck" type="CheckButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CompletePathSetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "开启/关闭"
+
+[node name="CaseSensitiveSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CaseSensitiveSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CaseSensitiveSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "区分大小写默认值"
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CaseSensitiveSetting/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CaseSensitiveCheck" type="CheckButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CaseSensitiveSetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "开启/关闭"
+
+[node name="ScriptListSortSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/ScriptListSortSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/ScriptListSortSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "脚本列表排序模式"
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/ScriptListSortSetting/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScriptListSortOptionButton" type="OptionButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/ScriptListSortSetting/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+selected = 2
+item_count = 4
+popup/item_0/text = "默认"
+popup/item_0/id = 0
+popup/item_1/text = "修改时间"
+popup/item_1/id = 1
+popup/item_2/text = "名称"
+popup/item_2/id = 2
+popup/item_3/text = "访问频率"
+popup/item_3/id = 3
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+layout_mode = 2
+text = "关键字设置
+（修改此项可能造成卡顿）"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NoticeListSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HSplitContainer" type="HSplitContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeListSetting"]
+layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_vste2")
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeListSetting/HSplitContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "注意关键字列表"
+vertical_alignment = 1
+
+[node name="NoticeListLine" type="LineEdit" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeListSetting/HSplitContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "INFO,NOTE,NOTICE,TEST,TESTING,VAR,ENUM,FUNC,SIG"
+
+[node name="NoticeColorSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeColorSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeColorSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "注意关键字颜色"
+vertical_alignment = 1
+
+[node name="NoticeColorPicker" type="ColorPickerButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/NoticeColorSetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.3125, 1, 0, 1)
+
+[node name="WarningListSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HSplitContainer" type="HSplitContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningListSetting"]
+layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_vste2")
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningListSetting/HSplitContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "警告关键字列表"
+vertical_alignment = 1
+
+[node name="WarningListLine" type="LineEdit" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningListSetting/HSplitContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "BUG,DEPRECATED,FIXME,HACK,TASK,TBD,TODO,WARNING,S_VAR"
+
+[node name="WarningColorSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningColorSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningColorSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "警告关键字颜色"
+vertical_alignment = 1
+
+[node name="WarningColorPicker" type="ColorPickerButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/WarningColorSetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.96875, 1, 0, 1)
+
+[node name="CriticalListSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HSplitContainer" type="HSplitContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalListSetting"]
+layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_vste2")
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalListSetting/HSplitContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "危急关键字列表"
+vertical_alignment = 1
+
+[node name="CriticalListLine" type="LineEdit" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalListSetting/HSplitContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "ALERT,ATTENTION,CAUTION,CRITICAL,DANGER,SECURITY"
+
+[node name="CriticalColorSetting" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalColorSetting"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalColorSetting/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "危急关键字颜色"
+vertical_alignment = 1
+
+[node name="CriticalColorPicker" type="ColorPickerButton" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/InterfaceDisplayVBox/CriticalColorSetting/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(1, 0, 0, 1)
+
+[node name="BlacklistVBox" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox"]
+layout_mode = 2
+text = "文件黑名单"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox/MarginContainer"]
+layout_mode = 2
+
+[node name="CreateBlackBarLine" type="LineEdit" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "请输入要加入黑名单的文件/文件夹"
+
+[node name="AddBlackBarButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+text = "+"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 4
+
+[node name="MarginContainer2" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="BlacklistBarVBox" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer/BlacklistVBox/ScrollContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ThemeVBox" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/ContextPanelContainer/MarginContainer/ContextScrollContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PluginIntroductionPanel" type="PanelContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hmdan")
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="IconTexture" type="TextureRect" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_a6d4f")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Todo Controller"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "开发者：DeerLuuu"
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "图标：猫"
+vertical_alignment = 1
+
+[node name="AfdianButton" type="Button" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "赞助我们"
+alignment = 0
+
+[node name="Label5" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "版本：v1.0.5"
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "插件简介：
+1、实现了所有脚本的读取
+2、实现了脚本分组（是否收藏脚本）
+3、实现了脚本中的注释扫描（所有包含关键字的注释会被添加到注释界面进行显示，显示内容包含行数、关键字、具体注释内容）
+4、实现了右键脚本树中的脚本时的右键菜单，包含收藏、取消收藏、打开脚本、取消
+5、实现了双击脚本树中的脚本来打开脚本
+6、单击脚本树中的脚本将会把注释界面中的注释进行过滤，仅显示当前显示的脚本的注释
+7、单击注释界面中的脚本名可以打开对应脚本
+8、单击注释界面中的注释可以打开对应脚本并跳转到对应行数
+9、注释搜索功能（允许全字匹配搜索和不区分大小写搜索）"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="SettingPanelContainer/MarginContainer/HBoxContainer/PluginIntroductionPanel/MarginContainer/ScrollContainer/VBoxContainer/AfdianButton" to="." method="_on_afdian_button_pressed"]
