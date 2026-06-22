@@ -1,4 +1,4 @@
-[gd_scene load_steps=785 format=3 uid="uid://bb24ydyvk8c3u"]
+[gd_scene load_steps=786 format=3 uid="uid://bb24ydyvk8c3u"]
 
 [ext_resource type="Script" uid="uid://bh1ixrlfb6jr4" path="res://scripts/ui/card/all_cards.gd" id="1_qtbte"]
 [ext_resource type="PackedScene" uid="uid://cjuiaaq33o5aa" path="res://scenes/ui/all_cards/card.tscn" id="2_5pqky"]
@@ -54,6 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="51_ocwvu"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="52_dc0c5"]
 [ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="53_vm05c"]
+[ext_resource type="Texture2D" uid="uid://dxlf47w4fpv7k" path="res://assets/reanim/Wallnut_brigita_body.png" id="53_wallnut_brigita"]
 [ext_resource type="Texture2D" uid="uid://bo22elcj4cnrl" path="res://assets/reanim/PotatoMine_rock4.png" id="54_xqigo"]
 [ext_resource type="Texture2D" uid="uid://cwcs1c31vf7xx" path="res://assets/reanim/PotatoMine_rock2.png" id="55_vfoxv"]
 [ext_resource type="Texture2D" uid="uid://blo1ft25x0qrk" path="res://assets/reanim/PotatoMine_body.png" id="56_ro17d"]
@@ -1694,7 +1695,7 @@ centered = false
 [node name="Anim_face" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect"]
 position = Vector2(7.3, 3.6)
 scale = Vector2(0.7, 0.719)
-texture = ExtResource("51_ocwvu")
+texture = ExtResource("53_wallnut_brigita")
 centered = false
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect"]
