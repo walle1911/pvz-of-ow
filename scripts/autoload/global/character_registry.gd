@@ -74,6 +74,7 @@ enum PlantType {
 
 	P049PeaShooterDoubleReverse,
 	P050PeaShooterSoldier76,
+	P052SunflowerMercy = 52,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -529,6 +530,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_050_pea_shooter_soldier76.tscn")
+		},
+	PlantType.P052SunflowerMercy: {
+		PlantInfoAttribute.PlantName: "Sunflower_Mercy",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 50,
+		PlantInfoAttribute.PlantConditionResource:preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_052_sunflower_mercy.tscn")
 		},
 
 	## 模仿者

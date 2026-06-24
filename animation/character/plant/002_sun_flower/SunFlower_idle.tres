@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=29 format=3 uid="uid://b1ck53g20rabf"]
+[gd_resource type="Animation" format=3 uid="uid://b1ck53g20rabf"]
 
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="1_fuck"]
@@ -1112,7 +1112,7 @@ tracks/89/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.115192, 0.181514, 0.151844, 0.123918, 0.073304, 0.020944, -0.024435, -0.040143, -0.057596, -0.075049, -0.057596, -0.036652, -0.020944, 0.10472, 0.050615, 0.0, 0.0, 0.0, 0.0, -0.031416, -0.066323, -0.10472, -0.027925, 0.038397, 0.115192]
+"values": [0.115192, 0.181514, 0.151844, 0.123918, 0.073304, 0.020944, -0.024435, -0.040143, -0.057596, -0.075049, -0.057596, -0.036652, -0.020944, 0.10472, 0.050615, 0.0, 0.0, 0.0, 0.0, -0.031416, -0.06632299999999999, -0.10472, -0.027925, 0.038397, 0.115192]
 }
 tracks/90/type = "value"
 tracks/90/imported = false
@@ -1136,7 +1136,7 @@ tracks/91/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [-0.115192, -0.181514, -0.151844, -0.123918, -0.073304, -0.020944, 0.024435, 0.040143, 0.057596, 0.075049, 0.057596, 0.036652, 0.020944, -0.10472, -0.050615, 0.0, 0.0, 0.0, 0.0, 0.031416, 0.066323, 0.10472, 0.027925, -0.038397, -0.115192]
+"values": [-0.115192, -0.181514, -0.151844, -0.123918, -0.073304, -0.020944, 0.024435, 0.040143, 0.057596, 0.075049, 0.057596, 0.036652, 0.020944, -0.10472, -0.050615, 0.0, 0.0, 0.0, 0.0, 0.031416, 0.06632299999999999, 0.10472, 0.027925, -0.038397, -0.115192]
 }
 tracks/92/type = "value"
 tracks/92/imported = false
@@ -1784,7 +1784,7 @@ tracks/145/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.031416, 0.066323, 0.099484, 0.127409, 0.158825, 0.191986, 0.228638, 0.270526, 0.310669, 0.342085, 0.375246, 0.410152, 0.385718, 0.363028, 0.342085, 0.289725, 0.240855, 0.191986, 0.158825, 0.127409, 0.099484, 0.066323, 0.031416, 0.0]
+"values": [0.0, 0.031416, 0.06632299999999999, 0.099484, 0.127409, 0.158825, 0.191986, 0.228638, 0.270526, 0.310669, 0.342085, 0.375246, 0.410152, 0.385718, 0.363028, 0.342085, 0.289725, 0.240855, 0.191986, 0.158825, 0.127409, 0.099484, 0.06632299999999999, 0.031416, 0.0]
 }
 tracks/146/type = "value"
 tracks/146/imported = false
@@ -2097,4 +2097,112 @@ tracks/171/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [true, true]
+}
+tracks/172/type = "value"
+tracks/172/imported = false
+tracks/172/enabled = true
+tracks/172/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingL:position")
+tracks/172/interp = 1
+tracks/172/loop_wrap = true
+tracks/172/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(24, 68), Vector2(28.23, 63.32), Vector2(28.36, 66.34), Vector2(26.71, 64.58)]
+}
+tracks/173/type = "value"
+tracks/173/imported = false
+tracks/173/enabled = true
+tracks/173/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingL:rotation")
+tracks/173/interp = 1
+tracks/173/loop_wrap = true
+tracks/173/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0]
+}
+tracks/174/type = "value"
+tracks/174/imported = false
+tracks/174/enabled = true
+tracks/174/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingL:scale")
+tracks/174/interp = 1
+tracks/174/loop_wrap = true
+tracks/174/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0.07, 0.07), Vector2(0.07, 0.07), Vector2(0.07, 0.07), Vector2(0.07, 0.07)]
+}
+tracks/175/type = "value"
+tracks/175/imported = false
+tracks/175/enabled = true
+tracks/175/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:position")
+tracks/175/interp = 1
+tracks/175/loop_wrap = true
+tracks/175/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(34, 23), Vector2(37, 17), Vector2(40, 17.999996), Vector2(42.71, 18.833), Vector2(46.038, 24.626), Vector2(41.258, 19.389), Vector2(38.279, 18.483), Vector2(36.879, 18.852)]
+}
+tracks/176/type = "value"
+tracks/176/imported = false
+tracks/176/enabled = true
+tracks/176/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:rotation")
+tracks/176/interp = 1
+tracks/176/loop_wrap = true
+tracks/176/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0]
+}
+tracks/177/type = "value"
+tracks/177/imported = false
+tracks/177/enabled = true
+tracks/177/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:scale")
+tracks/177/interp = 1
+tracks/177/loop_wrap = true
+tracks/177/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.06, 0.061), Vector2(0.06, 0.061), Vector2(0.06, 0.061)]
+}
+tracks/178/type = "value"
+tracks/178/imported = false
+tracks/178/enabled = true
+tracks/178/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:rotation")
+tracks/178/interp = 1
+tracks/178/loop_wrap = true
+tracks/178/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
+}
+tracks/179/type = "value"
+tracks/179/imported = false
+tracks/179/enabled = true
+tracks/179/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:scale")
+tracks/179/interp = 1
+tracks/179/loop_wrap = true
+tracks/179/keys = {
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.071128406, 0.07219316), Vector2(0.071128406, 0.07219316)]
+}
+tracks/180/type = "value"
+tracks/180/imported = false
+tracks/180/enabled = true
+tracks/180/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:position")
+tracks/180/interp = 1
+tracks/180/loop_wrap = true
+tracks/180/keys = {
+"times": PackedFloat32Array(0, 0.5, 1, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(50.186, 65.662), Vector2(50.641, 62.032), Vector2(51.096, 65.902), Vector2(49.711, 63.262)]
 }

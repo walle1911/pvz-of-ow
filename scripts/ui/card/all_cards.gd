@@ -40,7 +40,6 @@ func _ready() -> void:
 				init_card(card, card_para)
 				all_plant_card_prefabs[card.card_plant_type] = card
 				plant_card_ids[card.card_plant_type] = plant_i
-
 	var zombie_i = -1
 	all_zombie_card_prefabs.clear()
 	for zombie_cards_parent_node in all_zombie_cards_parent_node_root:
