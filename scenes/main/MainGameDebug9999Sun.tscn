@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/MainGame01Front.tscn" id="1_front"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_9999_sun.tres" id="2_level"]
+
+[node name="MainGameDebug9999Sun" instance=ExtResource("1_front")]
+game_para = ExtResource("2_level")
+test_change_sun_value = 9999
+test_time_scale = 1

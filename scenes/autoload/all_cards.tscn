@@ -957,6 +957,20 @@ all_plant_card_prefabs = {
 49: NodePath("PlantCards2/Card4"),
 50: NodePath("PlantCards2/Card5"),
 52: NodePath("PlantCards2/Card6"),
+53: NodePath("PlantCards2/Card7"),
+54: NodePath("PlantCards2/Card8"),
+55: NodePath("PlantCards2/Card9"),
+56: NodePath("PlantCards2/Card10"),
+57: NodePath("PlantCards2/Card11"),
+58: NodePath("PlantCards2/Card12"),
+59: NodePath("PlantCards2/Card13"),
+60: NodePath("PlantCards2/Card14"),
+61: NodePath("PlantCards2/Card15"),
+62: NodePath("PlantCards2/Card16"),
+63: NodePath("PlantCards2/Card17"),
+64: NodePath("PlantCards2/Card18"),
+65: NodePath("PlantCards2/Card19"),
+66: NodePath("PlantCards2/Card20"),
 1001: NodePath("PlantCards2/Card"),
 1002: NodePath("PlantCards2/Card2"),
 1003: NodePath("PlantCards2/Card3")
@@ -1044,6 +1058,20 @@ plant_card_ids = Dictionary[int, int]({
 49: 51,
 50: 52,
 52: 53,
+53: 54,
+54: 55,
+55: 56,
+56: 57,
+57: 58,
+58: 59,
+59: 60,
+60: 61,
+61: 62,
+62: 63,
+63: 64,
+64: 65,
+65: 66,
+66: 67,
 1001: 48,
 1002: 49,
 1003: 50
@@ -1074,7 +1102,10 @@ zombie_card_ids = Dictionary[int, int]({
 23: 22,
 24: 23,
 25: 24,
-1001: 25
+26: 25,
+27: 26,
+28: 27,
+1001: 28
 })
 
 [node name="CardImitater" parent="." unique_id=349133254 instance=ExtResource("2_5pqky")]

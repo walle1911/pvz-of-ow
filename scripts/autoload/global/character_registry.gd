@@ -184,6 +184,8 @@ enum ZombieInfoAttribute{
 	PlantType.P047SpikeRock:PlantType.P022Caltrop,
 	PlantType.P048CobCannon:PlantType.P035CornPult,
 	PlantType.P056GatlingPeaBastion:PlantType.P008PeaShooterDouble,
+	PlantType.P058CattailJetpackCat:PlantType.P017LilyPad,
+	PlantType.P063GloomShroomMoira:PlantType.P011FumeShroom,
 }
 
 const PlantInfo = {

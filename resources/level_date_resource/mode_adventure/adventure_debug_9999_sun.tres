@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="ResourceLevelData" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/level/level_data.gd" id="1_level"]
+[ext_resource type="Script" path="res://scripts/resources/level/pre_plant_in_level.gd" id="2_preplant"]
+
+[sub_resource type="Resource" id="Resource_pre_repeater"]
+script = ExtResource("2_preplant")
+plant_type = 8
+plant_cell_pos = Vector2i(0, 1)
+
+[sub_resource type="Resource" id="Resource_pre_fume"]
+script = ExtResource("2_preplant")
+plant_type = 11
+plant_cell_pos = Vector2i(0, 2)
+
+[sub_resource type="Resource" id="Resource_pre_lilypad"]
+script = ExtResource("2_preplant")
+plant_type = 17
+plant_cell_pos = Vector2i(0, 3)
+
+[sub_resource type="Resource" id="Resource_pre_cornpult"]
+script = ExtResource("2_preplant")
+plant_type = 35
+plant_cell_pos = Vector2i(0, 4)
+
+[sub_resource type="Resource" id="Resource_pre_magnet"]
+script = ExtResource("2_preplant")
+plant_type = 32
+plant_cell_pos = Vector2i(0, 5)
+
+[resource]
+script = ExtResource("1_level")
+is_day_sun = false
+is_zombie_can_home = false
+all_pre_plant_data = Array[ExtResource("2_preplant")]([SubResource("Resource_pre_repeater"), SubResource("Resource_pre_fume"), SubResource("Resource_pre_lilypad"), SubResource("Resource_pre_cornpult"), SubResource("Resource_pre_magnet")])
+look_show_zombie = false
+monster_mode = 1
+max_wave = 30
+zombie_refresh_types = Array[int]([1, 3, 5, 8])
+max_choosed_card_num = 15
+start_sun = 9999
+pre_choosed_card_list_plant = Array[int]([50, 63, 52, 8, 11, 41, 43, 56, 66, 1, 2, 3, 4, 18, 24])
+pre_choosed_card_list_zombie = Array[int]([1, 3, 5, 8, 26, 27, 28])
