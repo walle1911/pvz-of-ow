@@ -1410,7 +1410,7 @@ size = Vector2(1000, 5)
 
 [node name="Plant050PeaShooterSoldier76" unique_id=1953579651 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_c75pq")]
 script = ExtResource("2_rdoq1")
-plant_type = 1
+plant_type = 50
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3]
+[gd_scene load_steps=38 format=3]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_185k3"]
 [ext_resource type="Script" path="res://scripts/character/plant/plant_063_gloom_shroom_moira.gd" id="2_52sk1"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="17_fdqap"]
 [ext_resource type="Script" path="res://scripts/character/components/detect_component/component_detect.gd" id="18_xweqa"]
 [ext_resource type="Texture2D" uid="uid://yjc7pkf5hdn2" path="res://assets/image/particles/bullet/PuffShroom_puff1.png" id="19_sj1qt"]
+[ext_resource type="Script" uid="uid://0hywxqemaott" path="res://scripts/character/components/component_create_sun.gd" id="20_moira_sun"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_76ioa"]
 _data = {
@@ -243,6 +244,12 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("12_1w7go")
 centered = false
 
+[node name="Marker2DCreateSun" type="Marker2D" parent="Body/BodyCorrect" index="21"]
+position = Vector2(40, 20)
+
+[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
+sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../CreateSunComponent")]
+
 [node name="Plant063GloomShroomMoira" type="AnimationPlayer" parent="." index="8"]
 libraries = {
 &"": SubResource("AnimationLibrary_76ioa")
@@ -282,6 +289,13 @@ shape = SubResource("RectangleShape2D_52sk1")
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="1"]
 
 [node name="AllBullet_FX" type="Node2D" parent="." index="11"]
+
+[node name="CreateSunComponent" type="Node2D" parent="." index="12" node_paths=PackedStringArray("marker_2d_create_sun")]
+script = ExtResource("20_moira_sun")
+marker_2d_create_sun = NodePath("../Body/BodyCorrect/Marker2DCreateSun")
+
+[node name="CreateSunTimer" type="Timer" parent="CreateSunComponent" index="0"]
+one_shot = true
 
 [node name="Bullet_FX" type="Node2D" parent="AllBullet_FX" index="0"]
 unique_name_in_owner = true
@@ -772,3 +786,4 @@ draw_order = 0
 process_material = SubResource("ParticleProcessMaterial_52sk1")
 
 [connection signal="timeout" from="AttackComponent/BulletAttackCdTimer" to="AttackComponent" method="_on_bullet_attack_cd_timer_timeout"]
+[connection signal="timeout" from="CreateSunComponent/CreateSunTimer" to="CreateSunComponent" method="_on_create_sun_timer_timeout"]

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bh1ixrlfb6jr4" path="res://scripts/ui/card/all_cards.gd" id="1_qtbte"]
 [ext_resource type="PackedScene" uid="uid://cjuiaaq33o5aa" path="res://scenes/ui/all_cards/card.tscn" id="2_5pqky"]
 [ext_resource type="Texture2D" uid="uid://cdm356vgex30b" path="res://assets/image/ui/ui_card/SeedPacket_Larger.png" id="3_m4n4y"]
-[ext_resource type="Texture2D" path="res://assets_temp/豌豆射手-76/PeaShooter_76.png" id="3_s76card"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="3_xm6ba"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="4_2m5n3"]
 [ext_resource type="Texture2D" uid="uid://i7fngqj5l36a" path="res://assets/reanim/PeaShooter_backleaf_righttip.png" id="5_utnli"]
@@ -6603,12 +6602,10 @@ card_plant_type = 50
 texture = ExtResource("3_m4n4y")
 
 [node name="Plant050PeaShooterSoldier76" type="Node2D" parent="PlantCards2/Card5/CardBg/CharacterStatic" index="0" unique_id=477947516]
-visible = false
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
 [node name="Body" type="Node2D" parent="PlantCards2/Card5/CardBg/CharacterStatic/Plant050PeaShooterSoldier76" unique_id=662452571]
-visible = false
 
 [node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card5/CardBg/CharacterStatic/Plant050PeaShooterSoldier76/Body" unique_id=1856847182]
 position = Vector2(-43, -67)
@@ -6707,11 +6704,6 @@ centered = false
 
 [node name="Marker2DBullet" type="Marker2D" parent="PlantCards2/Card5/CardBg/CharacterStatic/Plant050PeaShooterSoldier76/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=217441554]
 position = Vector2(60.9452, 30.6411)
-
-[node name="PeaShooter76CardPreview" type="Sprite2D" parent="PlantCards2/Card5/CardBg/CharacterStatic" index="1" unique_id=1943276743]
-position = Vector2(1.5, 0.5)
-scale = Vector2(0.07, 0.07)
-texture = ExtResource("3_s76card")
 
 [node name="Card6" parent="PlantCards2" unique_id=281935870 instance=ExtResource("2_5pqky")]
 layout_mode = 2
