@@ -75,6 +75,20 @@ enum PlantType {
 	P049PeaShooterDoubleReverse,
 	P050PeaShooterSoldier76,
 	P052SunflowerMercy = 52,
+	P053CherryBombJunkrat = 53,
+	P054SquashDoomfist = 54,
+	P055SnowPeaMei = 55,
+	P056GatlingPeaBastion = 56,
+	P057TallNutSigma = 57,
+	P058CattailJetpackCat = 58,
+	P059JalapenoVendetta = 59,
+	P060MelonPultAshe = 60,
+	P061ImitaterEcho = 61,
+	P062DoomShroomDVA = 62,
+	P063GloomShroomMoira = 63,
+	P064SeaShroomWuyang = 64,
+	P065FumeShroomRoadhog = 65,
+	P066MagnetShroomSombra = 66,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -132,6 +146,9 @@ enum ZombieType {
 	Z023Catapult,
 	Z024Gargantuar,
 	Z025Imp,
+	Z026GargantuarReinhardt = 26,
+	Z027ZombieYetiWinston = 27,
+	Z028DiggerZombieVenture = 28,
 
 	Z1001BobsledSingle=1001,	## 单个雪橇车僵尸
 	}
@@ -166,6 +183,7 @@ enum ZombieInfoAttribute{
 	PlantType.P046GoldMagnet:PlantType.P032MagnetShroom,
 	PlantType.P047SpikeRock:PlantType.P022Caltrop,
 	PlantType.P048CobCannon:PlantType.P035CornPult,
+	PlantType.P056GatlingPeaBastion:PlantType.P008PeaShooterDouble,
 }
 
 const PlantInfo = {
@@ -539,6 +557,105 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_052_sunflower_mercy.tscn")
 		},
 
+	PlantType.P053CherryBombJunkrat: {
+		PlantInfoAttribute.PlantName: "CherryBomb_Junkrat",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 150,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_053_cherry_bomb_junkrat.tscn")
+		},
+	PlantType.P054SquashDoomfist: {
+		PlantInfoAttribute.PlantName: "Squash_Doomfist",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 50,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_054_squash_doomfist.tscn")
+		},
+	PlantType.P055SnowPeaMei: {
+		PlantInfoAttribute.PlantName: "SnowPea_Mei",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 175,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_055_snow_pea_mei.tscn")
+		},
+	PlantType.P056GatlingPeaBastion: {
+		PlantInfoAttribute.PlantName: "GatlingPea_Bastion",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 250,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_056_gatling_pea_bastion.tscn")
+		},
+	PlantType.P057TallNutSigma: {
+		PlantInfoAttribute.PlantName: "TallNut_Sigma",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 175,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_057_tall_nut_sigma.tscn")
+		},
+	PlantType.P058CattailJetpackCat: {
+		PlantInfoAttribute.PlantName: "Cattail_JetpackCat",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 225,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_058_cattail_jetpack_cat.tscn")
+		},
+	PlantType.P059JalapenoVendetta: {
+		PlantInfoAttribute.PlantName: "Jalapeno_Vendetta",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_059_jalapeno_vendetta.tscn")
+		},
+	PlantType.P060MelonPultAshe: {
+		PlantInfoAttribute.PlantName: "MelonPult_Ashe",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 300,
+		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_060_melon_pult_ashe.tscn")
+		},
+	PlantType.P061ImitaterEcho:{
+		PlantInfoAttribute.PlantName: "Imitater_Echo",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 0,
+		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/999_imitater.tres"),
+		PlantInfoAttribute.PlantScenes :  preload("res://scenes/character/plant/plant_061_imitater_echo.tscn")
+		},
+
+	PlantType.P062DoomShroomDVA: {
+		PlantInfoAttribute.PlantName: "DoomShroom_DVA",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_062_doom_shroom_dva.tscn")
+		},
+	PlantType.P063GloomShroomMoira: {
+		PlantInfoAttribute.PlantName: "GloomShroom_Moira",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 150,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_063_gloom_shroom_moira.tscn")
+		},
+	PlantType.P064SeaShroomWuyang: {
+		PlantInfoAttribute.PlantName: "SeaShroom_Wuyang",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 0,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_064_sea_shroom_wuyang.tscn")
+		},
+	PlantType.P065FumeShroomRoadhog: {
+		PlantInfoAttribute.PlantName: "FumeShroom_Roadhog",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 75,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_065_fume_shroom_roadhog.tscn")
+		},
+	PlantType.P066MagnetShroomSombra: {
+		PlantInfoAttribute.PlantName: "MagnetShroom_Sombra",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 100,
+		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_066_magnet_shroom_sombra.tscn")
+		},
 	## 模仿者
 	PlantType.P999Imitater:{
 		PlantInfoAttribute.PlantName: "Imitater",
@@ -773,6 +890,27 @@ const ZombieInfo = {
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
 
+	ZombieType.Z026GargantuarReinhardt:{
+		ZombieInfoAttribute.ZombieName: "Gargantuar_Reinhardt",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 300,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_026_gargantuar_reinhardt.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z027ZombieYetiWinston:{
+		ZombieInfoAttribute.ZombieName: "ZombieYeti_Winston",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 100,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_027_zombie_yeti_winston.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z028DiggerZombieVenture:{
+		ZombieInfoAttribute.ZombieName: "DiggerZombie_Venture",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 125,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_028_digger_zombie_venture.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
 	## 单独雪橇僵尸
 	ZombieType.Z1001BobsledSingle:{
 		ZombieInfoAttribute.ZombieName: "ZombieBobsledSingle",
