@@ -67,6 +67,7 @@ enum E_InitParasAttr{
 	## 抛物线子弹\追踪子弹额外属性
 	Enemy,				## 子弹选中的敌人
 	EnemyGloPos,		## 敌人位置(发射子弹时敌人若已经消失,抛物线依旧可以攻击)
+	AttackValue,			## 子弹伤害覆盖值
 
 }
 
@@ -83,6 +84,9 @@ func init_bullet(bullet_paras:Dictionary):
 	self.direction = bullet_paras.get(E_InitParasAttr.Direction, Vector2.RIGHT)
 	self.can_attack_plant_status = bullet_paras.get(E_InitParasAttr.CanAttackPlantState, can_attack_plant_status)
 	self.can_attack_zombie_status = bullet_paras.get(E_InitParasAttr.CanAttackZombieState, can_attack_zombie_status)
+	var new_attack_value:int = bullet_paras.get(E_InitParasAttr.AttackValue, -1)
+	if new_attack_value > 0:
+		attack_value = new_attack_value
 
 
 ## 获取子弹属性
@@ -94,6 +98,7 @@ func get_bullet_paras()->Dictionary[E_InitParasAttr,Variant]:
 		E_InitParasAttr.Direction : self.direction,
 		E_InitParasAttr.CanAttackPlantState : self.can_attack_plant_status,
 		E_InitParasAttr.CanAttackZombieState : self.can_attack_zombie_status,
+		E_InitParasAttr.AttackValue : self.attack_value,
 	}
 
 ## 子弹与敌人碰撞

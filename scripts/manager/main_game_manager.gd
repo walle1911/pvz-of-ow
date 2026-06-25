@@ -22,6 +22,16 @@ class_name MainGameManager
 		test_time_scale = value
 		Engine.time_scale = test_time_scale
 
+@export_subgroup("调试预设卡片")
+## 直接运行测试场景时覆盖关卡资源中的预选植物卡，留空则使用关卡资源原配置
+@export var test_pre_choosed_card_list_plant: Array[CharacterRegistry.PlantType] = []
+## 直接运行测试场景时覆盖关卡资源中的预选僵尸卡，留空则使用关卡资源原配置
+@export var test_pre_choosed_card_list_zombie: Array[CharacterRegistry.ZombieType] = []
+## 直接运行测试场景时覆盖最大卡槽数量，0表示使用关卡资源原配置
+@export_range(0, 15) var test_max_choosed_card_num: int = 0
+## 直接运行测试场景时显示植物和僵尸血量，便于观察调参结果
+@export var test_show_hp_label := true
+
 #endregion
 #region 游戏管理器
 @onready var manager: Node = %Manager
@@ -152,6 +162,28 @@ func set_game_para() -> void:
 		)
 		queue_free()
 		return
+	apply_test_card_overrides()
+
+func apply_test_card_overrides() -> void:
+	if not is_test:
+		return
+	if test_pre_choosed_card_list_plant.is_empty() \
+	and test_pre_choosed_card_list_zombie.is_empty() \
+	and test_max_choosed_card_num <= 0:
+		return
+	game_para = game_para.duplicate(true)
+	if not test_pre_choosed_card_list_plant.is_empty():
+		game_para.pre_choosed_card_list_plant = test_pre_choosed_card_list_plant.duplicate()
+	if not test_pre_choosed_card_list_zombie.is_empty():
+		game_para.pre_choosed_card_list_zombie = test_pre_choosed_card_list_zombie.duplicate()
+	if test_max_choosed_card_num > 0:
+		game_para.max_choosed_card_num = test_max_choosed_card_num
+
+func apply_test_display_overrides() -> void:
+	if not is_test or not test_show_hp_label:
+		return
+	Global.config_service.display_plant_HP_label = true
+	Global.config_service.display_zombie_HP_label = true
 
 func _exit_tree() -> void:
 	## 避免切场景后主游戏节点已释放，Global 仍持有野指针
@@ -159,6 +191,7 @@ func _exit_tree() -> void:
 		Global.main_game = null
 
 func _ready() -> void:
+	apply_test_display_overrides()
 	game_para.init_para()
 	## 多轮游戏并且有存档
 	is_save_game_data_on_init = game_para.game_round != 1 and game_para.save_game_data_main_game != null

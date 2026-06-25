@@ -17,8 +17,8 @@ var is_lane:=true
 
 ## 攻击参数,动画攻击一次的参数
 @export var attack_para:StringName= &"parameters/OneShot/request"
-### TODO:子弹攻击伤害(为正数时可以给子弹赋值,默认为子弹攻击力)
-#@export var attack_value_bullet:int = -1
+## 子弹攻击伤害（为正数时覆盖子弹场景默认伤害）
+@export var attack_value_bullet:int = -1
 @export var attack_cd:float = 1.5
 ## 攻击子弹类型
 @export var attack_bullet_type:BulletRegistry.BulletType = BulletRegistry.BulletType.Bullet001Pea
@@ -108,6 +108,7 @@ func get_bullet_paras(marker_2d_bullet_glo_pos:Vector2, ray_direction:Vector2) -
 		Bullet000NormBase.E_InitParasAttr.Direction : ray_direction,
 		Bullet000NormBase.E_InitParasAttr.CanAttackPlantState : can_attack_plant_status,
 		Bullet000NormBase.E_InitParasAttr.CanAttackZombieState : can_attack_zombie_status,
+		Bullet000NormBase.E_InitParasAttr.AttackValue : attack_value_bullet,
 	}
 
 

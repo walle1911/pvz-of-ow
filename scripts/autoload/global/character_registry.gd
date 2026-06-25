@@ -74,6 +74,7 @@ enum PlantType {
 
 	P049PeaShooterDoubleReverse,
 	P050PeaShooterSoldier76,
+	P051PeaShooterMccree,
 	P052SunflowerMercy = 52,
 	P053CherryBombJunkrat = 53,
 	P054SquashDoomfist = 54,
@@ -550,6 +551,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_050_pea_shooter_soldier76.tscn")
+		},
+	PlantType.P051PeaShooterMccree: {
+		PlantInfoAttribute.PlantName: "PeaShooterMccree",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_051_pea_shooter_mccree.tscn")
 		},
 	PlantType.P052SunflowerMercy: {
 		PlantInfoAttribute.PlantName: "Sunflower_Mercy",
