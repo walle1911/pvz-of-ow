@@ -13,6 +13,7 @@ var is_sun_enough: bool = true		# 阳光是否足够
 var _cool_timer : float				# 冷却计时器
 var is_can_click := true		## 是否可以点击
 var tween_blink:Tween
+var _is_ready_state := false
 #region 开局选卡相关
 ## 开局选择卡片时 是否被选中
 var is_choosed_pre_card := false
@@ -26,6 +27,11 @@ signal signal_card_click(card:Card)
 ## 卡片种植完成后信号，生成卡片所在卡槽连接该信号
 @warning_ignore("unused_signal")
 signal signal_card_use_end(card:Card)
+## 卡片变为可用时发射
+signal signal_card_ready(card:Card)
+
+var is_hidden_by_squash_doomfist := false
+var is_being_attacked_by_squash_doomfist := false
 
 func _ready() -> void:
 	super()
@@ -99,13 +105,27 @@ func set_card_cool_end():
 
 ## 卡片可以点击
 func card_ready():
+	if is_being_attacked_by_squash_doomfist:
+		_cool_mask.visible = false
+		is_can_click = false
+		return
+
+	var should_emit_ready := not _is_ready_state
+	if is_hidden_by_squash_doomfist:
+		is_hidden_by_squash_doomfist = false
+		character_static.visible = true
+		should_emit_ready = true
 	_cool_mask.visible = false
 	is_can_click = true
+	_is_ready_state = true
+	if should_emit_ready:
+		signal_card_ready.emit(self)
 
 ## 卡片不可以点击
 func card_not_can_click():
 	_cool_mask.visible = true
 	is_can_click = false
+	_is_ready_state = false
 
 ## 卡片开始冷却
 func card_cool():
@@ -114,6 +134,21 @@ func card_cool():
 	_cool_timer = cool_time
 	_cool_mask.value = cool_time
 	is_can_click = false
+	_is_ready_state = false
+
+func start_squash_doomfist_card_attack():
+	is_being_attacked_by_squash_doomfist = true
+	is_can_click = false
+	_cool_mask.visible = false
+
+func get_squash_doomfist_attack_screen_position() -> Vector2:
+	return get_global_transform_with_canvas() * (size * 0.5 + Vector2(0, 24))
+
+func hide_by_squash_doomfist():
+	is_being_attacked_by_squash_doomfist = false
+	is_hidden_by_squash_doomfist = true
+	character_static.visible = false
+	card_cool()
 
 ## 点击卡片时
 func _on_button_pressed() -> void:

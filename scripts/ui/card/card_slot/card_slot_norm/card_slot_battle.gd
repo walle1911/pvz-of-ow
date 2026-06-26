@@ -11,6 +11,7 @@ class_name CardSlotBattle
 var cards_placeholder:Array = []
 ## 出战卡片
 var curr_cards : Array[Card]
+var _squash_doomfist_card_attack_check_timer := 0.0
 ## 阳光值
 var sun_value:
 	set(value):
@@ -26,6 +27,16 @@ func _ready() -> void:
 	EventBus.subscribe("add_sun_value", func(value): sun_value+=value)
 	EventBus.subscribe("update_card_purple_sun_cost", update_card_purple_sun_cost)
 
+func _process(delta: float) -> void:
+	if not is_instance_valid(Global.main_game) or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
+		return
+
+	_squash_doomfist_card_attack_check_timer -= delta
+	if _squash_doomfist_card_attack_check_timer > 0:
+		return
+
+	_squash_doomfist_card_attack_check_timer = 0.2
+	_try_squash_doomfist_attack_coffee_bean_ana()
 
 ## 初始化出战卡槽，管理器调用
 func init_card_slot_battle(max_choosed_card_num:int, sun:int):
@@ -46,10 +57,12 @@ func main_game_refresh_card():
 	update_card_purple_sun_cost()
 	for i in range(curr_cards.size()):
 		var card:Card = curr_cards[i]
-		card.judge_sun_enough(sun_value)
-		card.set_shortcut((i+1)%10)
 		if not card.signal_card_use_end.is_connected(card_use_end.bind(card)):
 			card.signal_card_use_end.connect(card_use_end.bind(card))
+		if not card.signal_card_ready.is_connected(_on_card_ready):
+			card.signal_card_ready.connect(_on_card_ready)
+		card.judge_sun_enough(sun_value)
+		card.set_shortcut((i+1)%10)
 	judge_disappear_add_card_bar()
 
 ## 开始下一轮出战卡槽更新数据
@@ -62,12 +75,54 @@ func start_next_game_card_slot_battle_update():
 		card.set_shortcut_disappear()
 		if card.signal_card_use_end.is_connected(card_use_end.bind(card)):
 			card.signal_card_use_end.disconnect(card_use_end.bind(card))
+		if card.signal_card_ready.is_connected(_on_card_ready):
+			card.signal_card_ready.disconnect(_on_card_ready)
 
 ## 卡片种植后信号调用函数
 func card_use_end(card:Card):
 	## 减少阳光，卡片冷却
 	sun_value = sun_value - card.sun_cost
 	card.card_cool()
+
+func _on_card_ready(card:Card):
+	_try_squash_doomfist_attack_card(card)
+
+func _try_squash_doomfist_attack_coffee_bean_ana():
+	for card:Card in curr_cards:
+		if _try_squash_doomfist_attack_card(card):
+			return
+
+func _try_squash_doomfist_attack_card(card:Card) -> bool:
+	if card.card_plant_type != CharacterRegistry.PlantType.P067CoffeeBeanAna:
+		return false
+	if card.is_hidden_by_squash_doomfist:
+		return false
+	if card.is_being_attacked_by_squash_doomfist:
+		return false
+	if not card.is_can_click:
+		return false
+	if not is_instance_valid(Global.main_game) or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
+		return false
+
+	var squash_doomfist := _get_available_squash_doomfist()
+	if not is_instance_valid(squash_doomfist):
+		return false
+
+	return squash_doomfist.attack_card(card)
+
+func _get_available_squash_doomfist() -> Plant054SquashDoomfist:
+	if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.plant_cell_manager):
+		return null
+
+	for plant_cells_row in Global.main_game.plant_cell_manager.all_plant_cells:
+		for plant_cell:PlantCell in plant_cells_row:
+			for place_plant_in_cell in plant_cell.plant_in_cell:
+				var plant:Plant000Base = plant_cell.plant_in_cell[place_plant_in_cell]
+				if is_instance_valid(plant) and plant is Plant054SquashDoomfist:
+					var squash_doomfist := plant as Plant054SquashDoomfist
+					if not squash_doomfist.is_attack:
+						return squash_doomfist
+	return null
 
 #region 控制台相关
 ## 是否显示多余卡槽
