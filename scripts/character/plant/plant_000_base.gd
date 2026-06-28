@@ -25,6 +25,8 @@ var plant_cell:PlantCell
 var is_death_free:= true
 ## 是否为模仿者材质
 var is_imitater_material:=false
+## 攻击伤害倍率来源。key 为来源实例 ID，value 为倍率。
+var attack_damage_multiplier_sources:Dictionary[int, float] = {}
 #endregion
 
 #region 植物动画
@@ -236,6 +238,25 @@ func coffee_bean_awake_up():
 ## 植物修改睡眠
 func update_is_sleeping(new_is_sleeping:bool):
 	self.is_sleeping = new_is_sleeping
+
+## 增加一个攻击伤害倍率来源
+func add_attack_damage_multiplier(source:Object, multiplier:float):
+	if not is_instance_valid(source):
+		return
+	attack_damage_multiplier_sources[source.get_instance_id()] = multiplier
+
+## 移除一个攻击伤害倍率来源
+func remove_attack_damage_multiplier(source:Object):
+	if not is_instance_valid(source):
+		return
+	attack_damage_multiplier_sources.erase(source.get_instance_id())
+
+## 获取当前攻击伤害倍率，多个来源取最高值
+func get_attack_damage_multiplier() -> float:
+	var result := 1.0
+	for multiplier:float in attack_damage_multiplier_sources.values():
+		result = maxf(result, multiplier)
+	return result
 
 
 #region 花园植物

@@ -1,15 +1,15 @@
-[gd_resource type="Animation" format=3 uid="uid://bkp3alta7lpu0"]
+[gd_resource type="Animation" format=3 uid="uid://b7hnetqbco4rm"]
 
 [ext_resource type="Texture2D" uid="uid://nj6m28m6k5p1" path="res://assets/reanim/PeaShooter_frontleaf_righttip.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://dit0i5evvco14" path="res://assets/reanim/PeaShooter_frontleaf_lefttip.png" id="1_fuck"]
 [ext_resource type="Texture2D" uid="uid://b7uqfdos6ocy7" path="res://assets/reanim/Cabbagepult_basket.png" id="2_fuck"]
-[ext_resource type="Texture2D" uid="uid://cyq6qjfok78qm" path="res://assets/reanim/Melonpult_melon.png" id="3_fuck"]
+[ext_resource type="Texture2D" uid="uid://bm62filn2k5rm" path="res://assets/reanim/MelonPult_Ashe_BobFace.png" id="3_fuck"]
 [ext_resource type="Texture2D" uid="uid://ypi3oybr0n66" path="res://assets/reanim/Cabbagepult_basket_overlay.png" id="4_fuck"]
 [ext_resource type="Texture2D" uid="uid://bfprc4gnain57" path="res://assets/reanim/Melonpult_stalk.png" id="5_fuck"]
 [ext_resource type="Texture2D" uid="uid://jc04bawcark1" path="res://assets/reanim/Melonpult_body.png" id="6_fuck"]
 [ext_resource type="Texture2D" uid="uid://b545xxdmuws6t" path="res://assets/reanim/Melonpult_blink1.png" id="7_fuck"]
 [ext_resource type="Texture2D" uid="uid://bw5pn01hh1dfv" path="res://assets/reanim/Melonpult_eyebrow.png" id="8_fuck"]
-[ext_resource type="Texture2D" uid="uid://300aew7liup" path="res://assets/reanim/PeaShooter_frontleaf.png" id="9_fuck"]
+[ext_resource type="Texture2D" uid="uid://c55upfg2nlkqd" path="res://assets/reanim/MelonPult_Ashe_Clothes.png" id="9_fuck"]
 
 [resource]
 resource_name = "MelonPult_idle"
@@ -26,7 +26,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 2.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -110,7 +110,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0, 2.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -554,7 +554,7 @@ tracks/44/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [0.0005, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, 0.0005, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, 0.0005, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, 0.0005, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, -0.0001, 0.0005]
 }
 tracks/45/type = "value"
 tracks/45/imported = false
@@ -578,7 +578,7 @@ tracks/46/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [0.0084, 0.0131, 0.0179, 0.0135, 0.0093, 0.0052, 0.001, -0.0033, -0.0108, -0.0184, -0.0138, -0.0094, -0.0048, -0.0005, 0.0042, 0.0084, 0.0131, 0.0179, 0.0117, 0.0059, -0.0002, -0.0063, -0.0124, -0.0153, -0.0184, -0.0138, -0.0094, -0.0048, -0.0005, 0.0042, 0.0084]
 }
 tracks/47/type = "value"
 tracks/47/imported = false
@@ -638,7 +638,7 @@ tracks/51/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [0.0115, 0.0178, 0.0243, 0.0184, 0.0127, 0.0071, 0.0014, -0.0046, -0.0147, -0.025, -0.0188, -0.0128, -0.0066, -0.0006, 0.0057, 0.0115, 0.0178, 0.0243, 0.016, 0.008, -0.0003, -0.0086, -0.0169, -0.0208, -0.025, -0.0188, -0.0128, -0.0066, -0.0006, 0.0057, 0.0115]
 }
 tracks/52/type = "value"
 tracks/52/imported = false
@@ -878,7 +878,7 @@ tracks/71/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(23.3, 54.6), Vector2(23.3, 54.9), Vector2(23.4, 55.3), Vector2(23.5, 55.5), Vector2(23.6, 55.8), Vector2(23.6, 55.9), Vector2(23.7, 56.3), Vector2(23.8, 56.4), Vector2(23.7, 56.3), Vector2(23.7, 56), Vector2(23.6, 55.8), Vector2(23.5, 55.6), Vector2(23.5, 55.4), Vector2(23.5, 55.1), Vector2(23.4, 54.9), Vector2(23.3, 54.6), Vector2(23.3, 54.9), Vector2(23.4, 55.3), Vector2(23.5, 55.5), Vector2(23.6, 55.8), Vector2(23.6, 55.9), Vector2(23.7, 56.3), Vector2(23.8, 56.4), Vector2(23.7, 56.3), Vector2(23.7, 56), Vector2(23.6, 55.8), Vector2(23.5, 55.6), Vector2(23.5, 55.4), Vector2(23.5, 55.1), Vector2(23.4, 54.9), Vector2(23.3, 54.6)]
+"values": [Vector2(18.1271, 55.1768), Vector2(18.3271, 54.9278), Vector2(18.4271, 54.6788), Vector2(18.1271, 54.99), Vector2(17.7271, 55.488), Vector2(17.4271, 55.8615), Vector2(17.1271, 56.235), Vector2(16.9271, 56.5463), Vector2(16.7271, 57.1065), Vector2(16.7271, 57.48), Vector2(16.9271, 57.1065), Vector2(17.1271, 56.733), Vector2(17.4271, 56.2973), Vector2(17.7271, 55.9238), Vector2(17.9271, 55.5503), Vector2(18.1271, 55.1768), Vector2(18.3271, 54.9278), Vector2(18.4271, 54.6788), Vector2(18.1271, 54.99), Vector2(17.7271, 55.488), Vector2(17.4271, 55.8615), Vector2(17.1271, 56.235), Vector2(16.9271, 56.5463), Vector2(16.7271, 57.1065), Vector2(16.7271, 57.48), Vector2(16.9271, 57.1065), Vector2(17.1271, 56.733), Vector2(17.4271, 56.2973), Vector2(17.7271, 55.9238), Vector2(17.9271, 55.5503), Vector2(18.1271, 55.1768)]
 }
 tracks/72/type = "value"
 tracks/72/imported = false
@@ -890,7 +890,7 @@ tracks/72/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.10472, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.10472, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.10472, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.10472, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.101229, 0.10472]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/73/type = "value"
 tracks/73/imported = false
@@ -902,7 +902,7 @@ tracks/73/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.572, 0.444), Vector2(0.572, 0.436), Vector2(0.572, 0.428), Vector2(0.572, 0.421), Vector2(0.572, 0.413), Vector2(0.572, 0.405), Vector2(0.572, 0.397), Vector2(0.572, 0.39), Vector2(0.572, 0.396), Vector2(0.572, 0.403), Vector2(0.572, 0.41), Vector2(0.572, 0.417), Vector2(0.572, 0.423), Vector2(0.572, 0.43), Vector2(0.572, 0.437), Vector2(0.572, 0.444), Vector2(0.572, 0.436), Vector2(0.572, 0.428), Vector2(0.572, 0.421), Vector2(0.572, 0.413), Vector2(0.572, 0.405), Vector2(0.572, 0.397), Vector2(0.572, 0.39), Vector2(0.572, 0.396), Vector2(0.572, 0.403), Vector2(0.572, 0.41), Vector2(0.572, 0.417), Vector2(0.572, 0.423), Vector2(0.572, 0.43), Vector2(0.572, 0.437), Vector2(0.572, 0.444)]
+"values": [Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239), Vector2(0.308, 0.239)]
 }
 tracks/74/type = "value"
 tracks/74/imported = false
@@ -911,10 +911,10 @@ tracks/74/path = NodePath("Body/BodyCorrect/Frontleaf:skew")
 tracks/74/interp = 1
 tracks/74/loop_wrap = true
 tracks/74/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
 "update": 0,
-"values": [-2e-07, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, -2e-07, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, -2e-07, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, -2e-07, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, 0.0034908, -2e-07]
+"values": []
 }
 tracks/75/type = "value"
 tracks/75/imported = false
@@ -950,7 +950,7 @@ tracks/77/keys = {
 "times": PackedFloat32Array(0, 2.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/78/type = "value"
 tracks/78/imported = false
@@ -1034,7 +1034,7 @@ tracks/84/keys = {
 "times": PackedFloat32Array(0, 2.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/85/type = "value"
 tracks/85/imported = false
@@ -1107,4 +1107,40 @@ tracks/90/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+tracks/91/type = "value"
+tracks/91/imported = false
+tracks/91/enabled = true
+tracks/91/path = NodePath("Body/BodyCorrect/Anim_face/MelonPult_Ashe_Hair:position")
+tracks/91/interp = 1
+tracks/91/loop_wrap = true
+tracks/91/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(32.17, 5.71)]
+}
+tracks/92/type = "value"
+tracks/92/imported = false
+tracks/92/enabled = true
+tracks/92/path = NodePath("Body/BodyCorrect/Anim_face/MelonPult_Ashe_Hair:rotation")
+tracks/92/interp = 1
+tracks/92/loop_wrap = true
+tracks/92/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/93/type = "value"
+tracks/93/imported = false
+tracks/93/enabled = true
+tracks/93/path = NodePath("Body/BodyCorrect/Anim_face/MelonPult_Ashe_Hair:scale")
+tracks/93/interp = 1
+tracks/93/loop_wrap = true
+tracks/93/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.91, 0.91)]
 }

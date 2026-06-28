@@ -94,6 +94,7 @@ func _shoot_bullet():
 	for i in range(markers_2d_bullet.size()):
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, detect_component.ray_area_direction[i])
+		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
 		#print(bullet_paras)
 		bullet.init_bullet(bullet_paras)
 		bullets.add_child(bullet)
@@ -110,6 +111,20 @@ func get_bullet_paras(marker_2d_bullet_glo_pos:Vector2, ray_direction:Vector2) -
 		Bullet000NormBase.E_InitParasAttr.CanAttackZombieState : can_attack_zombie_status,
 		Bullet000NormBase.E_InitParasAttr.AttackValue : attack_value_bullet,
 	}
+
+func _apply_owner_damage_multiplier_to_bullet_paras(bullet:Bullet000Base, bullet_paras:Dictionary):
+	if not owner is Plant000Base:
+		return
+	var owner_plant:Plant000Base = owner
+	var damage_multiplier := owner_plant.get_attack_damage_multiplier()
+	if is_equal_approx(damage_multiplier, 1.0):
+		return
+	if not bullet is Bullet000NormBase:
+		return
+	var base_attack_value:int = attack_value_bullet
+	if base_attack_value <= 0:
+		base_attack_value = (bullet as Bullet000NormBase).attack_value
+	bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = maxi(1, int(round(float(base_attack_value) * damage_multiplier)))
 
 
 func play_throw_sfx():
