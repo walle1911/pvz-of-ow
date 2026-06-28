@@ -119,20 +119,20 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-42, -63)
 
 [node name="SeaShroom_tentacles" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1663812435]
-position = Vector2(19.603552, 52.08622)
-scale = Vector2(0.63703126, 0.8126265)
+position = Vector2(19.953636, 52.136234)
+scale = Vector2(0.6260286, 0.8324935)
 texture = ExtResource("2_cq6r6")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1754824481]
-position = Vector2(24.38622, 33.241337)
-scale = Vector2(0.7179645, 0.72389776)
+position = Vector2(24.472467, 33.0913)
+scale = Vector2(0.714826, 0.7278987)
 texture = ExtResource("3_x4qhn")
 centered = false
 
 [node name="SeaShroom_blink" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=692999652]
 visible = false
-position = Vector2(41.447933, 36.16054)
+position = Vector2(41.422127, 36.070103)
 scale = Vector2(0.711841, 0.841227)
 texture = ExtResource("4_ai3ac")
 centered = false
@@ -145,14 +145,14 @@ texture = ExtResource("10_ai3ac")
 centered = false
 
 [node name="Anim_waterline" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1833760317]
-position = Vector2(28.872442, 51)
-scale = Vector2(0.7553778, 0.773)
+position = Vector2(28.936234, 51)
+scale = Vector2(0.75037664, 0.773)
 texture = ExtResource("5_y3aiw")
 centered = false
 
 [node name="SeaShroom_head" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1012114306]
-position = Vector2(21.472443, 20.441334)
-scale = Vector2(0.6828267, 0.7)
+position = Vector2(21.572468, 20.327532)
+scale = Vector2(0.6801883, 0.7)
 texture = ExtResource("6_t37yi")
 centered = false
 
@@ -163,15 +163,15 @@ scale = Vector2(0.95, 0.95)
 texture = ExtResource("9_ujl3q")
 
 [node name="SeahShroom_mouth" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1916470616]
-position = Vector2(51.613777, 41.541336)
-rotation = -0.036473274
-scale = Vector2(0.701, 0.7)
-skew = 0.036473274
+position = Vector2(51.6, 41.3913)
+rotation = -0.04345631
+scale = Vector2(0.7013623, 0.7)
+skew = 0.04345631
 texture = ExtResource("7_8cpqx")
 centered = false
 
 [node name="SeaShroom_lips" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=31280983]
-position = Vector2(56.313778, 39.341335)
+position = Vector2(56.263767, 39.1913)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("8_l3s8s")
 centered = false

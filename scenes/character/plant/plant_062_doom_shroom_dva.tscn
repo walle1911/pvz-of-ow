@@ -5,20 +5,63 @@
 [ext_resource type="Script" uid="uid://cm3ke4d3y0d4j" path="res://scripts/character/plant/plant_062_doom_shroom_dva.gd" id="2_tjrwq"]
 [ext_resource type="Texture2D" uid="uid://bpjmr3sk4my7i" path="res://assets/reanim/DoomShroom_head1.png" id="3_oiu6n"]
 [ext_resource type="Animation" uid="uid://ddwy4t6dlipi2" path="res://animation/character/plant/016_doom_shroom/DoomShroom_explode.tres" id="4_m56k1"]
+[ext_resource type="Texture2D" uid="uid://cwpi5oo583dgq" path="res://assets/reanim/DoomShroom_head2.png" id="4_soejn"]
 [ext_resource type="Animation" uid="uid://bdiplwnh2kbon" path="res://animation/character/plant/016_doom_shroom/DoomShroom_idle.tres" id="5_enwho"]
+[ext_resource type="Texture2D" uid="uid://b5yvt3d0m74sp" path="res://assets/reanim/DoomShroom_head3.png" id="5_f5eh2"]
 [ext_resource type="Texture2D" uid="uid://dmyml8fm0ewet" path="res://assets/reanim/DoomShroom_Dva_Earphone.png" id="5_oobft"]
 [ext_resource type="Animation" uid="uid://d36brwlaso680" path="res://animation/character/plant/016_doom_shroom/DoomShroom_sleep.tres" id="6_kpsvp"]
 [ext_resource type="Script" uid="uid://l0umdgng0y2m" path="res://scripts/character/components/bomb_component/component_bomb_norm.gd" id="7_enwho"]
 [ext_resource type="Texture2D" uid="uid://lr726nfj8o4l" path="res://assets/image/particles/bullet/DoomShroom_Explosion_Top.png" id="9_tjrwq"]
 [ext_resource type="Script" uid="uid://dnlyx25yj7ugo" path="res://scripts/fx/plant_effect/plant_effect_004_bomb_doom.gd" id="11_xh3xa"]
 [ext_resource type="Texture2D" uid="uid://t7mk75cdipj4" path="res://assets/image/particles/bullet/DoomShroom_Explosion_Stem.png" id="12_64sl4"]
+[ext_resource type="Texture2D" uid="uid://d2r6w5vphjyek" path="res://assets/reanim/DoomShroom_Dva_Warning.png" id="12_warn"]
 [ext_resource type="Texture2D" uid="uid://2j6bc4pg8v3j" path="res://assets/image/particles/bullet/DoomShroom_Explosion_Base.png" id="13_yiuho"]
+
+[sub_resource type="Animation" id="Animation_8xix1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodyCorrect/DoomShroom_head1/DoomShroom_Dva_Earphone:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.1, 1.1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Body/BodyCorrect/DoomShroom_head1/DoomShroom_Dva_Earphone:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.17278759]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Body/BodyCorrect/DoomShroom_head1/DoomShroom_Dva_Earphone:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(49.91, 20.32)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rjiww"]
 _data = {
 &"DoomShroom_explode": ExtResource("4_m56k1"),
 &"DoomShroom_idle": ExtResource("5_enwho"),
-&"DoomShroom_sleep": ExtResource("6_kpsvp")
+&"DoomShroom_sleep": ExtResource("6_kpsvp"),
+&"RESET": SubResource("Animation_8xix1")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_dc52l"]
@@ -66,7 +109,7 @@ graph_offset = Vector2(133, 12)
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_k2ghs"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_tjrwq"]
-graph_offset = Vector2(-62, -26)
+graph_offset = Vector2(-396.07996, 49.84004)
 nodes/output/position = Vector2(600, 120)
 nodes/StateMachine/node = SubResource("AnimationNodeStateMachine_fmcth")
 nodes/StateMachine/position = Vector2(40, 100)
@@ -1590,35 +1633,52 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-39, -72)
 
 [node name="DoomShroom_body" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=144157614]
-position = Vector2(18.139595, 37.58122)
-scale = Vector2(0.76221824, 0.8481777)
+position = Vector2(17.1, 40)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("2_55ivw")
 centered = false
 
-[node name="DoomShroom_head1" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1996289445]
-position = Vector2(1.3593911, -0.7979704)
-scale = Vector2(0.77361417, 0.8545736)
+[node name="DoomShroom_head2" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1117954294]
+visible = false
+position = Vector2(-8, -10.4)
+scale = Vector2(0.834, 0.895)
+texture = ExtResource("4_soejn")
+centered = false
+
+[node name="DoomShroom_head3" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1677511979]
+position = Vector2(-20.8, -25.1)
+scale = Vector2(0.978, 0.978)
+texture = ExtResource("5_f5eh2")
+centered = false
+
+[node name="DoomShroom_sleepinghead" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=598644526]
+visible = false
+centered = false
+
+[node name="DoomShroom_head1" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1996289445]
+self_modulate = Color(1, 1, 1, 0)
+position = Vector2(-5.5, -5.7)
+scale = Vector2(0.911, 0.955)
 texture = ExtResource("3_oiu6n")
 centered = false
 
 [node name="DoomShroom_Dva_Earphone" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_head1" index="0" unique_id=760297470]
-position = Vector2(50.44, 22.48)
+position = Vector2(49.91, 20.32)
+rotation = 0.17278759
+scale = Vector2(1.1, 1.1)
 texture = ExtResource("5_oobft")
 
-[node name="DoomShroom_head2" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1117954294]
-visible = false
-centered = false
-
-[node name="DoomShroom_head3" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1677511979]
-visible = false
-centered = false
-
-[node name="DoomShroom_sleepinghead" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=598644526]
-visible = false
-centered = false
+[node name="DoomShroom_Dva_Warning" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1348084295]
+self_modulate = Color(1, 1, 1, 0.5)
+position = Vector2(39.15, 30.78)
+scale = Vector2(0.8415556, 0.7016)
+texture = ExtResource("12_warn")
 
 [node name="BlinkComponent" parent="." index="5"]
 is_enable_default = false
+
+[node name="HurtBoxComponent" parent="." index="7"]
+visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=1219495401]
 libraries/ = SubResource("AnimationLibrary_rjiww")
@@ -1644,6 +1704,7 @@ input_pickable = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BombComponent/Area2DBomb" index="0" unique_id=307529381]
+visible = false
 position = Vector2(0, -25)
 shape = SubResource("RectangleShape2D_64sl4")
 

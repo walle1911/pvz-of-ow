@@ -337,7 +337,7 @@ libraries/ = SubResource("AnimationLibrary_7vcvm")
 [node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1064648451]
 tree_root = SubResource("AnimationNodeBlendTree_unqju")
 advance_expression_base_node = NodePath("..")
-anim_player = NodePath("../AnimationPlayer")
+anim_player = NodePath("../Plant056GatlingPeaBastion")
 parameters/Add2/add_amount = 1.0
 parameters/OneShot/active = false
 parameters/OneShot/internal_active = false

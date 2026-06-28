@@ -220,7 +220,7 @@ libraries/ = SubResource("AnimationLibrary_o3ogr")
 [node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1200797738]
 tree_root = SubResource("AnimationNodeBlendTree_3h8kf")
 advance_expression_base_node = NodePath("..")
-anim_player = NodePath("../AnimationPlayer")
+anim_player = NodePath("../Plant060MelonPultAshe")
 parameters/OneShot/active = false
 parameters/OneShot/internal_active = false
 parameters/OneShot/request = 0

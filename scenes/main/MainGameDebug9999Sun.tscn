@@ -4,9 +4,7 @@
 [ext_resource type="Resource" uid="uid://evdpsat2avsr" path="res://resources/level_date_resource/mode_adventure/adventure_debug_9999_sun.tres" id="2_level"]
 
 [node name="MainGameDebug9999Sun" unique_id=1737605305 instance=ExtResource("1_front")]
-test_pre_choosed_card_list_plant = Array[int]([50, 51, 52, 53, 54, 55, 56, 57, 67])
-test_pre_choosed_card_list_zombie = Array[int]([1, 3, 5, 8, 26, 27, 28])
-test_max_choosed_card_num = 15
+
 game_para = ExtResource("2_level")
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]

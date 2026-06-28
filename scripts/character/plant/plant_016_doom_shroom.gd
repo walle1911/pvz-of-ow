@@ -5,7 +5,8 @@ class_name Plant016DoomShroom
 
 func ready_norm_signal_connect():
 	super()
-	bomb_component.signal_bomb_once.connect(plant_cell.create_crater)
+	if is_instance_valid(plant_cell):
+		bomb_component.signal_bomb_once.connect(plant_cell.create_crater)
 
 
 ## 亡语

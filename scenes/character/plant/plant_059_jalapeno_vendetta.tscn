@@ -226,7 +226,6 @@ is_enable_default = false
 libraries/ = SubResource("AnimationLibrary_3dqyt")
 
 [node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=2090568823]
-active = false
 deterministic = false
 tree_root = SubResource("AnimationNodeBlendTree_g5a41")
 advance_expression_base_node = NodePath("..")

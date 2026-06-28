@@ -10,27 +10,35 @@ class_name Plant052SunflowerMercy
 @export var source_anchor_path:NodePath = ^"Body/BodyCorrect/Stalk_bottom"
 @export var source_anchor_offset := Vector2(2, 4)
 @export var target_anchor_offset := Vector2(2, 4)
-@export var rope_segment_count := 24
-@export var rope_sag_amount := 6.0
-@export var rope_swing_amount := 3.0
-@export var rope_swing_speed := 1.8
-@export var rope_core_width := 4.5
-@export var rope_glow_width := 10.0
-@export var rope_outer_glow_width := 15.0
-@export var rope_core_color := Color(0.68, 0.9, 1.0, 0.8)
-@export var rope_glow_color := Color(0.48, 0.38, 1.0, 0.58)
-@export var rope_outer_glow_color := Color(0.18, 0.72, 1.0, 0.24)
-@export var rope_spark_count := 6
-@export var rope_spark_flow_speed := 0.07
-@export var rope_spark_color := Color(0.62, 0.8, 1.0, 0.38)
-@export var rope_spark_scale_min := 0.22
-@export var rope_spark_scale_max := 0.42
-@export var mouth_glow_inner_scale := 2.2
-@export var mouth_glow_outer_scale := 5.8
-@export var mouth_glow_inner_color := Color(0.25, 0.75, 1.0, 0.9)
-@export var mouth_glow_outer_color := Color(0.15, 0.45, 1.0, 0.48)
-@export var mouth_glow_pulse_amount := 0.12
-@export var mouth_glow_pulse_speed := 2.5
+@export var rope_segment_count := 32
+@export var rope_sag_amount := 4.5
+@export var rope_swing_amount := 2.0
+@export var rope_swing_speed := 1.2
+@export var rope_secondary_swing_amount := 0.7
+@export var rope_secondary_swing_speed := 3.8
+@export var rope_wind_drift_speed := 0.25
+@export var rope_core_width := 2.2
+@export var rope_glow_width := 9.0
+@export var rope_outer_glow_width := 18.0
+@export var rope_core_color := Color(0.58, 0.88, 1.0, 0.9)
+@export var rope_glow_color := Color(0.07, 0.48, 1.0, 0.62)
+@export var rope_outer_glow_color := Color(0.03, 0.22, 1.0, 0.3)
+## 螺旋深蓝线
+@export var rope_spiral_width := 2.8
+@export var rope_spiral_color := Color(0.02, 0.12, 0.5, 0.82)
+@export var rope_spiral_frequency := 5.5
+@export var rope_spiral_amplitude := 5.0
+@export var rope_spark_count := 12
+@export var rope_spark_flow_speed := 0.09
+@export var rope_spark_color := Color(0.45, 0.8, 1.0, 0.65)
+@export var rope_spark_scale_min := 0.12
+@export var rope_spark_scale_max := 0.35
+@export var mouth_glow_inner_scale := 2.4
+@export var mouth_glow_outer_scale := 6.5
+@export var mouth_glow_inner_color := Color(0.15, 0.65, 1.0, 0.9)
+@export var mouth_glow_outer_color := Color(0.08, 0.35, 1.0, 0.48)
+@export var mouth_glow_pulse_amount := 0.15
+@export var mouth_glow_pulse_speed := 2.8
 @export var damage_boost_target_plant_types:Array[CharacterRegistry.PlantType] = [
 	CharacterRegistry.PlantType.P001PeaShooterSingle,
 	CharacterRegistry.PlantType.P006SnowPea,
@@ -51,6 +59,7 @@ var rope_time := 0.0
 var damage_boost_line_root:Node2D
 var damage_boost_outer_glow_line:Line2D
 var damage_boost_glow_line:Line2D
+var damage_boost_spiral_line:Line2D
 var damage_boost_core_line:Line2D
 var source_anchor_node:Node2D
 var target_anchor_node:Node2D
@@ -123,6 +132,7 @@ func _create_damage_boost_line():
 
 	damage_boost_outer_glow_line = _create_one_damage_boost_line("OuterGlowLine", rope_outer_glow_width, rope_outer_glow_color)
 	damage_boost_glow_line = _create_one_damage_boost_line("GlowLine", rope_glow_width, rope_glow_color)
+	damage_boost_spiral_line = _create_one_damage_boost_line("SpiralLine", rope_spiral_width, rope_spiral_color)
 	damage_boost_core_line = _create_one_damage_boost_line("CoreLine", rope_core_width, rope_core_color)
 	_create_damage_boost_rope_sparks()
 
@@ -136,7 +146,7 @@ func _create_one_damage_boost_line(line_name:StringName, line_width:float, line_
 	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 	line.end_cap_mode = Line2D.LINE_CAP_ROUND
 	line.joint_mode = Line2D.LINE_JOINT_ROUND
-	if line_name != &"CoreLine":
+	if line_name != &"CoreLine" and line_name != &"SpiralLine":
 		line.material = _create_glow_line_material(line_color)
 	damage_boost_line_root.add_child(line)
 	return line
@@ -148,12 +158,16 @@ func _create_glow_line_material(glow_color:Color) -> ShaderMaterial:
 shader_type canvas_item;
 render_mode blend_add;
 
-uniform vec4 glow_color : source_color = vec4(0.15, 0.75, 1.0, 0.42);
+uniform vec4 glow_color : source_color = vec4(0.05, 0.45, 1.0, 0.55);
 
 void fragment() {
+	// 中心亮、边缘柔和的 Mercy 式光束渐变
 	float edge_distance = abs(UV.y - 0.5) * 2.0;
-	float edge_alpha = 1.0 - smoothstep(0.35, 1.0, edge_distance);
-	COLOR = vec4(glow_color.rgb, glow_color.a * edge_alpha);
+	float core_glow = exp(-edge_distance * 2.2);
+	float mid_glow = exp(-edge_distance * 1.1);
+	float soft_glow = 1.0 - smoothstep(0.0, 1.0, edge_distance);
+	float alpha = core_glow * 0.45 + mid_glow * 0.35 + soft_glow * 0.2;
+	COLOR = vec4(glow_color.rgb, glow_color.a * alpha);
 }
 """
 	var material := ShaderMaterial.new()
@@ -222,6 +236,7 @@ func _update_damage_boost_line():
 
 	_update_line_points(damage_boost_outer_glow_line, points)
 	_update_line_points(damage_boost_glow_line, points)
+	_update_line_points(damage_boost_spiral_line, _get_spiral_points(points))
 	_update_line_points(damage_boost_core_line, points)
 	_update_damage_boost_rope_sparks(points)
 	_set_damage_boost_line_visible(true)
@@ -235,20 +250,66 @@ func _get_rope_points(start_pos:Vector2, end_pos:Vector2) -> PackedVector2Array:
 	var normal := Vector2(-dir.y, dir.x).normalized()
 	var points := PackedVector2Array()
 	var segment_count:int = maxi(1, rope_segment_count)
-	var rotation_angle := rope_time * rope_swing_speed
+	var phase_primary := rope_time * rope_swing_speed
+	var phase_secondary := rope_time * rope_secondary_swing_speed
+	var wind_drift:float = sin(rope_time * rope_wind_drift_speed) * 1.5
 
 	for i in range(segment_count + 1):
 		var t := float(i) / float(segment_count)
 		var point := start_pos.lerp(end_pos, t)
 		var fixed_end_falloff := sin(PI * t)
-		var sag := fixed_end_falloff * rope_sag_amount * sin(rotation_angle)
-		var swing := fixed_end_falloff * rope_swing_amount * cos(rotation_angle)
+		# 主摆动 + 次级微颤 + 缓慢风偏 → 更自然的绳索物理
+		var sag := fixed_end_falloff * (
+			rope_sag_amount * sin(phase_primary) +
+			rope_secondary_swing_amount * 1.6 * sin(phase_secondary) +
+			wind_drift
+		)
+		var swing := fixed_end_falloff * (
+			rope_swing_amount * cos(phase_primary) +
+			rope_secondary_swing_amount * cos(phase_secondary * 1.3)
+		)
 
 		point.y += sag
 		point += normal * swing
 		points.append(point)
 
 	return points
+
+
+## 在基础绳线上叠加高频垂直振荡，模拟螺旋/缠绕的深蓝内线
+func _get_spiral_points(base_points:PackedVector2Array) -> PackedVector2Array:
+	if base_points.size() < 2:
+		return base_points
+
+	var spiral_points := PackedVector2Array()
+	var spiral_phase := rope_time * 3.0
+
+	for i in range(base_points.size()):
+		var t:float = float(i) / float(base_points.size() - 1)
+		var point := base_points[i]
+
+		# 计算该点处绳线的切线方向
+		var tangent:Vector2
+		if i == 0:
+			tangent = base_points[1] - base_points[0]
+		elif i == base_points.size() - 1:
+			tangent = base_points[i] - base_points[i - 1]
+		else:
+			tangent = base_points[i + 1] - base_points[i - 1]
+
+		if tangent.length() < 0.01:
+			spiral_points.append(point)
+			continue
+
+		var perpendicular := Vector2(-tangent.y, tangent.x).normalized()
+		# 高频正弦沿绳长方向变化 + 时间旋转 → 螺旋缠绕效果
+		var spiral_offset:float = sin(t * PI * 2.0 * rope_spiral_frequency + spiral_phase) * rope_spiral_amplitude
+		# 两端衰减，螺旋在中间最明显
+		var end_falloff:float = sin(PI * t)
+		point += perpendicular * spiral_offset * end_falloff
+		spiral_points.append(point)
+
+	return spiral_points
 
 
 func _update_line_points(line:Line2D, points:PackedVector2Array):
@@ -341,6 +402,7 @@ func _get_mouth_glow_texture() -> Texture2D:
 	if is_instance_valid(mouth_glow_texture):
 		return mouth_glow_texture
 
+	# 守望先锋天使蓝线风格的枪口光晕 — 亮蓝白中心渐变
 	var image_size := 64
 	var image := Image.create(image_size, image_size, false, Image.FORMAT_RGBA8)
 	var center := Vector2(float(image_size - 1) * 0.5, float(image_size - 1) * 0.5)
@@ -350,10 +412,10 @@ func _get_mouth_glow_texture() -> Texture2D:
 		for y in range(image_size):
 			var distance := Vector2(float(x), float(y)).distance_to(center)
 			var t:float = clamp(1.0 - distance / radius, 0.0, 1.0)
-			# 中心亮蓝 → 边缘透明的蓝色渐变
-			var r:float = lerpf(0.2, 0.0, 1.0 - t)
-			var g:float = lerpf(0.65, 0.0, 1.0 - t)
-			var b:float = lerpf(1.0, 0.05, 1.0 - t)
+			# 中心亮蓝白 → 边缘透明蓝 (Mercy 蓝线风格)
+			var r:float = lerpf(0.35, 0.02, 1.0 - t)
+			var g:float = lerpf(0.75, 0.08, 1.0 - t)
+			var b:float = lerpf(1.0, 0.15, 1.0 - t)
 			var alpha:float = t * t * t
 			image.set_pixel(x, y, Color(r, g, b, alpha))
 
@@ -394,6 +456,8 @@ func _update_damage_boost_rope_sparks(points:PackedVector2Array):
 		var spark_scale:float = lerpf(rope_spark_scale_min, rope_spark_scale_max, scale_wave)
 
 		spark.position = _sample_rope_points(points, drift)
+		# 粒子旋转跟随光束方向 (Mercy 蓝线风格 — 菱形沿光束方向)
+		spark.rotation = _sample_rope_direction_angle(points, drift)
 		spark.scale = Vector2.ONE * spark_scale
 		spark.self_modulate = Color(rope_spark_color.r, rope_spark_color.g, rope_spark_color.b, rope_spark_color.a * alpha_wave)
 		spark.visible = true
@@ -413,6 +477,17 @@ func _sample_rope_points(points:PackedVector2Array, t:float) -> Vector2:
 	return points[index].lerp(points[index + 1], local_t)
 
 
+## 采样光束方向角度，用于菱形粒子沿光线方向旋转
+func _sample_rope_direction_angle(points:PackedVector2Array, t:float) -> float:
+	if points.size() < 2:
+		return 0.0
+	var segment_count:int = maxi(1, points.size() - 1)
+	var scaled_t:float = clamp(t, 0.0, 1.0) * float(segment_count)
+	var index:int = mini(int(floor(scaled_t)), segment_count - 1)
+	var dir := points[index + 1] - points[index]
+	return dir.angle()
+
+
 func _create_mouth_particle_canvas_material() -> CanvasItemMaterial:
 	var material := CanvasItemMaterial.new()
 	material.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -423,17 +498,24 @@ func _get_mouth_particle_texture() -> Texture2D:
 	if is_instance_valid(mouth_particle_texture):
 		return mouth_particle_texture
 
-	var image_size := 8
+	# 守望先锋天使蓝线风格的菱形粒子
+	var image_size := 16
 	var image := Image.create(image_size, image_size, false, Image.FORMAT_RGBA8)
 	var center := Vector2(float(image_size - 1) * 0.5, float(image_size - 1) * 0.5)
-	var radius := float(image_size) * 0.5
+	var radius := float(image_size) * 0.45
 
 	for x in range(image_size):
 		for y in range(image_size):
-			var distance := Vector2(float(x), float(y)).distance_to(center)
-			var alpha:float = clamp(1.0 - distance / radius, 0.0, 1.0)
-			alpha *= alpha
-			image.set_pixel(x, y, Color(0.45, 0.82, 1.0, alpha))
+			# 曼哈顿距离产生菱形 (Mercy 蓝线粒子形状)
+			var manhattan:float = abs(float(x) - center.x) + abs(float(y) - center.y)
+			var t:float = clamp(1.0 - manhattan / radius, 0.0, 1.0)
+			# 中心亮蓝白 → 边缘透明
+			var alpha:float = t * t
+			# 明亮的蓝白渐变色
+			var r:float = lerpf(0.6, 0.0, 1.0 - t)
+			var g:float = lerpf(0.85, 0.1, 1.0 - t)
+			var b:float = lerpf(1.0, 0.15, 1.0 - t)
+			image.set_pixel(x, y, Color(r, g, b, alpha))
 
 	mouth_particle_texture = ImageTexture.create_from_image(image)
 	return mouth_particle_texture
