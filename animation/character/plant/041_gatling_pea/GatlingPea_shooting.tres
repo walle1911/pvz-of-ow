@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=9 format=3 uid="uid://bcryy17cyc5ki"]
+[gd_resource type="Animation" format=3 uid="uid://bcryy17cyc5ki"]
 
 [ext_resource type="Texture2D" uid="uid://lyw24xd1xo6b" path="res://assets/reanim/GatlingPea_head.png" id="8_fuck"]
 [ext_resource type="Texture2D" uid="uid://d4al6wc7hk8at" path="res://assets/reanim/GatlingPea_mouth.png" id="9_fuck"]
@@ -887,7 +887,7 @@ tracks/72/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5, 1.58333, 1.66667, 1.75, 1.83333, 1.91667, 2, 2.08333, 2.16667, 2.25, 2.33333, 2.41667, 2.5, 2.58333, 2.66667, 2.75, 2.83333, 2.91667, 3, 3.08333, 3.16667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.066323, 0.069813, 0.073304, 0.075049, 0.07854, 0.08203, 0.083776, 0.07854, 0.071558, 0.066323, 0.059341, 0.055851, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.061087, 0.061087, 0.062832, 0.064577, 0.066323]
+"values": [0.06632299999999999, 0.069813, 0.073304, 0.075049, 0.07854, 0.08203, 0.083776, 0.07854, 0.071558, 0.06632299999999999, 0.059341, 0.055851, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.055851, 0.05236, 0.050615, 0.05236, 0.055851, 0.059341, 0.061087, 0.061087, 0.062832, 0.064577, 0.06632299999999999]
 }
 tracks/73/type = "value"
 tracks/73/imported = false
@@ -959,4 +959,40 @@ tracks/77/keys = {
 "args": [],
 "method": &"_shoot_bullet"
 }]
+}
+tracks/78/type = "value"
+tracks/78/imported = false
+tracks/78/enabled = true
+tracks/78/path = NodePath("Body/BodyCorrect/Anim_idle/HeadCorrect/GatlingPea_Bastion_helmet:position")
+tracks/78/interp = 1
+tracks/78/loop_wrap = true
+tracks/78/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(32.004898, 20.801298), Vector2(32.5049, 17.801298), Vector2(32.004906, 15.801301), Vector2(31.504902, 19.8013), Vector2(31.504953, 23.991), Vector2(32.004906, 21.396149), Vector2(32.504898, 24.396147), Vector2(32.504898, 21.301298), Vector2(32.504898, 23.801298), Vector2(32.504898, 21.3013), Vector2(32.504898, 23.8013), Vector2(32.504898, 20.801304)]
+}
+tracks/79/type = "value"
+tracks/79/imported = false
+tracks/79/enabled = true
+tracks/79/path = NodePath("Body/BodyCorrect/Anim_idle/HeadCorrect/GatlingPea_Bastion_helmet:rotation")
+tracks/79/interp = 1
+tracks/79/loop_wrap = true
+tracks/79/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/80/type = "value"
+tracks/80/imported = false
+tracks/80/enabled = true
+tracks/80/path = NodePath("Body/BodyCorrect/Anim_idle/HeadCorrect/GatlingPea_Bastion_helmet:scale")
+tracks/80/interp = 1
+tracks/80/loop_wrap = true
+tracks/80/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0.3935484, 0.39370075), Vector2(0.38709673, 0.4251969), Vector2(0.36774194, 0.45669287), Vector2(0.3870968, 0.39370078), Vector2(0.41290385, 0.34645665), Vector2(0.41935486, 0.38732043), Vector2(0.4258065, 0.34007636), Vector2(0.4258065, 0.37007874), Vector2(0.4258065, 0.33070868), Vector2(0.4258065, 0.37007874), Vector2(0.4258065, 0.33070868)]
 }

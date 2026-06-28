@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=18 format=3 uid="uid://b2a3f5y4dudyi"]
+[gd_resource type="Animation" format=3 uid="uid://b2a3f5y4dudyi"]
 
 [ext_resource type="Texture2D" uid="uid://dvuugtbourjhs" path="res://assets/reanim/CherryBomb_leftstem.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://bmpuc6vb6mfpk" path="res://assets/reanim/CherryBomb_left1.png" id="1_fuck"]
@@ -309,7 +309,7 @@ tracks/23/keys = {
 "times": PackedFloat32Array(0, 0.033333, 0.066667, 0.1, 0.133333, 0.166667, 0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.366667, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.013963, 0.031416, 0.048869, 0.066323, 0.057596, 0.048869, 0.040143, 0.031416, 0.022689, 0.013963, 0.005236, 0.0]
+"values": [0.0, 0.013963, 0.031416, 0.048869, 0.06632299999999999, 0.057596, 0.048869, 0.040143, 0.031416, 0.022689, 0.013963, 0.005236, 0.0]
 }
 tracks/24/type = "value"
 tracks/24/imported = false
@@ -1485,7 +1485,7 @@ tracks/121/keys = {
 "times": PackedFloat32Array(0, 0.033333, 0.066667, 0.1, 0.133333, 0.166667, 0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.366667, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.118682, 0.237365, 0.191986, 0.150098, 0.109956, 0.066323, 0.0, -0.061087, -0.041888, -0.029671, -0.012217, 0.0]
+"values": [0.0, 0.118682, 0.237365, 0.191986, 0.150098, 0.109956, 0.06632299999999999, 0.0, -0.061087, -0.041888, -0.029671, -0.012217, 0.0]
 }
 tracks/122/type = "value"
 tracks/122/imported = false
@@ -1618,4 +1618,76 @@ tracks/132/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+tracks/133/type = "value"
+tracks/133/imported = false
+tracks/133/enabled = true
+tracks/133/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:position")
+tracks/133/interp = 1
+tracks/133/loop_wrap = true
+tracks/133/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(26.210327, 32.5069), Vector2(26, 30.000002)]
+}
+tracks/134/type = "value"
+tracks/134/imported = false
+tracks/134/enabled = true
+tracks/134/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:rotation")
+tracks/134/interp = 1
+tracks/134/loop_wrap = true
+tracks/134/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.13264503, 0.13264503]
+}
+tracks/135/type = "value"
+tracks/135/imported = false
+tracks/135/enabled = true
+tracks/135/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:scale")
+tracks/135/interp = 1
+tracks/135/loop_wrap = true
+tracks/135/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.4270148, 0.48924983), Vector2(0.4759326, 0.5259919)]
+}
+tracks/136/type = "value"
+tracks/136/imported = false
+tracks/136/enabled = true
+tracks/136/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:position")
+tracks/136/interp = 1
+tracks/136/loop_wrap = true
+tracks/136/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(64.5, 47), Vector2(67.5, 47.5)]
+}
+tracks/137/type = "value"
+tracks/137/imported = false
+tracks/137/enabled = true
+tracks/137/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:rotation")
+tracks/137/interp = 1
+tracks/137/loop_wrap = true
+tracks/137/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
+}
+tracks/138/type = "value"
+tracks/138/imported = false
+tracks/138/enabled = true
+tracks/138/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:scale")
+tracks/138/interp = 1
+tracks/138/loop_wrap = true
+tracks/138/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.33944952, 0.34328356), Vector2(0.41284406, 0.36567163)]
 }

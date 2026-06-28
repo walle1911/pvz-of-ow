@@ -30,6 +30,9 @@ func _ready() -> void:
 		for i in range(plant_cards_parent_node.get_children().size()):
 			var card:Card = plant_cards_parent_node.get_children()[i]
 			if card.card_plant_type != 0:
+				if not Global.character_registry.PlantInfo.has(card.card_plant_type):
+					push_warning("缺少植物卡牌注册信息: %s" % card.card_plant_type)
+					continue
 				plant_i += 1
 				var card_para:Dictionary[Card.E_CInitAttr, Variant] = {
 					Card.E_CInitAttr.CardId:plant_i,

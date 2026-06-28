@@ -90,6 +90,9 @@ enum PlantType {
 	P064SeaShroomWuyang = 64,
 	P065FumeShroomRoadhog = 65,
 	P066MagnetShroomSombra = 66,
+	P067CoffeeBeanAna = 67,
+	P068ScaredyShroomWidowmaker = 68,
+	P069HypnoShroomJuno = 69,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -665,6 +668,27 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_066_magnet_shroom_sombra.tscn")
+		},
+	PlantType.P067CoffeeBeanAna: {
+		PlantInfoAttribute.PlantName: "CoffeeBean_Ana",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 75,
+		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/036_coffee_bean.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_067_coffee_bean_ana.tscn")
+		},
+	PlantType.P068ScaredyShroomWidowmaker: {
+		PlantInfoAttribute.PlantName: "ScaredyShroom_Widowmaker",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 25,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_068_scaredy_shroom_widowmaker.tscn")
+		},
+	PlantType.P069HypnoShroomJuno: {
+		PlantInfoAttribute.PlantName: "HypnoShroom_Juno",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 75,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_069_hypno_shroom_juno.tscn")
 		},
 	## 模仿者
 	PlantType.P999Imitater:{

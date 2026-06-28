@@ -1,16 +1,56 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene format=3 uid="uid://b27h5gwnseapx"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_2veis"]
-[ext_resource type="Script" path="res://scripts/character/plant/plant_054_squash_doomfist.gd" id="2_rin1p"]
+[ext_resource type="Script" uid="uid://b60b5obdhl5to" path="res://scripts/character/plant/plant_054_squash_doomfist.gd" id="2_rin1p"]
 [ext_resource type="Texture2D" uid="uid://db3ehuxapn0l1" path="res://assets/reanim/Squash_stem.png" id="2_tfn24"]
 [ext_resource type="Texture2D" uid="uid://irbh4snyltu1" path="res://assets/reanim/Squash_body.png" id="3_kh2ri"]
 [ext_resource type="Texture2D" uid="uid://bgijsa0y0ayos" path="res://assets/reanim/Squash_eyes.png" id="4_rin1p"]
 [ext_resource type="Texture2D" uid="uid://kewigqip7qgf" path="res://assets/reanim/Squash_eyebrows.png" id="5_xoecu"]
 [ext_resource type="Animation" uid="uid://v23h6rycvrwm" path="res://animation/character/plant/018_squash/Squash_jumpdown.tres" id="6_3pxe2"]
+[ext_resource type="Texture2D" uid="uid://dmuc5wyi3p4jr" path="res://assets/reanim/Squash_Doomfist.png" id="7_c5dkp"]
 [ext_resource type="Animation" uid="uid://qq4s7m264mj1" path="res://animation/character/plant/018_squash/Squash_jumpup.tres" id="7_taict"]
 [ext_resource type="Animation" uid="uid://ph5epkvaxlw8" path="res://animation/character/plant/018_squash/Squash_lookleft.tres" id="8_22da3"]
 [ext_resource type="Animation" uid="uid://bkw8ev4lim0mg" path="res://animation/character/plant/018_squash/Squash_lookright.tres" id="9_0e73g"]
-[ext_resource type="Script" path="res://scripts/character/components/detect_component/component_detect_squash.gd" id="11_kh2ri"]
+[ext_resource type="Script" uid="uid://cpqg0k1xevhi5" path="res://scripts/character/components/detect_component/component_detect_squash.gd" id="11_kh2ri"]
+
+[sub_resource type="Animation" id="Animation_wkug1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodyCorrect/Squash_Doomfist:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(44, 37.499996)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Body/BodyCorrect/Squash_Doomfist:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Body/BodyCorrect/Squash_Doomfist:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5765766, 0.70810807)]
+}
 
 [sub_resource type="Animation" id="Animation_cpkc7"]
 resource_name = "Squash_idle"
@@ -365,9 +405,46 @@ tracks/28/keys = {
 "update": 0,
 "values": [-75.0]
 }
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Body/BodyCorrect/Squash_Doomfist:position")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(44, 39.499996), Vector2(44, 37.499996), Vector2(44, 45.999996)]
+}
+tracks/30/type = "value"
+tracks/30/imported = false
+tracks/30/enabled = true
+tracks/30/path = NodePath("Body/BodyCorrect/Squash_Doomfist:rotation")
+tracks/30/interp = 1
+tracks/30/loop_wrap = true
+tracks/30/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0]
+}
+tracks/31/type = "value"
+tracks/31/imported = false
+tracks/31/enabled = true
+tracks/31/path = NodePath("Body/BodyCorrect/Squash_Doomfist:scale")
+tracks/31/interp = 1
+tracks/31/loop_wrap = true
+tracks/31/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0.5765766, 0.6864865), Vector2(0.5765766, 0.70810807), Vector2(0.5765766, 0.6162162)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0mrk0"]
 _data = {
+&"RESET": SubResource("Animation_wkug1"),
 &"Squash_idle": SubResource("Animation_cpkc7"),
 &"Squash_jumpdown": ExtResource("6_3pxe2"),
 &"Squash_jumpup": ExtResource("7_taict"),
@@ -443,7 +520,7 @@ size = Vector2(200, 5)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kh2ri"]
 size = Vector2(80, 5)
 
-[node name="Plant018Squash" node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_2veis")]
+[node name="Plant018Squash" unique_id=398787074 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_2veis")]
 script = ExtResource("2_rin1p")
 can_attack_plant_status = 5
 can_attack_zombie_status = 5
@@ -455,74 +532,78 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-41, -75)
 
-[node name="Squash_stem" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
-position = Vector2(33.688717, 0.15744126)
-rotation = -0.065347016
+[node name="Squash_stem" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=2075418476]
+position = Vector2(33.4, -1.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("2_tfn24")
 centered = false
 
-[node name="Squash_body" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
-position = Vector2(6.3651266, 6.7282095)
-scale = Vector2(0.80993336, 0.7831897)
+[node name="Squash_body" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=847032330]
+position = Vector2(6.6, 5.2)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_kh2ri")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(33.54718, 31.316927)
-scale = Vector2(0.7878205, 0.7675384)
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1497993972]
+position = Vector2(35.1, 30)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("4_rin1p")
 centered = false
 
-[node name="Anim_eye" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
-position = Vector2(25.847178, 20.546158)
-scale = Vector2(0.7878205, 0.7675384)
+[node name="Anim_eye" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=2117857152]
+position = Vector2(25.3, 23.2)
+rotation = -0.284489
+scale = Vector2(0.834, 0.8)
+skew = 0.284489
 texture = ExtResource("5_xoecu")
 centered = false
 
-[node name="Plant054SquashDoomfist" type="Timer" parent="." index="5"]
+[node name="Squash_Doomfist" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1881243594]
+position = Vector2(44, 37.499996)
+scale = Vector2(0.5765766, 0.70810807)
+texture = ExtResource("7_c5dkp")
+
+[node name="Plant054SquashDoomfist" type="Timer" parent="." index="5" unique_id=185580134]
 one_shot = true
 
 [node name="BlinkComponent" parent="." index="6"]
 is_enable_default = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="9"]
-libraries = {
-&"": SubResource("AnimationLibrary_0mrk0")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="9" unique_id=98347862]
+libraries/ = SubResource("AnimationLibrary_0mrk0")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="10"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="10" unique_id=1542896967]
+active = false
 deterministic = false
 tree_root = SubResource("AnimationNodeBlendTree_gvb6j")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.5
 
-[node name="DetectComponent" type="Node2D" parent="." index="11"]
+[node name="DetectComponent" type="Node2D" parent="." index="11" unique_id=69607192]
 script = ExtResource("11_kh2ri")
 is_detect_attack = true
 can_attack_plant_status = 13
 can_attack_zombie_status = 5
 
-[node name="Area2D" type="Area2D" parent="DetectComponent" index="0"]
+[node name="Area2D" type="Area2D" parent="DetectComponent" index="0" unique_id=6909626]
 position = Vector2(0, -25)
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/Area2D" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/Area2D" index="0" unique_id=1800566745]
 shape = SubResource("RectangleShape2D_xoecu")
 
-[node name="Area2DSquashAttack" type="Area2D" parent="." index="12"]
+[node name="Area2DSquashAttack" type="Area2D" parent="." index="12" unique_id=1919623263]
 position = Vector2(0, -25)
 collision_layer = 0
 collision_mask = 4
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DSquashAttack" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DSquashAttack" index="0" unique_id=74866348]
 shape = SubResource("RectangleShape2D_kh2ri")
 
-[node name="IceFreezeTimer" type="Timer" parent="." index="13"]
+[node name="IceFreezeTimer" type="Timer" parent="." index="13" unique_id=1991336977]
 one_shot = true
 
-[connection signal="timeout" from="IceDecelerateTimer" to="." method="_on_ice_decelerate_timer_timeout"]
 [connection signal="timeout" from="IceFreezeTimer" to="." method="_on_ice_freeze_timer_timeout"]

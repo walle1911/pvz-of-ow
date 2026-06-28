@@ -1,8 +1,8 @@
-[gd_scene load_steps=59 format=3]
+[gd_scene format=3 uid="uid://cgy86wu07wtx1"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_mdj76"]
 [ext_resource type="Texture2D" uid="uid://dvuugtbourjhs" path="res://assets/reanim/CherryBomb_leftstem.png" id="2_1003c"]
-[ext_resource type="Script" path="res://scripts/character/plant/plant_053_cherry_bomb_junkrat.gd" id="2_dniyj"]
+[ext_resource type="Script" uid="uid://cxl124kqd1lme" path="res://scripts/character/plant/plant_053_cherry_bomb_junkrat.gd" id="2_dniyj"]
 [ext_resource type="Texture2D" uid="uid://bmpuc6vb6mfpk" path="res://assets/reanim/CherryBomb_left1.png" id="3_mg664"]
 [ext_resource type="Texture2D" uid="uid://c3mfcmrjen4il" path="res://assets/reanim/CherryBomb_left3.png" id="4_xvxsx"]
 [ext_resource type="Texture2D" uid="uid://dlayj8ftlothc" path="res://assets/reanim/CherryBomb_lefteye11.png" id="5_fwwkt"]
@@ -20,17 +20,95 @@
 [ext_resource type="Texture2D" uid="uid://be4ah7odddsjx" path="res://assets/reanim/CherryBomb_leaf1.png" id="17_gsjgd"]
 [ext_resource type="Texture2D" uid="uid://fh1tkc18o3qe" path="res://assets/reanim/CherryBomb_leaf1tip.png" id="18_lg8p0"]
 [ext_resource type="Animation" uid="uid://eg5i0srekcuo" path="res://animation/character/plant/003_cherry_bomb/CherryBomb_explode.tres" id="19_6bpf6"]
-[ext_resource type="Script" path="res://scripts/character/components/bomb_component/component_bomb_norm.gd" id="20_dniyj"]
+[ext_resource type="Script" uid="uid://l0umdgng0y2m" path="res://scripts/character/components/bomb_component/component_bomb_norm.gd" id="20_dniyj"]
 [ext_resource type="Animation" uid="uid://b2a3f5y4dudyi" path="res://animation/character/plant/003_cherry_bomb/CherryBomb_idle.tres" id="20_g6ibo"]
-[ext_resource type="Script" path="res://scripts/fx/plant_effect/plant_effect_001_bomb_cherry.gd" id="22_7axkc"]
+[ext_resource type="Texture2D" uid="uid://jtm5n0epmu1q" path="res://assets/reanim/CherryBomb_JunkratL.png" id="20_hqw77"]
+[ext_resource type="Texture2D" uid="uid://cthavi528e8lr" path="res://assets/reanim/CherryBomb_JunkratR.png.png" id="21_7asdk"]
+[ext_resource type="Script" uid="uid://uv71i8wk2job" path="res://scripts/fx/plant_effect/plant_effect_001_bomb_cherry.gd" id="22_7axkc"]
 [ext_resource type="Texture2D" uid="uid://ysajcyiwrdnk" path="res://assets/image/particles/ExplosionPowie.png" id="24_2gy5r"]
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="24_ql0xv"]
 [ext_resource type="Shader" uid="uid://cikju0ectkkms" path="res://shaders/Mypartical.gdshader" id="25_qq8mq"]
 
+[sub_resource type="Animation" id="Animation_hqw77"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(22.361895, 25.03626)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.13264503]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratL:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5565342, 0.5351294)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(67, 46)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Body/BodyCorrect/CherryBomb_JunkratR:scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.5110378, 0.45079297)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_q5e28"]
 _data = {
 &"CherryBomb_explode": ExtResource("19_6bpf6"),
-&"CherryBomb_idle": ExtResource("20_g6ibo")
+&"CherryBomb_idle": ExtResource("20_g6ibo"),
+&"RESET": SubResource("Animation_hqw77")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q5e28"]
@@ -248,7 +326,7 @@ shader_parameter/emission_shape_scale = 1.0
 shader_parameter/emission_sphere_radius = 60.0
 shader_parameter/random_direction_from_spread = Vector3(0, 0, 0)
 
-[node name="Plant003CherryBomb" node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_mdj76")]
+[node name="Plant003CherryBomb" unique_id=157169406 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_mdj76")]
 script = ExtResource("2_dniyj")
 plant_type = 53
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
@@ -257,175 +335,164 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-42, -67)
 
-[node name="Anim_explode" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
+[node name="Anim_explode" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=782568655]
 visible = false
 centered = false
 
-[node name="CherryBomb_leftstem" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(29.7, 5.9)
-rotation = 0.774926
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=295102482]
+centered = false
+
+[node name="CherryBomb_leftstem" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=652761607]
+position = Vector2(31, 17.1)
+rotation = 0.493928
 scale = Vector2(0.599, 0.599)
 texture = ExtResource("2_1003c")
 centered = false
 
-[node name="CherryBomb_left1" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
-visible = false
-position = Vector2(-8.3, 17.2)
-rotation = 0.057596
-scale = Vector2(1.152, 1.246)
+[node name="CherryBomb_left1" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=2127646593]
+position = Vector2(4, 30.9)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_mg664")
 centered = false
 
-[node name="CherryBomb_left3" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
+[node name="CherryBomb_left3" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1121847957]
+visible = false
 position = Vector2(-12.4, 5.3)
 rotation = 0.171042
 scale = Vector2(1.037, 1.003)
 texture = ExtResource("4_xvxsx")
 centered = false
 
-[node name="CherryBomb_lefteye11" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
-position = Vector2(-9.7, 22.1)
-rotation = 0.174533
-scale = Vector2(1.184, 1.214)
+[node name="CherryBomb_lefteye11" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1541689684]
+position = Vector2(8.7, 41.6)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("5_fwwkt")
 centered = false
 
-[node name="CherryBomb_lefteye21" type="Sprite2D" parent="Body/BodyCorrect" index="6"]
-position = Vector2(15.4, 31.8)
-rotation = 0.174533
-scale = Vector2(1.184, 1.214)
+[node name="CherryBomb_lefteye21" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=80681460]
+position = Vector2(21.2, 44.3)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("6_7axkc")
 centered = false
 
-[node name="CherryBomb_leftmouth1" type="Sprite2D" parent="Body/BodyCorrect" index="7"]
-position = Vector2(-15.9, 43.3)
-rotation = 0.174533
-scale = Vector2(1.698, 1.214)
+[node name="CherryBomb_leftmouth1" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=769398151]
+position = Vector2(9.2, 52.9)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("7_dniyj")
 centered = false
 
-[node name="CherryBomb_rightstem" type="Sprite2D" parent="Body/BodyCorrect" index="8"]
-position = Vector2(34.5, 7.6)
-rotation = 6.62178
-scale = Vector2(0.57, 0.554)
-skew = 0.0122174
+[node name="CherryBomb_rightstem" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=245446131]
+position = Vector2(34, 21.9)
+rotation = 6.23432
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("8_2gy5r")
 centered = false
 
-[node name="CherryBomb_right1" type="Sprite2D" parent="Body/BodyCorrect" index="9"]
-visible = false
-position = Vector2(31.8, 22.7)
-rotation = -0.143117
-scale = Vector2(1.308, 1.327)
-skew = 0.0261799
+[node name="CherryBomb_right1" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=2046033720]
+position = Vector2(44.5, 31.3)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("9_ql0xv")
 centered = false
 
-[node name="CherryBomb_right3" type="Sprite2D" parent="Body/BodyCorrect" index="10"]
+[node name="CherryBomb_right3" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=1379174474]
+visible = false
 position = Vector2(26.2, 23.3)
 rotation = -0.270526
 scale = Vector2(1.116, 1.116)
 texture = ExtResource("10_qq8mq")
 centered = false
 
-[node name="CherryBomb_righteye11" type="Sprite2D" parent="Body/BodyCorrect" index="11"]
-position = Vector2(76.2, 30.2)
-scale = Vector2(1.218, 1.218)
+[node name="CherryBomb_righteye11" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=1664015059]
+position = Vector2(66.7, 42)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("11_s6vx3")
 centered = false
 
-[node name="CherryBomb_righteye21" type="Sprite2D" parent="Body/BodyCorrect" index="12"]
-position = Vector2(38.6, 38.7)
-scale = Vector2(1.493, 1.493)
+[node name="CherryBomb_righteye21" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=234096221]
+position = Vector2(51.4, 45.5)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("12_0rjum")
 centered = false
 
-[node name="CherryBomb_rightmouth1" type="Sprite2D" parent="Body/BodyCorrect" index="13"]
-position = Vector2(56.4, 52.7)
-rotation = -0.118682
-scale = Vector2(3.386, 1.077)
-skew = 0.0366515
+[node name="CherryBomb_rightmouth1" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=1304686124]
+position = Vector2(63.1, 50.5)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("13_jel4a")
 centered = false
 
-[node name="CherryBomb_leaf3" type="Sprite2D" parent="Body/BodyCorrect" index="14"]
-position = Vector2(39.5, 0.5)
-rotation = 0.328122
-scale = Vector2(0.798, 0.798)
+[node name="CherryBomb_leaf3" type="Sprite2D" parent="Body/BodyCorrect" index="14" unique_id=1190387559]
+position = Vector2(36.1, 11.7)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("14_erbjr")
 centered = false
 
-[node name="CherryBomb_leaf2tip" type="Sprite2D" parent="Body/BodyCorrect" index="15"]
-position = Vector2(42.8, -6.3)
-rotation = 1.58825
-scale = Vector2(0.796, 0.859)
-skew = 0.383972
+[node name="CherryBomb_leaf2tip" type="Sprite2D" parent="Body/BodyCorrect" index="15" unique_id=1205479023]
+position = Vector2(25.5, 7.6)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("15_7m227")
 centered = false
 
-[node name="CherryBomb_leaf2" type="Sprite2D" parent="Body/BodyCorrect" index="16"]
-position = Vector2(42, -8.7)
-rotation = 0.818559
-scale = Vector2(0.798, 0.798)
+[node name="CherryBomb_leaf2" type="Sprite2D" parent="Body/BodyCorrect" index="16" unique_id=1883587087]
+position = Vector2(27.2, 5.5)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("16_nlrwo")
 centered = false
 
-[node name="CherryBomb_leaf1" type="Sprite2D" parent="Body/BodyCorrect" index="17"]
-position = Vector2(33.5, -5.2)
-rotation = 0.809833
-scale = Vector2(0.798, 0.805)
-skew = 0.1309
+[node name="CherryBomb_leaf1" type="Sprite2D" parent="Body/BodyCorrect" index="17" unique_id=1263506984]
+position = Vector2(23.3, 14.1)
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("17_gsjgd")
 centered = false
 
-[node name="CherryBomb_leaf1tip" type="Sprite2D" parent="Body/BodyCorrect" index="18"]
-position = Vector2(29.2, -10.1)
-rotation = 0.963422
-scale = Vector2(0.796, 0.802)
-skew = -0.125664
+[node name="CherryBomb_leaf1tip" type="Sprite2D" parent="Body/BodyCorrect" index="18" unique_id=633904822]
+position = Vector2(18, 14.9)
+scale = Vector2(0.8, 0.871)
 texture = ExtResource("18_lg8p0")
 centered = false
 
-[node name="Plant053CherryBombJunkrat" parent="." index="5"]
-is_enable_default = false
+[node name="CherryBomb_JunkratL" type="Sprite2D" parent="Body/BodyCorrect" index="19" unique_id=100108402]
+position = Vector2(22.361895, 25.03626)
+rotation = 0.13264503
+scale = Vector2(0.5565342, 0.5351294)
+texture = ExtResource("20_hqw77")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_q5e28")
-}
+[node name="CherryBomb_JunkratR" type="Sprite2D" parent="Body/BodyCorrect" index="20" unique_id=1986830504]
+position = Vector2(67, 46)
+scale = Vector2(0.5110378, 0.45079297)
+texture = ExtResource("21_7asdk")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=334129040]
+libraries/ = SubResource("AnimationLibrary_q5e28")
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=483572581]
 tree_root = SubResource("AnimationNodeBlendTree_dniyj")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 
-[node name="BombComponent" type="Node2D" parent="." index="10"]
+[node name="BombComponent" type="Node2D" parent="." index="10" unique_id=1715761164]
 unique_name_in_owner = true
 script = ExtResource("20_dniyj")
 bomb_lane = 1
 can_attack_plant_status = 7
 can_attack_zombie_status = 63
 
-[node name="Area2DBomb" type="Area2D" parent="BombComponent" index="0"]
+[node name="Area2DBomb" type="Area2D" parent="BombComponent" index="0" unique_id=97287345]
 collision_layer = 0
 collision_mask = 2068
 input_pickable = false
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BombComponent/Area2DBomb" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BombComponent/Area2DBomb" index="0" unique_id=1521901739]
 position = Vector2(0, -25)
 shape = SubResource("RectangleShape2D_2gy5r")
 
-[node name="BombEffect" type="Node2D" parent="BombComponent" index="1"]
+[node name="BombEffect" type="Node2D" parent="BombComponent" index="1" unique_id=1476232161]
 visible = false
 position = Vector2(0, -28)
 script = ExtResource("22_7axkc")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="BombComponent/BombEffect" index="0"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="BombComponent/BombEffect" index="0" unique_id=1443071142]
 emitting = false
 amount = 13
 texture = ExtResource("24_ql0xv")
@@ -436,7 +503,7 @@ collision_base_size = 0.0
 draw_order = 0
 process_material = SubResource("ShaderMaterial_lg8p0")
 
-[node name="GPUParticles2D2" type="GPUParticles2D" parent="BombComponent/BombEffect" index="1"]
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="BombComponent/BombEffect" index="1" unique_id=1637896528]
 emitting = false
 amount = 10
 texture = ExtResource("24_ql0xv")
@@ -446,5 +513,5 @@ explosiveness = 1.0
 draw_order = 0
 process_material = SubResource("ShaderMaterial_vp07b")
 
-[node name="ExplosiveFont" type="Sprite2D" parent="BombComponent/BombEffect" index="2"]
+[node name="ExplosiveFont" type="Sprite2D" parent="BombComponent/BombEffect" index="2" unique_id=684855940]
 texture = ExtResource("24_2gy5r")

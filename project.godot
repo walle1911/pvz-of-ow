@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="GodotPVZ-Dream_me"
+config/name="PVZ-OF-OW"
 run/main_scene="uid://dc1xvxus2co66"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="uid://dxvlqvahfmjaa"
@@ -34,6 +34,8 @@ TreePauseManager="*res://scripts/autoload/tree_pause_manager.gd"
 
 window/size/viewport_width=1066
 window/size/viewport_height=600
+window/size/window_width_override=1600
+window/size/window_height_override=900
 window/stretch/mode="canvas_items"
 
 [dotnet]

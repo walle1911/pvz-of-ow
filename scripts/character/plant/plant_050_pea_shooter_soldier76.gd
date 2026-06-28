@@ -2,10 +2,16 @@ extends Plant000Base
 class_name Plant050PeaShooterSoldier76
 
 @onready var attack_component: AttackComponentBulletBase = $AttackComponent
+@onready var heal_animation_player: AnimationPlayer = $HealAnimationPlayer
+@onready var heal_plus_effect: Node2D = $Body/BodyCorrect/HealPlusEffect
+@onready var soldier76_e: Sprite2D = $Body/BodyCorrect/Anim_stem/Anim_Soldier76_E
 
 @export_group("PeaShooter 76")
-@export var heal_delay_after_attack:float = 1.5
+@export var heal_delay_after_attack:float = 1.0
+@export var heal_duration:float = 1.25
+@export var heal_amount:int = 300
 @export var escape_move_time:float = 0.15
+@export var heal_animation_name:StringName = &"Heal"
 
 const FRONT_CELL_OFFSET := Vector2i(0, 1)
 const BACK_CELL_OFFSET := Vector2i(0, -1)
@@ -18,6 +24,7 @@ const SIDE_CELL_OFFSETS:Array[Vector2i] = [
 
 var _has_used_heal := false
 var _heal_wait_token := 0
+var _is_healing := false
 var _has_escaped := false
 var _escape_tween:Tween
 
@@ -29,7 +36,7 @@ func ready_norm_signal_connect():
 ## 被僵尸啃食掉血
 func be_zombie_eat(attack_value:int, attack_zombie:Zombie000Base):
 	super(attack_value, attack_zombie)
-	_start_heal_countdown()
+	_on_took_damage()
 
 ## 被僵尸啃食一次发光，动画调用时认为敌人快要攻击到自己
 func be_zombie_eat_once(attack_zombie:Zombie000Base):
@@ -39,13 +46,20 @@ func be_zombie_eat_once(attack_zombie:Zombie000Base):
 ## 被子弹攻击
 func be_attacked_bullet(attack_value:int, bullet_mode:BulletRegistry.AttackMode=BulletRegistry.AttackMode.Norm, is_drop:bool=true, trigger_be_attack_SFX:=true):
 	super(attack_value, bullet_mode, is_drop, trigger_be_attack_SFX)
-	_start_heal_countdown()
+	_on_took_damage()
 
 ## 被锤子攻击
 func be_attacked_hammer(attack_value:int):
 	var is_dead = super(attack_value)
-	_start_heal_countdown()
+	_on_took_damage()
 	return is_dead
+
+func _on_took_damage():
+	if _has_used_heal or is_death:
+		return
+	if _is_healing:
+		_interrupt_heal()
+	_start_heal_countdown()
 
 func _start_heal_countdown():
 	if _has_used_heal or is_death:
@@ -55,13 +69,37 @@ func _start_heal_countdown():
 
 func _heal_after_delay(token:int):
 	await get_tree().create_timer(heal_delay_after_attack).timeout
-	if token != _heal_wait_token or _has_used_heal or is_death:
+	if token != _heal_wait_token or _has_used_heal or is_death or _is_healing:
 		return
 	if hp_component.curr_hp >= hp_component.max_hp:
 		return
-	hp_component.curr_hp = hp_component.max_hp
-	_has_used_heal = true
+	_begin_heal(token)
+
+func _begin_heal(token:int):
+	_is_healing = true
 	body.body_light()
+	_play_heal_anim()
+	await get_tree().create_timer(heal_duration).timeout
+	if token != _heal_wait_token or _has_used_heal or is_death or not _is_healing:
+		return
+	hp_component.curr_hp = min(hp_component.curr_hp + heal_amount, hp_component.max_hp)
+	_has_used_heal = true
+	_is_healing = false
+
+func _play_heal_anim():
+	heal_animation_player.play(heal_animation_name)
+
+func _interrupt_heal():
+	_is_healing = false
+	heal_animation_player.stop()
+	_reset_heal_visual()
+
+func _reset_heal_visual():
+	heal_plus_effect.visible = false
+	heal_plus_effect.modulate = Color(1, 1, 1, 0)
+	heal_plus_effect.position = Vector2(39, 22)
+	heal_plus_effect.scale = Vector2(0.75, 0.75)
+	soldier76_e.self_modulate = Color(1, 1, 1, 1)
 
 func _try_escape_once(attack_zombie:Zombie000Base):
 	if _has_escaped or is_death or not is_instance_valid(plant_cell):
