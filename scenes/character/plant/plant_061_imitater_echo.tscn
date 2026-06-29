@@ -39,7 +39,7 @@ advance_mode = 2
 break_loop_at_end = true
 switch_mode = 2
 advance_mode = 2
-advance_expression = "not is_show"
+advance_expression = "not is_show and imitater_echo_can_explode"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_65uuy"]
 states/BlendTree/node = SubResource("AnimationNodeBlendTree_g4iio")
