@@ -74,7 +74,7 @@ func judge_body_change(curr_hp:int, is_drop:=true):
 	for i in range(boundary_value_hp.size()):
 		if curr_hp_stage < i and curr_hp <= boundary_value_hp[i]:
 			curr_hp_stage = i
-			if body_change[i] == null:
+			if i >= body_change.size() or body_change[i] == null:
 				continue
 
 			body_change[i].update_body(self)
@@ -118,7 +118,7 @@ func update_hp_armor_stage(curr_hp_arm:int, curr_hp_armor_stage:int, boundary_va
 			#print("当前血量：", curr_hp_stage, "小于状态：", i)
 			curr_hp_armor_stage = i
 
-			if body_change_armor[i] == null:
+			if i >= body_change_armor.size() or body_change_armor[i] == null:
 				continue
 			body_change_armor[i].update_body(self)
 
