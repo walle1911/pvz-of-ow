@@ -4,6 +4,13 @@ class_name BodyCharacter
 
 ## 模仿者材质
 const IMITATER = preload("res://shader_material/imitater.tres")
+const IMITATER_ECHO = preload("res://shader_material/imitater_echo.tres")
+
+## 模仿者叠加颜色（在 inspector 中直接调整）
+@export_group("模仿者染色", "imitater_")
+@export var imitater_tint_color: Color = Color(0.427, 0.757, 0.992, 1.0)  # 天蓝色
+@export var imitater_whiteness: float = 0.5   # 染色强度 (0 = 原图, 1 = 纯色)
+@export var imitater_gray_strength: float = 0.0  # 灰度强度 (0 = 保留原色, 1 = 全灰)
 
 const BODY_MASK = preload("res://shader_material/body_mask.tres")
 var hit_tween: Tween = null  # 发光动画
@@ -89,7 +96,11 @@ func body_charred_black():
 
 ## 模仿者更新材质
 func imitater_update_material():
-	material = IMITATER.duplicate()
+	var mat := IMITATER_ECHO.duplicate()
+	mat.set_shader_parameter(&"tint_color", imitater_tint_color)
+	mat.set_shader_parameter(&"whiteness", imitater_whiteness)
+	mat.set_shader_parameter(&"gray_strength", imitater_gray_strength)
+	material = mat
 	for child in get_children():
 		if child.owner == owner:
 			GlobalUtils.node_use_parent_material(child)

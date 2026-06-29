@@ -28,6 +28,9 @@ var characte_static_shadow_colum : Array[Node2D]
 ## 紫卡植物可以的预种植植物,点击卡片时明暗交替
 var curr_all_preplant_purple:Array[Plant000Base]
 
+## 上一次选中的非模仿者植物类型，模仿者种植时自动复制它
+var last_non_imitater_plant_type: CharacterRegistry.PlantType = CharacterRegistry.PlantType.Null
+
 func init_hm_character():
 	self.is_mode_column = hand_manager.game_para.is_mode_column
 
@@ -45,7 +48,16 @@ func click_card(card:Card) -> void:
 	EventBus.push_event("hm_character_hand_card", [curr_card])
 	## 植物
 	if curr_card.card_plant_type != CharacterRegistry.PlantType.Null:
+		## 记住上一个非模仿者植物类型
+		if not curr_card.is_imitater\
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P999Imitater\
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P061ImitaterEcho:
+			last_non_imitater_plant_type = curr_card.card_plant_type
+
 		plant_condition = Global.character_registry.get_plant_info(curr_card.card_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
+		## 如果卡牌没有种植条件（如模仿者本体），使用上一次选中植物的条件
+		if plant_condition == null and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
+			plant_condition = Global.character_registry.get_plant_info(last_non_imitater_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 		## 静态植物以及植物虚影
 		characte_static = card.character_static.duplicate()
 		characte_static.get_child(0).scale = Vector2.ONE
@@ -60,7 +72,7 @@ func click_card(card:Card) -> void:
 			click_card_column()
 
 		# 如果是紫卡植物
-		if plant_condition.is_purple_card:
+		if plant_condition != null and plant_condition.is_purple_card:
 			start_preplant_purple_light(plant_condition, curr_card.card_plant_type)
 
 	## 僵尸
@@ -121,6 +133,9 @@ func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2
 	## 植物
 	if curr_card.card_plant_type != 0:
 		## 如果是判定是否可以种植植物
+		if plant_condition == null:
+			curr_characte_static_shadow.modulate.a = 0
+			return false
 		if plant_condition.judge_is_can_plant(plant_cell, curr_card.card_plant_type):
 			curr_characte_static_shadow.global_position = plant_cell.get_new_plant_static_shadow_global_position(plant_condition.place_plant_in_cell)
 			curr_characte_static_shadow.modulate.a = 0.5
@@ -172,7 +187,17 @@ func mouse_exit(_plant_cell:PlantCell):
 func click_cell(plant_cell:PlantCell):
 	if is_shadow_in_cell:
 		if curr_card.card_plant_type != 0:
-			plant_cell.create_plant(curr_card.card_plant_type, curr_card.is_imitater)
+			var plant_type := curr_card.card_plant_type
+			var is_imitater := curr_card.is_imitater
+			var imitater_variant := CharacterRegistry.PlantType.P999Imitater  # 默认原版模仿者
+			## 如果卡牌是模仿者本体（没有指定模仿目标），复制上一次选中的植物
+			if not is_imitater\
+				and (plant_type == CharacterRegistry.PlantType.P999Imitater or plant_type == CharacterRegistry.PlantType.P061ImitaterEcho)\
+				and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
+				imitater_variant = plant_type  # 记住具体变体（999 或 61）
+				plant_type = last_non_imitater_plant_type
+				is_imitater = true
+			plant_cell.create_plant(plant_type, is_imitater, true, false, false, imitater_variant)
 		else:
 			var zombie_init_para:Dictionary = {
 				Zombie000Base.E_ZInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsNorm,
@@ -241,7 +266,16 @@ func _click_cell_column(plant_cell:PlantCell):
 			var _characte_static_shadow = characte_static_shadow_colum[i]
 			if _characte_static_shadow.modulate.a != 0:
 				var _plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[i][plant_cell.row_col.y]
-				_plant_cell.create_plant(curr_card.card_plant_type, curr_card.is_imitater)
+				var _plant_type := curr_card.card_plant_type
+				var _is_imitater := curr_card.is_imitater
+				var _imitater_variant := CharacterRegistry.PlantType.P999Imitater  # 默认原版模仿者
+				if not _is_imitater\
+					and (_plant_type == CharacterRegistry.PlantType.P999Imitater or _plant_type == CharacterRegistry.PlantType.P061ImitaterEcho)\
+					and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
+					_imitater_variant = _plant_type  # 记住具体变体
+					_plant_type = last_non_imitater_plant_type
+					_is_imitater = true
+				_plant_cell.create_plant(_plant_type, _is_imitater, true, false, false, _imitater_variant)
 	else:
 		for i in range(characte_static_shadow_colum.size()):
 			## 当前格子的图像透明

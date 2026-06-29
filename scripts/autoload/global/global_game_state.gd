@@ -99,6 +99,7 @@ var curr_plant :Array[CharacterRegistry.PlantType]= [
 	CharacterRegistry.PlantType.P067CoffeeBeanAna,
 	CharacterRegistry.PlantType.P068ScaredyShroomWidowmaker,
 	CharacterRegistry.PlantType.P069HypnoShroomJuno,
+	CharacterRegistry.PlantType.P999Imitater,
 	CharacterRegistry.PlantType.P1001WallNutBowling,
 	CharacterRegistry.PlantType.P1002WallNutBowlingBomb,
 	CharacterRegistry.PlantType.P1003WallNutBowlingBig,

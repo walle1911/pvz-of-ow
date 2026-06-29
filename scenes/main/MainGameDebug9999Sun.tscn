@@ -4,7 +4,6 @@
 [ext_resource type="Resource" uid="uid://evdpsat2avsr" path="res://resources/level_date_resource/mode_adventure/adventure_debug_9999_sun.tres" id="2_level"]
 
 [node name="MainGameDebug9999Sun" unique_id=1737605305 instance=ExtResource("1_front")]
-
 game_para = ExtResource("2_level")
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]

@@ -3,9 +3,10 @@ shader_type canvas_item;
 varying vec4 v_modulate;
 
 uniform float gray_strength : hint_range(0.0, 1.0) = 1.0;   // 灰度强度
-uniform float whiteness : hint_range(0.0, 1.0) = 0.0;       // 白化强度
+uniform float whiteness : hint_range(0.0, 1.0) = 0.0;       // 白化强度（混合 tint_color）
 uniform float brightness : hint_range(-1.0, 1.0) = 0.0;     // 亮度调节（加法）
 uniform float contrast : hint_range(0.0, 3.0) = 1.0;        // 对比度调节
+uniform vec4 tint_color : source_color = vec4(1.0);          // 染色，默认白色（兼容原版模仿者）
 
 void vertex() {
     v_modulate = COLOR;  // 保存 node 本身的 modulate (包括 self_modulate)
@@ -22,10 +23,10 @@ void fragment() {
     vec3 mixed_gray = mix(tex.rgb, gray_col, gray_strength);
 
     // 3. 白化（混入白色）
-    vec3 whitened = mix(mixed_gray, vec3(1.0), whiteness);
+    vec3 tinted = mix(mixed_gray, tint_color.rgb, whiteness);
 
     // 4. 调亮度 (加法)
-    vec3 brighted = whitened + vec3(brightness);
+    vec3 brighted = tinted + vec3(brightness);
 
     // 5. 调对比度 (以 0.5 为中心缩放)
     vec3 contrasted = (brighted - vec3(0.5)) * contrast + vec3(0.5);

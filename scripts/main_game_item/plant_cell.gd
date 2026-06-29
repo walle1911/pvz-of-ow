@@ -148,16 +148,16 @@ func plant_be_flattened():
 
 #region 植物(僵尸)种植(死亡)
 ## 模仿者创建植物
-func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true):
+func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P999Imitater):
 	await get_tree().process_frame
-	var plant = create_plant(plant_type, false, is_plant_start_effect, true)
+	var plant = create_plant(plant_type, false, is_plant_start_effect, true, false, imitater_variant)
 	return plant
 ## 新植物种植
 ##[is_imitater:bool] 植物是否为模仿者
 ##[is_plant_start_effect:bool] 是否有种植特效
 ##[is_imitater_material:bool] 是否为模仿者材质
 ##[is_zombie_mode:bool] 是否为我是僵尸模式
-func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false) -> Plant000Base:
+func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P999Imitater) -> Plant000Base:
 	var plant_condition:ResourcePlantCondition
 	var plant :Plant000Base
 	plant_condition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
@@ -171,17 +171,22 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 			#await get_tree().process_frame
 	else:
 		## 非紫卡 如果该位置已经存在植物,返回
-		if is_instance_valid(plant_in_cell[plant_condition.place_plant_in_cell]):
-			print("当前位置", row_col, "已经有植物：", plant_in_cell[plant_condition.place_plant_in_cell].name)
+		## 模仿者检查 Imitater 位置，普通植物检查对应位置
+		var check_place := CharacterRegistry.PlacePlantInCell.Imitater if is_imitater else (plant_condition.place_plant_in_cell if plant_condition != null else CharacterRegistry.PlacePlantInCell.Norm)
+		if plant_condition != null and is_instance_valid(plant_in_cell[check_place]):
+			print("当前位置", row_col, "已经有植物：", plant_in_cell[check_place].name)
 			return
 
 	## 创建植物
 	if is_imitater:
 		## 创建植物
 		#plant_condition = Global.character_registry.get_plant_info(CharacterRegistry.PlantType.P999Imitater, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
-		plant = Global.character_registry.get_plant_info(CharacterRegistry.PlantType.P999Imitater, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
-		plant = plant as Plant999Imitater
-		plant.imitater_plant_type = plant_type
+		plant = Global.character_registry.get_plant_info(imitater_variant, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
+		## 根据变体类型正确赋值（999 和 61 是平级类，不能互转）
+		if plant is Plant999Imitater:
+			plant.imitater_plant_type = plant_type
+		elif plant is Plant061ImitaterEcho:
+			plant.imitater_plant_type = plant_type
 	else:
 		plant = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
 
@@ -194,10 +199,11 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 	plant.init_plant(plant_init_para)
 	if is_imitater:
 		plant_container_node[CharacterRegistry.PlacePlantInCell.Imitater].add_child(plant)
+		plant_in_cell[CharacterRegistry.PlacePlantInCell.Imitater] = plant
 	else:
 		plant_container_node[plant_condition.place_plant_in_cell].add_child(plant)
+		plant_in_cell[plant_condition.place_plant_in_cell] = plant
 
-	plant_in_cell[plant_condition.place_plant_in_cell] = plant
 	plant.signal_character_death.connect(one_plant_free.bind(plant))
 
 	if is_plant_start_effect:
@@ -242,6 +248,12 @@ func get_new_plant_static_shadow_global_position(place_plant_in_cell:CharacterRe
 ## 植物死亡
 func one_plant_free(plant:Plant000Base):
 	var curr_plant_condition :ResourcePlantCondition = Global.character_registry.get_plant_info(plant.plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
+
+	## 如果没有种植条件（如模仿者），清理 Imitater 位置后直接返回
+	if curr_plant_condition == null:
+		plant_in_cell[CharacterRegistry.PlacePlantInCell.Imitater] = null
+		signal_plant_free.emit(self, plant.plant_type)
+		return
 
 	if is_instance_valid(ladder):
 		if curr_plant_condition.place_plant_in_cell in [CharacterRegistry.PlacePlantInCell.Down, CharacterRegistry.PlacePlantInCell.Norm, CharacterRegistry.PlacePlantInCell.Shell]:

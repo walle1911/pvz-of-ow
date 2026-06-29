@@ -22,6 +22,12 @@ var card_candidate_container:CardCandidateContainer
 ## 模仿者材质
 const IMITATER = preload("res://shader_material/imitater.tres")
 
+## 模仿者叠加颜色（在 inspector 中直接调整）
+@export_group("模仿者染色", "imitater_")
+@export var imitater_tint_color: Color = Color(0.427, 0.757, 0.992, 1.0)  # 天蓝色
+@export var imitater_whiteness: float = 0.5   # 染色强度 (0 = 原图, 1 = 纯色)
+@export var imitater_gray_strength: float = 0.0  # 灰度强度 (0 = 保留原色, 1 = 全灰)
+
 ## 点击信号,选卡时使用该信号(种植点击使用时间总线)
 signal signal_card_click(card:Card)
 ## 卡片种植完成后信号，生成卡片所在卡槽连接该信号
@@ -37,7 +43,11 @@ func _ready() -> void:
 	super()
 	_cool_mask.value = 0
 	if is_imitater:
-		character_static.material = IMITATER.duplicate()
+		var mat := IMITATER.duplicate()
+		mat.set_shader_parameter(&"tint_color", imitater_tint_color)
+		mat.set_shader_parameter(&"whiteness", imitater_whiteness)
+		mat.set_shader_parameter(&"gray_strength", imitater_gray_strength)
+		character_static.material = mat
 		for child in character_static.get_children():
 			GlobalUtils.node_use_parent_material(child)
 

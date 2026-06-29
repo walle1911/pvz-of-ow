@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://bq2ef6etyqxxt"]
+[gd_scene format=3 uid="uid://bq2ef6etyqxxt"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_hjvtv"]
 [ext_resource type="Script" uid="uid://bbvpjixpt0wmh" path="res://scripts/character/plant/plant_999_imitater.gd" id="2_4e7mo"]
@@ -239,25 +239,25 @@ shader_parameter/emission_shape_scale = 0.6
 shader_parameter/emission_sphere_radius = 30.0
 shader_parameter/random_direction_from_spread = Vector3(0, 0, 0)
 
-[node name="Plant999Imitater" instance=ExtResource("1_hjvtv")]
+[node name="Plant999Imitater" unique_id=1493097722 instance=ExtResource("1_hjvtv")]
 script = ExtResource("2_4e7mo")
 plant_type = 999
 
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-40, -69)
 
-[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
+[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1196363887]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=331701349]
 visible = false
 centered = false
 
-[node name="Anim_explode" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
+[node name="Anim_explode" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1741505131]
 centered = false
 
-[node name="Imitater_root4" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
+[node name="Imitater_root4" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=902802378]
 visible = false
 position = Vector2(62.8, 49.1)
 rotation = 2.572615
@@ -266,7 +266,7 @@ skew = -3.1154125
 texture = ExtResource("2_a0vy4")
 centered = false
 
-[node name="Imitater_root3" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
+[node name="Imitater_root3" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1010548917]
 visible = false
 position = Vector2(55.8, 29.6)
 rotation = 0.249582
@@ -274,7 +274,7 @@ scale = Vector2(0.799, 0.819)
 texture = ExtResource("3_6sn0i")
 centered = false
 
-[node name="Imitater_root2" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
+[node name="Imitater_root2" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1334511630]
 visible = false
 position = Vector2(15.8, 49)
 rotation = -0.26529
@@ -282,14 +282,14 @@ scale = Vector2(0.799, 0.819)
 texture = ExtResource("2_a0vy4")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6"]
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1897326765]
 visible = false
 position = Vector2(17.3, 3.7)
 scale = Vector2(0.8, 0.819)
 texture = ExtResource("4_wlwkf")
 centered = false
 
-[node name="Imitater_root1" type="Sprite2D" parent="Body/BodyCorrect" index="7"]
+[node name="Imitater_root1" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=38810153]
 visible = false
 position = Vector2(14.7, 31.7)
 rotation = -0.342085
@@ -298,46 +298,44 @@ skew = 0.2286386
 texture = ExtResource("5_d08h2")
 centered = false
 
-[node name="Imitater_blink" type="Sprite2D" parent="Body/BodyCorrect" index="8"]
+[node name="Imitater_blink" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=134455244]
 visible = false
 position = Vector2(26.9, 13.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("6_f2fc4")
 centered = false
 
-[node name="Imitater_hat" type="Sprite2D" parent="Body/BodyCorrect" index="9"]
+[node name="Imitater_hat" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=2006806388]
 visible = false
 position = Vector2(15.8, -0.5)
 scale = Vector2(0.8, 0.819)
 texture = ExtResource("7_uj3h0")
 centered = false
 
-[node name="Imitater_spin" type="Sprite2D" parent="Body/BodyCorrect" index="10"]
+[node name="Imitater_spin" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=718366136]
 position = Vector2(14.2, -3.8)
 scale = Vector2(0.801, 0.799)
 texture = ExtResource("8_xhl1m")
 centered = false
 
-[node name="Imitater_explode" type="Sprite2D" parent="Body/BodyCorrect" index="11"]
+[node name="Imitater_explode" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=624644185]
 visible = false
 centered = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_b55ym")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=1227413134]
+libraries/ = SubResource("AnimationLibrary_b55ym")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1840611899]
 tree_root = SubResource("AnimationNodeBlendTree_gxw7h")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 parameters/StateMachine/BlendTree/TimeScale/scale = 0.5
 
-[node name="ImitaterEffect" type="Node2D" parent="." index="10"]
+[node name="ImitaterEffect" type="Node2D" parent="." index="10" unique_id=353074257]
 script = SubResource("GDScript_3rp6v")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="ImitaterEffect" index="0"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="ImitaterEffect" index="0" unique_id=2093123750]
 position = Vector2(0, -36)
 emitting = false
 amount = 13
@@ -349,7 +347,7 @@ collision_base_size = 0.0
 draw_order = 0
 process_material = SubResource("ShaderMaterial_totpa")
 
-[node name="GPUParticles2D2" type="GPUParticles2D" parent="ImitaterEffect" index="1"]
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="ImitaterEffect" index="1" unique_id=885717253]
 position = Vector2(0, -36)
 emitting = false
 amount = 10

@@ -141,4 +141,3 @@ func update_mini_zombie_hp_stage_change():
 	if hp_component.max_hp_armor2 != 0:
 		for i in range(boundary_value_hp_armor2.size()):
 			boundary_value_hp_armor2[i] /= 2
-

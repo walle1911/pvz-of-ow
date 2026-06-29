@@ -51,7 +51,8 @@ func _ready() -> void:
 	## 如果是植物,根据是否为紫卡更新背景
 	if card_plant_type != 0:
 		plant_condition = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
-		is_purple_card = plant_condition.is_purple_card
+		if plant_condition:
+			is_purple_card = plant_condition.is_purple_card
 		if is_purple_card:
 			curr_card_gb = E_CardBg.CB02Purple
 		if is_imitater:
