@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/VineCableTest.gd" id="1_50bq4"]
+[ext_resource type="PackedScene" path="res://scenes/effects/VineCable2D.tscn" id="2_poe71"]
+
+[node name="VineCableTest" type="Node2D"]
+script = ExtResource("1_50bq4")
+
+[node name="StartPoint" type="Marker2D" parent="."]
+position = Vector2(180, 300)
+
+[node name="EndPoint" type="Marker2D" parent="."]
+position = Vector2(520, 300)
+
+[node name="VineCable2D" parent="." instance=ExtResource("2_poe71")]
