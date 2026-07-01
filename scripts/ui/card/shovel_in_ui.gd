@@ -12,4 +12,4 @@ func ui_shovel_appear():
 	shovel.visible = true
 
 func get_shovel_screen_center() -> Vector2:
-	return shovel.get_global_transform_with_canvas() * (shovel.size * 0.5)
+	return shovel.get_global_rect().get_center()

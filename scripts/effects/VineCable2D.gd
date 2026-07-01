@@ -46,8 +46,12 @@ var _override_tension: float = 0.0
 
 
 func set_points(start_pos: Vector2, end_pos: Vector2) -> void:
-	_target_start = to_local(start_pos)
-	_target_end = to_local(end_pos)
+	# CanvasLayer 是 Node 而非 Node2D，to_local 的 get_global_transform 不会包含
+	# CanvasLayer 的 follow_viewport 变换，导致坐标转换错误。
+	# 必须用 get_global_transform_with_canvas 获取 canvas-aware 的逆变换。
+	var inv := get_global_transform_with_canvas().affine_inverse()
+	_target_start = inv * start_pos
+	_target_end = inv * end_pos
 	if _is_tension_overridden:
 		_target_tension = _override_tension
 	else:
@@ -63,8 +67,9 @@ func set_points(start_pos: Vector2, end_pos: Vector2) -> void:
 
 
 func snap_points(start_pos: Vector2, end_pos: Vector2) -> void:
-	_target_start = to_local(start_pos)
-	_target_end = to_local(end_pos)
+	var inv := get_global_transform_with_canvas().affine_inverse()
+	_target_start = inv * start_pos
+	_target_end = inv * end_pos
 	_visual_start = _target_start
 	_visual_end = _target_end
 	_has_points = true

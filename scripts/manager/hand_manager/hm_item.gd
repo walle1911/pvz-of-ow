@@ -153,6 +153,8 @@ func _play_shovel_pull_animation(plant:Plant000Base):
 
 	is_pulling = true
 	shovel_line.hide_line()
+	# 先让 UI 铲子可见，确保 PanelContainer 完成布局后再获取屏幕坐标
+	ui_shovel.ui_shovel_appear()
 	_start_shovel_vine_pull(pull_visual)
 
 	plant.visible = false
@@ -167,9 +169,9 @@ func _play_shovel_pull_animation(plant:Plant000Base):
 	tween.tween_interval(SHOVEL_PULL_PLANT_DELAY)
 	var move_duration := SHOVEL_PULL_DURATION - SHOVEL_PULL_PLANT_DELAY
 	tween.set_parallel(true)
-	tween.tween_property(pull_visual, ^"position", target_position, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tween.tween_property(pull_visual, ^"scale", target_scale, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tween.tween_property(pull_visual, ^"modulate:a", 0.0, move_duration * 0.72).set_delay(move_duration * 0.18)
+	tween.tween_property(pull_visual, "position", target_position, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(pull_visual, "scale", target_scale, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(pull_visual, "modulate:a", 0.0, move_duration * 0.72).set_delay(move_duration * 0.18)
 	tween.chain().tween_callback(_finish_shovel_pull_animation.bind(plant, pull_visual))
 
 func _create_shovel_pull_visual(plant:Plant000Base) -> Node2D:
@@ -243,7 +245,7 @@ func _start_shovel_vine_pull(pull_visual: Node2D) -> void:
 	shovel_vine_target = pull_visual
 	shovel_vine_cable.visible = true
 	shovel_vine_cable.call("set_tension_override", 0.0, true)
-	shovel_vine_cable.call("snap_points", _get_shovel_vine_start_pos(), pull_visual.global_position)
+	shovel_vine_cable.call("snap_points", _get_shovel_vine_start_pos(), pull_visual.get_global_transform_with_canvas().origin)
 
 	shovel_vine_tween = create_tween()
 	shovel_vine_tween.tween_method(_set_shovel_vine_tension, 0.0, 1.0, SHOVEL_VINE_TENSION_DURATION)\
@@ -255,7 +257,7 @@ func _update_shovel_vine_points() -> void:
 		return
 
 	if is_instance_valid(shovel_vine_target):
-		shovel_vine_cable.call("set_points", _get_shovel_vine_start_pos(), shovel_vine_target.global_position)
+		shovel_vine_cable.call("set_points", _get_shovel_vine_start_pos(), shovel_vine_target.get_global_transform_with_canvas().origin)
 	else:
 		_hide_shovel_vine()
 
