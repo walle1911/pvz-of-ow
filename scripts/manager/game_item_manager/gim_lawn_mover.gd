@@ -102,4 +102,3 @@ func get_save_game_data_lawn_mover_manager()->Dictionary:
 			is_has_all_lawn_mover.append(false)
 	save_game_data_lawn_mover["is_has_all_lawn_mover"] = is_has_all_lawn_mover
 	return save_game_data_lawn_mover
-

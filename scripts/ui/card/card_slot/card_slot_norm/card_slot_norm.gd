@@ -96,6 +96,9 @@ func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], ca
 			CharacterRegistry.CharacterType.Null:
 				continue
 
+		# 如果卡槽已满，动态扩展
+		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
+			card_slot_battle.add_card_placeholder()
 		card_slot_battle.curr_cards.append(card)
 		pre_choosed_card(card, card_slot_battle.cards_placeholder[len(card_slot_battle.curr_cards)-1])
 	## 预选卡断开鼠标点击信号
@@ -117,15 +120,16 @@ func _on_card_click(card:Card):
 			move_card_to(card_slot_battle.curr_cards[i], card_slot_battle.cards_placeholder[i])
 		move_card_to(card, card.card_candidate_container)
 
-	## 如果没被选取，放在最后一位
+	## 如果没被选取，放在最后一位；卡槽已满则自动扩展
 	else:
 		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
-			SoundManager.play_other_SFX("buzzer")
-			return
-		else:
-			card.is_choosed_pre_card = true
-			card_slot_battle.curr_cards.append(card)
-			move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
+			var new_placeholder = card_slot_battle.add_card_placeholder()
+			if not is_instance_valid(new_placeholder):
+				SoundManager.play_other_SFX("buzzer")
+				return
+		card.is_choosed_pre_card = true
+		card_slot_battle.curr_cards.append(card)
+		move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
 
 ## 游戏选卡阶段时，模仿者卡片被点击
 func _on_imitater_card_click(card:Card):
@@ -145,18 +149,19 @@ func _on_imitater_card_click(card:Card):
 		card.reparent(card.card_candidate_container, false)
 		card_slot_candidate.imitater_be_choosed_cancel()
 
-	## 如果没被选取，放在最后一位
+	## 如果没被选取，放在最后一位；卡槽已满则自动扩展
 	else:
 		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
-			SoundManager.play_other_SFX("buzzer")
-			card_slot_candidate.imitater_card_slot_disappear()
-			return
-		else:
-			card.is_choosed_pre_card = true
-			card_slot_battle.curr_cards.append(card)
-			card.reparent(card_slot_candidate.card_imitater, false)
-			move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
-			card_slot_candidate.imitater_be_choosed()
+			var new_placeholder = card_slot_battle.add_card_placeholder()
+			if not is_instance_valid(new_placeholder):
+				SoundManager.play_other_SFX("buzzer")
+				card_slot_candidate.imitater_card_slot_disappear()
+				return
+		card.is_choosed_pre_card = true
+		card_slot_battle.curr_cards.append(card)
+		card.reparent(card_slot_candidate.card_imitater, false)
+		move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
+		card_slot_candidate.imitater_be_choosed()
 
 
 ## 移动card到目标点位置

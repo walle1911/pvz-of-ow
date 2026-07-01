@@ -27,8 +27,8 @@ class_name MainGameManager
 @export var test_pre_choosed_card_list_plant: Array[CharacterRegistry.PlantType] = []
 ## 直接运行测试场景时覆盖关卡资源中的预选僵尸卡，留空则使用关卡资源原配置
 @export var test_pre_choosed_card_list_zombie: Array[CharacterRegistry.ZombieType] = []
-## 直接运行测试场景时覆盖最大卡槽数量，0表示使用关卡资源原配置
-@export_range(0, 15) var test_max_choosed_card_num: int = 0
+## 直接运行测试场景时覆盖最大卡槽数量，固定8个，超过上限自动增加
+@export_range(1, 15) var test_max_choosed_card_num: int = 8
 ## 直接运行测试场景时显示植物和僵尸血量，便于观察调参结果
 @export var test_show_hp_label := true
 

@@ -52,6 +52,19 @@ func init_card_slot_battle(max_choosed_card_num:int, sun:int):
 
 	return cards_placeholder
 
+
+## 动态添加一个卡槽占位节点（超过初始上限时自动扩展）
+func add_card_placeholder() -> Control:
+	if cards_placeholder.is_empty():
+		return null
+	var template: Control = cards_placeholder[0]
+	if not is_instance_valid(template):
+		return null
+	var cloned_card_placeholder = template.duplicate()
+	card_ui_list.add_child(cloned_card_placeholder)
+	cards_placeholder.append(cloned_card_placeholder)
+	return cloned_card_placeholder
+
 ## 主游戏刷新卡片
 func main_game_refresh_card():
 	update_card_purple_sun_cost()
