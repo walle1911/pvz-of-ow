@@ -224,6 +224,8 @@ func _configure_shovel_vine() -> void:
 	shovel_vine_cable.set("tight_bulge_ratio", SHOVEL_VINE_TIGHT_BULGE_RATIO)
 	shovel_vine_cable.set("tight_strand_separation", 3.2)
 	shovel_vine_cable.set("alpha_multiplier", shovel_vine_alpha)
+	shovel_vine_cable.set("loose_brightness_boost", 0.3)
+	shovel_vine_cable.set("loose_alpha_boost", 0.5)
 	shovel_vine_cable.set("strand_colors", [
 		Color(1.0, 0.72, 0.84, 0.42),
 		Color(1.0, 0.72, 0.84, 0.38),
