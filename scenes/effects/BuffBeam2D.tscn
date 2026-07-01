@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dly7qm8n0v8k1"]
+
+[ext_resource type="Script" path="res://scripts/effects/BuffBeam2D.gd" id="1_beam_script"]
+
+[node name="BuffBeam2D" type="Node2D"]
+script = ExtResource("1_beam_script")
+beam_width = 14.0
+curve_height = 0.0
+point_count = 16
+z_index_override = 200
+glow_color = Color(0.08, 0.35, 1, 0.7)
+core_color = Color(0.3, 0.7, 1, 0.9)
+flow_speed = 1.2
+flow_density = 8.0
+pulse_speed = 3.5
+pulse_amount = 0.12
+glow_softness = 1.0
+core_falloff = 3.5
+core_ratio = 0.15
