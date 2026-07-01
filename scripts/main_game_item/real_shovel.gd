@@ -1,7 +1,7 @@
 extends Sprite2D
 class_name RealShovel
 
-@export var follow_scale := 0.42
+@export var follow_scale := 0.8
 @export var follow_alpha := 0.55
 @export var follow_offset := Vector2(18, 18)
 

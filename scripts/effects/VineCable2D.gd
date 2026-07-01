@@ -15,6 +15,10 @@ class_name VineCable2D
 	set(value):
 		alpha_multiplier = clamp(value, 0.0, 1.0)
 		queue_redraw()
+@export_range(0.0, 2.0, 0.01) var line_flash_boost: float = 0.0:
+	set(value):
+		line_flash_boost = clamp(value, 0.0, 2.0)
+		queue_redraw()
 ## 松弛状态下的额外亮度倍率（收紧后渐隐为 1.0）
 @export_range(0.0, 1.0, 0.01) var loose_brightness_boost: float = 0.0
 ## 松弛状态下的额外不透明度倍率（收紧后渐隐为 1.0）
@@ -214,7 +218,7 @@ func _draw_rounded_segment(from_point: Vector2, to_point: Vector2, color: Color,
 func _shade_color(base_color: Color, depth: float) -> Color:
 	var front_amount: float = clamp((depth + 1.0) * 0.5, 0.0, 1.0)
 	var tension_fade: float = 1.0 - visual_tension
-	var brightness: float = lerp(0.82, 1.06, front_amount) * (1.0 + loose_brightness_boost * tension_fade)
+	var brightness: float = lerp(0.82, 1.06, front_amount) * (1.0 + loose_brightness_boost * tension_fade) * (1.0 + line_flash_boost)
 	var alpha: float = clamp(base_color.a * alpha_multiplier * (1.0 + loose_alpha_boost * tension_fade) * lerp(0.62, 1.0, front_amount), 0.0, 1.0)
 	return Color(
 		clamp(base_color.r * brightness, 0.0, 1.0),

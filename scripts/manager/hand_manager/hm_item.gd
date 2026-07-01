@@ -12,6 +12,8 @@ class_name HM_Item
 		if is_instance_valid(shovel_vine_cable):
 			shovel_vine_cable.set("alpha_multiplier", shovel_vine_alpha)
 			shovel_vine_cable.queue_redraw()
+@export_range(0.0, 2.0, 0.01) var shovel_vine_flash_boost: float = 0.85
+@export_range(0.01, 0.5, 0.01) var shovel_vine_flash_duration: float = 0.12
 
 const SHOVEL_PULL_DURATION := 0.55
 const SHOVEL_PULL_END_SCALE := 0.35
@@ -45,6 +47,8 @@ var shovel_line: ShovelLine
 var shovel_vine_cable: Node2D
 var shovel_vine_target: Node2D
 var shovel_vine_tween: Tween
+var shovel_vine_alpha_tween: Tween
+var shovel_vine_flash_tween: Tween
 ## 是否正在播放拉取动画
 var is_pulling := false
 
@@ -171,7 +175,10 @@ func _play_shovel_pull_animation(plant:Plant000Base):
 	tween.set_parallel(true)
 	tween.tween_property(pull_visual, "position", target_position, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tween.tween_property(pull_visual, "scale", target_scale, move_duration).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	tween.tween_property(pull_visual, "modulate:a", 0.0, move_duration * 0.72).set_delay(move_duration * 0.18)
+	var fade_duration := move_duration * 0.72
+	var fade_delay := move_duration * 0.18
+	tween.tween_property(pull_visual, "modulate:a", 0.0, fade_duration).set_delay(fade_delay)
+	_start_shovel_vine_fade(SHOVEL_PULL_PLANT_DELAY + fade_delay, fade_duration)
 	tween.chain().tween_callback(_finish_shovel_pull_animation.bind(plant, pull_visual))
 
 func _create_shovel_pull_visual(plant:Plant000Base) -> Node2D:
@@ -242,10 +249,14 @@ func _start_shovel_vine_pull(pull_visual: Node2D) -> void:
 	if shovel_vine_tween:
 		shovel_vine_tween.kill()
 
+	_kill_shovel_vine_alpha_tween()
+	shovel_vine_cable.set("alpha_multiplier", shovel_vine_alpha)
+	shovel_vine_cable.set("line_flash_boost", 0.0)
 	shovel_vine_target = pull_visual
 	shovel_vine_cable.visible = true
 	shovel_vine_cable.call("set_tension_override", 0.0, true)
 	shovel_vine_cable.call("snap_points", _get_shovel_vine_start_pos(), pull_visual.get_global_transform_with_canvas().origin)
+	_start_shovel_vine_flash()
 
 	shovel_vine_tween = create_tween()
 	shovel_vine_tween.tween_method(_set_shovel_vine_tension, 0.0, 1.0, SHOVEL_VINE_TENSION_DURATION)\
@@ -267,6 +278,51 @@ func _set_shovel_vine_tension(value: float) -> void:
 		shovel_vine_cable.call("set_tension_override", value, false)
 
 
+func _start_shovel_vine_flash() -> void:
+	if not is_instance_valid(shovel_vine_cable) or shovel_vine_flash_boost <= 0.0:
+		return
+
+	_kill_shovel_vine_flash_tween()
+	shovel_vine_cable.set("line_flash_boost", shovel_vine_flash_boost)
+	shovel_vine_flash_tween = create_tween()
+	shovel_vine_flash_tween.tween_property(shovel_vine_cable, "line_flash_boost", 0.0, shovel_vine_flash_duration)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	shovel_vine_flash_tween.tween_callback(_clear_shovel_vine_flash_tween)
+
+
+func _kill_shovel_vine_flash_tween() -> void:
+	if shovel_vine_flash_tween:
+		shovel_vine_flash_tween.kill()
+		shovel_vine_flash_tween = null
+
+
+func _clear_shovel_vine_flash_tween() -> void:
+	shovel_vine_flash_tween = null
+
+
+func _start_shovel_vine_fade(delay: float, duration: float) -> void:
+	if not is_instance_valid(shovel_vine_cable):
+		return
+
+	_kill_shovel_vine_alpha_tween()
+	shovel_vine_alpha_tween = create_tween()
+	if delay > 0.0:
+		shovel_vine_alpha_tween.tween_interval(delay)
+	shovel_vine_alpha_tween.tween_property(shovel_vine_cable, "alpha_multiplier", 0.0, duration)\
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	shovel_vine_alpha_tween.tween_callback(_clear_shovel_vine_alpha_tween)
+
+
+func _kill_shovel_vine_alpha_tween() -> void:
+	if shovel_vine_alpha_tween:
+		shovel_vine_alpha_tween.kill()
+		shovel_vine_alpha_tween = null
+
+
+func _clear_shovel_vine_alpha_tween() -> void:
+	shovel_vine_alpha_tween = null
+
+
 func _get_shovel_vine_start_pos() -> Vector2:
 	return ui_shovel.get_shovel_screen_center() + SHOVEL_VINE_START_OFFSET
 
@@ -275,7 +331,11 @@ func _hide_shovel_vine() -> void:
 	if shovel_vine_tween:
 		shovel_vine_tween.kill()
 		shovel_vine_tween = null
+	_kill_shovel_vine_alpha_tween()
+	_kill_shovel_vine_flash_tween()
 	shovel_vine_target = null
 	if is_instance_valid(shovel_vine_cable):
-		shovel_vine_cable.call("clear_tension_override")
 		shovel_vine_cable.visible = false
+		shovel_vine_cable.call("clear_tension_override")
+		shovel_vine_cable.set("alpha_multiplier", shovel_vine_alpha)
+		shovel_vine_cable.set("line_flash_boost", 0.0)
