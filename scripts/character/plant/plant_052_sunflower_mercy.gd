@@ -33,12 +33,11 @@ class_name Plant052SunflowerMercy
 @export var rope_spark_color := Color(0.45, 0.8, 1.0, 0.65)
 @export var rope_spark_scale_min := 0.12
 @export var rope_spark_scale_max := 0.35
-@export var mouth_glow_inner_scale := 2.4
-@export var mouth_glow_outer_scale := 6.5
-@export var mouth_glow_inner_color := Color(0.15, 0.65, 1.0, 0.9)
-@export var mouth_glow_outer_color := Color(0.08, 0.35, 1.0, 0.48)
-@export var mouth_glow_pulse_amount := 0.15
-@export var mouth_glow_pulse_speed := 2.8
+@export var mouth_overlay_base_color := Color(0.0, 0.35, 0.72, 0.82)
+@export var mouth_overlay_highlight_color := Color(0.2, 0.65, 0.95, 0.88)
+@export var mouth_overlay_pulse_amount := 0.18
+@export var mouth_overlay_pulse_speed := 2.8
+@export var mouth_overlay_flow_speed := 1.4
 @export var damage_boost_target_plant_types:Array[CharacterRegistry.PlantType] = [
 	CharacterRegistry.PlantType.P001PeaShooterSingle,
 	CharacterRegistry.PlantType.P006SnowPea,
@@ -65,7 +64,7 @@ var source_anchor_node:Node2D
 var target_anchor_node:Node2D
 var damage_boost_mouth_glow_containers:Array[Node2D] = []
 var damage_boost_rope_sparks:Array[Sprite2D] = []
-var mouth_glow_texture:Texture2D
+var mouth_overlay_shader:Shader
 var mouth_particle_texture:Texture2D
 
 const TARGET_ANCHOR_PATHS:Array[NodePath] = [
@@ -335,60 +334,28 @@ func _create_damage_boost_mouth_glow_sprites(target_plant:Plant000Base):
 	var attack_component := target_plant.get_node_or_null(^"AttackComponent")
 	if not attack_component is AttackComponentBulletBase:
 		return
+	var bullet_attack_component := attack_component as AttackComponentBulletBase
 
-	for marker:Marker2D in attack_component.markers_2d_bullet:
+	var mouth_sprites:Array[Sprite2D] = _get_damage_boost_mouth_sprites(target_plant, bullet_attack_component.markers_2d_bullet)
+	for marker:Marker2D in bullet_attack_component.markers_2d_bullet:
 		if not is_instance_valid(marker):
 			continue
-		var container := Node2D.new()
-		container.name = "MercyDamageBoostMouthGlow"
-		container.z_index = 210
-		marker.add_child(container)
-
-		var inner_glow := Sprite2D.new()
-		inner_glow.name = "InnerGlow"
-		inner_glow.texture = _get_mouth_glow_texture()
-		inner_glow.material = _create_mouth_particle_canvas_material()
-		inner_glow.self_modulate = mouth_glow_inner_color
-		inner_glow.scale = Vector2.ONE * mouth_glow_inner_scale
-		container.add_child(inner_glow)
-
-		var outer_glow := Sprite2D.new()
-		outer_glow.name = "OuterGlow"
-		outer_glow.texture = _get_mouth_glow_texture()
-		outer_glow.material = _create_mouth_particle_canvas_material()
-		outer_glow.self_modulate = mouth_glow_outer_color
-		outer_glow.scale = Vector2.ONE * mouth_glow_outer_scale
-		container.add_child(outer_glow)
-
+		var mouth_sprite := _get_closest_mouth_sprite(marker.global_position, mouth_sprites)
+		if not is_instance_valid(mouth_sprite) or _has_damage_boost_mouth_glow(mouth_sprite):
+			continue
+		var container := _create_damage_boost_mouth_overlay(mouth_sprite)
 		damage_boost_mouth_glow_containers.append(container)
 
 
 func _update_damage_boost_mouth_glow():
-	var pulse:float = 1.0 + mouth_glow_pulse_amount * sin(rope_time * mouth_glow_pulse_speed)
-	var alpha_pulse:float = 0.85 + 0.15 * sin(rope_time * mouth_glow_pulse_speed * 1.3)
-
 	for container:Node2D in damage_boost_mouth_glow_containers:
 		if not is_instance_valid(container):
 			continue
-		var inner_glow := container.get_node_or_null(^"InnerGlow") as Sprite2D
-		if is_instance_valid(inner_glow):
-			inner_glow.scale = Vector2.ONE * mouth_glow_inner_scale * pulse
-			inner_glow.self_modulate = Color(
-				mouth_glow_inner_color.r,
-				mouth_glow_inner_color.g,
-				mouth_glow_inner_color.b,
-				mouth_glow_inner_color.a * alpha_pulse
-			)
-
-		var outer_glow := container.get_node_or_null(^"OuterGlow") as Sprite2D
-		if is_instance_valid(outer_glow):
-			outer_glow.scale = Vector2.ONE * mouth_glow_outer_scale * pulse
-			outer_glow.self_modulate = Color(
-				mouth_glow_outer_color.r,
-				mouth_glow_outer_color.g,
-				mouth_glow_outer_color.b,
-				mouth_glow_outer_color.a * alpha_pulse
-			)
+		var mouth_sprite := container.get_parent() as Sprite2D
+		var overlay := container.get_node_or_null(^"MouthBlueOverlay") as Sprite2D
+		if not is_instance_valid(mouth_sprite) or not is_instance_valid(overlay):
+			continue
+		_sync_mouth_overlay_sprite(overlay, mouth_sprite)
 
 
 func _clear_damage_boost_mouth_glow():
@@ -398,29 +365,126 @@ func _clear_damage_boost_mouth_glow():
 	damage_boost_mouth_glow_containers.clear()
 
 
-func _get_mouth_glow_texture() -> Texture2D:
-	if is_instance_valid(mouth_glow_texture):
-		return mouth_glow_texture
+func _create_damage_boost_mouth_overlay(mouth_sprite:Sprite2D) -> Node2D:
+	var container := Node2D.new()
+	container.name = "MercyDamageBoostMouthGlow"
+	container.z_index = 1
+	container.z_as_relative = true
+	mouth_sprite.add_child(container)
 
-	# 守望先锋天使蓝线风格的枪口光晕 — 亮蓝白中心渐变
-	var image_size := 64
-	var image := Image.create(image_size, image_size, false, Image.FORMAT_RGBA8)
-	var center := Vector2(float(image_size - 1) * 0.5, float(image_size - 1) * 0.5)
-	var radius := float(image_size) * 0.5
+	var overlay := Sprite2D.new()
+	overlay.name = "MouthBlueOverlay"
+	overlay.material = _create_mouth_overlay_material()
+	container.add_child(overlay)
+	_sync_mouth_overlay_sprite(overlay, mouth_sprite)
+	return container
 
-	for x in range(image_size):
-		for y in range(image_size):
-			var distance := Vector2(float(x), float(y)).distance_to(center)
-			var t:float = clamp(1.0 - distance / radius, 0.0, 1.0)
-			# 中心亮蓝白 → 边缘透明蓝 (Mercy 蓝线风格)
-			var r:float = lerpf(0.35, 0.02, 1.0 - t)
-			var g:float = lerpf(0.75, 0.08, 1.0 - t)
-			var b:float = lerpf(1.0, 0.15, 1.0 - t)
-			var alpha:float = t * t * t
-			image.set_pixel(x, y, Color(r, g, b, alpha))
 
-	mouth_glow_texture = ImageTexture.create_from_image(image)
-	return mouth_glow_texture
+func _get_damage_boost_mouth_sprites(target_plant:Plant000Base, markers:Array[Marker2D]) -> Array[Sprite2D]:
+	var all_mouth_sprites:Array[Sprite2D] = []
+	_collect_damage_boost_mouth_sprites(target_plant, all_mouth_sprites)
+	if markers.is_empty():
+		return all_mouth_sprites
+
+	var selected_mouth_sprites:Array[Sprite2D] = []
+	for marker:Marker2D in markers:
+		if not is_instance_valid(marker):
+			continue
+		var mouth_sprite := _get_closest_mouth_sprite(marker.global_position, all_mouth_sprites)
+		if is_instance_valid(mouth_sprite) and not selected_mouth_sprites.has(mouth_sprite):
+			selected_mouth_sprites.append(mouth_sprite)
+	return selected_mouth_sprites
+
+
+func _collect_damage_boost_mouth_sprites(node:Node, mouth_sprites:Array[Sprite2D]) -> void:
+	for child:Node in node.get_children():
+		if child is Sprite2D and _is_damage_boost_mouth_sprite(child):
+			mouth_sprites.append(child)
+		_collect_damage_boost_mouth_sprites(child, mouth_sprites)
+
+
+func _is_damage_boost_mouth_sprite(node:Node) -> bool:
+	if not node is Sprite2D:
+		return false
+	var sprite := node as Sprite2D
+	if not is_instance_valid(sprite.texture):
+		return false
+	var node_name := String(sprite.name).to_lower()
+	return node_name.contains("mouth") and not node_name.contains("overlay") and not node_name.contains("glow")
+
+
+func _get_closest_mouth_sprite(global_pos:Vector2, mouth_sprites:Array[Sprite2D]) -> Sprite2D:
+	var closest_mouth_sprite:Sprite2D
+	var closest_distance := INF
+	for mouth_sprite:Sprite2D in mouth_sprites:
+		if not is_instance_valid(mouth_sprite):
+			continue
+		var distance := mouth_sprite.global_position.distance_to(global_pos)
+		if distance < closest_distance:
+			closest_distance = distance
+			closest_mouth_sprite = mouth_sprite
+	return closest_mouth_sprite
+
+
+func _has_damage_boost_mouth_glow(mouth_sprite:Sprite2D) -> bool:
+	return is_instance_valid(mouth_sprite.get_node_or_null(^"MercyDamageBoostMouthGlow"))
+
+
+func _sync_mouth_overlay_sprite(overlay:Sprite2D, mouth_sprite:Sprite2D) -> void:
+	overlay.texture = mouth_sprite.texture
+	overlay.centered = mouth_sprite.centered
+	overlay.offset = mouth_sprite.offset
+	overlay.flip_h = mouth_sprite.flip_h
+	overlay.flip_v = mouth_sprite.flip_v
+	overlay.region_enabled = mouth_sprite.region_enabled
+	overlay.region_rect = mouth_sprite.region_rect
+	overlay.hframes = mouth_sprite.hframes
+	overlay.vframes = mouth_sprite.vframes
+	overlay.frame = mouth_sprite.frame
+	overlay.position = Vector2.ZERO
+	overlay.rotation = 0.0
+	overlay.scale = Vector2.ONE
+	overlay.skew = 0.0
+	overlay.visible = mouth_sprite.visible and is_instance_valid(mouth_sprite.texture)
+
+
+func _create_mouth_overlay_material() -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = _get_mouth_overlay_shader()
+	material.set_shader_parameter("base_color", mouth_overlay_base_color)
+	material.set_shader_parameter("highlight_color", mouth_overlay_highlight_color)
+	material.set_shader_parameter("pulse_amount", mouth_overlay_pulse_amount)
+	material.set_shader_parameter("pulse_speed", mouth_overlay_pulse_speed)
+	material.set_shader_parameter("flow_speed", mouth_overlay_flow_speed)
+	return material
+
+
+func _get_mouth_overlay_shader() -> Shader:
+	if is_instance_valid(mouth_overlay_shader):
+		return mouth_overlay_shader
+
+	mouth_overlay_shader = Shader.new()
+	mouth_overlay_shader.code = """
+shader_type canvas_item;
+render_mode blend_add, unshaded;
+
+uniform vec4 base_color : source_color = vec4(0.0, 0.35, 0.72, 0.82);
+uniform vec4 highlight_color : source_color = vec4(0.2, 0.65, 0.95, 0.88);
+uniform float pulse_amount = 0.18;
+uniform float pulse_speed = 2.8;
+uniform float flow_speed = 1.4;
+
+void fragment() {
+	vec4 tex = texture(TEXTURE, UV);
+	float mask = tex.a;
+	float flow = 0.5 + 0.5 * sin((UV.x * 13.0 + UV.y * 7.0) + TIME * flow_speed * 6.28318);
+	float pulse = 1.0 + pulse_amount * sin(TIME * pulse_speed);
+	vec3 color = mix(base_color.rgb, highlight_color.rgb, flow * 0.45) * pulse;
+	float alpha = mask * mix(base_color.a, highlight_color.a, flow);
+	COLOR = vec4(color, alpha);
+}
+"""
+	return mouth_overlay_shader
 
 
 func _create_damage_boost_rope_sparks():
