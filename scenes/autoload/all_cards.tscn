@@ -568,6 +568,7 @@
 [ext_resource type="Texture2D" uid="uid://ym3cj03fvop4" path="res://assets/reanim/Zombie_dolphinrider_outerleg_lower.png" id="382_3fnx5"]
 [ext_resource type="Texture2D" uid="uid://d3etuf1sy65a1" path="res://assets/reanim/Imitater_blink1.png" id="382_knh0l"]
 [ext_resource type="Texture2D" uid="uid://bnccv7wjkdsph" path="res://assets/reanim/Imitater_hat.png" id="383_junvc"]
+[ext_resource type="Texture2D" path="res://assets/image/plant/070_bonk_choy/frame_sequences/idle/000.png" id="386_bonk0"]
 [ext_resource type="Texture2D" uid="uid://cnf5nehubebbk" path="res://assets/reanim/Zombie_dolphinrider_outerleg_upper.png" id="383_knh0l"]
 [ext_resource type="Texture2D" uid="uid://drnjm8h8oct42" path="res://assets/reanim/Sunflower_Mercy_Card.png" id="383_msri8"]
 [ext_resource type="Texture2D" uid="uid://dyuftdphg1t8n" path="res://assets/reanim/Imitater_Echo.png" id="384_echo"]
@@ -975,6 +976,7 @@ all_plant_card_prefabs = {
 67: NodePath("PlantCards2/Card21"),
 68: NodePath("PlantCards2/Card22"),
 69: NodePath("PlantCards2/Card23"),
+70: NodePath("PlantCards2/Card25"),
 1001: NodePath("PlantCards2/Card"),
 1002: NodePath("PlantCards2/Card2"),
 1003: NodePath("PlantCards2/Card3")
@@ -8544,6 +8546,29 @@ scale = Vector2(0.8, 0.819)
 texture = ExtResource("383_junvc")
 centered = false
 
+[node name="Card25" parent="PlantCards2" unique_id=2089000010 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+card_id = 70
+card_plant_type = 70
+cool_time = 5.0
+sun_cost = 150
+
+[node name="CardBg" parent="PlantCards2/Card25" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant070BonkChoy" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic" index="0" unique_id=2089000011]
+position = Vector2(25, 67)
+scale = Vector2(0.32, 0.32)
+
+[node name="Body" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy" unique_id=2089000012]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy/Body" unique_id=2089000013]
+position = Vector2(-100.5, -178)
+
+[node name="FrameSprite" type="Sprite2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy/Body/BodyCorrect" unique_id=2089000014]
+texture = ExtResource("386_bonk0")
+centered = false
+
 [node name="ZombieCards" type="GridContainer" parent="." unique_id=255774907]
 unique_name_in_owner = true
 layout_mode = 0
@@ -14299,6 +14324,7 @@ centered = false
 [editable path="PlantCards2/Card21"]
 [editable path="PlantCards2/Card22"]
 [editable path="PlantCards2/Card23"]
+[editable path="PlantCards2/Card25"]
 [editable path="ZombieCards/Card1"]
 [editable path="ZombieCards/Card2"]
 [editable path="ZombieCards/Card3"]

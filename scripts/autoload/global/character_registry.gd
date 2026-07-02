@@ -93,6 +93,7 @@ enum PlantType {
 	P067CoffeeBeanAna = 67,
 	P068ScaredyShroomWidowmaker = 68,
 	P069HypnoShroomJuno = 69,
+	P070BonkChoy = 70,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -689,6 +690,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_069_hypno_shroom_juno.tscn")
+		},
+	PlantType.P070BonkChoy: {
+		PlantInfoAttribute.PlantName: "BonkChoy",
+		PlantInfoAttribute.CoolTime: 5.0,
+		PlantInfoAttribute.SunCost: 150,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_070_bonk_choy.tscn")
 		},
 	## 模仿者
 	PlantType.P999Imitater:{
