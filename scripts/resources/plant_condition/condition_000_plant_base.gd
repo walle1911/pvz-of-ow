@@ -54,20 +54,20 @@ func judge_purple_card_can_plant(all_plant_cells, curr_plant_type:CharacterRegis
 ## 获取当前格子紫卡预种植植物
 ## 返回预种植植物,若当前植物格子可以种植紫卡,返回预种植紫卡,
 func get_preplant_purple(plant_cell:PlantCell, curr_plant_type:CharacterRegistry.PlantType) ->Plant000Base:
-	## 紫卡前置植物
-	var precondition_plant:CharacterRegistry.PlantType = Global.character_registry.AllPrePlantPurple[curr_plant_type]
-	## 当前格子存在前置种植植物
-	var condition_precondition_plant :ResourcePlantCondition = Global.character_registry.get_plant_info(precondition_plant, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
-	var place_precondition_plant:CharacterRegistry.PlacePlantInCell = condition_precondition_plant.place_plant_in_cell
-	if is_instance_valid(plant_cell.plant_in_cell[place_precondition_plant]) and\
-	plant_cell.plant_in_cell[place_precondition_plant].plant_type == precondition_plant:
-		## 如果种植位置不相同,并且当前植物格子已有紫卡植物位置的植物
-		if place_precondition_plant != place_plant_in_cell and is_instance_valid(plant_cell.plant_in_cell[place_plant_in_cell]):
-			return null
-		else:
-			return plant_cell.plant_in_cell[place_precondition_plant]
-	else:
-		return null
+	## 紫卡前置植物（一个紫卡可对应多个前置）
+	var precondition_plants:Array = Global.character_registry.AllPrePlantPurple[curr_plant_type]
+	for precondition_plant in precondition_plants:
+		## 当前格子存在前置种植植物
+		var condition_precondition_plant :ResourcePlantCondition = Global.character_registry.get_plant_info(precondition_plant, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
+		var place_precondition_plant:CharacterRegistry.PlacePlantInCell = condition_precondition_plant.place_plant_in_cell
+		if is_instance_valid(plant_cell.plant_in_cell[place_precondition_plant]) and\
+		plant_cell.plant_in_cell[place_precondition_plant].plant_type == precondition_plant:
+			## 如果种植位置不相同,并且当前植物格子已有紫卡植物位置的植物
+			if place_precondition_plant != place_plant_in_cell and is_instance_valid(plant_cell.plant_in_cell[place_plant_in_cell]):
+				return null
+			else:
+				return plant_cell.plant_in_cell[place_precondition_plant]
+	return null
 
 
 ## 获取当前场上所有的紫卡植物的对应预种植植物

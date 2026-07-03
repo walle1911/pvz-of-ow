@@ -178,19 +178,19 @@ enum ZombieInfoAttribute{
 #endregion
 
 
-## 紫卡植物种植前置植物
-@export var AllPrePlantPurple:Dictionary[PlantType, PlantType]= {
-	PlantType.P041GatlingPea:PlantType.P008PeaShooterDouble,
-	PlantType.P042TwinSunFlower:PlantType.P002SunFlower,
-	PlantType.P043GloomShroom:PlantType.P011FumeShroom,
-	PlantType.P044Cattail:PlantType.P017LilyPad,
-	PlantType.P045WinterMelon:PlantType.P040MelonPult,
-	PlantType.P046GoldMagnet:PlantType.P032MagnetShroom,
-	PlantType.P047SpikeRock:PlantType.P022Caltrop,
-	PlantType.P048CobCannon:PlantType.P035CornPult,
-	PlantType.P056GatlingPeaBastion:PlantType.P008PeaShooterDouble,
-	PlantType.P058CattailJetpackCat:PlantType.P017LilyPad,
-	PlantType.P063GloomShroomMoira:PlantType.P011FumeShroom,
+## 紫卡植物种植前置植物（一个紫卡可对应多个可叠加的前置植物）
+@export var AllPrePlantPurple:Dictionary[PlantType, Array]= {
+	PlantType.P041GatlingPea:[PlantType.P008PeaShooterDouble],
+	PlantType.P042TwinSunFlower:[PlantType.P002SunFlower],
+	PlantType.P043GloomShroom:[PlantType.P011FumeShroom, PlantType.P065FumeShroomRoadhog],
+	PlantType.P044Cattail:[PlantType.P017LilyPad],
+	PlantType.P045WinterMelon:[PlantType.P040MelonPult],
+	PlantType.P046GoldMagnet:[PlantType.P032MagnetShroom],
+	PlantType.P047SpikeRock:[PlantType.P022Caltrop],
+	PlantType.P048CobCannon:[PlantType.P035CornPult],
+	PlantType.P056GatlingPeaBastion:[PlantType.P008PeaShooterDouble],
+	PlantType.P058CattailJetpackCat:[PlantType.P017LilyPad],
+	PlantType.P063GloomShroomMoira:[PlantType.P011FumeShroom, PlantType.P065FumeShroomRoadhog],
 }
 
 const PlantInfo = {
