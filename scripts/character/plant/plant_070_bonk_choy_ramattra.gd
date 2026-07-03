@@ -1,5 +1,5 @@
 extends Plant000Base
-class_name Plant070BonkChoy
+class_name Plant070BonkChoyRamattra
 
 @onready var detect_component: DetectComponent = $DetectComponent
 @onready var frame_sprite: Sprite2D = $Body/BodyCorrect/FrameSprite
@@ -38,22 +38,30 @@ const FRAME_COUNTS := {
 }
 
 const STATE_ANCHORS := {
-	STATE_IDLE: Vector2(100.5, 178.0),
-	ATTACK_STATE_FRONT: Vector2(145.5, 183.5),
-	ATTACK_STATE_BACK: Vector2(288.5, 183.5),
-	ATTACK_STATE_FRONT_UPPERCUT: Vector2(154.5, 333.0),
-	ATTACK_STATE_BACK_UPPERCUT: Vector2(207.5, 333.0),
+	STATE_IDLE: Vector2(119.5, 207.0),
+	ATTACK_STATE_FRONT: Vector2(154.5, 318.0),
+	ATTACK_STATE_BACK: Vector2(280.5, 318.0),
+	ATTACK_STATE_FRONT_UPPERCUT: Vector2(144.0, 323.0),
+	ATTACK_STATE_BACK_UPPERCUT: Vector2(180.0, 323.0),
 	STATE_PLANT_FOOD_START: Vector2(153.0, 171.0),
 	STATE_PLANT_FOOD: Vector2(282.5, 505.0),
 	STATE_PLANT_FOOD_END: Vector2(154.5, 171.0),
 	STATE_WATERED: Vector2(138.5, 179.0),
 }
 
+const STATE_SCALES := {
+	STATE_IDLE: 0.44,
+	ATTACK_STATE_FRONT: 0.48,
+	ATTACK_STATE_BACK: 0.48,
+	ATTACK_STATE_FRONT_UPPERCUT: 0.48,
+	ATTACK_STATE_BACK_UPPERCUT: 0.48,
+}
+
 const ATTACK_HIT_FRAMES := {
-	ATTACK_STATE_FRONT: 5,
-	ATTACK_STATE_BACK: 5,
-	ATTACK_STATE_FRONT_UPPERCUT: 7,
-	ATTACK_STATE_BACK_UPPERCUT: 7,
+	ATTACK_STATE_FRONT: 3,
+	ATTACK_STATE_BACK: 3,
+	ATTACK_STATE_FRONT_UPPERCUT: 5,
+	ATTACK_STATE_BACK_UPPERCUT: 5,
 }
 
 const PLANT_FOOD_HIT_FRAMES := [6, 12, 18, 24]
@@ -64,6 +72,9 @@ const PLANT_FOOD_HIT_FRAMES := [6, 12, 18, 24]
 @export var plant_food_attack_value := 45
 @export var frame_time := 0.033
 @export var frame_scale := 0.55
+@export_group("动画平滑")
+@export var idle_frame_blend_enabled := true
+@export_range(0.0, 1.0, 0.05) var idle_frame_blend_strength := 1.0
 @export_group("动画状态")
 @export var is_attack := false
 @export var is_plant_food := false
@@ -81,6 +92,7 @@ var _speed_product := 1.0
 var _is_frames_loaded := false
 var _normal_attack_streak_side := 0
 var _normal_attack_streak_count := 0
+var _frame_blend_sprite: Sprite2D = null
 
 
 func ready_norm() -> void:
@@ -121,6 +133,7 @@ func _process(delta: float) -> void:
 	while _frame_elapsed >= frame_time:
 		_frame_elapsed -= frame_time
 		_advance_frame()
+	_update_frame_blend()
 
 
 func owner_update_speed(speed_product: float):
@@ -247,10 +260,70 @@ func _apply_frame():
 		return
 
 	_frame_index = clampi(_frame_index, 0, textures.size() - 1)
+	var state_scale := _get_state_scale(_state)
 	frame_sprite.texture = textures[_frame_index]
 	frame_sprite.centered = false
-	frame_sprite.scale = Vector2(frame_scale, frame_scale)
-	frame_sprite.position = -STATE_ANCHORS.get(_state, STATE_ANCHORS[STATE_IDLE]) * frame_scale
+	frame_sprite.scale = Vector2(state_scale, state_scale)
+	frame_sprite.position = -STATE_ANCHORS.get(_state, STATE_ANCHORS[STATE_IDLE]) * state_scale
+	_update_frame_blend()
+
+
+func _get_state_scale(state: StringName) -> float:
+	return float(STATE_SCALES.get(state, frame_scale))
+
+
+func _update_frame_blend():
+	if not _should_blend_state(_state) or frame_time <= 0.0:
+		_hide_frame_blend()
+		return
+
+	var textures: Array = _frames.get(_state, [])
+	if textures.size() <= 1:
+		_hide_frame_blend()
+		return
+
+	var next_frame_index := _frame_index + 1
+	if next_frame_index >= textures.size():
+		if _is_looping:
+			next_frame_index = 0
+		else:
+			_hide_frame_blend()
+			return
+
+	var blend_sprite := _ensure_frame_blend_sprite()
+	var blend_alpha := clampf(_frame_elapsed / frame_time, 0.0, 1.0) * clampf(idle_frame_blend_strength, 0.0, 1.0)
+	var state_scale := _get_state_scale(_state)
+	frame_sprite.self_modulate = Color(1.0, 1.0, 1.0, 1.0 - blend_alpha)
+	blend_sprite.visible = blend_alpha > 0.0
+	blend_sprite.texture = textures[next_frame_index]
+	blend_sprite.centered = false
+	blend_sprite.scale = Vector2(state_scale, state_scale)
+	blend_sprite.position = frame_sprite.position
+	blend_sprite.self_modulate = Color(1.0, 1.0, 1.0, blend_alpha)
+
+
+func _should_blend_state(state: StringName) -> bool:
+	return idle_frame_blend_enabled and state == STATE_IDLE
+
+
+func _ensure_frame_blend_sprite() -> Sprite2D:
+	if is_instance_valid(_frame_blend_sprite):
+		return _frame_blend_sprite
+
+	_frame_blend_sprite = Sprite2D.new()
+	_frame_blend_sprite.name = "FrameBlendSprite"
+	_frame_blend_sprite.centered = false
+	_frame_blend_sprite.visible = false
+	frame_sprite.get_parent().add_child(_frame_blend_sprite)
+	frame_sprite.get_parent().move_child(_frame_blend_sprite, frame_sprite.get_index() + 1)
+	return _frame_blend_sprite
+
+
+func _hide_frame_blend():
+	frame_sprite.self_modulate = Color.WHITE
+	if is_instance_valid(_frame_blend_sprite):
+		_frame_blend_sprite.visible = false
+		_frame_blend_sprite.texture = null
 
 
 func _handle_frame_events():

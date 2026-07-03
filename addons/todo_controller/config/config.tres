@@ -184,6 +184,7 @@ script_list_meta = {
 "res://scripts/character/plant/plant_067_coffee_bean_ana.gd": [-1, -1],
 "res://scripts/character/plant/plant_068_scaredy_shroom_widowmaker.gd": [-1, -1],
 "res://scripts/character/plant/plant_069_hypno_shroom_juno.gd": [-1, -1],
+"res://scripts/character/plant/plant_070_bonk_choy_ramattra.gd": [-1, -1],
 "res://scripts/character/plant/plant_1000_sprout.gd": [-1, -1],
 "res://scripts/character/plant/plant_1001_wall_nut_bowling.gd": [-1, -1],
 "res://scripts/character/plant/plant_999_imitater.gd": [-1, -1],

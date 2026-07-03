@@ -8556,16 +8556,17 @@ sun_cost = 150
 [node name="CardBg" parent="PlantCards2/Card25" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant070BonkChoy" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic" index="0" unique_id=2089000011]
+[node name="Plant070BonkChoyRamattra" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic" index="0" unique_id=2089000011]
 position = Vector2(25, 67)
 scale = Vector2(0.32, 0.32)
 
-[node name="Body" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy" unique_id=2089000012]
+[node name="Body" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoyRamattra" unique_id=2089000012]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy/Body" unique_id=2089000013]
-position = Vector2(-100.5, -178)
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoyRamattra/Body" unique_id=2089000013]
+position = Vector2(-108.745, -188.37)
 
-[node name="FrameSprite" type="Sprite2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoy/Body/BodyCorrect" unique_id=2089000014]
+[node name="FrameSprite" type="Sprite2D" parent="PlantCards2/Card25/CardBg/CharacterStatic/Plant070BonkChoyRamattra/Body/BodyCorrect" unique_id=2089000014]
+scale = Vector2(0.91, 0.91)
 texture = ExtResource("386_bonk0")
 centered = false
 
