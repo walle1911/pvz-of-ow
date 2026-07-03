@@ -7,7 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://3rd1uiq8lpn8" path="res://assets/reanim/Magnetshroom_head1.png" id="4_fmi46"]
 [ext_resource type="Texture2D" uid="uid://2snv65tl4xk6" path="res://assets/reanim/Magnetshroom_stemcap_overlay.png" id="5_joae0"]
 [ext_resource type="Texture2D" uid="uid://dl3cfd2n18484" path="res://assets/reanim/Magnetshroom_eye1.png" id="6_52fw1"]
+[ext_resource type="Texture2D" uid="uid://508meevxqgtf" path="res://assets/reanim/MagnetShroom_Sombra_Face (1).png" id="6_py1ht"]
 [ext_resource type="Texture2D" uid="uid://cac85x53tvblx" path="res://assets/reanim/Magnetshroom_eyeblink3.png" id="7_4o74c"]
+[ext_resource type="Texture2D" uid="uid://ook5ilqyan66" path="res://assets/reanim/MagnetShroom_Sombra_Overlay.png" id="8_bbgs6"]
 [ext_resource type="Texture2D" uid="uid://b03m7og0h7653" path="res://assets/reanim/Magnetshroom_eyebrow.png" id="8_ilpu8"]
 [ext_resource type="Animation" uid="uid://crcgp4xy72of0" path="res://animation/character/plant/032_magnet_shroom/Magnetshroom_idle.tres" id="9_751g4"]
 [ext_resource type="Texture2D" uid="uid://j4xw4erjse5o" path="res://assets/reanim/Magnetshroom_idle_electric3.png" id="10_fmi46"]
@@ -15,6 +17,7 @@
 [ext_resource type="Animation" uid="uid://d4mvc6wrs744f" path="res://animation/character/plant/032_magnet_shroom/Magnetshroom_nonactive_idle2.tres" id="11_hfq51"]
 [ext_resource type="Animation" uid="uid://cq0rhsyu667e2" path="res://animation/character/plant/032_magnet_shroom/Magnetshroom_shooting.tres" id="12_yvast"]
 [ext_resource type="Animation" uid="uid://lj17wuby085" path="res://animation/character/plant/032_magnet_shroom/Magnetshroom_sleep.tres" id="13_6ml1a"]
+[ext_resource type="Texture2D" uid="uid://drdi3pwalu37f" path="res://assets/reanim/MagnetShroom_Sombra_Shock.png" id="13_sfeky"]
 [ext_resource type="Script" uid="uid://c0xqtq7j1rek2" path="res://scripts/character/components/component_magnet.gd" id="16_joae0"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0q7qt"]
@@ -107,47 +110,60 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-43, -68)
 
 [node name="Magnetshroom_stem" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=886978702]
-position = Vector2(35.851807, 58.124096)
-scale = Vector2(0.6, 0.6192771)
-skew = -0.0025234236
+position = Vector2(33.71073, 59.244633)
+scale = Vector2(0.6, 0.5813841)
+skew = -0.16204952
 texture = ExtResource("2_1ji1j")
 centered = false
 
 [node name="Magnetshroom_stemcap" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=594448277]
-position = Vector2(27.739758, 44.708435)
-rotation = -0.0018925677
-scale = Vector2(0.60036147, 0.6189156)
-skew = -0.00021028129
+position = Vector2(23.893784, 50.567802)
+rotation = -0.13208301
+scale = Vector2(0.61695486, 0.56487566)
+skew = -0.009988844
 texture = ExtResource("3_vvqvt")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1601326439]
-position = Vector2(1.6831282, -5.359031)
-rotation = -0.0025234236
-scale = Vector2(0.6, 0.6192771)
-skew = -0.00042056257
+position = Vector2(-9.5615835, 9.857068)
+rotation = -0.17783643
+scale = Vector2(0.597, 0.57938415)
+skew = -0.013962417
 texture = ExtResource("4_fmi46")
 centered = false
 
+[node name="MagnetShroom_Sombra_Face (1)" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="0" unique_id=1686098150]
+position = Vector2(66.05, 67.92)
+scale = Vector2(1.21, 1.21)
+texture = ExtResource("6_py1ht")
+
 [node name="Magnetshroom_stemcap_overlay" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1856262425]
-position = Vector2(27.727709, 44.796387)
-rotation = -0.0018925677
-scale = Vector2(0.60036147, 0.6192771)
-skew = -0.00021028129
+position = Vector2(23.793783, 50.323166)
+rotation = -0.13208301
+scale = Vector2(0.61695486, 0.580661)
+skew = -0.009988844
 texture = ExtResource("5_joae0")
 centered = false
 
+[node name="MagnetShroom_Sombra_Overlay" type="Sprite2D" parent="Body/BodyCorrect/Magnetshroom_stemcap_overlay" index="0" unique_id=455218715]
+position = Vector2(25.53, 26.82)
+rotation = -0.05235988
+scale = Vector2(0.88, 0.88)
+texture = ExtResource("8_bbgs6")
+
 [node name="Anim_eyes" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1790336464]
-position = Vector2(34.803616, 36.496387)
-rotation = -0.0025234236
-scale = Vector2(0.6, 0.6192771)
+position = Vector2(30.110733, 42.4678)
+rotation = -0.16658558
+scale = Vector2(0.599, 0.580661)
+skew = -0.011250671
 texture = ExtResource("6_52fw1")
 centered = false
 
 [node name="Anim_eyes2" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=947419126]
-position = Vector2(49.49156, 31.660242)
-rotation = -0.0025234236
-scale = Vector2(0.57, 0.5882771)
+position = Vector2(43.71073, 35.595486)
+rotation = -0.16658558
+scale = Vector2(0.569, 0.55138415)
+skew = -0.011250671
 texture = ExtResource("6_52fw1")
 centered = false
 
@@ -174,18 +190,18 @@ texture = ExtResource("7_4o74c")
 centered = false
 
 [node name="Magnetshroom_eyebrows" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=917173113]
-position = Vector2(40.603615, 31.932531)
-rotation = 1.1889057
-scale = Vector2(0.6153976, 0.60187954)
-skew = -0.02184825
+position = Vector2(35.21073, 39.1678)
+rotation = 0.9920176
+scale = Vector2(0.5851073, 0.5932768)
+skew = 0.029483115
 texture = ExtResource("8_ilpu8")
 centered = false
 
 [node name="Magnetshroom_eyebrows2" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=16717075]
-position = Vector2(47.891563, 28.620483)
-rotation = 1.789927
-scale = Vector2(0.6172771, 0.6)
-skew = -3.1263018
+position = Vector2(41.88305, 34.940117)
+rotation = 1.6263506
+scale = Vector2(0.57938415, 0.5987232)
+skew = -3.1428556
 texture = ExtResource("8_ilpu8")
 centered = false
 
@@ -195,20 +211,21 @@ centered = false
 
 [node name="Magnetshroom_shock" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=1440996947]
 visible = false
-position = Vector2(30.6, 9)
-rotation = 0.075049
-scale = Vector2(0.6, 0.6)
+position = Vector2(18.4, 16.2)
+rotation = -0.099484
+scale = Vector2(0.599, 0.599)
 texture = ExtResource("10_fmi46")
 centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Magnetshroom_shock" index="0" unique_id=641183144]
+position = Vector2(17.71, 13.52)
+texture = ExtResource("13_sfeky")
 
 [node name="CurrIronContainer" type="Node2D" parent="Body" index="1" unique_id=1147693922]
 z_index = 10
 position = Vector2(21, -42)
 
 [node name="HpComponent" parent="." index="3"]
-visible = false
-
-[node name="HurtBoxComponent" parent="." index="7"]
 visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=1846445044]

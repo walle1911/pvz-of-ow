@@ -1,12 +1,10 @@
-[gd_resource type="Animation" load_steps=12 format=3 uid="uid://bixk3lhrkpgdn"]
+[gd_resource type="Animation" format=3 uid="uid://bixk3lhrkpgdn"]
 
 [ext_resource type="Texture2D" uid="uid://crmmrx3udqb0" path="res://assets/reanim/GloomShroom_base.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://crtc0e5ars06p" path="res://assets/reanim/GloomShroom_shooter4.png" id="1_fuck"]
 [ext_resource type="Texture2D" uid="uid://kayk4ioac4ge" path="res://assets/reanim/GloomShroom_shooter5.png" id="2_fuck"]
 [ext_resource type="Texture2D" uid="uid://dbufjppsufks" path="res://assets/reanim/GloomShroom_head.png" id="3_fuck"]
-[ext_resource type="Texture2D" uid="uid://buljqolbwkqsf" path="res://assets/reanim/GloomShroom_stem1.png" id="4_fuck"]
 [ext_resource type="Texture2D" uid="uid://btqhc7w415bc4" path="res://assets/reanim/GloomShroom_shooter1.png" id="5_fuck"]
-[ext_resource type="Texture2D" uid="uid://cxhcfy34a1jcr" path="res://assets/reanim/GloomShroom_stem2.png" id="6_fuck"]
 [ext_resource type="Texture2D" uid="uid://blnjxkyjc8hps" path="res://assets/reanim/GloomShroom_shooter2.png" id="7_fuck"]
 [ext_resource type="Texture2D" uid="uid://c3vhpes4gfdnm" path="res://assets/reanim/GloomShroom_stem3.png" id="8_fuck"]
 [ext_resource type="Texture2D" uid="uid://8xpg1e5uv1h" path="res://assets/reanim/GloomShroom_shooter3.png" id="9_fuck"]
@@ -776,7 +774,7 @@ tracks/62/keys = {
 tracks/63/type = "value"
 tracks/63/imported = false
 tracks/63/enabled = true
-tracks/63/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:visible")
+tracks/63/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:visible")
 tracks/63/interp = 1
 tracks/63/loop_wrap = true
 tracks/63/keys = {
@@ -788,19 +786,19 @@ tracks/63/keys = {
 tracks/64/type = "value"
 tracks/64/imported = false
 tracks/64/enabled = true
-tracks/64/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:position")
+tracks/64/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:position")
 tracks/64/interp = 1
 tracks/64/loop_wrap = true
 tracks/64/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(31.4, 49.4), Vector2(31.5, 48.9), Vector2(31.6, 48.5), Vector2(31.8, 48.1), Vector2(31.7, 48.7), Vector2(31.6, 49.4), Vector2(31.4, 50), Vector2(31.3, 50.6), Vector2(31.2, 51.3), Vector2(31.1, 52), Vector2(31, 51.8), Vector2(31, 51.5), Vector2(31, 51.4), Vector2(31.1, 51), Vector2(31.2, 50.8), Vector2(31.2, 50.4), Vector2(31.3, 50), Vector2(31.4, 49.8), Vector2(31.4, 49.4)]
+"values": [Vector2(29.3, 51.1), Vector2(29.4, 50.5), Vector2(29.6, 50), Vector2(29.6, 49.4), Vector2(29.5, 50.4), Vector2(29.3, 51.4), Vector2(29.2, 52.3), Vector2(29.1, 53.3), Vector2(28.9, 54.3), Vector2(28.8, 55.2), Vector2(28.8, 55.1), Vector2(28.8, 55), Vector2(28.7, 54.9), Vector2(28.8, 54.3), Vector2(28.9, 53.6), Vector2(29, 53), Vector2(29.1, 52.4), Vector2(29.2, 51.8), Vector2(29.3, 51.1)]
 }
 tracks/65/type = "value"
 tracks/65/imported = false
 tracks/65/enabled = true
-tracks/65/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:rotation")
+tracks/65/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:rotation")
 tracks/65/interp = 1
 tracks/65/loop_wrap = true
 tracks/65/keys = {
@@ -812,7 +810,7 @@ tracks/65/keys = {
 tracks/66/type = "value"
 tracks/66/imported = false
 tracks/66/enabled = true
-tracks/66/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:scale")
+tracks/66/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:scale")
 tracks/66/interp = 1
 tracks/66/loop_wrap = true
 tracks/66/keys = {
@@ -824,7 +822,7 @@ tracks/66/keys = {
 tracks/67/type = "value"
 tracks/67/imported = false
 tracks/67/enabled = true
-tracks/67/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:skew")
+tracks/67/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:skew")
 tracks/67/interp = 1
 tracks/67/loop_wrap = true
 tracks/67/keys = {
@@ -836,19 +834,19 @@ tracks/67/keys = {
 tracks/68/type = "value"
 tracks/68/imported = false
 tracks/68/enabled = true
-tracks/68/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:texture")
+tracks/68/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:texture")
 tracks/68/interp = 1
 tracks/68/loop_wrap = true
 tracks/68/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("4_fuck"), ExtResource("4_fuck")]
+"values": [ExtResource("5_fuck"), ExtResource("5_fuck")]
 }
 tracks/69/type = "value"
 tracks/69/imported = false
 tracks/69/enabled = true
-tracks/69/path = NodePath("Body/BodyCorrect/GloomShroom_stem1:self_modulate")
+tracks/69/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:self_modulate")
 tracks/69/interp = 1
 tracks/69/loop_wrap = true
 tracks/69/keys = {
@@ -860,7 +858,7 @@ tracks/69/keys = {
 tracks/70/type = "value"
 tracks/70/imported = false
 tracks/70/enabled = true
-tracks/70/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:visible")
+tracks/70/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:visible")
 tracks/70/interp = 1
 tracks/70/loop_wrap = true
 tracks/70/keys = {
@@ -872,19 +870,19 @@ tracks/70/keys = {
 tracks/71/type = "value"
 tracks/71/imported = false
 tracks/71/enabled = true
-tracks/71/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:position")
+tracks/71/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:position")
 tracks/71/interp = 1
 tracks/71/loop_wrap = true
 tracks/71/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(29.3, 51.1), Vector2(29.4, 50.5), Vector2(29.6, 50), Vector2(29.6, 49.4), Vector2(29.5, 50.4), Vector2(29.3, 51.4), Vector2(29.2, 52.3), Vector2(29.1, 53.3), Vector2(28.9, 54.3), Vector2(28.8, 55.2), Vector2(28.8, 55.1), Vector2(28.8, 55), Vector2(28.7, 54.9), Vector2(28.8, 54.3), Vector2(28.9, 53.6), Vector2(29, 53), Vector2(29.1, 52.4), Vector2(29.2, 51.8), Vector2(29.3, 51.1)]
+"values": [Vector2(8.1, 41.4), Vector2(8.3, 40.4), Vector2(8.4, 39.3), Vector2(8.5, 38.3), Vector2(8.5, 39.4), Vector2(8.4, 40.4), Vector2(8.3, 41.6), Vector2(8.3, 42.6), Vector2(8.2, 43.8), Vector2(8.1, 44.9), Vector2(7.8, 44.9), Vector2(7.6, 44.9), Vector2(7.3, 44.9), Vector2(7.5, 44.4), Vector2(7.6, 43.8), Vector2(7.7, 43.2), Vector2(7.8, 42.5), Vector2(8, 42), Vector2(8.1, 41.4)]
 }
 tracks/72/type = "value"
 tracks/72/imported = false
 tracks/72/enabled = true
-tracks/72/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:rotation")
+tracks/72/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:rotation")
 tracks/72/interp = 1
 tracks/72/loop_wrap = true
 tracks/72/keys = {
@@ -896,19 +894,19 @@ tracks/72/keys = {
 tracks/73/type = "value"
 tracks/73/imported = false
 tracks/73/enabled = true
-tracks/73/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:scale")
+tracks/73/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:scale")
 tracks/73/interp = 1
 tracks/73/loop_wrap = true
 tracks/73/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.792, 0.81), Vector2(0.785, 0.819), Vector2(0.777, 0.829), Vector2(0.787, 0.82), Vector2(0.796, 0.81), Vector2(0.806, 0.801), Vector2(0.815, 0.792), Vector2(0.824, 0.783), Vector2(0.834, 0.774), Vector2(0.837, 0.773), Vector2(0.84, 0.772), Vector2(0.842, 0.771), Vector2(0.835, 0.776), Vector2(0.828, 0.781), Vector2(0.821, 0.786), Vector2(0.814, 0.79), Vector2(0.807, 0.795), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.797, 0.813), Vector2(0.793, 0.825), Vector2(0.79, 0.838), Vector2(0.791, 0.831), Vector2(0.793, 0.825), Vector2(0.795, 0.819), Vector2(0.797, 0.813), Vector2(0.798, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
 }
 tracks/74/type = "value"
 tracks/74/imported = false
 tracks/74/enabled = true
-tracks/74/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:skew")
+tracks/74/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:skew")
 tracks/74/interp = 1
 tracks/74/loop_wrap = true
 tracks/74/keys = {
@@ -920,19 +918,19 @@ tracks/74/keys = {
 tracks/75/type = "value"
 tracks/75/imported = false
 tracks/75/enabled = true
-tracks/75/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:texture")
+tracks/75/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:texture")
 tracks/75/interp = 1
 tracks/75/loop_wrap = true
 tracks/75/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("5_fuck"), ExtResource("5_fuck")]
+"values": [ExtResource("7_fuck"), ExtResource("7_fuck")]
 }
 tracks/76/type = "value"
 tracks/76/imported = false
 tracks/76/enabled = true
-tracks/76/path = NodePath("Body/BodyCorrect/GloomShroom_shooter1:self_modulate")
+tracks/76/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:self_modulate")
 tracks/76/interp = 1
 tracks/76/loop_wrap = true
 tracks/76/keys = {
@@ -944,7 +942,7 @@ tracks/76/keys = {
 tracks/77/type = "value"
 tracks/77/imported = false
 tracks/77/enabled = true
-tracks/77/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:visible")
+tracks/77/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:visible")
 tracks/77/interp = 1
 tracks/77/loop_wrap = true
 tracks/77/keys = {
@@ -956,67 +954,67 @@ tracks/77/keys = {
 tracks/78/type = "value"
 tracks/78/imported = false
 tracks/78/enabled = true
-tracks/78/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:position")
+tracks/78/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:position")
 tracks/78/interp = 1
 tracks/78/loop_wrap = true
 tracks/78/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(9.3, 40.4), Vector2(9.7, 39.8), Vector2(10.2, 39.2), Vector2(10.6, 38.6), Vector2(10.4, 39.5), Vector2(10.2, 40.1), Vector2(9.9, 40.9), Vector2(9.7, 41.5), Vector2(9.5, 42.3), Vector2(9.3, 43), Vector2(9, 42.8), Vector2(8.8, 42.7), Vector2(8.5, 42.5), Vector2(8.6, 42.2), Vector2(8.8, 41.8), Vector2(8.8, 41.5), Vector2(9, 41.1), Vector2(9.1, 40.8), Vector2(9.3, 40.4)]
+"values": [Vector2(73.2, 42.6), Vector2(73, 41.6), Vector2(72.8, 40.6), Vector2(72.8, 39.5), Vector2(72.8, 40.7), Vector2(72.8, 41.7), Vector2(72.9, 42.9), Vector2(73, 43.9), Vector2(73.1, 45.1), Vector2(73.2, 46.1), Vector2(73.4, 46.1), Vector2(73.7, 46.1), Vector2(74, 46.1), Vector2(73.8, 45.6), Vector2(73.7, 45), Vector2(73.5, 44.4), Vector2(73.4, 43.8), Vector2(73.3, 43.3), Vector2(73.2, 42.6)]
 }
 tracks/79/type = "value"
 tracks/79/imported = false
 tracks/79/enabled = true
-tracks/79/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:rotation")
+tracks/79/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:rotation")
 tracks/79/interp = 1
 tracks/79/loop_wrap = true
 tracks/79/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
 }
 tracks/80/type = "value"
 tracks/80/imported = false
 tracks/80/enabled = true
-tracks/80/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:scale")
+tracks/80/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:scale")
 tracks/80/interp = 1
 tracks/80/loop_wrap = true
 tracks/80/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.789, 0.813), Vector2(0.777, 0.825), Vector2(0.766, 0.838), Vector2(0.772, 0.831), Vector2(0.777, 0.825), Vector2(0.783, 0.819), Vector2(0.789, 0.813), Vector2(0.794, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.797, 0.813), Vector2(0.793, 0.825), Vector2(0.79, 0.838), Vector2(0.791, 0.831), Vector2(0.793, 0.825), Vector2(0.795, 0.819), Vector2(0.797, 0.813), Vector2(0.798, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
 }
 tracks/81/type = "value"
 tracks/81/imported = false
 tracks/81/enabled = true
-tracks/81/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:skew")
+tracks/81/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:skew")
 tracks/81/interp = 1
 tracks/81/loop_wrap = true
 tracks/81/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
 }
 tracks/82/type = "value"
 tracks/82/imported = false
 tracks/82/enabled = true
-tracks/82/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:texture")
+tracks/82/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:texture")
 tracks/82/interp = 1
 tracks/82/loop_wrap = true
 tracks/82/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("6_fuck"), ExtResource("6_fuck")]
+"values": [ExtResource("7_fuck"), ExtResource("7_fuck")]
 }
 tracks/83/type = "value"
 tracks/83/imported = false
 tracks/83/enabled = true
-tracks/83/path = NodePath("Body/BodyCorrect/GloomShroom_stem2:self_modulate")
+tracks/83/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:self_modulate")
 tracks/83/interp = 1
 tracks/83/loop_wrap = true
 tracks/83/keys = {
@@ -1028,7 +1026,7 @@ tracks/83/keys = {
 tracks/84/type = "value"
 tracks/84/imported = false
 tracks/84/enabled = true
-tracks/84/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:visible")
+tracks/84/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:visible")
 tracks/84/interp = 1
 tracks/84/loop_wrap = true
 tracks/84/keys = {
@@ -1040,67 +1038,67 @@ tracks/84/keys = {
 tracks/85/type = "value"
 tracks/85/imported = false
 tracks/85/enabled = true
-tracks/85/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:position")
+tracks/85/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:position")
 tracks/85/interp = 1
 tracks/85/loop_wrap = true
 tracks/85/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(72, 41.6), Vector2(71.6, 41), Vector2(71.1, 40.5), Vector2(70.7, 40), Vector2(70.9, 40.8), Vector2(71.1, 41.4), Vector2(71.3, 42.1), Vector2(71.6, 42.8), Vector2(71.8, 43.5), Vector2(72, 44.2), Vector2(72.3, 44), Vector2(72.5, 44), Vector2(72.8, 43.8), Vector2(72.7, 43.5), Vector2(72.5, 43), Vector2(72.3, 42.8), Vector2(72.3, 42.4), Vector2(72.2, 42), Vector2(72, 41.6)]
+"values": [Vector2(2.4, 24), Vector2(2.8, 23.1), Vector2(3.3, 22.3), Vector2(3.8, 21.5), Vector2(3.4, 22.5), Vector2(3, 23.6), Vector2(2.7, 24.7), Vector2(2.4, 25.8), Vector2(2, 26.8), Vector2(1.7, 27.9), Vector2(1.5, 27.8), Vector2(1.3, 27.8), Vector2(1, 27.8), Vector2(1.2, 27.1), Vector2(1.4, 26.5), Vector2(1.7, 25.8), Vector2(2, 25.2), Vector2(2.1, 24.6), Vector2(2.4, 24)]
 }
 tracks/86/type = "value"
 tracks/86/imported = false
 tracks/86/enabled = true
-tracks/86/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:rotation")
+tracks/86/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:rotation")
 tracks/86/interp = 1
 tracks/86/loop_wrap = true
 tracks/86/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/87/type = "value"
 tracks/87/imported = false
 tracks/87/enabled = true
-tracks/87/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:scale")
+tracks/87/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:scale")
 tracks/87/interp = 1
 tracks/87/loop_wrap = true
 tracks/87/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.789, 0.813), Vector2(0.777, 0.825), Vector2(0.766, 0.838), Vector2(0.772, 0.831), Vector2(0.777, 0.825), Vector2(0.783, 0.819), Vector2(0.789, 0.813), Vector2(0.794, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
 }
 tracks/88/type = "value"
 tracks/88/imported = false
 tracks/88/enabled = true
-tracks/88/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:skew")
+tracks/88/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:skew")
 tracks/88/interp = 1
 tracks/88/loop_wrap = true
 tracks/88/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/89/type = "value"
 tracks/89/imported = false
 tracks/89/enabled = true
-tracks/89/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:texture")
+tracks/89/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:texture")
 tracks/89/interp = 1
 tracks/89/loop_wrap = true
 tracks/89/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("6_fuck"), ExtResource("6_fuck")]
+"values": [ExtResource("8_fuck"), ExtResource("8_fuck")]
 }
 tracks/90/type = "value"
 tracks/90/imported = false
 tracks/90/enabled = true
-tracks/90/path = NodePath("Body/BodyCorrect/GloomShroom_stem22:self_modulate")
+tracks/90/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:self_modulate")
 tracks/90/interp = 1
 tracks/90/loop_wrap = true
 tracks/90/keys = {
@@ -1112,7 +1110,7 @@ tracks/90/keys = {
 tracks/91/type = "value"
 tracks/91/imported = false
 tracks/91/enabled = true
-tracks/91/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:visible")
+tracks/91/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:visible")
 tracks/91/interp = 1
 tracks/91/loop_wrap = true
 tracks/91/keys = {
@@ -1124,67 +1122,67 @@ tracks/91/keys = {
 tracks/92/type = "value"
 tracks/92/imported = false
 tracks/92/enabled = true
-tracks/92/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:position")
+tracks/92/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:position")
 tracks/92/interp = 1
 tracks/92/loop_wrap = true
 tracks/92/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(8.1, 41.4), Vector2(8.3, 40.4), Vector2(8.4, 39.3), Vector2(8.5, 38.3), Vector2(8.5, 39.4), Vector2(8.4, 40.4), Vector2(8.3, 41.6), Vector2(8.3, 42.6), Vector2(8.2, 43.8), Vector2(8.1, 44.9), Vector2(7.8, 44.9), Vector2(7.6, 44.9), Vector2(7.3, 44.9), Vector2(7.5, 44.4), Vector2(7.6, 43.8), Vector2(7.7, 43.2), Vector2(7.8, 42.5), Vector2(8, 42), Vector2(8.1, 41.4)]
+"values": [Vector2(78.9, 25.2), Vector2(78.5, 24.4), Vector2(78, 23.6), Vector2(77.5, 22.8), Vector2(77.8, 23.8), Vector2(78.2, 24.9), Vector2(78.6, 25.9), Vector2(78.9, 27.1), Vector2(79.2, 28.1), Vector2(79.6, 29.1), Vector2(79.9, 29.1), Vector2(80.1, 29.1), Vector2(80.3, 29), Vector2(80.1, 28.4), Vector2(79.8, 27.8), Vector2(79.7, 27.1), Vector2(79.4, 26.5), Vector2(79.2, 25.8), Vector2(78.9, 25.2)]
 }
 tracks/93/type = "value"
 tracks/93/imported = false
 tracks/93/enabled = true
-tracks/93/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:rotation")
+tracks/93/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:rotation")
 tracks/93/interp = 1
 tracks/93/loop_wrap = true
 tracks/93/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
 }
 tracks/94/type = "value"
 tracks/94/imported = false
 tracks/94/enabled = true
-tracks/94/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:scale")
+tracks/94/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:scale")
 tracks/94/interp = 1
 tracks/94/loop_wrap = true
 tracks/94/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.797, 0.813), Vector2(0.793, 0.825), Vector2(0.79, 0.838), Vector2(0.791, 0.831), Vector2(0.793, 0.825), Vector2(0.795, 0.819), Vector2(0.797, 0.813), Vector2(0.798, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
 }
 tracks/95/type = "value"
 tracks/95/imported = false
 tracks/95/enabled = true
-tracks/95/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:skew")
+tracks/95/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:skew")
 tracks/95/interp = 1
 tracks/95/loop_wrap = true
 tracks/95/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
 }
 tracks/96/type = "value"
 tracks/96/imported = false
 tracks/96/enabled = true
-tracks/96/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:texture")
+tracks/96/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:texture")
 tracks/96/interp = 1
 tracks/96/loop_wrap = true
 tracks/96/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("7_fuck"), ExtResource("7_fuck")]
+"values": [ExtResource("8_fuck"), ExtResource("8_fuck")]
 }
 tracks/97/type = "value"
 tracks/97/imported = false
 tracks/97/enabled = true
-tracks/97/path = NodePath("Body/BodyCorrect/GloomShroom_shooter2:self_modulate")
+tracks/97/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:self_modulate")
 tracks/97/interp = 1
 tracks/97/loop_wrap = true
 tracks/97/keys = {
@@ -1196,7 +1194,7 @@ tracks/97/keys = {
 tracks/98/type = "value"
 tracks/98/imported = false
 tracks/98/enabled = true
-tracks/98/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:visible")
+tracks/98/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:visible")
 tracks/98/interp = 1
 tracks/98/loop_wrap = true
 tracks/98/keys = {
@@ -1208,67 +1206,67 @@ tracks/98/keys = {
 tracks/99/type = "value"
 tracks/99/imported = false
 tracks/99/enabled = true
-tracks/99/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:position")
+tracks/99/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:position")
 tracks/99/interp = 1
 tracks/99/loop_wrap = true
 tracks/99/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(73.2, 42.6), Vector2(73, 41.6), Vector2(72.8, 40.6), Vector2(72.8, 39.5), Vector2(72.8, 40.7), Vector2(72.8, 41.7), Vector2(72.9, 42.9), Vector2(73, 43.9), Vector2(73.1, 45.1), Vector2(73.2, 46.1), Vector2(73.4, 46.1), Vector2(73.7, 46.1), Vector2(74, 46.1), Vector2(73.8, 45.6), Vector2(73.7, 45), Vector2(73.5, 44.4), Vector2(73.4, 43.8), Vector2(73.3, 43.3), Vector2(73.2, 42.6)]
+"values": [Vector2(-0.4, 22.5), Vector2(0, 21.6), Vector2(0.5, 20.5), Vector2(1, 19.6), Vector2(0.6, 20.6), Vector2(0.2, 21.7), Vector2(0, 22.8), Vector2(-0.4, 23.9), Vector2(-0.8, 24.9), Vector2(-1.1, 26), Vector2(-1.3, 26.5), Vector2(-1.6, 26.9), Vector2(-1.9, 27.3), Vector2(-1.6, 26.6), Vector2(-1.4, 25.8), Vector2(-1.1, 25), Vector2(-0.8, 24.2), Vector2(-0.6, 23.4), Vector2(-0.4, 22.5)]
 }
 tracks/100/type = "value"
 tracks/100/imported = false
 tracks/100/enabled = true
-tracks/100/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:rotation")
+tracks/100/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:rotation")
 tracks/100/interp = 1
 tracks/100/loop_wrap = true
 tracks/100/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/101/type = "value"
 tracks/101/imported = false
 tracks/101/enabled = true
-tracks/101/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:scale")
+tracks/101/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:scale")
 tracks/101/interp = 1
 tracks/101/loop_wrap = true
 tracks/101/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.797, 0.813), Vector2(0.793, 0.825), Vector2(0.79, 0.838), Vector2(0.791, 0.831), Vector2(0.793, 0.825), Vector2(0.795, 0.819), Vector2(0.797, 0.813), Vector2(0.798, 0.806), Vector2(0.8, 0.8), Vector2(0.806, 0.796), Vector2(0.813, 0.792), Vector2(0.819, 0.788), Vector2(0.816, 0.79), Vector2(0.813, 0.792), Vector2(0.81, 0.794), Vector2(0.806, 0.796), Vector2(0.803, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
 }
 tracks/102/type = "value"
 tracks/102/imported = false
 tracks/102/enabled = true
-tracks/102/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:skew")
+tracks/102/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:skew")
 tracks/102/interp = 1
 tracks/102/loop_wrap = true
 tracks/102/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/103/type = "value"
 tracks/103/imported = false
 tracks/103/enabled = true
-tracks/103/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:texture")
+tracks/103/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:texture")
 tracks/103/interp = 1
 tracks/103/loop_wrap = true
 tracks/103/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("7_fuck"), ExtResource("7_fuck")]
+"values": [ExtResource("9_fuck"), ExtResource("9_fuck")]
 }
 tracks/104/type = "value"
 tracks/104/imported = false
 tracks/104/enabled = true
-tracks/104/path = NodePath("Body/BodyCorrect/GloomShroom_shooter22:self_modulate")
+tracks/104/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:self_modulate")
 tracks/104/interp = 1
 tracks/104/loop_wrap = true
 tracks/104/keys = {
@@ -1280,7 +1278,7 @@ tracks/104/keys = {
 tracks/105/type = "value"
 tracks/105/imported = false
 tracks/105/enabled = true
-tracks/105/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:visible")
+tracks/105/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:visible")
 tracks/105/interp = 1
 tracks/105/loop_wrap = true
 tracks/105/keys = {
@@ -1292,31 +1290,31 @@ tracks/105/keys = {
 tracks/106/type = "value"
 tracks/106/imported = false
 tracks/106/enabled = true
-tracks/106/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:position")
+tracks/106/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:position")
 tracks/106/interp = 1
 tracks/106/loop_wrap = true
 tracks/106/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(2.4, 24), Vector2(2.8, 23.1), Vector2(3.3, 22.3), Vector2(3.8, 21.5), Vector2(3.4, 22.5), Vector2(3, 23.6), Vector2(2.7, 24.7), Vector2(2.4, 25.8), Vector2(2, 26.8), Vector2(1.7, 27.9), Vector2(1.5, 27.8), Vector2(1.3, 27.8), Vector2(1, 27.8), Vector2(1.2, 27.1), Vector2(1.4, 26.5), Vector2(1.7, 25.8), Vector2(2, 25.2), Vector2(2.1, 24.6), Vector2(2.4, 24)]
+"values": [Vector2(81.8, 23.8), Vector2(81.3, 22.8), Vector2(80.8, 21.8), Vector2(80.3, 20.9), Vector2(80.7, 21.9), Vector2(81, 23), Vector2(81.4, 24.1), Vector2(81.8, 25.1), Vector2(82.2, 26.2), Vector2(82.6, 27.3), Vector2(82.8, 27.7), Vector2(83.1, 28.1), Vector2(83.3, 28.6), Vector2(83.1, 27.8), Vector2(82.8, 27), Vector2(82.6, 26.2), Vector2(82.3, 25.4), Vector2(82.1, 24.6), Vector2(81.8, 23.8)]
 }
 tracks/107/type = "value"
 tracks/107/imported = false
 tracks/107/enabled = true
-tracks/107/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:rotation")
+tracks/107/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:rotation")
 tracks/107/interp = 1
 tracks/107/loop_wrap = true
 tracks/107/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
 }
 tracks/108/type = "value"
 tracks/108/imported = false
 tracks/108/enabled = true
-tracks/108/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:scale")
+tracks/108/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:scale")
 tracks/108/interp = 1
 tracks/108/loop_wrap = true
 tracks/108/keys = {
@@ -1328,31 +1326,31 @@ tracks/108/keys = {
 tracks/109/type = "value"
 tracks/109/imported = false
 tracks/109/enabled = true
-tracks/109/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:skew")
+tracks/109/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:skew")
 tracks/109/interp = 1
 tracks/109/loop_wrap = true
 tracks/109/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
 }
 tracks/110/type = "value"
 tracks/110/imported = false
 tracks/110/enabled = true
-tracks/110/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:texture")
+tracks/110/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:texture")
 tracks/110/interp = 1
 tracks/110/loop_wrap = true
 tracks/110/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("8_fuck"), ExtResource("8_fuck")]
+"values": [ExtResource("9_fuck"), ExtResource("9_fuck")]
 }
 tracks/111/type = "value"
 tracks/111/imported = false
 tracks/111/enabled = true
-tracks/111/path = NodePath("Body/BodyCorrect/GloomShroom_stem3:self_modulate")
+tracks/111/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:self_modulate")
 tracks/111/interp = 1
 tracks/111/loop_wrap = true
 tracks/111/keys = {
@@ -1364,79 +1362,79 @@ tracks/111/keys = {
 tracks/112/type = "value"
 tracks/112/imported = false
 tracks/112/enabled = true
-tracks/112/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:visible")
+tracks/112/path = NodePath("Body/BodyCorrect/GloomShroom_face:visible")
 tracks/112/interp = 1
 tracks/112/loop_wrap = true
 tracks/112/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/113/type = "value"
 tracks/113/imported = false
 tracks/113/enabled = true
-tracks/113/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:position")
+tracks/113/path = NodePath("Body/BodyCorrect/GloomShroom_face:position")
 tracks/113/interp = 1
 tracks/113/loop_wrap = true
 tracks/113/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(78.9, 25.2), Vector2(78.5, 24.4), Vector2(78, 23.6), Vector2(77.5, 22.8), Vector2(77.8, 23.8), Vector2(78.2, 24.9), Vector2(78.6, 25.9), Vector2(78.9, 27.1), Vector2(79.2, 28.1), Vector2(79.6, 29.1), Vector2(79.9, 29.1), Vector2(80.1, 29.1), Vector2(80.3, 29), Vector2(80.1, 28.4), Vector2(79.8, 27.8), Vector2(79.7, 27.1), Vector2(79.4, 26.5), Vector2(79.2, 25.8), Vector2(78.9, 25.2)]
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)]
 }
 tracks/114/type = "value"
 tracks/114/imported = false
 tracks/114/enabled = true
-tracks/114/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:rotation")
+tracks/114/path = NodePath("Body/BodyCorrect/GloomShroom_face:rotation")
 tracks/114/interp = 1
 tracks/114/loop_wrap = true
 tracks/114/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/115/type = "value"
 tracks/115/imported = false
 tracks/115/enabled = true
-tracks/115/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:scale")
+tracks/115/path = NodePath("Body/BodyCorrect/GloomShroom_face:scale")
 tracks/115/interp = 1
 tracks/115/loop_wrap = true
 tracks/115/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)]
 }
 tracks/116/type = "value"
 tracks/116/imported = false
 tracks/116/enabled = true
-tracks/116/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:skew")
+tracks/116/path = NodePath("Body/BodyCorrect/GloomShroom_face:skew")
 tracks/116/interp = 1
 tracks/116/loop_wrap = true
 tracks/116/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/117/type = "value"
 tracks/117/imported = false
 tracks/117/enabled = true
-tracks/117/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:texture")
+tracks/117/path = NodePath("Body/BodyCorrect/GloomShroom_face:texture")
 tracks/117/interp = 1
 tracks/117/loop_wrap = true
 tracks/117/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("8_fuck"), ExtResource("8_fuck")]
+"values": [null, null]
 }
 tracks/118/type = "value"
 tracks/118/imported = false
 tracks/118/enabled = true
-tracks/118/path = NodePath("Body/BodyCorrect/GloomShroom_stem32:self_modulate")
+tracks/118/path = NodePath("Body/BodyCorrect/GloomShroom_face:self_modulate")
 tracks/118/interp = 1
 tracks/118/loop_wrap = true
 tracks/118/keys = {
@@ -1448,31 +1446,31 @@ tracks/118/keys = {
 tracks/119/type = "value"
 tracks/119/imported = false
 tracks/119/enabled = true
-tracks/119/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:visible")
+tracks/119/path = NodePath("Body/BodyCorrect/Blink:visible")
 tracks/119/interp = 1
 tracks/119/loop_wrap = true
 tracks/119/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [true, true]
+"values": [false, false]
 }
 tracks/120/type = "value"
 tracks/120/imported = false
 tracks/120/enabled = true
-tracks/120/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:position")
+tracks/120/path = NodePath("Body/BodyCorrect/Blink:position")
 tracks/120/interp = 1
 tracks/120/loop_wrap = true
 tracks/120/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-0.4, 22.5), Vector2(0, 21.6), Vector2(0.5, 20.5), Vector2(1, 19.6), Vector2(0.6, 20.6), Vector2(0.2, 21.7), Vector2(0, 22.8), Vector2(-0.4, 23.9), Vector2(-0.8, 24.9), Vector2(-1.1, 26), Vector2(-1.3, 26.5), Vector2(-1.6, 26.9), Vector2(-1.9, 27.3), Vector2(-1.6, 26.6), Vector2(-1.4, 25.8), Vector2(-1.1, 25), Vector2(-0.8, 24.2), Vector2(-0.6, 23.4), Vector2(-0.4, 22.5)]
+"values": [Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12)]
 }
 tracks/121/type = "value"
 tracks/121/imported = false
 tracks/121/enabled = true
-tracks/121/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:rotation")
+tracks/121/path = NodePath("Body/BodyCorrect/Blink:rotation")
 tracks/121/interp = 1
 tracks/121/loop_wrap = true
 tracks/121/keys = {
@@ -1484,19 +1482,19 @@ tracks/121/keys = {
 tracks/122/type = "value"
 tracks/122/imported = false
 tracks/122/enabled = true
-tracks/122/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:scale")
+tracks/122/path = NodePath("Body/BodyCorrect/Blink:scale")
 tracks/122/interp = 1
 tracks/122/loop_wrap = true
 tracks/122/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
+"values": [Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8)]
 }
 tracks/123/type = "value"
 tracks/123/imported = false
 tracks/123/enabled = true
-tracks/123/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:skew")
+tracks/123/path = NodePath("Body/BodyCorrect/Blink:skew")
 tracks/123/interp = 1
 tracks/123/loop_wrap = true
 tracks/123/keys = {
@@ -1508,274 +1506,22 @@ tracks/123/keys = {
 tracks/124/type = "value"
 tracks/124/imported = false
 tracks/124/enabled = true
-tracks/124/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:texture")
+tracks/124/path = NodePath("Body/BodyCorrect/Blink:texture")
 tracks/124/interp = 1
 tracks/124/loop_wrap = true
 tracks/124/keys = {
 "times": PackedFloat32Array(0, 1.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("9_fuck"), ExtResource("9_fuck")]
+"values": [ExtResource("10_fuck"), ExtResource("10_fuck")]
 }
 tracks/125/type = "value"
 tracks/125/imported = false
 tracks/125/enabled = true
-tracks/125/path = NodePath("Body/BodyCorrect/GloomShroom_shooter3:self_modulate")
+tracks/125/path = NodePath("Body/BodyCorrect/Blink:self_modulate")
 tracks/125/interp = 1
 tracks/125/loop_wrap = true
 tracks/125/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
-}
-tracks/126/type = "value"
-tracks/126/imported = false
-tracks/126/enabled = true
-tracks/126/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:visible")
-tracks/126/interp = 1
-tracks/126/loop_wrap = true
-tracks/126/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [true, true]
-}
-tracks/127/type = "value"
-tracks/127/imported = false
-tracks/127/enabled = true
-tracks/127/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:position")
-tracks/127/interp = 1
-tracks/127/loop_wrap = true
-tracks/127/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(81.8, 23.8), Vector2(81.3, 22.8), Vector2(80.8, 21.8), Vector2(80.3, 20.9), Vector2(80.7, 21.9), Vector2(81, 23), Vector2(81.4, 24.1), Vector2(81.8, 25.1), Vector2(82.2, 26.2), Vector2(82.6, 27.3), Vector2(82.8, 27.7), Vector2(83.1, 28.1), Vector2(83.3, 28.6), Vector2(83.1, 27.8), Vector2(82.8, 27), Vector2(82.6, 26.2), Vector2(82.3, 25.4), Vector2(82.1, 24.6), Vector2(81.8, 23.8)]
-}
-tracks/128/type = "value"
-tracks/128/imported = false
-tracks/128/enabled = true
-tracks/128/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:rotation")
-tracks/128/interp = 1
-tracks/128/loop_wrap = true
-tracks/128/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159, 3.14159]
-}
-tracks/129/type = "value"
-tracks/129/imported = false
-tracks/129/enabled = true
-tracks/129/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:scale")
-tracks/129/interp = 1
-tracks/129/loop_wrap = true
-tracks/129/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.79, 0.813), Vector2(0.781, 0.825), Vector2(0.771, 0.838), Vector2(0.778, 0.831), Vector2(0.785, 0.825), Vector2(0.793, 0.819), Vector2(0.8, 0.813), Vector2(0.807, 0.806), Vector2(0.815, 0.8), Vector2(0.819, 0.796), Vector2(0.824, 0.792), Vector2(0.829, 0.788), Vector2(0.824, 0.79), Vector2(0.819, 0.792), Vector2(0.815, 0.794), Vector2(0.81, 0.796), Vector2(0.805, 0.798), Vector2(0.8, 0.8)]
-}
-tracks/130/type = "value"
-tracks/130/imported = false
-tracks/130/enabled = true
-tracks/130/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:skew")
-tracks/130/interp = 1
-tracks/130/loop_wrap = true
-tracks/130/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159, -3.14159]
-}
-tracks/131/type = "value"
-tracks/131/imported = false
-tracks/131/enabled = true
-tracks/131/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:texture")
-tracks/131/interp = 1
-tracks/131/loop_wrap = true
-tracks/131/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [ExtResource("9_fuck"), ExtResource("9_fuck")]
-}
-tracks/132/type = "value"
-tracks/132/imported = false
-tracks/132/enabled = true
-tracks/132/path = NodePath("Body/BodyCorrect/GloomShroom_shooter32:self_modulate")
-tracks/132/interp = 1
-tracks/132/loop_wrap = true
-tracks/132/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
-}
-tracks/133/type = "value"
-tracks/133/imported = false
-tracks/133/enabled = true
-tracks/133/path = NodePath("Body/BodyCorrect/GloomShroom_face:visible")
-tracks/133/interp = 1
-tracks/133/loop_wrap = true
-tracks/133/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [false, false]
-}
-tracks/134/type = "value"
-tracks/134/imported = false
-tracks/134/enabled = true
-tracks/134/path = NodePath("Body/BodyCorrect/GloomShroom_face:position")
-tracks/134/interp = 1
-tracks/134/loop_wrap = true
-tracks/134/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)]
-}
-tracks/135/type = "value"
-tracks/135/imported = false
-tracks/135/enabled = true
-tracks/135/path = NodePath("Body/BodyCorrect/GloomShroom_face:rotation")
-tracks/135/interp = 1
-tracks/135/loop_wrap = true
-tracks/135/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/136/type = "value"
-tracks/136/imported = false
-tracks/136/enabled = true
-tracks/136/path = NodePath("Body/BodyCorrect/GloomShroom_face:scale")
-tracks/136/interp = 1
-tracks/136/loop_wrap = true
-tracks/136/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1), Vector2(1, 1)]
-}
-tracks/137/type = "value"
-tracks/137/imported = false
-tracks/137/enabled = true
-tracks/137/path = NodePath("Body/BodyCorrect/GloomShroom_face:skew")
-tracks/137/interp = 1
-tracks/137/loop_wrap = true
-tracks/137/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/138/type = "value"
-tracks/138/imported = false
-tracks/138/enabled = true
-tracks/138/path = NodePath("Body/BodyCorrect/GloomShroom_face:texture")
-tracks/138/interp = 1
-tracks/138/loop_wrap = true
-tracks/138/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [null, null]
-}
-tracks/139/type = "value"
-tracks/139/imported = false
-tracks/139/enabled = true
-tracks/139/path = NodePath("Body/BodyCorrect/GloomShroom_face:self_modulate")
-tracks/139/interp = 1
-tracks/139/loop_wrap = true
-tracks/139/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
-}
-tracks/140/type = "value"
-tracks/140/imported = false
-tracks/140/enabled = true
-tracks/140/path = NodePath("Body/BodyCorrect/Blink:visible")
-tracks/140/interp = 1
-tracks/140/loop_wrap = true
-tracks/140/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [false, false]
-}
-tracks/141/type = "value"
-tracks/141/imported = false
-tracks/141/enabled = true
-tracks/141/path = NodePath("Body/BodyCorrect/Blink:position")
-tracks/141/interp = 1
-tracks/141/loop_wrap = true
-tracks/141/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12), Vector2(15, 12)]
-}
-tracks/142/type = "value"
-tracks/142/imported = false
-tracks/142/enabled = true
-tracks/142/path = NodePath("Body/BodyCorrect/Blink:rotation")
-tracks/142/interp = 1
-tracks/142/loop_wrap = true
-tracks/142/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/143/type = "value"
-tracks/143/imported = false
-tracks/143/enabled = true
-tracks/143/path = NodePath("Body/BodyCorrect/Blink:scale")
-tracks/143/interp = 1
-tracks/143/loop_wrap = true
-tracks/143/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8), Vector2(0.8, 0.8)]
-}
-tracks/144/type = "value"
-tracks/144/imported = false
-tracks/144/enabled = true
-tracks/144/path = NodePath("Body/BodyCorrect/Blink:skew")
-tracks/144/interp = 1
-tracks/144/loop_wrap = true
-tracks/144/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
-tracks/145/type = "value"
-tracks/145/imported = false
-tracks/145/enabled = true
-tracks/145/path = NodePath("Body/BodyCorrect/Blink:texture")
-tracks/145/interp = 1
-tracks/145/loop_wrap = true
-tracks/145/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [ExtResource("10_fuck"), ExtResource("10_fuck")]
-}
-tracks/146/type = "value"
-tracks/146/imported = false
-tracks/146/enabled = true
-tracks/146/path = NodePath("Body/BodyCorrect/Blink:self_modulate")
-tracks/146/interp = 1
-tracks/146/loop_wrap = true
-tracks/146/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.08333, 1.16667, 1.25, 1.33333, 1.41667, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,

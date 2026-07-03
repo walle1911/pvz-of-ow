@@ -1,20 +1,24 @@
-[gd_scene load_steps=36 format=3]
+[gd_scene format=3 uid="uid://b50g6y635nobk"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_4klhy"]
 [ext_resource type="Texture2D" uid="uid://b5v5vannbipgc" path="res://assets/reanim/FumeShroom_body.png" id="2_5mc0d"]
-[ext_resource type="Script" path="res://scripts/character/plant/plant_065_fume_shroom_roadhog.gd" id="2_47ii7"]
+[ext_resource type="Script" uid="uid://627cg3fj2mys" path="res://scripts/character/plant/plant_065_fume_shroom_roadhog.gd" id="2_47ii7"]
 [ext_resource type="Texture2D" uid="uid://dvjtgvsprc5em" path="res://assets/reanim/FumeShroom_blink2.png" id="3_bbimx"]
 [ext_resource type="Texture2D" uid="uid://bdecyr5u832mx" path="res://assets/reanim/FumeShroom_head.png" id="4_0qv5g"]
+[ext_resource type="Texture2D" uid="uid://c7f0imshsp4d7" path="res://assets/reanim/FumeShroom_Roadhog_Body.png" id="4_m6p15"]
 [ext_resource type="Texture2D" uid="uid://b8hsdl8m0la2k" path="res://assets/reanim/FumeShroom_spout.png" id="5_47ii7"]
 [ext_resource type="Texture2D" uid="uid://dlwrjkajjpdsb" path="res://assets/reanim/FumeShroom_tip.png" id="6_h5tkg"]
+[ext_resource type="Texture2D" uid="uid://xd0iwxppb2gb" path="res://assets/reanim/FumeShroom_Roadhog_Face (1).png" id="7_4our6"]
 [ext_resource type="Texture2D" uid="uid://yjc7pkf5hdn2" path="res://assets/image/particles/bullet/PuffShroom_puff1.png" id="7_060wc"]
 [ext_resource type="Animation" uid="uid://du6mjid0siwe1" path="res://animation/character/plant/011_fume_shroom/FumeShroom_idle.tres" id="8_234co"]
-[ext_resource type="Script" path="res://scripts/resources/resource_body_change.gd" id="8_h5tkg"]
+[ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="8_h5tkg"]
+[ext_resource type="Texture2D" uid="uid://2iqrpnw4p81u" path="res://assets/reanim/FumeShroom_Roadhog_lip0.png" id="9_5ksfa"]
 [ext_resource type="Texture2D" uid="uid://cvjt2bbvgatgh" path="res://assets/reanim/FumeShroom_blink1.png" id="9_060wc"]
 [ext_resource type="Animation" uid="uid://djgaiijvnmftn" path="res://animation/character/plant/011_fume_shroom/FumeShroom_shooting.tres" id="9_prj4b"]
 [ext_resource type="Animation" uid="uid://bsqoibg8oa6p8" path="res://animation/character/plant/011_fume_shroom/FumeShroom_sleep.tres" id="10_gkpnf"]
-[ext_resource type="Script" path="res://scripts/character/components/detect_component/component_detect.gd" id="11_0qv5g"]
-[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="12_47ii7"]
+[ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="11_0qv5g"]
+[ext_resource type="Texture2D" uid="uid://dfqmrl67p86b6" path="res://assets/reanim/FumeShroom_Roadhog_Lip.png" id="11_02gsd"]
+[ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="12_47ii7"]
 
 [sub_resource type="Resource" id="Resource_234co"]
 script = ExtResource("8_h5tkg")
@@ -88,7 +92,7 @@ graph_offset = Vector2(12, 0)
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_djm5y"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_wf7jb"]
-graph_offset = Vector2(-253.52637, 42.73294)
+graph_offset = Vector2(-71.6311, -3.909103)
 nodes/output/position = Vector2(880, 180)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_p2ylm")
 nodes/Animation/position = Vector2(-120, 300)
@@ -126,7 +130,7 @@ radial_velocity_curve = SubResource("CurveTexture_h5tkg")
 velocity_limit_curve = SubResource("CurveTexture_060wc")
 gravity = Vector3(0, 0, 0)
 
-[node name="Plant011FumeShroom" node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_4klhy")]
+[node name="Plant011FumeShroom" unique_id=2001611577 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_4klhy")]
 script = ExtResource("2_47ii7")
 plant_type = 65
 is_sleep_in_day = true
@@ -136,61 +140,68 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-36, -59)
 scale = Vector2(0.9, 0.9)
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
-position = Vector2(9.8, 37.42536)
-scale = Vector2(0.8, 0.81936604)
+[node name="DoomShroom_eyes" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=2116131265]
+visible = false
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=616099046]
+position = Vector2(9.8, 38.294895)
+scale = Vector2(0.8, 0.80175173)
 texture = ExtResource("2_5mc0d")
 centered = false
 
-[node name="DoomShroom_eyes" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
-visible = false
-centered = false
+[node name="FumeShroom_Roadhog_Body" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="0" unique_id=469253487]
+position = Vector2(37, 26.58)
+texture = ExtResource("4_m6p15")
 
-[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
+[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1659246017]
 visible = false
-position = Vector2(43, 50)
+position = Vector2(43, 50.37852)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_bbimx")
 centered = false
 
-[node name="DoomShroom_head" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
-position = Vector2(6.4619617, -8.122488)
-scale = Vector2(0.77088755, 0.8483517)
+[node name="DoomShroom_head" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1159702315]
+position = Vector2(5.4051046, -3.1904888)
+scale = Vector2(0.7971972, 0.80420417)
 texture = ExtResource("4_0qv5g")
 centered = false
 
-[node name="DoomShroom_spout" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
-position = Vector2(66.73804, 12.139474)
-rotation = -0.0073028374
-scale = Vector2(0.7711411, 0.8483517)
-skew = 0.0073028374
+[node name="FumeShroom_Roadhog_Face" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_head" index="0" unique_id=92300434]
+position = Vector2(42.76, 26.14)
+texture = ExtResource("7_4our6")
+
+[node name="DoomShroom_spout" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1640136923]
+position = Vector2(67.729935, 16.014616)
+scale = Vector2(0.7971972, 0.80420417)
 texture = ExtResource("5_47ii7")
 centered = false
 
-[node name="DoomShroom_tip" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
-position = Vector2(72.83804, 9.574641)
-rotation = -0.0073028374
-scale = Vector2(0.7711411, 0.8483517)
-skew = 0.0073028374
+[node name="FumeShroom_Roadhog_Lip0" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_spout" index="0" unique_id=1039221696]
+position = Vector2(5.527777, 11.444447)
+texture = ExtResource("9_5ksfa")
+
+[node name="DoomShroom_tip" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=311596581]
+position = Vector2(73.994896, 13.779581)
+scale = Vector2(0.7971972, 0.80420417)
 texture = ExtResource("6_h5tkg")
 centered = false
 
-[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect" index="6"]
+[node name="FumeShroom_Roadhog_Lip" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_tip" index="0" unique_id=401863382]
+position = Vector2(6.61, 14.03)
+texture = ExtResource("11_02gsd")
+
+[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect" index="6" unique_id=1851612954]
 position = Vector2(43.3333, 32.2222)
 scale = Vector2(0.5, 0.592593)
-
-[node name="Plant065FumeShroomRoadhog" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
-sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent")]
 
 [node name="BlinkComponent" parent="." index="5"]
 all_blink_body_change = Array[ExtResource("8_h5tkg")]([SubResource("Resource_234co")])
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_ydcil")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=232104700]
+libraries/ = SubResource("AnimationLibrary_ydcil")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1242386246]
 deterministic = false
 tree_root = SubResource("AnimationNodeBlendTree_wf7jb")
 advance_expression_base_node = NodePath("..")
@@ -201,34 +212,34 @@ parameters/OneShot/request = 0
 parameters/TimeScale/scale = 1.0
 "parameters/TimeScale 2/scale" = 2.0
 
-[node name="AttackComponent" type="Node2D" parent="." index="10" node_paths=PackedStringArray("markers_2d_bullet")]
+[node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=103257219 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("12_47ii7")
 attack_bullet_type = 4
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
 attack_sfx = &"Fume"
 
-[node name="DetectComponent" type="Node2D" parent="AttackComponent" index="0"]
+[node name="DetectComponent" type="Node2D" parent="AttackComponent" index="0" unique_id=698548229]
 script = ExtResource("11_0qv5g")
 
-[node name="Area2D" type="Area2D" parent="AttackComponent/DetectComponent" index="0"]
+[node name="Area2D" type="Area2D" parent="AttackComponent/DetectComponent" index="0" unique_id=1134196440]
 position = Vector2(0, -25)
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackComponent/DetectComponent/Area2D" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackComponent/DetectComponent/Area2D" index="0" unique_id=25685189]
 position = Vector2(175, 0)
 shape = SubResource("RectangleShape2D_47ii7")
 
-[node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="1"]
+[node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="1" unique_id=1564443590]
 
-[node name="AllBullet_FX" type="Node2D" parent="AttackComponent" index="2"]
+[node name="AllBullet_FX" type="Node2D" parent="AttackComponent" index="2" unique_id=1060683128]
 
-[node name="Bullet_FX" type="Node2D" parent="AttackComponent/AllBullet_FX" index="0"]
+[node name="Bullet_FX" type="Node2D" parent="AttackComponent/AllBullet_FX" index="0" unique_id=2119392917]
 unique_name_in_owner = true
 position = Vector2(59, -32)
 scale = Vector2(0.9, 0.9)
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="AttackComponent/AllBullet_FX/Bullet_FX" index="0"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="AttackComponent/AllBullet_FX/Bullet_FX" index="0" unique_id=2047089117]
 z_index = 600
 z_as_relative = false
 emitting = false
