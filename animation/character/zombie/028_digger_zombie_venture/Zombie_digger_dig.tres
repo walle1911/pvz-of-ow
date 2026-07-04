@@ -1,4 +1,4 @@
-[gd_resource type="Animation" format=3 uid="uid://dpypkrc3q3o1n"]
+[gd_resource type="Animation" format=3 uid="uid://ci8gu0sxkbd37"]
 
 [ext_resource type="Texture2D" uid="uid://du7oo4nli6r46" path="res://assets/reanim/Zombie_digger_innerarm_lower.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://dnuesk0e5lytu" path="res://assets/reanim/Zombie_digger_pickaxe.png" id="1_fuck"]
@@ -132,7 +132,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0, 0.1875, 0.25, 0.3125, 0.375, 0.4375, 0.5, 0.5625, 0.625, 0.6875, 0.75, 0.8125, 0.875, 0.9375, 1, 1.0625),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(17.5, 108.5), Vector2(17.5, 108.5), Vector2(21.8, 102.3), Vector2(26.9, 97), Vector2(32.4, 92.9), Vector2(38.3, 89.9), Vector2(44.1, 88.2), Vector2(23.6, 91.1), Vector2(4.3, 101.4), Vector2(-0.6, 116.2), Vector2(0.4, 125.4), Vector2(0.4, 125.4), Vector2(0.4, 125.4), Vector2(0.4, 125.4), Vector2(0.4, 125.4), Vector2(0.4, 125.4)]
+"values": [Vector2(11.5, 108.5), Vector2(11.5, 108.5), Vector2(15.8, 102.3), Vector2(20.9, 97), Vector2(26.4, 92.9), Vector2(32.3, 89.9), Vector2(38.1, 88.2), Vector2(17.6, 91.1), Vector2(-1.7, 101.4), Vector2(-6.6, 116.2), Vector2(-5.6, 125.4), Vector2(-5.6, 125.4), Vector2(-5.6, 125.4), Vector2(-5.6, 125.4), Vector2(-5.6, 125.4), Vector2(-5.6, 125.4)]
 }
 tracks/9/type = "value"
 tracks/9/imported = false
@@ -1849,4 +1849,16 @@ tracks/151/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+tracks/152/type = "value"
+tracks/152/imported = false
+tracks/152/enabled = true
+tracks/152/path = NodePath("Body/BodyCorrect/Hardhat/Zombie_digger_hardhat/DiggerZombie_Venture_Hair:position")
+tracks/152/interp = 1
+tracks/152/loop_wrap = true
+tracks/152/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(51.57, 30.41)]
 }
