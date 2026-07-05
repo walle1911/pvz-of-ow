@@ -136,6 +136,9 @@ plant_type = 65
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
+[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
+sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent")]
+
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-36, -59)
 scale = Vector2(0.9, 0.9)

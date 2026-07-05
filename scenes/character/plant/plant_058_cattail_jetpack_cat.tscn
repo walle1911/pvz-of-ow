@@ -1,23 +1,25 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://sp3wkfsyxctt"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_5hnsj"]
-[ext_resource type="Script" path="res://scripts/character/plant/plant_058_cattail_jetpack_cat.gd" id="2_7npfu"]
+[ext_resource type="Script" uid="uid://brpddpuqk6usu" path="res://scripts/character/plant/plant_044_cattail.gd" id="2_7npfu"]
 [ext_resource type="Texture2D" uid="uid://dk1nraow67nfq" path="res://assets/reanim/Cattail_paw2.png" id="2_kbe0y"]
 [ext_resource type="Texture2D" uid="uid://yeq0wkhh7ocq" path="res://assets/reanim/Cattail_paw3.png" id="3_2hp7h"]
 [ext_resource type="Texture2D" uid="uid://imy0eqi3xw8o" path="res://assets/reanim/Cattail_tail.png" id="4_eckv1"]
 [ext_resource type="Texture2D" uid="uid://b7n0a7ih4mvcr" path="res://assets/reanim/Cattail_tail2.png" id="5_7npfu"]
 [ext_resource type="Texture2D" uid="uid://dgj32utlkf8f0" path="res://assets/reanim/Cattail_spike.png" id="6_sqd6c"]
 [ext_resource type="Texture2D" uid="uid://djx3mvue4t6nu" path="res://assets/reanim/Cattail_tail2_overlay.png" id="7_pcdgd"]
-[ext_resource type="Texture2D" uid="uid://2d7u1rm7gipc" path="res://assets/reanim/Cattail_JetpackCat_Face.png" id="8_v1yv0"]
+[ext_resource type="Texture2D" uid="uid://dikvd4i8v635g" path="res://assets/reanim/Cattail_head.png" id="8_v1yv0"]
 [ext_resource type="Texture2D" uid="uid://ch4khbbbwhh0d" path="res://assets/reanim/Cattail_paw1.png" id="9_va78y"]
-[ext_resource type="Texture2D" uid="uid://b7tqijvfnkyr6" path="res://assets/reanim/Cattail_JetpackCat_Hat.png" id="10_kl7ow"]
+[ext_resource type="Texture2D" uid="uid://bpm3pvlhwnqxk" path="res://assets/reanim/Cattail_hat.png" id="10_kl7ow"]
+[ext_resource type="Texture2D" uid="uid://2d7u1rm7gipc" path="res://assets/reanim/Cattail_JetpackCat_Face.png" id="10_sejdh"]
 [ext_resource type="Texture2D" uid="uid://xmsfwuavj25e" path="res://assets/reanim/Cattail_blink1.png" id="11_eckv1"]
 [ext_resource type="Texture2D" uid="uid://j427peyuyp0f" path="res://assets/reanim/Cattail_eyebrow1.png" id="12_nsrdc"]
+[ext_resource type="Texture2D" uid="uid://b7tqijvfnkyr6" path="res://assets/reanim/Cattail_JetpackCat_Hat.png" id="13_dfhbk"]
 [ext_resource type="Texture2D" uid="uid://del4hhtgqb4fr" path="res://assets/reanim/Cattail_eyebrow2.png" id="13_s7ymc"]
-[ext_resource type="Animation" path="res://animation/character/plant/058_cattail_jetpack_cat/Cattail_JetpackCat_idle.tres" id="14_8r44m"]
-[ext_resource type="Animation" path="res://animation/character/plant/058_cattail_jetpack_cat/Cattail_JetpackCat_shooting.tres" id="15_p11vv"]
-[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="16_2hp7h"]
-[ext_resource type="Script" path="res://scripts/character/components/detect_component/component_detect.gd" id="17_eckv1"]
+[ext_resource type="Animation" uid="uid://cu5g771k54tb7" path="res://animation/character/plant/044_cattail/Cattail_idle.tres" id="14_8r44m"]
+[ext_resource type="Animation" uid="uid://brrvac8kn6vqi" path="res://animation/character/plant/044_cattail/Cattail_shooting.tres" id="15_p11vv"]
+[ext_resource type="Script" uid="uid://gxh0w2813np7" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="16_2hp7h"]
+[ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="17_eckv1"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_55v01"]
 _data = {
@@ -81,7 +83,7 @@ size = Vector2(200, 5)
 
 [node name="Plant044Cattail" unique_id=385976623 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_5hnsj")]
 script = ExtResource("2_7npfu")
-plant_type = 58
+plant_type = 44
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
 [node name="BodyCorrect" parent="Body" index="0"]
@@ -99,66 +101,76 @@ visible = false
 centered = false
 
 [node name="Cattail_paw2" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1282812708]
-position = Vector2(6.1458287, 54)
-scale = Vector2(0.8093126, 0.8)
+position = Vector2(6.47648, 54)
+scale = Vector2(0.8003528, 0.8)
 texture = ExtResource("2_kbe0y")
 centered = false
 
 [node name="Cattail_paw3" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1732583199]
-position = Vector2(57.622913, 50.6)
-scale = Vector2(0.8287085, 0.8)
+position = Vector2(57.78824, 50.6)
+scale = Vector2(0.801176, 0.8)
 texture = ExtResource("3_2hp7h")
 centered = false
 
 [node name="Cattail_tail" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=648025246]
-position = Vector2(0.16040015, 36.47086)
-rotation = -0.0914853
-scale = Vector2(0.80277085, 0.7962291)
-skew = 0.0026909385
+position = Vector2(2.5058405, 33.76472)
+rotation = 0.002052481
+scale = Vector2(0.8, 0.7998824)
+skew = 0.0016420436
 texture = ExtResource("4_eckv1")
 centered = false
 
 [node name="Cattail_tail2" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1870622292]
-position = Vector2(-12.252171, 11.858399)
-rotation = -0.28841814
-scale = Vector2(0.8, 0.798)
-skew = -0.029416306
+position = Vector2(-0.8590378, 4.6059194)
+rotation = 0.012520334
+scale = Vector2(0.7997648, 0.8002352)
+skew = 0.0034892883
 texture = ExtResource("5_7npfu")
 centered = false
 
 [node name="Cattail_spike" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=377601864]
-position = Vector2(-3.537599, 7.5188)
-rotation = -0.28841814
-scale = Vector2(0.8, 0.798)
-skew = -0.029416306
+position = Vector2(8.888002, 2.4705603)
+rotation = 0.012520334
+scale = Vector2(0.7997648, 0.8002352)
+skew = 0.0034892883
 texture = ExtResource("6_sqd6c")
 centered = false
 
 [node name="Cattail_tail2_overlay" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=963372881]
-position = Vector2(-10.243828, 15.527143)
-rotation = -0.28841814
-scale = Vector2(0.8, 0.798)
-skew = -0.029416306
+position = Vector2(-0.21783808, 8.71768)
+rotation = 0.012520334
+scale = Vector2(0.7997648, 0.8002352)
+skew = 0.0034892883
 texture = ExtResource("7_pcdgd")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=1437053630]
-position = Vector2(25.522915, 25.654173)
-scale = Vector2(0.81939596, 0.7889166)
+position = Vector2(25.97648, 25.12352)
+scale = Vector2(0.8008232, 0.7995296)
 texture = ExtResource("8_v1yv0")
 centered = false
 
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="0" unique_id=401627390]
+position = Vector2(28.744858, 27.612123)
+scale = Vector2(0.46187806, 0.5075909)
+texture = ExtResource("10_sejdh")
+
 [node name="Cattail_paw1" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=1553305865]
-position = Vector2(30.922915, 59.477085)
-scale = Vector2(0.8610834, 0.86562514)
+position = Vector2(31.18824, 59.4)
+scale = Vector2(0.8504704, 0.8507056)
 texture = ExtResource("9_va78y")
 centered = false
 
 [node name="Cattail_hat" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=1144708347]
-position = Vector2(11.045829, 10.031258)
-scale = Vector2(0.81939596, 0.7889166)
+position = Vector2(11.76472, 9.33528)
+scale = Vector2(0.8008232, 0.7995296)
 texture = ExtResource("10_kl7ow")
 centered = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Cattail_hat" index="0" unique_id=1464662611]
+position = Vector2(39.01, 39.876)
+scale = Vector2(0.6498674, 0.6876938)
+texture = ExtResource("13_dfhbk")
 
 [node name="Cattail_blink" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=313898547]
 visible = false
@@ -168,22 +180,28 @@ texture = ExtResource("11_eckv1")
 centered = false
 
 [node name="Cattail_eyebrow1" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=1872974420]
-position = Vector2(38.5, 34.93126)
-scale = Vector2(0.81939596, 0.7889166)
+position = Vector2(38.6, 34.04704)
+scale = Vector2(0.8008232, 0.7995296)
 texture = ExtResource("12_nsrdc")
 centered = false
 
 [node name="Cattail_eyebrow2" type="Sprite2D" parent="Body/BodyCorrect" index="14" unique_id=80723802]
-position = Vector2(61.377087, 32.308346)
-scale = Vector2(0.81939596, 0.7889166)
+position = Vector2(60.911762, 31.43528)
+scale = Vector2(0.8008232, 0.7995296)
 texture = ExtResource("13_s7ymc")
 centered = false
 
 [node name="Marker2D" type="Marker2D" parent="Body/BodyCorrect" index="15" unique_id=1506866243]
 position = Vector2(31, 2)
 
-[node name="Plant058CattailJetpackCat" parent="." index="4"]
+[node name="HpComponent" parent="." index="3"]
+visible = false
+
+[node name="SleepComponent" parent="." index="4"]
 is_enable_default = null
+
+[node name="HurtBoxComponent" parent="." index="7"]
+visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=63343279]
 libraries/ = SubResource("AnimationLibrary_55v01")
@@ -199,6 +217,7 @@ parameters/TimeScale/scale = 1.5
 "parameters/TimeScale 2/scale" = 2.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=316347668 node_paths=PackedStringArray("markers_2d_bullet")]
+visible = false
 script = ExtResource("16_2hp7h")
 attack_bullet_type = 14
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2D")]

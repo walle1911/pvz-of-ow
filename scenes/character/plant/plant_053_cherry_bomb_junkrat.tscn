@@ -25,7 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://jtm5n0epmu1q" path="res://assets/reanim/CherryBomb_JunkratL.png" id="20_hqw77"]
 [ext_resource type="Texture2D" uid="uid://cthavi528e8lr" path="res://assets/reanim/CherryBomb_JunkratR.png.png" id="21_7asdk"]
 [ext_resource type="Script" uid="uid://uv71i8wk2job" path="res://scripts/fx/plant_effect/plant_effect_001_bomb_cherry.gd" id="22_7axkc"]
-[ext_resource type="Texture2D" uid="uid://ysajcyiwrdnk" path="res://assets/image/particles/ExplosionPowie.png" id="24_2gy5r"]
+[ext_resource type="Texture2D" uid="uid://hhr7g2qoh2qp" path="res://assets/image/particles/CherryBomb_Junkrat_Boom.png" id="24_2gy5r"]
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="24_ql0xv"]
 [ext_resource type="Shader" uid="uid://cikju0ectkkms" path="res://shaders/Mypartical.gdshader" id="25_qq8mq"]
 
@@ -514,4 +514,5 @@ draw_order = 0
 process_material = SubResource("ShaderMaterial_vp07b")
 
 [node name="ExplosiveFont" type="Sprite2D" parent="BombComponent/BombEffect" index="2" unique_id=684855940]
+modulate = Color(1, 1, 1, 0.83)
 texture = ExtResource("24_2gy5r")

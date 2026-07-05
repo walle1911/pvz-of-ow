@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://6fujba7kxnjg"]
+[gd_scene format=3 uid="uid://6fujba7kxnjg"]
 
 [ext_resource type="PackedScene" uid="uid://p2fwghratmjl" path="res://scenes/bullet/bullet_000_parabola_base.tscn" id="1_py6d0"]
 [ext_resource type="Script" uid="uid://ccjnjnre8jwfq" path="res://scripts/bullet/bullet_012_melon.gd" id="2_itde2"]
 [ext_resource type="Texture2D" uid="uid://cyq6qjfok78qm" path="res://assets/reanim/Melonpult_melon.png" id="2_py6d0"]
 [ext_resource type="Script" uid="uid://b8deeas2k62vb" path="res://scripts/fx/bullet_effect/bullet_effect_001_norm.gd" id="3_itde2"]
 [ext_resource type="Texture2D" uid="uid://bx81ebcqxmly2" path="res://assets/image/particles/bullet/Melonpult_particles.png" id="4_py6d0"]
+[ext_resource type="Texture2D" uid="uid://bm62filn2k5rm" path="res://assets/reanim/MelonPult_Ashe_BobFace.png" id="4_tuawr"]
 [ext_resource type="Script" uid="uid://kr4r24a1l80x" path="res://scripts/bullet/component/spatter_component.gd" id="5_d0acj"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_o220a"]
@@ -33,15 +34,14 @@ radius = 20.0
 radius = 60.0
 height = 300.0
 
-[node name="Bullet012Melon" instance=ExtResource("1_py6d0")]
+[node name="Bullet012Melon" unique_id=1756865849 instance=ExtResource("1_py6d0")]
 script = ExtResource("2_itde2")
-parabola_height = -500.0
-bullet_type = 12
 is_rotate = true
 attack_value = 80
 bullet_mode = 1
 type_bullet_SFX = 5
 can_attack_zombie_status = 5
+bullet_type = 12
 
 [node name="BulletShadow" parent="." index="0"]
 scale = Vector2(1.90476, 1.33333)
@@ -49,10 +49,16 @@ scale = Vector2(1.90476, 1.33333)
 [node name="BulletBody" parent="Body" index="0"]
 texture = ExtResource("2_py6d0")
 
+[node name="Sprite2D" type="Sprite2D" parent="Body/BulletBody" index="0" unique_id=1959467783]
+position = Vector2(0.76, -1.32)
+rotation = -0.04363323
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("4_tuawr")
+
 [node name="BulletEffect" parent="." index="2"]
 script = ExtResource("3_itde2")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="BulletEffect/AllParticles2D" index="0"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="BulletEffect/AllParticles2D" index="0" unique_id=1811663675]
 material = SubResource("CanvasItemMaterial_o220a")
 emitting = false
 amount = 13
@@ -65,15 +71,15 @@ process_material = SubResource("ParticleProcessMaterial_itde2")
 [node name="CollisionShape2D" parent="Area2DAttack" index="0"]
 shape = SubResource("CircleShape2D_wo6mn")
 
-[node name="SpatterComponent" type="Node2D" parent="." index="4"]
+[node name="SpatterComponent" type="Node2D" parent="." index="4" unique_id=1948554302]
 script = ExtResource("5_d0acj")
 sum_attack_value = 574
 range_attack_value = Vector2i(1, 26)
 spatter_lane_up_down = 1
 
-[node name="Area2DSpatter" type="Area2D" parent="SpatterComponent" index="0"]
+[node name="Area2DSpatter" type="Area2D" parent="SpatterComponent" index="0" unique_id=132634514]
 collision_layer = 8
 collision_mask = 512
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatterComponent/Area2DSpatter" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatterComponent/Area2DSpatter" index="0" unique_id=1907651981]
 shape = SubResource("CapsuleShape2D_itde2")
