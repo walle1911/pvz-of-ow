@@ -94,6 +94,9 @@ enum PlantType {
 	P068ScaredyShroomWidowmaker = 68,
 	P069HypnoShroomJuno = 69,
 	P070BonkChoyRamattra = 70,
+	P071GarlicMauga = 71,
+	P072CaltropHazard,
+	P073TanglekelpMizuki,
 
 	## 模仿者
 	P999Imitater = 999,
@@ -154,6 +157,7 @@ enum ZombieType {
 	Z026GargantuarReinhardt = 26,
 	Z027ZombieYetiWinston = 27,
 	Z028DiggerZombieVenture = 28,
+	Z029JackboxReaper = 29,
 
 	Z1001BobsledSingle=1001,	## 单个雪橇车僵尸
 	}
@@ -698,6 +702,27 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_070_bonk_choy_ramattra.tscn")
 		},
+	PlantType.P071GarlicMauga: {
+		PlantInfoAttribute.PlantName: "Garlic_Mauga",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 50,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_071_garlic_mauga.tscn")
+		},
+	PlantType.P072CaltropHazard: {
+		PlantInfoAttribute.PlantName: "Caltrop_Hazard",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/022_caltrop.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_072_caltrop_hazard.tscn")
+		},
+	PlantType.P073TanglekelpMizuki: {
+		PlantInfoAttribute.PlantName: "Tanglekelp_Mizuki",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 25,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_073_tanglekelp_mizuki.tscn")
+		},
 	## 模仿者
 	PlantType.P999Imitater:{
 		PlantInfoAttribute.PlantName: "Imitater",
@@ -951,6 +976,13 @@ const ZombieInfo = {
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
 		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_028_digger_zombie_venture.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z029JackboxReaper:{
+		ZombieInfoAttribute.ZombieName: "Jackbox_Reaper",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 75,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_029_jackbox_reaper.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
 	## 单独雪橇僵尸

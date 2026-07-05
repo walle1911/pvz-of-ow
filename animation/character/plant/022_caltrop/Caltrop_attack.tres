@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=6 format=3 uid="uid://b5e22xmdjw0hk"]
+[gd_resource type="Animation" format=3 uid="uid://b5e22xmdjw0hk"]
 
 [ext_resource type="Texture2D" uid="uid://djsyco71dq21c" path="res://assets/reanim/Caltrop_body.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://bt8vfd40soar2" path="res://assets/reanim/Caltrop_horn1.png" id="1_fuck"]
@@ -266,38 +266,38 @@ tracks/20/keys = {
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("Body/BodyCorrect/Caltrop_horn1:visible")
+tracks/21/path = NodePath("Body/BodyCorrect/Caltrop_horn1:self_modulate")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
-"times": PackedFloat32Array(0, 0.75),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [true, true]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
 }
 tracks/22/type = "value"
 tracks/22/imported = false
 tracks/22/enabled = true
-tracks/22/path = NodePath("Body/BodyCorrect/Caltrop_horn1:position")
+tracks/22/path = NodePath("Body/BodyCorrect/Caltrop_horn1:texture")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true
 tracks/22/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(8.1, 45.5), Vector2(9.7, 42.6), Vector2(11.3, 40), Vector2(13.1, 37.1), Vector2(13.1, 36.5), Vector2(13.1, 35.7), Vector2(11.8, 38), Vector2(10.6, 40.5), Vector2(9.3, 42.9), Vector2(8.1, 45.5)]
+"values": [ExtResource("1_fuck"), ExtResource("1_fuck")]
 }
 tracks/23/type = "value"
 tracks/23/imported = false
 tracks/23/enabled = true
-tracks/23/path = NodePath("Body/BodyCorrect/Caltrop_horn1:rotation")
+tracks/23/path = NodePath("Body/BodyCorrect/Caltrop_horn1:skew")
 tracks/23/interp = 1
 tracks/23/loop_wrap = true
 tracks/23/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.040143, 0.07854, 0.118682, 0.118682, 0.118682, 0.087266, 0.057596, 0.02618, 0.0]
+"values": [0.0, -0.0087271, -0.0174535, -0.0226889, -0.0261796, -0.0226889, -0.0174528, -0.0122174, -0.0034907, 0.0]
 }
 tracks/24/type = "value"
 tracks/24/imported = false
@@ -314,67 +314,67 @@ tracks/24/keys = {
 tracks/25/type = "value"
 tracks/25/imported = false
 tracks/25/enabled = true
-tracks/25/path = NodePath("Body/BodyCorrect/Caltrop_horn1:skew")
+tracks/25/path = NodePath("Body/BodyCorrect/Caltrop_horn1:rotation")
 tracks/25/interp = 1
 tracks/25/loop_wrap = true
 tracks/25/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, -0.0087271, -0.0174535, -0.0226889, -0.0261796, -0.0226889, -0.0174528, -0.0122174, -0.0034907, 0.0]
+"values": [0.0, 0.040143, 0.07854, 0.118682, 0.118682, 0.118682, 0.087266, 0.057596, 0.02618, 0.0]
 }
 tracks/26/type = "value"
 tracks/26/imported = false
 tracks/26/enabled = true
-tracks/26/path = NodePath("Body/BodyCorrect/Caltrop_horn1:texture")
+tracks/26/path = NodePath("Body/BodyCorrect/Caltrop_horn1:position")
 tracks/26/interp = 1
 tracks/26/loop_wrap = true
 tracks/26/keys = {
-"times": PackedFloat32Array(0, 0.75),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [ExtResource("1_fuck"), ExtResource("1_fuck")]
+"values": [Vector2(8.1, 45.5), Vector2(9.7, 42.6), Vector2(11.3, 40), Vector2(13.1, 37.1), Vector2(13.1, 36.5), Vector2(13.1, 35.7), Vector2(11.8, 38), Vector2(10.6, 40.5), Vector2(9.3, 42.9), Vector2(8.1, 45.5)]
 }
 tracks/27/type = "value"
 tracks/27/imported = false
 tracks/27/enabled = true
-tracks/27/path = NodePath("Body/BodyCorrect/Caltrop_horn1:self_modulate")
+tracks/27/path = NodePath("Body/BodyCorrect/Caltrop_horn1:visible")
 tracks/27/interp = 1
 tracks/27/loop_wrap = true
 tracks/27/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
-}
-tracks/28/type = "value"
-tracks/28/imported = false
-tracks/28/enabled = true
-tracks/28/path = NodePath("Body/BodyCorrect/Caltrop_horn2:visible")
-tracks/28/interp = 1
-tracks/28/loop_wrap = true
-tracks/28/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [true, true]
 }
-tracks/29/type = "value"
-tracks/29/imported = false
-tracks/29/enabled = true
-tracks/29/path = NodePath("Body/BodyCorrect/Caltrop_horn2:position")
-tracks/29/interp = 1
-tracks/29/loop_wrap = true
-tracks/29/keys = {
+tracks/28/type = "value"
+tracks/28/imported = false
+tracks/28/enabled = true
+tracks/28/path = NodePath("Body/BodyCorrect/Caltrop_horn2:self_modulate")
+tracks/28/interp = 1
+tracks/28/loop_wrap = true
+tracks/28/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(24, 41.4), Vector2(24.5, 38.5), Vector2(24.8, 35.5), Vector2(25.3, 32.5), Vector2(25.3, 31.9), Vector2(25.3, 31.3), Vector2(25, 33.8), Vector2(24.7, 36.3), Vector2(24.4, 38.9), Vector2(24, 41.4)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Body/BodyCorrect/Caltrop_horn2:texture")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [ExtResource("2_fuck"), ExtResource("2_fuck")]
 }
 tracks/30/type = "value"
 tracks/30/imported = false
 tracks/30/enabled = true
-tracks/30/path = NodePath("Body/BodyCorrect/Caltrop_horn2:rotation")
+tracks/30/path = NodePath("Body/BodyCorrect/Caltrop_horn2:skew")
 tracks/30/interp = 1
 tracks/30/loop_wrap = true
 tracks/30/keys = {
@@ -398,7 +398,7 @@ tracks/31/keys = {
 tracks/32/type = "value"
 tracks/32/imported = false
 tracks/32/enabled = true
-tracks/32/path = NodePath("Body/BodyCorrect/Caltrop_horn2:skew")
+tracks/32/path = NodePath("Body/BodyCorrect/Caltrop_horn2:rotation")
 tracks/32/interp = 1
 tracks/32/loop_wrap = true
 tracks/32/keys = {
@@ -410,26 +410,26 @@ tracks/32/keys = {
 tracks/33/type = "value"
 tracks/33/imported = false
 tracks/33/enabled = true
-tracks/33/path = NodePath("Body/BodyCorrect/Caltrop_horn2:texture")
+tracks/33/path = NodePath("Body/BodyCorrect/Caltrop_horn2:position")
 tracks/33/interp = 1
 tracks/33/loop_wrap = true
 tracks/33/keys = {
-"times": PackedFloat32Array(0, 0.75),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [ExtResource("2_fuck"), ExtResource("2_fuck")]
+"values": [Vector2(24, 41.4), Vector2(24.5, 38.5), Vector2(24.8, 35.5), Vector2(25.3, 32.5), Vector2(25.3, 31.9), Vector2(25.3, 31.3), Vector2(25, 33.8), Vector2(24.7, 36.3), Vector2(24.4, 38.9), Vector2(24, 41.4)]
 }
 tracks/34/type = "value"
 tracks/34/imported = false
 tracks/34/enabled = true
-tracks/34/path = NodePath("Body/BodyCorrect/Caltrop_horn2:self_modulate")
+tracks/34/path = NodePath("Body/BodyCorrect/Caltrop_horn2:visible")
 tracks/34/interp = 1
 tracks/34/loop_wrap = true
 tracks/34/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+"values": [true, true]
 }
 tracks/35/type = "value"
 tracks/35/imported = false

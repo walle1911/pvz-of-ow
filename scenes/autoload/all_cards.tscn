@@ -977,6 +977,9 @@ all_plant_card_prefabs = {
 68: NodePath("PlantCards2/Card22"),
 69: NodePath("PlantCards2/Card23"),
 70: NodePath("PlantCards2/Card25"),
+71: NodePath("PlantCards2/Card26"),
+72: NodePath("PlantCards2/Card27"),
+73: NodePath("PlantCards2/Card28"),
 1001: NodePath("PlantCards2/Card"),
 1002: NodePath("PlantCards2/Card2"),
 1003: NodePath("PlantCards2/Card3")
@@ -1010,6 +1013,7 @@ all_zombie_card_prefabs = {
 26: NodePath("ZombieCards/Card26"),
 27: NodePath("ZombieCards/Card27"),
 28: NodePath("ZombieCards/Card28"),
+29: NodePath("ZombieCards/Card29"),
 1001: NodePath("ZombieCards2/Card1")
 }
 plant_card_ids = Dictionary[int, int]({
@@ -1078,6 +1082,13 @@ plant_card_ids = Dictionary[int, int]({
 64: 65,
 65: 66,
 66: 67,
+67: 68,
+68: 69,
+69: 70,
+70: 71,
+71: 72,
+72: 73,
+73: 74,
 1001: 48,
 1002: 49,
 1003: 50
@@ -1111,6 +1122,7 @@ zombie_card_ids = Dictionary[int, int]({
 26: 25,
 27: 26,
 28: 27,
+29: 28,
 1001: 28
 })
 
@@ -8570,6 +8582,236 @@ scale = Vector2(0.91, 0.91)
 texture = ExtResource("386_bonk0")
 centered = false
 
+
+
+[node name="Card26" parent="PlantCards2" unique_id=2120000001 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+card_id = 71
+card_plant_type = 71
+sun_cost = 50
+
+[node name="CardBg" parent="PlantCards2/Card26" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant071GarlicMauga" type="Node2D" parent="PlantCards2/Card26/CardBg/CharacterStatic" index="0" unique_id=2120000010]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Body" type="Node2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga" unique_id=2120000009]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body" unique_id=2120000008]
+position = Vector2(-42, -66)
+
+[node name="Garlic_stem1" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000007]
+position = Vector2(32, 21.4)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("285_tmgt8")
+centered = false
+
+[node name="Garlic_stem2" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000006]
+position = Vector2(39, 17.5)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("286_bga83")
+centered = false
+
+[node name="Garlic_stem3" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000005]
+position = Vector2(40.8, 22.9)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("287_s6kw2")
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000004]
+position = Vector2(14, 20.1)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("288_whtsg")
+centered = false
+
+[node name="Garlic_stink" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000003]
+visible = false
+centered = false
+
+[node name="Garlic_blink" type="Sprite2D" parent="PlantCards2/Card26/CardBg/CharacterStatic/Plant071GarlicMauga/Body/BodyCorrect" unique_id=2120000002]
+visible = false
+position = Vector2(32, 38.2)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("289_utmk7")
+centered = false
+
+
+[node name="Card27" parent="PlantCards2" unique_id=2120000011 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+card_id = 72
+card_plant_type = 72
+sun_cost = 125
+
+[node name="CardBg" parent="PlantCards2/Card27" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant072CaltropHazard" type="Node2D" parent="PlantCards2/Card27/CardBg/CharacterStatic" index="0" unique_id=2120000023]
+position = Vector2(1, 10)
+scale = Vector2(0.5, 0.5)
+
+[node name="Shadow" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard" unique_id=2120000022]
+visible = false
+texture = ExtResource("98_ev02b")
+
+[node name="Body" type="Node2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard" unique_id=2120000021]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body" unique_id=2120000020]
+position = Vector2(-39, -69)
+
+[node name="Anim_attack" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000019]
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000018]
+visible = false
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000017]
+position = Vector2(-0.5, 44.5)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("182_bga83")
+centered = false
+
+[node name="Caltrop_horn1" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000016]
+position = Vector2(8.1, 45.5)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("183_s6kw2")
+centered = false
+
+[node name="Caltrop_horn2" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000015]
+position = Vector2(24, 41.4)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("184_whtsg")
+centered = false
+
+[node name="Caltrop_horn3" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000014]
+position = Vector2(45.4, 43)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("185_utmk7")
+centered = false
+
+[node name="Caltrop_horn4" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000013]
+position = Vector2(56.5, 49.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("186_4k8ki")
+centered = false
+
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards2/Card27/CardBg/CharacterStatic/Plant072CaltropHazard/Body/BodyCorrect" unique_id=2120000012]
+visible = false
+position = Vector2(19.4, 60.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("187_ghxkp")
+centered = false
+
+
+[node name="Card28" parent="PlantCards2" unique_id=2120000024 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+card_id = 73
+card_plant_type = 73
+cool_time = 30.0
+sun_cost = 25
+
+[node name="CardBg" parent="PlantCards2/Card28" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant073TanglekelpMizuki" type="Node2D" parent="PlantCards2/Card28/CardBg/CharacterStatic" index="0" unique_id=2120000043]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Shadow" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki" unique_id=2120000042]
+visible = false
+texture = ExtResource("98_ev02b")
+
+[node name="Body" type="Node2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki" unique_id=2120000041]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body" unique_id=2120000040]
+position = Vector2(-43, -62)
+
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000039]
+visible = false
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000038]
+visible = false
+centered = false
+
+[node name="Anim_grab" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000037]
+visible = false
+centered = false
+
+[node name="Anim_idle_aquarium" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000036]
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000035]
+position = Vector2(2.4, 11.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("163_k6rbm")
+centered = false
+
+[node name="Anim_waterline" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000034]
+visible = false
+position = Vector2(3.3, 52.9)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("164_gghvn")
+centered = false
+
+[node name="Tanglekelp_arm1" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000033]
+position = Vector2(-5.9, 24.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("165_018v2")
+centered = false
+
+[node name="Tanglekelp_arm2" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000032]
+position = Vector2(12.8, 21.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("166_5fvvn")
+centered = false
+
+[node name="Tanglekelp_arm3" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000031]
+position = Vector2(14.6, 11)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("167_ywrpp")
+centered = false
+
+[node name="Tanglekelp_arm4" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000030]
+position = Vector2(16, 5.2)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("168_c86k7")
+centered = false
+
+[node name="Tanglekelp_arm5" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000029]
+position = Vector2(41.4, 5.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("169_qvmtp")
+centered = false
+
+[node name="Tanglekelp_arm6" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000028]
+position = Vector2(51.2, 14)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("170_2xpbq")
+centered = false
+
+[node name="Tanglekelp_arm7" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000027]
+position = Vector2(63.8, 21.2)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("171_aglxf")
+centered = false
+
+[node name="Tanglekelp_arm8" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000026]
+position = Vector2(66.1, 28.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("172_pk4u5")
+centered = false
+
+[node name="Anim_blink1" type="Sprite2D" parent="PlantCards2/Card28/CardBg/CharacterStatic/Plant073TanglekelpMizuki/Body/BodyCorrect" unique_id=2120000025]
+visible = false
+position = Vector2(21.7, 42.8)
+scale = Vector2(0.8, 0.770034)
+texture = ExtResource("173_3lhqb")
+centered = false
+
+
 [node name="ZombieCards" type="GridContainer" parent="." unique_id=255774907]
 unique_name_in_owner = true
 layout_mode = 0
@@ -14108,6 +14350,153 @@ centered = false
 [node name="Zombie_digger_dig" type="Sprite2D" parent="ZombieCards/Card28/CardBg/CharacterStatic/Zombie028DiggerZombieVenture/Body/BodyCorrect" unique_id=945136614]
 visible = false
 centered = false
+
+[node name="Card29" parent="ZombieCards" unique_id=2120000044 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+card_id = 29
+card_zombie_type = 29
+cool_time = 0.0
+sun_cost = 75
+
+[node name="CardBg" parent="ZombieCards/Card29" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie029JackboxReaper" type="Node2D" parent="ZombieCards/Card29/CardBg/CharacterStatic" index="0" unique_id=2120000069]
+position = Vector2(2, 17)
+scale = Vector2(0.3, 0.3)
+
+[node name="Body" type="Node2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper" unique_id=2120000068]
+
+[node name="BodyCorrect" type="Node2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body" unique_id=2120000067]
+position = Vector2(-50, -120)
+
+[node name="_ground" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000066]
+visible = false
+texture = ExtResource("195_q2ynx")
+centered = false
+
+[node name="Zombie_jackbox_innerleg_foot" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000065]
+position = Vector2(27, 104.5)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("444_7f486")
+centered = false
+
+[node name="Zombie_jackbox_innerleg_lower" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000064]
+position = Vector2(27.2, 93.6)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("445_ih4no")
+centered = false
+
+[node name="Zombie_jackbox_innerleg_upper" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000063]
+position = Vector2(41.7, 75.6)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("446_angoc")
+centered = false
+
+[node name="Zombie_jackbox_body2" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000062]
+position = Vector2(38.4, 59.7)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("447_yrvmv")
+centered = false
+
+[node name="Zombie_jackbox_outerleg_foot" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000061]
+position = Vector2(48.4, 113.5)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("448_k6rbm")
+centered = false
+
+[node name="Zombie_jackbox_outerleg_lower" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000060]
+position = Vector2(57.6, 92.8)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("449_gghvn")
+centered = false
+
+[node name="Zombie_jackbox_outerleg_upper" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000059]
+position = Vector2(56.4, 73.5)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("450_018v2")
+centered = false
+
+[node name="Zombie_jackbox_innerarm_upper" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000058]
+position = Vector2(15.8, 33.4)
+rotation = 0.036652
+scale = Vector2(0.815, 0.757)
+texture = ExtResource("451_5fvvn")
+centered = false
+
+[node name="Zombie_jackbox_innerarm_lower" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000057]
+position = Vector2(-12, 44.5)
+scale = Vector2(0.775, 0.748)
+texture = ExtResource("452_ywrpp")
+centered = false
+
+[node name="Zombie_jackbox_body1" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000056]
+position = Vector2(26.9, 27.2)
+scale = Vector2(0.748, 0.748)
+texture = ExtResource("453_c86k7")
+centered = false
+
+[node name="Anim_head1" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000055]
+position = Vector2(0.3, -1.4)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("455_orgcc")
+centered = false
+
+[node name="Anim_head2" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000054]
+position = Vector2(10.1, 35.5)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("456_1exfc")
+centered = false
+
+[node name="Zombie_jackbox_handle" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000053]
+position = Vector2(-3, 45.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("456_qvmtp")
+centered = false
+
+[node name="Zombie_jackbox_box" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000052]
+position = Vector2(7.8, 43.5)
+rotation = -0.099484
+scale = Vector2(0.67, 0.67)
+texture = ExtResource("457_2xpbq")
+centered = false
+
+[node name="Zombie_jackbox_box2" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000051]
+visible = false
+centered = false
+
+[node name="Zombie_jackbox_clownneck3" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000050]
+visible = false
+centered = false
+
+[node name="Zombie_jackbox_clownneck2" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000049]
+visible = false
+centered = false
+
+[node name="Zombie_jackbox_clownneck1" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000048]
+visible = false
+centered = false
+
+[node name="Zombie_jackbox_clownhead" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000047]
+visible = false
+centered = false
+
+[node name="Zombie_jackbox_outerarm_upper" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000046]
+position = Vector2(44.6, 38.1)
+rotation = -0.136136
+scale = Vector2(0.767, 0.795)
+skew = 0.225148
+texture = ExtResource("445_deuj6")
+centered = false
+
+[node name="Zombie_jackbox_outerarm_lower" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie029JackboxReaper/Body/BodyCorrect" unique_id=2120000045]
+position = Vector2(14.2, 59.5)
+rotation = -0.099484
+scale = Vector2(0.747, 0.747)
+texture = ExtResource("446_fxj51")
+centered = false
+
+
 
 [node name="ZombieCards2" type="GridContainer" parent="." unique_id=561692043]
 unique_name_in_owner = true
