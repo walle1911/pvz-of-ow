@@ -47,6 +47,7 @@ script = ExtResource("7_clw33")
 [node name="GlobalGameState" type="Node" parent="." unique_id=1502665354]
 unique_name_in_owner = true
 script = ExtResource("8_t0h6q")
+curr_plant = Array[int]([50, 2, 3, 503, 6, 13, 13, 20, 14, 16, 18, 21, 22, 24, 25, 32, 36, 37, 40, 41, 43, 44, 49, 70, 999, 500, 501, 502, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 1001, 1002, 1003])
 
 [node name="GlobalReadData" type="Node" parent="." unique_id=2070056274]
 unique_name_in_owner = true

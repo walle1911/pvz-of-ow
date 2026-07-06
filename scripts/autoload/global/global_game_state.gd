@@ -29,7 +29,7 @@ var garden_data: Dictionary = DEFAULT_GARDEN_DATA.duplicate(true)
 var curr_all_level_state_data: Dictionary = DEFAULT_CURR_ALL_LEVEL_STATE_DATA.duplicate(true)
 var selected_cards: Array = []
 
-var curr_plant :Array[CharacterRegistry.PlantType]= [
+@export var curr_plant :Array[CharacterRegistry.PlantType]= [
 	CharacterRegistry.PlantType.P002SunflowerMercy,
 	CharacterRegistry.PlantType.P003CherryBombJunkrat,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
@@ -108,7 +108,7 @@ var curr_plant :Array[CharacterRegistry.PlantType]= [
 	CharacterRegistry.PlantType.P1003WallNutBowlingBig,
 ]
 
-var curr_zombie :Array[CharacterRegistry.ZombieType]= [
+@export var curr_zombie :Array[CharacterRegistry.ZombieType]= [
 	CharacterRegistry.ZombieType.Z016JackboxReaper,
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston,

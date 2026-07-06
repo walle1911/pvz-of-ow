@@ -114,6 +114,8 @@ func _init_card_slot_candidate_plant():
 		card_candidate_container.visible = false
 
 	for plant_type:CharacterRegistry.PlantType in Global.global_game_state.curr_plant:
+		if not AllCards.plant_card_ids.has(plant_type):
+			continue
 		all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].visible = true
 
 
@@ -151,6 +153,8 @@ func _init_card_slot_candidate_zombie():
 		card_candidate_container.visible = false
 
 	for zombie_type:CharacterRegistry.ZombieType in Global.global_game_state.curr_zombie:
+		if not AllCards.zombie_card_ids.has(zombie_type):
+			continue
 		all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].visible = true
 
 	grid_container_zombie.queue_free()
@@ -188,6 +192,8 @@ func _init_card_slot_candidate_imitater():
 		card_candidate_container.visible = false
 
 	for plant_type:CharacterRegistry.PlantType in Global.global_game_state.curr_plant:
+		if not AllCards.plant_card_ids.has(plant_type):
+			continue
 		all_card_candidate_containers_plant_imitater[AllCards.plant_card_ids[plant_type]].visible = true
 
 	grid_container_plant_imitater.queue_free()
