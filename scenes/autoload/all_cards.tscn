@@ -933,10 +933,10 @@ offset_right = -883.0
 offset_bottom = 6.0
 script = ExtResource("1_qtbte")
 all_zombie_card_prefabs = {
-16: NodePath("ZombieCards/Card29"),
-18: NodePath("ZombieCards/Card28"),
-20: NodePath("ZombieCards/Card27"),
-24: NodePath("ZombieCards/Card26"),
+16: NodePath("ZombieCards2/Card5"),
+18: NodePath("ZombieCards2/Card4"),
+20: NodePath("ZombieCards2/Card3"),
+24: NodePath("ZombieCards2/Card2"),
 500: NodePath("ZombieCards/Card1"),
 501: NodePath("ZombieCards/Card2"),
 502: NodePath("ZombieCards/Card3"),
@@ -6406,196 +6406,6 @@ offset_right = -17.070007
 offset_bottom = 368.0
 columns = 8
 
-[node name="Card" parent="PlantCards2" unique_id=558803022 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 73
-card_plant_type = 1001
-sun_cost = 50
-
-[node name="CardBg" parent="PlantCards2/Card" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Plant1001WallNutBowling" type="Node2D" parent="PlantCards2/Card/CardBg/CharacterStatic" index="0" unique_id=24157271]
-position = Vector2(1, 14)
-scale = Vector2(0.5, 0.5)
-
-[node name="Body" type="Node2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1257323139]
-
-[node name="BowlingCenter" type="Node2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body" unique_id=956018598]
-position = Vector2(0, -28)
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter" unique_id=543126546]
-position = Vector2(0, 30)
-
-[node name="_ground" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1881035733]
-position = Vector2(-42, -71)
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=382567075]
-position = Vector2(-42, -71)
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1471035214]
-position = Vector2(-38.163, -62.7476)
-rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
-
-[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=266141564]
-visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
-
-[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1239765073]
-visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1760105188]
-libraries/ = SubResource("AnimationLibrary_7lapw")
-
-[node name="AnimationTree" type="AnimationTree" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=285436764]
-tree_root = SubResource("AnimationNodeBlendTree_te8ao")
-advance_expression_base_node = NodePath("..")
-anim_player = NodePath("../AnimationPlayer")
-parameters/TimeScale/scale = 1.0
-
-[node name="Card2" parent="PlantCards2" unique_id=1454621003 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 74
-card_plant_type = 1002
-sun_cost = 50
-
-[node name="CardBg" parent="PlantCards2/Card2" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Plant1002WallNutBowling" type="Node2D" parent="PlantCards2/Card2/CardBg/CharacterStatic" index="0" unique_id=686972498]
-position = Vector2(1, 14)
-scale = Vector2(0.5, 0.5)
-
-[node name="Body" type="Node2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1032102387]
-modulate = Color(1, 0, 0.141176, 1)
-
-[node name="BowlingCenter" type="Node2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body" unique_id=488448717]
-position = Vector2(2, -26)
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter" unique_id=1002396343]
-position = Vector2(-2, 26)
-
-[node name="_ground" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1908181115]
-position = Vector2(-42, -69)
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1246037475]
-position = Vector2(-42, -69)
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=377445764]
-position = Vector2(-38.163, -60.7476)
-rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
-
-[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1316602386]
-visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
-
-[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=866111797]
-visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1197965782]
-libraries/ = SubResource("AnimationLibrary_7lapw")
-
-[node name="AnimationTree" type="AnimationTree" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1972781580]
-tree_root = SubResource("AnimationNodeBlendTree_te8ao")
-advance_expression_base_node = NodePath("..")
-anim_player = NodePath("../AnimationPlayer")
-parameters/TimeScale/scale = 1.0
-
-[node name="Card3" parent="PlantCards2" unique_id=257349315 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 75
-card_plant_type = 1003
-sun_cost = 50
-
-[node name="CardBg" parent="PlantCards2/Card3" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Plant1003WallNutBowling" type="Node2D" parent="PlantCards2/Card3/CardBg/CharacterStatic" index="0" unique_id=438887481]
-position = Vector2(2, 21)
-scale = Vector2(0.4, 0.4)
-
-[node name="Body" type="Node2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=1257184569]
-scale = Vector2(2, 2)
-
-[node name="BowlingCenter" type="Node2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body" unique_id=2140350927]
-position = Vector2(0, -25)
-scale = Vector2(0.99999994, 0.99999994)
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter" unique_id=1317932905]
-position = Vector2(0, 25.000004)
-scale = Vector2(1.0000001, 1.0000001)
-
-[node name="_ground" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1148731280]
-position = Vector2(-42.5, -69.5)
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=394433854]
-position = Vector2(-42.5, -69.5)
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1698650326]
-position = Vector2(-38.663, -61.2476)
-rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
-
-[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=762902328]
-visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
-
-[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1570846155]
-visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=1810795647]
-libraries/ = SubResource("AnimationLibrary_7lapw")
-
-[node name="AnimationTree" type="AnimationTree" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=778759402]
-tree_root = SubResource("AnimationNodeBlendTree_te8ao")
-advance_expression_base_node = NodePath("..")
-anim_player = NodePath("../AnimationPlayer")
-parameters/TimeScale/scale = 1.0
-
 [node name="Card4" parent="PlantCards2" unique_id=1202022465 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
@@ -8114,6 +7924,206 @@ position = Vector2(60.9, 31.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("343_8nnpu")
 centered = false
+
+[node name="PlantCards3" type="GridContainer" parent="." unique_id=819751303]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -445.07
+offset_top = 2.0
+offset_right = -17.070007
+offset_bottom = 368.0
+columns = 8
+
+[node name="Card" parent="PlantCards3" unique_id=558803022 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 73
+card_plant_type = 1001
+sun_cost = 50
+
+[node name="CardBg" parent="PlantCards3/Card" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant1001WallNutBowling" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic" index="0" unique_id=24157271]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Body" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1257323139]
+
+[node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body" unique_id=956018598]
+position = Vector2(0, -28)
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter" unique_id=543126546]
+position = Vector2(0, 30)
+
+[node name="_ground" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1881035733]
+position = Vector2(-42, -71)
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=382567075]
+position = Vector2(-42, -71)
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1471035214]
+position = Vector2(-38.163, -62.7476)
+rotation = -0.0454682
+scale = Vector2(0.7, 0.68937)
+texture = ExtResource("51_ocwvu")
+centered = false
+
+[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=266141564]
+visible = false
+position = Vector2(-14.5894, -8.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("52_dc0c5")
+centered = false
+
+[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1239765073]
+visible = false
+position = Vector2(-15.7894, -22.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("53_vm05c")
+centered = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1760105188]
+libraries/ = SubResource("AnimationLibrary_7lapw")
+
+[node name="AnimationTree" type="AnimationTree" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=285436764]
+tree_root = SubResource("AnimationNodeBlendTree_te8ao")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../AnimationPlayer")
+parameters/TimeScale/scale = 1.0
+
+[node name="Card2" parent="PlantCards3" unique_id=1454621003 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 74
+card_plant_type = 1002
+sun_cost = 50
+
+[node name="CardBg" parent="PlantCards3/Card2" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant1002WallNutBowling" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic" index="0" unique_id=686972498]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Body" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1032102387]
+modulate = Color(1, 0, 0.141176, 1)
+
+[node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body" unique_id=488448717]
+position = Vector2(2, -26)
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter" unique_id=1002396343]
+position = Vector2(-2, 26)
+
+[node name="_ground" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1908181115]
+position = Vector2(-42, -69)
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1246037475]
+position = Vector2(-42, -69)
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=377445764]
+position = Vector2(-38.163, -60.7476)
+rotation = -0.0454682
+scale = Vector2(0.7, 0.68937)
+texture = ExtResource("51_ocwvu")
+centered = false
+
+[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1316602386]
+visible = false
+position = Vector2(-14.5894, -8.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("52_dc0c5")
+centered = false
+
+[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=866111797]
+visible = false
+position = Vector2(-15.7894, -22.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("53_vm05c")
+centered = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1197965782]
+libraries/ = SubResource("AnimationLibrary_7lapw")
+
+[node name="AnimationTree" type="AnimationTree" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1972781580]
+tree_root = SubResource("AnimationNodeBlendTree_te8ao")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../AnimationPlayer")
+parameters/TimeScale/scale = 1.0
+
+[node name="Card3" parent="PlantCards3" unique_id=257349315 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 75
+card_plant_type = 1003
+sun_cost = 50
+
+[node name="CardBg" parent="PlantCards3/Card3" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant1003WallNutBowling" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic" index="0" unique_id=438887481]
+position = Vector2(2, 21)
+scale = Vector2(0.4, 0.4)
+
+[node name="Body" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=1257184569]
+scale = Vector2(2, 2)
+
+[node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body" unique_id=2140350927]
+position = Vector2(0, -25)
+scale = Vector2(0.99999994, 0.99999994)
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter" unique_id=1317932905]
+position = Vector2(0, 25.000004)
+scale = Vector2(1.0000001, 1.0000001)
+
+[node name="_ground" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1148731280]
+position = Vector2(-42.5, -69.5)
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=394433854]
+position = Vector2(-42.5, -69.5)
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1698650326]
+position = Vector2(-38.663, -61.2476)
+rotation = -0.0454682
+scale = Vector2(0.7, 0.68937)
+texture = ExtResource("51_ocwvu")
+centered = false
+
+[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=762902328]
+visible = false
+position = Vector2(-14.5894, -8.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("52_dc0c5")
+centered = false
+
+[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1570846155]
+visible = false
+position = Vector2(-15.7894, -22.3159)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("53_vm05c")
+centered = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=1810795647]
+libraries/ = SubResource("AnimationLibrary_7lapw")
+
+[node name="AnimationTree" type="AnimationTree" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=778759402]
+tree_root = SubResource("AnimationNodeBlendTree_te8ao")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../AnimationPlayer")
+parameters/TimeScale/scale = 1.0
+
 
 [node name="ZombieCards" type="GridContainer" parent="." unique_id=255774907]
 unique_name_in_owner = true
@@ -13192,92 +13202,6 @@ centered = false
 [node name="NodeDrop" type="Node2D" parent="ZombieCards/Card25/CardBg/CharacterStatic/Zombie524Imp/Body" unique_id=2014335878]
 visible = false
 
-[node name="Card26" parent="ZombieCards" unique_id=1306778560 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 3
-card_zombie_type = 24
-cool_time = 0.0
-sun_cost = 300
-
-[node name="CardBg" parent="ZombieCards/Card26" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Zombie024GargantuarReinhardt" type="Node2D" parent="ZombieCards/Card26/CardBg/CharacterStatic" index="0" unique_id=1621909291]
-position = Vector2(2, 17)
-scale = Vector2(0.2, 0.2)
-
-[node name="Card" type="Sprite2D" parent="ZombieCards/Card26/CardBg/CharacterStatic/Zombie024GargantuarReinhardt" unique_id=729744531]
-position = Vector2(-5.5, -85.22)
-scale = Vector2(-1.13, 1.13)
-texture = ExtResource("785_hnpw6")
-
-[node name="Card27" parent="ZombieCards" unique_id=1481422670 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 2
-card_zombie_type = 20
-cool_time = 0.0
-
-[node name="CardBg" parent="ZombieCards/Card27" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Zombie020ZombieYetiWinston" type="Node2D" parent="ZombieCards/Card27/CardBg/CharacterStatic" index="0" unique_id=323862613]
-position = Vector2(2, 17)
-scale = Vector2(0.3, 0.3)
-
-[node name="Card" type="Sprite2D" parent="ZombieCards/Card27/CardBg/CharacterStatic/Zombie020ZombieYetiWinston" unique_id=151287559]
-position = Vector2(-7.63, -62.28)
-scale = Vector2(-0.68, 0.68)
-texture = ExtResource("786_put5c")
-
-[node name="Card28" parent="ZombieCards" unique_id=1915820477 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 1
-card_zombie_type = 18
-cool_time = 0.0
-sun_cost = 125
-
-[node name="CardBg" parent="ZombieCards/Card28" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Zombie018DiggerZombieVenture" type="Node2D" parent="ZombieCards/Card28/CardBg/CharacterStatic" index="0" unique_id=716593954]
-position = Vector2(2, 17)
-scale = Vector2(0.3, 0.3)
-
-[node name="Card" type="Sprite2D" parent="ZombieCards/Card28/CardBg/CharacterStatic/Zombie018DiggerZombieVenture" unique_id=945154617]
-position = Vector2(-8.24, -55.3)
-scale = Vector2(0.41, 0.41)
-texture = ExtResource("787_vgnkp")
-
-[node name="Card29" parent="ZombieCards" unique_id=-1294966995 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 0
-card_zombie_type = 16
-cool_time = 0.0
-sun_cost = 75
-
-[node name="CardBg" parent="ZombieCards/Card29" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Zombie016JackboxReaper" type="Node2D" parent="ZombieCards/Card29/CardBg/CharacterStatic" index="0" unique_id=-1294966994]
-position = Vector2(2, 17)
-scale = Vector2(0.3, 0.3)
-
-[node name="Card" type="Sprite2D" parent="ZombieCards/Card29/CardBg/CharacterStatic/Zombie016JackboxReaper" unique_id=-1294966993]
-position = Vector2(-8, -55)
-scale = Vector2(-0.5, 0.5)
-texture = ExtResource("799_h3i4j")
 
 [node name="ZombieCards2" type="GridContainer" parent="." unique_id=561692043]
 unique_name_in_owner = true
@@ -13426,6 +13350,93 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("371_ea7g5")
 centered = false
 
+[node name="Card2" parent="ZombieCards2" unique_id=1306778560 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 3
+card_zombie_type = 24
+cool_time = 0.0
+sun_cost = 300
+
+[node name="CardBg" parent="ZombieCards2/Card2" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie024GargantuarReinhardt" type="Node2D" parent="ZombieCards2/Card2/CardBg/CharacterStatic" index="0" unique_id=1621909291]
+position = Vector2(2, 17)
+scale = Vector2(0.2, 0.2)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards2/Card2/CardBg/CharacterStatic/Zombie024GargantuarReinhardt" unique_id=729744531]
+position = Vector2(-5.5, -85.22)
+scale = Vector2(-1.13, 1.13)
+texture = ExtResource("785_hnpw6")
+
+[node name="Card3" parent="ZombieCards2" unique_id=1481422670 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 2
+card_zombie_type = 20
+cool_time = 0.0
+
+[node name="CardBg" parent="ZombieCards2/Card3" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie020ZombieYetiWinston" type="Node2D" parent="ZombieCards2/Card3/CardBg/CharacterStatic" index="0" unique_id=323862613]
+position = Vector2(2, 17)
+scale = Vector2(0.3, 0.3)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards2/Card3/CardBg/CharacterStatic/Zombie020ZombieYetiWinston" unique_id=151287559]
+position = Vector2(-7.63, -62.28)
+scale = Vector2(-0.68, 0.68)
+texture = ExtResource("786_put5c")
+
+[node name="Card4" parent="ZombieCards2" unique_id=1915820477 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 1
+card_zombie_type = 18
+cool_time = 0.0
+sun_cost = 125
+
+[node name="CardBg" parent="ZombieCards2/Card4" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie018DiggerZombieVenture" type="Node2D" parent="ZombieCards2/Card4/CardBg/CharacterStatic" index="0" unique_id=716593954]
+position = Vector2(2, 17)
+scale = Vector2(0.3, 0.3)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards2/Card4/CardBg/CharacterStatic/Zombie018DiggerZombieVenture" unique_id=945154617]
+position = Vector2(-8.24, -55.3)
+scale = Vector2(0.41, 0.41)
+texture = ExtResource("787_vgnkp")
+
+[node name="Card5" parent="ZombieCards2" unique_id=-1294966995 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 0
+card_zombie_type = 16
+cool_time = 0.0
+sun_cost = 75
+
+[node name="CardBg" parent="ZombieCards2/Card5" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie016JackboxReaper" type="Node2D" parent="ZombieCards2/Card5/CardBg/CharacterStatic" index="0" unique_id=-1294966994]
+position = Vector2(2, 17)
+scale = Vector2(0.3, 0.3)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards2/Card5/CardBg/CharacterStatic/Zombie016JackboxReaper" unique_id=-1294966993]
+position = Vector2(-8, -55)
+scale = Vector2(-0.5, 0.5)
+texture = ExtResource("799_h3i4j")
+
 [editable path="CardImitater"]
 [editable path="PlantCards/Card1"]
 [editable path="PlantCards/Card2"]
@@ -13475,9 +13486,6 @@ centered = false
 [editable path="PlantCards/Card46"]
 [editable path="PlantCards/Card47"]
 [editable path="PlantCards/Card48"]
-[editable path="PlantCards2/Card"]
-[editable path="PlantCards2/Card2"]
-[editable path="PlantCards2/Card3"]
 [editable path="PlantCards2/Card4"]
 [editable path="PlantCards2/Card5"]
 [editable path="PlantCards2/Card6"]
@@ -13509,6 +13517,9 @@ centered = false
 [editable path="PlantCards2/Card32"]
 [editable path="PlantCards2/Card33"]
 [editable path="PlantCards2/Card34"]
+[editable path="PlantCards3/Card"]
+[editable path="PlantCards3/Card2"]
+[editable path="PlantCards3/Card3"]
 [editable path="ZombieCards/Card1"]
 [editable path="ZombieCards/Card2"]
 [editable path="ZombieCards/Card3"]
@@ -13534,8 +13545,9 @@ centered = false
 [editable path="ZombieCards/Card23"]
 [editable path="ZombieCards/Card24"]
 [editable path="ZombieCards/Card25"]
-[editable path="ZombieCards/Card26"]
-[editable path="ZombieCards/Card27"]
-[editable path="ZombieCards/Card28"]
-[editable path="ZombieCards/Card29"]
+
 [editable path="ZombieCards2/Card1"]
+[editable path="ZombieCards2/Card2"]
+[editable path="ZombieCards2/Card3"]
+[editable path="ZombieCards2/Card4"]
+[editable path="ZombieCards2/Card5"]

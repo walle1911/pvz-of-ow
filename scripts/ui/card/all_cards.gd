@@ -4,7 +4,7 @@ extends Control
 class_name AllCardsClass
 
 @onready var all_plant_cards_parent_node_root: Array[GridContainer] = [
-	%PlantCards, %PlantCards2
+	%PlantCards, %PlantCards2, %PlantCards3
 ]
 @onready var all_zombie_cards_parent_node_root: Array[GridContainer] = [
 	%ZombieCards, %ZombieCards2
