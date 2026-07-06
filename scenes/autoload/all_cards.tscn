@@ -4751,7 +4751,161 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("262_angoc")
 centered = false
 
-[node name="Card35" parent="PlantCards" unique_id=426320060 instance=ExtResource("2_5pqky")]
+[node name="Card35" parent="PlantCards" unique_id=1202022465 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 20
+card_plant_type = 49
+sun_cost = 200
+
+[node name="CardBg" parent="PlantCards/Card35" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant008PeaShooterDoubleReverse" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic" index="0" unique_id=1345860080]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Body" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse" unique_id=1297535003]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body" unique_id=537700809]
+position = Vector2(44, -70)
+scale = Vector2(-1, 1)
+
+[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1747747164]
+position = Vector2(27.6, 54.764)
+scale = Vector2(0.5874, 0.48144)
+texture = ExtResource("3_xm6ba")
+centered = false
+
+[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1530032498]
+position = Vector2(24.736, 55.228)
+rotation = 0.0102626
+scale = Vector2(0.61456, 0.515)
+texture = ExtResource("4_2m5n3")
+centered = false
+
+[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=2146726667]
+position = Vector2(47.876, 54.364)
+rotation = 0.0461463
+scale = Vector2(0.66084, 0.50884)
+texture = ExtResource("5_utnli")
+centered = false
+
+[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1152722391]
+position = Vector2(38.252, 49.072)
+rotation = 0.217049
+scale = Vector2(0.55988, 0.75092)
+skew = -0.0753286
+texture = ExtResource("6_1j6ba")
+centered = false
+
+[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1520292224]
+position = Vector2(34.216, 36.696)
+rotation = 0.188007
+scale = Vector2(0.56564, 0.85512)
+skew = -0.0766547
+texture = ExtResource("7_1qg83")
+centered = false
+
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1601294530]
+position = Vector2(22.212, 55.388)
+scale = Vector2(0.57664, 0.52172)
+texture = ExtResource("8_jrvjq")
+centered = false
+
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1892983849]
+position = Vector2(55.536, 56.488)
+rotation = -0.15701
+scale = Vector2(0.72552, 0.54524)
+texture = ExtResource("9_lppa3")
+centered = false
+
+[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=2145018184]
+position = Vector2(19.612, 60.448)
+rotation = 0.14172
+scale = Vector2(0.62656, 0.54512)
+texture = ExtResource("10_xa6hp")
+centered = false
+
+[node name="Anim_stem" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=352492639]
+position = Vector2(39.952, 42.836)
+centered = false
+
+[node name="stem_correct" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem" unique_id=725265076]
+position = Vector2(-36.5861, -47.9858)
+
+[node name="Idle_headleaf_farthest" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=457685114]
+position = Vector2(12.9, 38.1)
+rotation = -0.338594
+scale = Vector2(0.547, 0.501)
+skew = -0.0837757
+texture = ExtResource("91_orgcc")
+centered = false
+
+[node name="Idle_headleaf_3rdfarthest" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=73020849]
+position = Vector2(22.6, 17.7)
+scale = Vector2(0.555, 0.493)
+texture = ExtResource("92_1exfc")
+centered = false
+
+[node name="Idle_headleaf_2ndfarthest" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=340026642]
+position = Vector2(11.1, 29.1)
+scale = Vector2(0.555, 0.493)
+texture = ExtResource("93_a1y4x")
+centered = false
+
+[node name="Idle_headleaf_tip_bottom" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1059073795]
+position = Vector2(6.2, 33.1)
+scale = Vector2(0.555, 0.493)
+texture = ExtResource("94_bywlf")
+centered = false
+
+[node name="Idle_headleaf_nearest" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=49141783]
+position = Vector2(17, 18.4)
+scale = Vector2(0.527, 0.513)
+texture = ExtResource("95_biftl")
+centered = false
+
+[node name="Idle_headleaf_tip_top" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1291622114]
+position = Vector2(13, 18.4)
+scale = Vector2(0.527, 0.513)
+texture = ExtResource("96_5jdnp")
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1802516884]
+position = Vector2(19.2, 17.8)
+scale = Vector2(0.555, 0.5)
+texture = ExtResource("12_cgaa5")
+centered = false
+
+[node name="Idle_mouth" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1277091487]
+position = Vector2(52.4, 17.8)
+scale = Vector2(0.555, 0.5)
+texture = ExtResource("13_rata2")
+centered = false
+
+[node name="Idle_shoot_blink" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=548209557]
+centered = false
+
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1095063835]
+visible = false
+position = Vector2(37.5, 23.5)
+scale = Vector2(0.555, 0.555)
+texture = ExtResource("14_kp5c5")
+centered = false
+
+[node name="PeaShooter_eyebrow" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1361819630]
+position = Vector2(34.8, 19.7)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("97_rcuue")
+centered = false
+
+[node name="Marker2DBullet" type="Marker2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1969223720]
+position = Vector2(60.9452, 30.6411)
+
+[node name="Card36" parent="PlantCards" unique_id=426320060 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -4760,155 +4914,155 @@ card_id = 58
 card_plant_type = 534
 sun_cost = 125
 
-[node name="CardBg" parent="PlantCards/Card35" index="0"]
+[node name="CardBg" parent="PlantCards/Card36" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant534CornPult" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic" index="0" unique_id=722018133]
+[node name="Plant534CornPult" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic" index="0" unique_id=722018133]
 position = Vector2(6, 15)
 scale = Vector2(0.45, 0.45)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult" unique_id=1259953777]
+[node name="Body" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult" unique_id=1259953777]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body" unique_id=1746298289]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body" unique_id=1746298289]
 position = Vector2(-45, -67)
 
-[node name="Cornpult_husk5" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2106307206]
+[node name="Cornpult_husk5" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2106307206]
 position = Vector2(55.7, 55.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("263_l1yc2")
 centered = false
 
-[node name="Cornpult_husk6" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=898386894]
+[node name="Cornpult_husk6" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=898386894]
 position = Vector2(16.8, 55.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("264_2uats")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=191219484]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=191219484]
 position = Vector2(23.4, 18.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("265_ch63v")
 centered = false
 
-[node name="Cornpult_blink" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=555831357]
+[node name="Cornpult_blink" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=555831357]
 visible = false
 position = Vector2(45.8, 46.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("266_hvhik")
 centered = false
 
-[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=375830013]
+[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=375830013]
 position = Vector2(-16.5, 4.6)
 rotation = 0.071558
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("245_etbto")
 centered = false
 
-[node name="Cabbagepult_basket2" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1356379251]
+[node name="Cabbagepult_basket2" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1356379251]
 position = Vector2(-16.4, 4.8)
 rotation = 0.071558
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("247_qq07m")
 centered = false
 
-[node name="Cornpult_kernal" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2084357776]
+[node name="Cornpult_kernal" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2084357776]
 position = Vector2(-16.7, 11.1)
 rotation = -0.71384
 scale = Vector2(0.95, 0.95)
 texture = ExtResource("267_0ve74")
 centered = false
 
-[node name="Cornpult_butter" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=620252557]
+[node name="Cornpult_butter" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=620252557]
 visible = false
 position = Vector2(-22, -18.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("268_tmgt8")
 centered = false
 
-[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=496397210]
+[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=496397210]
 position = Vector2(-16.5, 4.3)
 rotation = 0.071558
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("247_qq07m")
 centered = false
 
-[node name="Cornpult_husk3" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=547654829]
+[node name="Cornpult_husk3" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=547654829]
 position = Vector2(12.4, 58.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("269_bga83")
 centered = false
 
-[node name="Cornpult_husktip3" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=706418389]
+[node name="Cornpult_husktip3" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=706418389]
 position = Vector2(7.7, 59.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("270_s6kw2")
 centered = false
 
-[node name="Cornpult_husk1" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2012968269]
+[node name="Cornpult_husk1" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=2012968269]
 position = Vector2(19.3, 61.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("271_whtsg")
 centered = false
 
-[node name="Cornpult_husktip1" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1558494077]
+[node name="Cornpult_husktip1" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1558494077]
 position = Vector2(11.8, 67.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("272_utmk7")
 centered = false
 
-[node name="Cornpult_husk4" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1612864445]
+[node name="Cornpult_husk4" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1612864445]
 position = Vector2(56.3, 61.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("273_4k8ki")
 centered = false
 
-[node name="Cornpult_husk2" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1367854701]
+[node name="Cornpult_husk2" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1367854701]
 position = Vector2(44.9, 63)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("274_ghxkp")
 centered = false
 
-[node name="Cornpult_husktip2" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1127837617]
+[node name="Cornpult_husktip2" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1127837617]
 position = Vector2(62.5, 65.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("275_xbns8")
 centered = false
 
-[node name="Cornpult_stalk1" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1746421503]
+[node name="Cornpult_stalk1" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1746421503]
 position = Vector2(38.8, 9.4)
 rotation = 0.071558
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("276_jnetc")
 centered = false
 
-[node name="Cornpult_stalk2" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1451078271]
+[node name="Cornpult_stalk2" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1451078271]
 position = Vector2(26.2, 8.5)
 rotation = 0.071558
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("277_x4ed2")
 centered = false
 
-[node name="Cornpult_stalk4" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=291330334]
+[node name="Cornpult_stalk4" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=291330334]
 position = Vector2(14, 13.5)
 rotation = 0.333358
 scale = Vector2(0.755, 0.755)
 texture = ExtResource("278_g74nx")
 centered = false
 
-[node name="Cornpult_stalk3" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1557039177]
+[node name="Cornpult_stalk3" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1557039177]
 position = Vector2(14.6, 16)
 rotation = 0.071558
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("279_kkciq")
 centered = false
 
-[node name="Cornpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=938511384]
+[node name="Cornpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=938511384]
 position = Vector2(38.7, 42)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("280_d31db")
 centered = false
 
-[node name="Cornpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card35/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1166964727]
+[node name="Cornpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant534CornPult/Body/BodyCorrect" unique_id=1166964727]
 position = Vector2(64.7, 42.1)
 rotation = 3.14159
 scale = Vector2(0.621, 0.621)
@@ -4916,7 +5070,7 @@ skew = -3.14159
 texture = ExtResource("280_d31db")
 centered = false
 
-[node name="Card36" parent="PlantCards" unique_id=1080823695 instance=ExtResource("2_5pqky")]
+[node name="Card37" parent="PlantCards" unique_id=1080823695 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -4925,34 +5079,34 @@ card_id = 59
 card_plant_type = 535
 sun_cost = 75
 
-[node name="CardBg" parent="PlantCards/Card36" index="0"]
+[node name="CardBg" parent="PlantCards/Card37" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant535CoffeeBean" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic" index="0" unique_id=876972001]
+[node name="Plant535CoffeeBean" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic" index="0" unique_id=876972001]
 position = Vector2(1, 21)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant535CoffeeBean" unique_id=784174468]
+[node name="Body" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant535CoffeeBean" unique_id=784174468]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant535CoffeeBean/Body" unique_id=474020993]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant535CoffeeBean/Body" unique_id=474020993]
 position = Vector2(-41, -81)
 
-[node name="Anim_crumble" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=307151596]
+[node name="Anim_crumble" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=307151596]
 centered = false
 
-[node name="Coffeebean_leaf" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=1416186399]
+[node name="Coffeebean_leaf" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=1416186399]
 position = Vector2(17.2, 6.7)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("283_2uats")
 centered = false
 
-[node name="Coffeebean_head" type="Sprite2D" parent="PlantCards/Card36/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=1433939930]
+[node name="Coffeebean_head" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant535CoffeeBean/Body/BodyCorrect" unique_id=1433939930]
 position = Vector2(18.2, 12.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("284_ch63v")
 centered = false
 
-[node name="Card37" parent="PlantCards" unique_id=819676868 instance=ExtResource("2_5pqky")]
+[node name="Card38" parent="PlantCards" unique_id=819676868 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -4961,54 +5115,54 @@ card_id = 60
 card_plant_type = 536
 sun_cost = 50
 
-[node name="CardBg" parent="PlantCards/Card37" index="0"]
+[node name="CardBg" parent="PlantCards/Card38" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant536Garlic" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic" index="0" unique_id=1002068756]
+[node name="Plant536Garlic" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic" index="0" unique_id=1002068756]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic" unique_id=709146590]
+[node name="Body" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic" unique_id=709146590]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body" unique_id=483346743]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body" unique_id=483346743]
 position = Vector2(-42, -66)
 
-[node name="Garlic_stem1" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=761318730]
+[node name="Garlic_stem1" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=761318730]
 position = Vector2(32, 21.4)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("285_tmgt8")
 centered = false
 
-[node name="Garlic_stem2" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1020316058]
+[node name="Garlic_stem2" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1020316058]
 position = Vector2(39, 17.5)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("286_bga83")
 centered = false
 
-[node name="Garlic_stem3" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1426203053]
+[node name="Garlic_stem3" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1426203053]
 position = Vector2(40.8, 22.9)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("287_s6kw2")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=2031600772]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=2031600772]
 position = Vector2(14, 20.1)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("288_whtsg")
 centered = false
 
-[node name="Garlic_stink" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1523307265]
+[node name="Garlic_stink" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=1523307265]
 visible = false
 centered = false
 
-[node name="Garlic_blink" type="Sprite2D" parent="PlantCards/Card37/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=2088795036]
+[node name="Garlic_blink" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant536Garlic/Body/BodyCorrect" unique_id=2088795036]
 visible = false
 position = Vector2(32, 38.2)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("289_utmk7")
 centered = false
 
-[node name="Card38" parent="PlantCards" unique_id=1851352784 instance=ExtResource("2_5pqky")]
+[node name="Card39" parent="PlantCards" unique_id=1851352784 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5016,78 +5170,78 @@ imitater_gray_strength = 0.0
 card_id = 61
 card_plant_type = 537
 
-[node name="CardBg" parent="PlantCards/Card38" index="0"]
+[node name="CardBg" parent="PlantCards/Card39" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant537UmbrellaLeaf" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic" index="0" unique_id=1326176224]
+[node name="Plant537UmbrellaLeaf" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic" index="0" unique_id=1326176224]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf" unique_id=1367653380]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf" unique_id=1367653380]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf" unique_id=340304642]
+[node name="Body" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf" unique_id=340304642]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body" unique_id=1663982336]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body" unique_id=1663982336]
 position = Vector2(-40, -66)
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1140081537]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1140081537]
 position = Vector2(27.6, 33.5)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("290_jnetc")
 centered = false
 
-[node name="Umbrellaleaf_blink" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1280592932]
+[node name="Umbrellaleaf_blink" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1280592932]
 visible = false
 position = Vector2(33.1, 50.6)
 scale = Vector2(0.665, 0.665)
 texture = ExtResource("291_x4ed2")
 centered = false
 
-[node name="Umbrellaleaf_leaf5" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=191539790]
+[node name="Umbrellaleaf_leaf5" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=191539790]
 position = Vector2(32.9, 3.9)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("292_g74nx")
 centered = false
 
-[node name="Umbrellaleaf_leaf4" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=302401302]
+[node name="Umbrellaleaf_leaf4" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=302401302]
 position = Vector2(9.6, 4.8)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("293_kkciq")
 centered = false
 
-[node name="Umbrellaleaf_leaf6" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=896708697]
+[node name="Umbrellaleaf_leaf6" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=896708697]
 position = Vector2(33.5, 11.4)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("294_d31db")
 centered = false
 
-[node name="Umbrellaleaf_leaf3" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1850630936]
+[node name="Umbrellaleaf_leaf3" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1850630936]
 position = Vector2(0, 16.3)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("295_5wf4j")
 centered = false
 
-[node name="Umbrellaleaf_leaf7" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1291990103]
+[node name="Umbrellaleaf_leaf7" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1291990103]
 position = Vector2(37.7, 19.1)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("296_q2ynx")
 centered = false
 
-[node name="Umbrellaleaf_leaf2" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=287974965]
+[node name="Umbrellaleaf_leaf2" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=287974965]
 position = Vector2(11.1, 23.2)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("297_pct5d")
 centered = false
 
-[node name="Umbrellaleaf_leaf1" type="Sprite2D" parent="PlantCards/Card38/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1010237824]
+[node name="Umbrellaleaf_leaf1" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant537UmbrellaLeaf/Body/BodyCorrect" unique_id=1010237824]
 position = Vector2(32, 24)
 scale = Vector2(0.637, 0.637)
 texture = ExtResource("298_m376l")
 centered = false
 
-[node name="Card39" parent="PlantCards" unique_id=666401983 instance=ExtResource("2_5pqky")]
+[node name="Card40" parent="PlantCards" unique_id=666401983 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5097,105 +5251,105 @@ card_plant_type = 538
 cool_time = 30.0
 sun_cost = 50
 
-[node name="CardBg" parent="PlantCards/Card39" index="0"]
+[node name="CardBg" parent="PlantCards/Card40" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant538MariGold" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic" index="0" unique_id=961798940]
+[node name="Plant538MariGold" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic" index="0" unique_id=961798940]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold" unique_id=831920041]
+[node name="Body" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold" unique_id=831920041]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body" unique_id=2122098470]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body" unique_id=2122098470]
 position = Vector2(-41, -68)
 
-[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1341073657]
+[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1341073657]
 position = Vector2(27.7, 53)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("3_xm6ba")
 centered = false
 
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=875555726]
+[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=875555726]
 position = Vector2(25, 53.9)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("4_2m5n3")
 centered = false
 
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=103059277]
+[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=103059277]
 position = Vector2(47, 52.9)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("5_utnli")
 centered = false
 
-[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1486333526]
+[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1486333526]
 position = Vector2(36.1, 52.6)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("6_1j6ba")
 centered = false
 
-[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=466791211]
+[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=466791211]
 position = Vector2(31, 45.3)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("7_1qg83")
 centered = false
 
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1538323577]
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1538323577]
 position = Vector2(22.8, 54.4)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("8_jrvjq")
 centered = false
 
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=952590665]
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=952590665]
 position = Vector2(56.3, 56)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1638918475]
+[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1638918475]
 position = Vector2(19.4, 61.6)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Marigold_petals" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1674093397]
+[node name="Marigold_petals" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1674093397]
 position = Vector2(13.8, 6)
 scale = Vector2(0.7, 0.664)
 texture = ExtResource("299_y6tmw")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=30283782]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=30283782]
 position = Vector2(25.9, 15.4)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("300_i5ktd")
 centered = false
 
-[node name="Marigold_mouth" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=194498021]
+[node name="Marigold_mouth" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=194498021]
 position = Vector2(33, 27.5)
 rotation = 0.102974
 scale = Vector2(0.7, 0.977)
 texture = ExtResource("301_7d1vg")
 centered = false
 
-[node name="Marigold_eyebrow1" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1580287315]
+[node name="Marigold_eyebrow1" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1580287315]
 position = Vector2(30.1, 21)
 scale = Vector2(0.49, 0.49)
 texture = ExtResource("302_3svsw")
 centered = false
 
-[node name="Marigold_eyebrow2" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=163337012]
+[node name="Marigold_eyebrow2" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=163337012]
 position = Vector2(46.3, 18.1)
 scale = Vector2(0.49, 0.49)
 texture = ExtResource("303_guhh7")
 centered = false
 
-[node name="Marigold_blink" type="Sprite2D" parent="PlantCards/Card39/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1214696573]
+[node name="Marigold_blink" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant538MariGold/Body/BodyCorrect" unique_id=1214696573]
 visible = false
 position = Vector2(31.4, 20.3)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("304_riqar")
 centered = false
 
-[node name="Card40" parent="PlantCards" unique_id=106226735 instance=ExtResource("2_5pqky")]
+[node name="Card41" parent="PlantCards" unique_id=106226735 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5204,19 +5358,19 @@ card_id = 63
 card_plant_type = 539
 sun_cost = 300
 
-[node name="CardBg" parent="PlantCards/Card40" index="0"]
+[node name="CardBg" parent="PlantCards/Card41" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant539MelonPult" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic" index="0" unique_id=593439431]
+[node name="Plant539MelonPult" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic" index="0" unique_id=593439431]
 position = Vector2(9, 14)
 scale = Vector2(0.45, 0.45)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult" unique_id=423654750]
+[node name="Body" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult" unique_id=423654750]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body" unique_id=1803809002]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body" unique_id=1803809002]
 position = Vector2(-42, -65)
 
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=873751342]
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=873751342]
 position = Vector2(26.8, 57.4)
 rotation = -2.45917
 scale = Vector2(0.572, 0.444)
@@ -5224,7 +5378,7 @@ skew = 3.13985
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=916778145]
+[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=916778145]
 position = Vector2(64.8, 48.7)
 rotation = 2.51327
 scale = Vector2(0.572, 0.498)
@@ -5232,76 +5386,76 @@ skew = -3.13985
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1118517620]
+[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1118517620]
 position = Vector2(-23.9, 9.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("245_etbto")
 centered = false
 
-[node name="Melonpult_mellon" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1472300277]
+[node name="Melonpult_mellon" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1472300277]
 position = Vector2(-34, -15.3)
 texture = ExtResource("305_7ny8r")
 centered = false
 
-[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1306788779]
+[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1306788779]
 position = Vector2(-23.9, 9.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("247_qq07m")
 centered = false
 
-[node name="Melonpult_stalk" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1462779384]
+[node name="Melonpult_stalk" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1462779384]
 position = Vector2(16.5, 21.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("306_fc5ck")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1769173396]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1769173396]
 position = Vector2(15.3, 33.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("307_k5sko")
 centered = false
 
-[node name="Melonpult_blink" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=913382777]
+[node name="Melonpult_blink" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=913382777]
 visible = false
 position = Vector2(35.3, 47.7)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("308_a810k")
 centered = false
 
-[node name="Melonpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1526023969]
+[node name="Melonpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1526023969]
 position = Vector2(53.4, 45.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("309_2248j")
 centered = false
 
-[node name="Melonpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1031598607]
+[node name="Melonpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1031598607]
 position = Vector2(35.5, 47)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("309_2248j")
 centered = false
 
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1309222375]
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1309222375]
 position = Vector2(23.3, 54.6)
 rotation = 0.10472
 scale = Vector2(0.572, 0.444)
 texture = ExtResource("8_jrvjq")
 centered = false
 
-[node name="Frontleaf_right_tip1" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=97082639]
+[node name="Frontleaf_right_tip1" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=97082639]
 position = Vector2(57.6, 59.3)
 rotation = 0.10472
 scale = Vector2(0.572, 0.444)
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left1" type="Sprite2D" parent="PlantCards/Card40/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1283973719]
+[node name="Frontleaf_tip_left1" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant539MelonPult/Body/BodyCorrect" unique_id=1283973719]
 position = Vector2(19.4, 59.4)
 rotation = 0.10472
 scale = Vector2(0.572, 0.498)
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Card41" parent="PlantCards" unique_id=1346369733 instance=ExtResource("2_5pqky")]
+[node name="Card42" parent="PlantCards" unique_id=1346369733 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5311,40 +5465,40 @@ card_plant_type = 540
 cool_time = 50.0
 sun_cost = 250
 
-[node name="Plant540GatlingPea" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic" index="0" unique_id=1154396821]
+[node name="Plant540GatlingPea" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic" index="0" unique_id=1154396821]
 position = Vector2(1, 14)
 scale = Vector2(0.45, 0.45)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea" unique_id=827474891]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea" unique_id=827474891]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea" unique_id=154942717]
+[node name="Body" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea" unique_id=154942717]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body" unique_id=1616340819]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body" unique_id=1616340819]
 position = Vector2(-42, -70)
 
-[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=345145978]
+[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=345145978]
 position = Vector2(27.6, 53.948)
 scale = Vector2(0.5732, 0.51488)
 texture = ExtResource("3_xm6ba")
 centered = false
 
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=2085442313]
+[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=2085442313]
 position = Vector2(24.9, 54.424)
 rotation = 0.0282745
 scale = Vector2(0.5864, 0.52908)
 texture = ExtResource("4_2m5n3")
 centered = false
 
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1683653137]
+[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1683653137]
 position = Vector2(47.5, 53.696)
 rotation = 0.0152196
 scale = Vector2(0.62828, 0.52908)
 texture = ExtResource("5_utnli")
 centered = false
 
-[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1419109365]
+[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1419109365]
 position = Vector2(37.196, 50.632)
 rotation = 0.118333
 scale = Vector2(0.55824, 0.66292)
@@ -5352,7 +5506,7 @@ skew = -0.0422371
 texture = ExtResource("6_1j6ba")
 centered = false
 
-[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1854098701]
+[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1854098701]
 position = Vector2(32.62, 38.38)
 rotation = 0.106186
 scale = Vector2(0.55772, 0.79252)
@@ -5360,49 +5514,49 @@ skew = -0.0409107
 texture = ExtResource("7_1qg83")
 centered = false
 
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1487380926]
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1487380926]
 position = Vector2(22.476, 55.024)
 scale = Vector2(0.56696, 0.5368)
 texture = ExtResource("8_jrvjq")
 centered = false
 
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1402485589]
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1402485589]
 position = Vector2(55.976, 56.148)
 rotation = -0.0830772
 scale = Vector2(0.64896, 0.54952)
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1415367494]
+[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1415367494]
 position = Vector2(19.524, 61.052)
 rotation = 0.0760962
 scale = Vector2(0.59488, 0.54952)
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1258279605]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect" unique_id=1258279605]
 position = Vector2(38.72, 43.728)
 centered = false
 
-[node name="HeadCorrect" type="Node2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle" unique_id=375438104]
+[node name="HeadCorrect" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle" unique_id=375438104]
 position = Vector2(-36.1049, -48.5013)
 
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=304767315]
+[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=304767315]
 visible = false
 self_modulate = Color(0, 0, 0, 1)
 scale = Vector2(1e-05, 1e-05)
 centered = false
 
-[node name="Anim_head_idle" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1065169703]
+[node name="Anim_head_idle" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1065169703]
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1068055032]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1068055032]
 position = Vector2(19.3, 16.276)
 scale = Vector2(0.555, 0.51512)
 texture = ExtResource("311_dlmd8")
 centered = false
 
-[node name="GatlingPea_mouth" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=701260889]
+[node name="GatlingPea_mouth" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=701260889]
 position = Vector2(49.584, 13.976)
 rotation = -0.0249237
 scale = Vector2(0.55036, 0.51512)
@@ -5410,7 +5564,7 @@ skew = 0.0249237
 texture = ExtResource("312_seprb")
 centered = false
 
-[node name="GatlingPea_barrel3" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1212833558]
+[node name="GatlingPea_barrel3" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1212833558]
 position = Vector2(58.216, 18.644)
 rotation = -0.0162665
 scale = Vector2(0.55, 0.55)
@@ -5418,7 +5572,7 @@ skew = 0.0162665
 texture = ExtResource("313_apyy4")
 centered = false
 
-[node name="GatlingPea_barrel4" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=2018503072]
+[node name="GatlingPea_barrel4" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=2018503072]
 position = Vector2(56, 24.728)
 rotation = -0.0162665
 scale = Vector2(0.55, 0.55)
@@ -5426,7 +5580,7 @@ skew = 0.0162665
 texture = ExtResource("313_apyy4")
 centered = false
 
-[node name="GatlingPea_barrel2" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1207876109]
+[node name="GatlingPea_barrel2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1207876109]
 position = Vector2(56.1, 12.844)
 rotation = -0.0162665
 scale = Vector2(0.55, 0.55)
@@ -5434,7 +5588,7 @@ skew = 0.0162665
 texture = ExtResource("313_apyy4")
 centered = false
 
-[node name="GatlingPea_barrel1" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=262110539]
+[node name="GatlingPea_barrel1" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=262110539]
 position = Vector2(53.1, 18.944)
 rotation = -0.0162665
 scale = Vector2(0.55, 0.55)
@@ -5442,7 +5596,7 @@ skew = 0.0162665
 texture = ExtResource("313_apyy4")
 centered = false
 
-[node name="GatlingPea_mouth_overlay" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1506020567]
+[node name="GatlingPea_mouth_overlay" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1506020567]
 position = Vector2(49.5, 13.876)
 rotation = -0.0249237
 scale = Vector2(0.55036, 0.51512)
@@ -5450,26 +5604,26 @@ skew = 0.0249237
 texture = ExtResource("314_fjnrx")
 centered = false
 
-[node name="Idle_shoot_blink" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1534213936]
+[node name="Idle_shoot_blink" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1534213936]
 visible = false
 self_modulate = Color(0, 0, 0, 1)
 scale = Vector2(1e-05, 1e-05)
 centered = false
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1268512134]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1268512134]
 visible = false
 position = Vector2(-9.70314, -23.1875)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("315_h01eb")
 centered = false
 
-[node name="PeaShooter_eyebrow" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1537107121]
+[node name="PeaShooter_eyebrow" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1537107121]
 position = Vector2(35.3, 17.616)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("97_rcuue")
 centered = false
 
-[node name="GatlingPea_helmet" type="Sprite2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1078320451]
+[node name="GatlingPea_helmet" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=1078320451]
 position = Vector2(9.768, 2.18)
 rotation = 0.0642978
 scale = Vector2(0.6108, 0.57788)
@@ -5477,10 +5631,10 @@ skew = 0.0372105
 texture = ExtResource("316_7tryg")
 centered = false
 
-[node name="Marker2D" type="Marker2D" parent="PlantCards/Card41/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=2049737087]
+[node name="Marker2D" type="Marker2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant540GatlingPea/Body/BodyCorrect/Anim_idle/HeadCorrect" unique_id=2049737087]
 position = Vector2(80.4326, 24.4314)
 
-[node name="Card42" parent="PlantCards" unique_id=30227176 instance=ExtResource("2_5pqky")]
+[node name="Card43" parent="PlantCards" unique_id=30227176 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5490,56 +5644,56 @@ card_plant_type = 541
 cool_time = 50.0
 sun_cost = 150
 
-[node name="Plant541TwinSunFlower" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic" index="0" unique_id=836294651]
+[node name="Plant541TwinSunFlower" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic" index="0" unique_id=836294651]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower" unique_id=234555803]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower" unique_id=234555803]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower" unique_id=475013053]
+[node name="Body" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower" unique_id=475013053]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body" unique_id=472275412]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body" unique_id=472275412]
 position = Vector2(-42, -69)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=2082566828]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=2082566828]
 visible = false
 centered = false
 
-[node name="Anim_blink2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=815522990]
+[node name="Anim_blink2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=815522990]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1198713183]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1198713183]
 centered = false
 
-[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=371418463]
+[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=371418463]
 position = Vector2(27.7, 53)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("3_xm6ba")
 centered = false
 
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=116233359]
+[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=116233359]
 position = Vector2(25, 53.9)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("4_2m5n3")
 centered = false
 
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=31653795]
+[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=31653795]
 position = Vector2(47, 52.9)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("5_utnli")
 centered = false
 
-[node name="TwinSunflower_stem2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1235582855]
+[node name="TwinSunflower_stem2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1235582855]
 position = Vector2(16.8, 38.4)
 scale = Vector2(0.8, 0.912)
 skew = -0.16057
 texture = ExtResource("317_mmvdr")
 centered = false
 
-[node name="TwinSunflower_leaf1" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=602317403]
+[node name="TwinSunflower_leaf1" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=602317403]
 position = Vector2(23.8, 46.9)
 rotation = 2.65116
 scale = Vector2(0.592, 0.592)
@@ -5547,21 +5701,21 @@ skew = -3.13985
 texture = ExtResource("318_d0h7s")
 centered = false
 
-[node name="TwinSunflower_stem1" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1684822744]
+[node name="TwinSunflower_stem1" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1684822744]
 position = Vector2(42.3, 21.2)
 scale = Vector2(0.8, 0.868)
 skew = 0.0331613
 texture = ExtResource("319_ncr51")
 centered = false
 
-[node name="TwinSunflower_leaf11" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=2081918802]
+[node name="TwinSunflower_leaf11" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=2081918802]
 position = Vector2(55.2, 33.1)
 rotation = 0.307178
 scale = Vector2(0.799, 0.799)
 texture = ExtResource("318_d0h7s")
 centered = false
 
-[node name="TwinSunflower_leaf12" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1920092718]
+[node name="TwinSunflower_leaf12" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=1920092718]
 position = Vector2(51.2, 40.9)
 rotation = -2.86583
 scale = Vector2(0.594, 0.594)
@@ -5569,66 +5723,66 @@ skew = 3.13985
 texture = ExtResource("318_d0h7s")
 centered = false
 
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=133105745]
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=133105745]
 position = Vector2(22.8, 54.4)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("8_jrvjq")
 centered = false
 
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=160708888]
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=160708888]
 position = Vector2(56.3, 56)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_left_tip" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=297870555]
+[node name="Frontleaf_left_tip" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=297870555]
 position = Vector2(19.4, 61.6)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Sunflower_double_petals1" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=208698865]
+[node name="Sunflower_double_petals1" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=208698865]
 position = Vector2(36.9, -3.2)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("320_ov1cb")
 centered = false
 
-[node name="Anim_face2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=605406917]
+[node name="Anim_face2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=605406917]
 position = Vector2(43.4, 2)
 scale = Vector2(0.6, 0.534)
 texture = ExtResource("34_q3g05")
 centered = false
 
-[node name="Sunflower_double_petals2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=835066214]
+[node name="Sunflower_double_petals2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=835066214]
 position = Vector2(-3.8, 14.1)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("320_ov1cb")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=865519991]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=865519991]
 position = Vector2(2.6, 19.5)
 scale = Vector2(0.6, 0.534)
 texture = ExtResource("34_q3g05")
 centered = false
 
-[node name="SunFlower_blink" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=528177579]
+[node name="SunFlower_blink" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=528177579]
 visible = false
 position = Vector2(12.2, 24)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("35_f8qha")
 centered = false
 
-[node name="SunFlower_blink2" type="Sprite2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=624958153]
+[node name="SunFlower_blink2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=624958153]
 visible = false
 position = Vector2(52.9, 6.7)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("35_f8qha")
 centered = false
 
-[node name="Marker2DCreateSun" type="Marker2D" parent="PlantCards/Card42/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=669611608]
+[node name="Marker2DCreateSun" type="Marker2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant541TwinSunFlower/Body/BodyCorrect" unique_id=669611608]
 position = Vector2(43, 27)
 
-[node name="Card43" parent="PlantCards" unique_id=24024221 instance=ExtResource("2_5pqky")]
+[node name="Card44" parent="PlantCards" unique_id=24024221 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5638,47 +5792,47 @@ card_plant_type = 542
 cool_time = 50.0
 sun_cost = 150
 
-[node name="Plant542GloomShroom" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic" index="0" unique_id=433617370]
+[node name="Plant542GloomShroom" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic" index="0" unique_id=433617370]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom" unique_id=1177423342]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom" unique_id=1177423342]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom" unique_id=760615762]
+[node name="Body" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom" unique_id=760615762]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body" unique_id=1986131045]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body" unique_id=1986131045]
 position = Vector2(-39, -67)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=938268230]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=938268230]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=822224218]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=822224218]
 centered = false
 
-[node name="Anim_sleep" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1469301964]
+[node name="Anim_sleep" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1469301964]
 visible = false
 centered = false
 
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1022958149]
+[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1022958149]
 visible = false
 centered = false
 
-[node name="GloomShroom_base" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=734519844]
+[node name="GloomShroom_base" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=734519844]
 position = Vector2(12.5, 40.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("321_ks0wj")
 centered = false
 
-[node name="GloomShroom_shooter4" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=352198291]
+[node name="GloomShroom_shooter4" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=352198291]
 position = Vector2(7.6, 3.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("322_ylgpa")
 centered = false
 
-[node name="GloomShroom_shooter42" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=362661825]
+[node name="GloomShroom_shooter42" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=362661825]
 position = Vector2(75.3, 3.5)
 rotation = 3.14159
 scale = Vector2(0.8, 0.8)
@@ -5686,37 +5840,37 @@ skew = -3.14159
 texture = ExtResource("322_ylgpa")
 centered = false
 
-[node name="GloomShroom_shooter5" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=438695002]
+[node name="GloomShroom_shooter5" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=438695002]
 position = Vector2(28.3, -1.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("323_whuge")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=652458960]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=652458960]
 position = Vector2(7.2, 5.7)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("324_ffws3")
 centered = false
 
-[node name="GloomShroom_stem1" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=92294613]
+[node name="GloomShroom_stem1" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=92294613]
 position = Vector2(31.4, 49.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("325_ft85b")
 centered = false
 
-[node name="GloomShroom_shooter1" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=190137220]
+[node name="GloomShroom_shooter1" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=190137220]
 position = Vector2(29.3, 51.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("326_vcv46")
 centered = false
 
-[node name="GloomShroom_stem2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1539721264]
+[node name="GloomShroom_stem2" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1539721264]
 position = Vector2(9.3, 40.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("327_vo1g1")
 centered = false
 
-[node name="GloomShroom_stem22" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1752315658]
+[node name="GloomShroom_stem22" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1752315658]
 position = Vector2(72, 41.6)
 rotation = 3.14159
 scale = Vector2(0.8, 0.8)
@@ -5724,13 +5878,13 @@ skew = -3.14159
 texture = ExtResource("327_vo1g1")
 centered = false
 
-[node name="GloomShroom_shooter2" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=913535813]
+[node name="GloomShroom_shooter2" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=913535813]
 position = Vector2(8.1, 41.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("328_bqk8l")
 centered = false
 
-[node name="GloomShroom_shooter22" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1020694260]
+[node name="GloomShroom_shooter22" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1020694260]
 position = Vector2(73.2, 42.6)
 rotation = 3.14159
 scale = Vector2(0.8, 0.8)
@@ -5738,13 +5892,13 @@ skew = -3.14159
 texture = ExtResource("328_bqk8l")
 centered = false
 
-[node name="GloomShroom_stem3" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1476680334]
+[node name="GloomShroom_stem3" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1476680334]
 position = Vector2(2.4, 24)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("329_ed5ns")
 centered = false
 
-[node name="GloomShroom_stem32" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=131993537]
+[node name="GloomShroom_stem32" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=131993537]
 position = Vector2(78.9, 25.2)
 rotation = 3.14159
 scale = Vector2(0.8, 0.8)
@@ -5752,13 +5906,13 @@ skew = -3.14159
 texture = ExtResource("329_ed5ns")
 centered = false
 
-[node name="GloomShroom_shooter3" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1499592460]
+[node name="GloomShroom_shooter3" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1499592460]
 position = Vector2(-0.4, 22.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("330_6nvl2")
 centered = false
 
-[node name="GloomShroom_shooter32" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1460867200]
+[node name="GloomShroom_shooter32" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=1460867200]
 position = Vector2(81.8, 23.8)
 rotation = 3.14159
 scale = Vector2(0.8, 0.8)
@@ -5766,18 +5920,18 @@ skew = -3.14159
 texture = ExtResource("330_6nvl2")
 centered = false
 
-[node name="GloomShroom_face" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=622754053]
+[node name="GloomShroom_face" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=622754053]
 visible = false
 centered = false
 
-[node name="Blink" type="Sprite2D" parent="PlantCards/Card43/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=356727529]
+[node name="Blink" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant542GloomShroom/Body/BodyCorrect" unique_id=356727529]
 visible = false
 position = Vector2(15, 12)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("331_augfe")
 centered = false
 
-[node name="Card44" parent="PlantCards" unique_id=947560939 instance=ExtResource("2_5pqky")]
+[node name="Card45" parent="PlantCards" unique_id=947560939 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5787,104 +5941,104 @@ card_plant_type = 543
 cool_time = 50.0
 sun_cost = 225
 
-[node name="Plant543Cattail" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic" index="0" unique_id=277002124]
+[node name="Plant543Cattail" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic" index="0" unique_id=277002124]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail" unique_id=2102988777]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail" unique_id=2102988777]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail" unique_id=1641566200]
+[node name="Body" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail" unique_id=1641566200]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body" unique_id=1230319152]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body" unique_id=1230319152]
 position = Vector2(-42, -66)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=201288053]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=201288053]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=58333751]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=58333751]
 centered = false
 
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1365286560]
+[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1365286560]
 visible = false
 centered = false
 
-[node name="Cattail_paw2" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=683930602]
+[node name="Cattail_paw2" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=683930602]
 position = Vector2(6.5, 54)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("332_7x32i")
 centered = false
 
-[node name="Cattail_paw3" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1164399124]
+[node name="Cattail_paw3" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1164399124]
 position = Vector2(57.8, 50.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("333_5hyh1")
 centered = false
 
-[node name="Cattail_tail" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1549964545]
+[node name="Cattail_tail" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1549964545]
 position = Vector2(2.4, 33.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("334_stc33")
 centered = false
 
-[node name="Cattail_tail2" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1306130050]
+[node name="Cattail_tail2" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1306130050]
 position = Vector2(-1.4, 4.7)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("335_agc5q")
 centered = false
 
-[node name="Cattail_spike" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1599157010]
+[node name="Cattail_spike" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=1599157010]
 position = Vector2(8.3, 2.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("336_7dndd")
 centered = false
 
-[node name="Cattail_tail2_overlay" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=470992467]
+[node name="Cattail_tail2_overlay" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=470992467]
 position = Vector2(-0.7, 8.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("337_3bba4")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=518480769]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=518480769]
 position = Vector2(26, 25.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("338_5d2eo")
 centered = false
 
-[node name="Cattail_paw1" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=619744553]
+[node name="Cattail_paw1" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=619744553]
 position = Vector2(31.2, 59.4)
 scale = Vector2(0.85, 0.85)
 texture = ExtResource("339_aliup")
 centered = false
 
-[node name="Cattail_hat" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=437211307]
+[node name="Cattail_hat" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=437211307]
 position = Vector2(11.8, 9.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("340_63kfc")
 centered = false
 
-[node name="Cattail_blink" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=512318964]
+[node name="Cattail_blink" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=512318964]
 visible = false
 position = Vector2(41.1, 33.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("341_ij2p4")
 centered = false
 
-[node name="Cattail_eyebrow1" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=420628750]
+[node name="Cattail_eyebrow1" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=420628750]
 position = Vector2(38.6, 34)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("342_77b3v")
 centered = false
 
-[node name="Cattail_eyebrow2" type="Sprite2D" parent="PlantCards/Card44/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=38009102]
+[node name="Cattail_eyebrow2" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant543Cattail/Body/BodyCorrect" unique_id=38009102]
 position = Vector2(60.9, 31.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("343_8nnpu")
 centered = false
 
-[node name="Card45" parent="PlantCards" unique_id=2006478888 instance=ExtResource("2_5pqky")]
+[node name="Card46" parent="PlantCards" unique_id=2006478888 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -5894,31 +6048,31 @@ card_plant_type = 544
 cool_time = 50.0
 sun_cost = 200
 
-[node name="Plant544WinterMelon" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic" index="0" unique_id=1912755704]
+[node name="Plant544WinterMelon" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic" index="0" unique_id=1912755704]
 position = Vector2(8, 16)
 scale = Vector2(0.45, 0.45)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon" unique_id=2072476659]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon" unique_id=2072476659]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon" unique_id=1096491122]
+[node name="Body" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon" unique_id=1096491122]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body" unique_id=1503022640]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body" unique_id=1503022640]
 position = Vector2(-41, -69)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1766926074]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1766926074]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1523123001]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1523123001]
 centered = false
 
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=165283340]
+[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=165283340]
 visible = false
 centered = false
 
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1626492572]
+[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1626492572]
 position = Vector2(26.8, 57.4)
 rotation = -2.45917
 scale = Vector2(0.572, 0.444)
@@ -5926,7 +6080,7 @@ skew = 3.13985
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=335379983]
+[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=335379983]
 position = Vector2(64.8, 48.7)
 rotation = 2.51327
 scale = Vector2(0.572, 0.498)
@@ -5934,78 +6088,78 @@ skew = -3.13985
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1453786541]
+[node name="Cabbagepult_basket" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1453786541]
 position = Vector2(-25.9, 4.7)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("344_ffws3")
 centered = false
 
-[node name="Melonpult_mellon" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=2102283951]
+[node name="Melonpult_mellon" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=2102283951]
 position = Vector2(-27.6, -26.9)
 rotation = 0.219911
 scale = Vector2(0.999, 0.999)
 texture = ExtResource("345_ft85b")
 centered = false
 
-[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1969741797]
+[node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1969741797]
 position = Vector2(-25.9, 14.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("346_vcv46")
 centered = false
 
-[node name="Melonpult_stalk" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1047438513]
+[node name="Melonpult_stalk" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1047438513]
 position = Vector2(16.5, 18.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("347_vo1g1")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=252014511]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=252014511]
 position = Vector2(15.3, 33.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("348_bqk8l")
 centered = false
 
-[node name="Melonpult_blink" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1565587249]
+[node name="Melonpult_blink" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1565587249]
 visible = false
 position = Vector2(35.3, 47.7)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("349_ed5ns")
 centered = false
 
-[node name="Melonpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=755110204]
+[node name="Melonpult_eyebrow1" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=755110204]
 position = Vector2(53.4, 45.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("350_6nvl2")
 centered = false
 
-[node name="Melonpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1869079499]
+[node name="Melonpult_eyebrow2" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1869079499]
 position = Vector2(35.5, 47)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("350_6nvl2")
 centered = false
 
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1172107383]
+[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1172107383]
 position = Vector2(23.3, 54.6)
 rotation = 0.10472
 scale = Vector2(0.572, 0.444)
 texture = ExtResource("8_jrvjq")
 centered = false
 
-[node name="Frontleaf_right_tip1" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1828697435]
+[node name="Frontleaf_right_tip1" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1828697435]
 position = Vector2(57.6, 59.3)
 rotation = 0.10472
 scale = Vector2(0.572, 0.444)
 texture = ExtResource("9_lppa3")
 centered = false
 
-[node name="Frontleaf_tip_left1" type="Sprite2D" parent="PlantCards/Card45/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1595125816]
+[node name="Frontleaf_tip_left1" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant544WinterMelon/Body/BodyCorrect" unique_id=1595125816]
 position = Vector2(19.4, 59.4)
 rotation = 0.10472
 scale = Vector2(0.572, 0.498)
 texture = ExtResource("10_xa6hp")
 centered = false
 
-[node name="Card46" parent="PlantCards" unique_id=1107013605 instance=ExtResource("2_5pqky")]
+[node name="Card47" parent="PlantCards" unique_id=1107013605 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6015,45 +6169,45 @@ card_plant_type = 545
 cool_time = 50.0
 sun_cost = 50
 
-[node name="Plant545GoldMagnet" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic" index="0" unique_id=1933564007]
+[node name="Plant545GoldMagnet" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic" index="0" unique_id=1933564007]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet" unique_id=1639640046]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet" unique_id=1639640046]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet" unique_id=81682543]
+[node name="Body" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet" unique_id=81682543]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body" unique_id=989512042]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body" unique_id=989512042]
 position = Vector2(-41, -71)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1622353651]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1622353651]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1613034544]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1613034544]
 centered = false
 
-[node name="Anim_attract" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=290583377]
+[node name="Anim_attract" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=290583377]
 visible = false
 centered = false
 
-[node name="GoldMagnet_stem" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1902341573]
+[node name="GoldMagnet_stem" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1902341573]
 position = Vector2(36.664, 53.444)
 scale = Vector2(0.55, 0.5738)
 skew = -0.127826
 texture = ExtResource("351_5hyh1")
 centered = false
 
-[node name="GoldMagnet_leaf5" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1068348691]
+[node name="GoldMagnet_leaf5" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1068348691]
 position = Vector2(47.232, 57.472)
 rotation = 0.336918
 scale = Vector2(0.549, 0.549)
 texture = ExtResource("352_stc33")
 centered = false
 
-[node name="GoldMagnet_leaf5_2" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=747740453]
+[node name="GoldMagnet_leaf5_2" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=747740453]
 position = Vector2(45.332, 63.928)
 rotation = -2.81424
 scale = Vector2(0.36828, 0.37472)
@@ -6061,7 +6215,7 @@ skew = 3.22963
 texture = ExtResource("352_stc33")
 centered = false
 
-[node name="GoldMagnet_leaf1" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=98213346]
+[node name="GoldMagnet_leaf1" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=98213346]
 position = Vector2(18.276, 47.188)
 rotation = 0.0363024
 scale = Vector2(0.55, 0.55)
@@ -6069,7 +6223,7 @@ skew = 0.0296005
 texture = ExtResource("353_agc5q")
 centered = false
 
-[node name="GoldMagnet_leaf4" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1904643051]
+[node name="GoldMagnet_leaf4" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1904643051]
 position = Vector2(49.136, 40.972)
 rotation = -0.0641578
 scale = Vector2(0.55228, 0.55)
@@ -6077,25 +6231,25 @@ skew = 0.0641578
 texture = ExtResource("354_7dndd")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1100501858]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1100501858]
 position = Vector2(-10.536, -13.412)
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("355_3bba4")
 centered = false
 
-[node name="GoldMagnet_eyebrow1" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=245785278]
+[node name="GoldMagnet_eyebrow1" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=245785278]
 position = Vector2(27.62, 37.604)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("356_5d2eo")
 centered = false
 
-[node name="GoldMagnet_eyebrow11" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=112646195]
+[node name="GoldMagnet_eyebrow11" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=112646195]
 position = Vector2(46.32, 34.204)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("356_5d2eo")
 centered = false
 
-[node name="GoldMagnet_leaf2" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1363949470]
+[node name="GoldMagnet_leaf2" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1363949470]
 position = Vector2(26.22, 50.26)
 rotation = 0.179908
 scale = Vector2(0.55028, 0.55072)
@@ -6103,7 +6257,7 @@ skew = 0.0955043
 texture = ExtResource("357_aliup")
 centered = false
 
-[node name="GoldMagnet_leaf3" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=174801054]
+[node name="GoldMagnet_leaf3" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=174801054]
 position = Vector2(42.264, 45.8)
 rotation = -0.0482403
 scale = Vector2(0.551, 0.55)
@@ -6111,21 +6265,21 @@ skew = 0.0447496
 texture = ExtResource("358_63kfc")
 centered = false
 
-[node name="GoldMagnet_blink" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1752782325]
+[node name="GoldMagnet_blink" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1752782325]
 visible = false
 position = Vector2(29.3, 38.5)
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("359_ij2p4")
 centered = false
 
-[node name="GoldMagnet_sparks" type="Sprite2D" parent="PlantCards/Card46/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1703155346]
+[node name="GoldMagnet_sparks" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant545GoldMagnet/Body/BodyCorrect" unique_id=1703155346]
 visible = false
 position = Vector2(15.9, 0)
 scale = Vector2(0.482, 0.55)
 texture = ExtResource("360_77b3v")
 centered = false
 
-[node name="Card47" parent="PlantCards" unique_id=1886790594 instance=ExtResource("2_5pqky")]
+[node name="Card48" parent="PlantCards" unique_id=1886790594 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6135,116 +6289,116 @@ card_plant_type = 546
 cool_time = 50.0
 sun_cost = 125
 
-[node name="Plant546SpikeRock" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic" index="0" unique_id=926799873]
+[node name="Plant546SpikeRock" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic" index="0" unique_id=926799873]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock" unique_id=1157160779]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock" unique_id=1157160779]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock" unique_id=1197427462]
+[node name="Body" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock" unique_id=1197427462]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body" unique_id=1008555512]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body" unique_id=1008555512]
 position = Vector2(-41, -63)
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1301858932]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1301858932]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1897579997]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1897579997]
 visible = false
 centered = false
 
-[node name="Anim_attack" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2038065297]
+[node name="Anim_attack" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2038065297]
 centered = false
 
-[node name="Spike1" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1090438222]
+[node name="Spike1" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1090438222]
 position = Vector2(50.4, 39.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike7" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2076069558]
+[node name="Spike7" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2076069558]
 position = Vector2(59.1, 39.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike8" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=83429970]
+[node name="Spike8" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=83429970]
 position = Vector2(6.6, 41)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike2" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1458090918]
+[node name="Spike2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1458090918]
 position = Vector2(42, 39)
 scale = Vector2(0.8, 0.683)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike3" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2118319743]
+[node name="Spike3" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2118319743]
 position = Vector2(32.8, 37.3)
 scale = Vector2(0.944, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike4" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=176498435]
+[node name="Spike4" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=176498435]
 position = Vector2(23.7, 39.4)
 scale = Vector2(0.862, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike5" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1748270948]
+[node name="Spike5" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1748270948]
 position = Vector2(15, 40)
 scale = Vector2(0.862, 0.8)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike9" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=146191566]
+[node name="Spike9" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=146191566]
 position = Vector2(0.3, 44.1)
 scale = Vector2(0.755, 0.635)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Spike6" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1636610583]
+[node name="Spike6" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1636610583]
 position = Vector2(67, 44.9)
 scale = Vector2(0.755, 0.635)
 texture = ExtResource("361_8p6b6")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=903399104]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=903399104]
 position = Vector2(-0.4, 40)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("362_ees34")
 centered = false
 
-[node name="Bigspike1" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=66172164]
+[node name="Bigspike1" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=66172164]
 position = Vector2(8.1, 29.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("363_4aydd")
 centered = false
 
-[node name="Bigspike2" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2124500777]
+[node name="Bigspike2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=2124500777]
 position = Vector2(33, 33.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("364_mkpjk")
 centered = false
 
-[node name="Bigspike3" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1471974242]
+[node name="Bigspike3" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=1471974242]
 position = Vector2(56.8, 29.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("365_ea7g5")
 centered = false
 
-[node name="Anim_eye_leftbrow" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=875986827]
+[node name="Anim_eye_leftbrow" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=875986827]
 position = Vector2(18.8, 45.5)
 rotation = 6.44899
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("366_m7q7w")
 centered = false
 
-[node name="Anim_eye_rightbrow" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=882024552]
+[node name="Anim_eye_rightbrow" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=882024552]
 position = Vector2(61.1, 45.1)
 rotation = 2.87979
 scale = Vector2(0.8, 0.8)
@@ -6252,13 +6406,13 @@ skew = -3.13985
 texture = ExtResource("366_m7q7w")
 centered = false
 
-[node name="Mouth" type="Sprite2D" parent="PlantCards/Card47/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=95579928]
+[node name="Mouth" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant546SpikeRock/Body/BodyCorrect" unique_id=95579928]
 position = Vector2(28.3, 56.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("367_r0uf5")
 centered = false
 
-[node name="Card48" parent="PlantCards" unique_id=19956140 instance=ExtResource("2_5pqky")]
+[node name="Card49" parent="PlantCards" unique_id=19956140 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6268,85 +6422,85 @@ card_plant_type = 547
 cool_time = 50.0
 sun_cost = 500
 
-[node name="CharacterStatic" parent="PlantCards/Card48/CardBg" index="1"]
+[node name="CharacterStatic" parent="PlantCards/Card49/CardBg" index="1"]
 position = Vector2(12, 31)
 
-[node name="Plant547CobCannon" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic" index="0" unique_id=333003930]
+[node name="Plant547CobCannon" type="Node2D" parent="PlantCards/Card49/CardBg/CharacterStatic" index="0" unique_id=333003930]
 position = Vector2(1, 14)
 scale = Vector2(0.3, 0.3)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon" unique_id=21394133]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon" unique_id=21394133]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon" unique_id=418423099]
+[node name="Body" type="Node2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon" unique_id=418423099]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body" unique_id=948582920]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body" unique_id=948582920]
 position = Vector2(-37, -75)
 
-[node name="Anim_unarmed_idle" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1366297060]
+[node name="Anim_unarmed_idle" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1366297060]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1823416509]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1823416509]
 visible = false
 centered = false
 
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1083183616]
+[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1083183616]
 centered = false
 
-[node name="Anim_charge" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=286568142]
+[node name="Anim_charge" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=286568142]
 visible = false
 centered = false
 
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=2046325684]
+[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=2046325684]
 visible = false
 centered = false
 
-[node name="CobCannon_backwheels" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=622482876]
+[node name="CobCannon_backwheels" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=622482876]
 position = Vector2(31.7, -5.7)
 scale = Vector2(0.72, 0.72)
 texture = ExtResource("368_te8ao")
 centered = false
 
-[node name="CobCannon_backwheels2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=38247758]
+[node name="CobCannon_backwheels2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=38247758]
 position = Vector2(98.6, -5.7)
 scale = Vector2(0.72, 0.72)
 texture = ExtResource("368_te8ao")
 centered = false
 
-[node name="CobCannon_log2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1675536456]
+[node name="CobCannon_log2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1675536456]
 position = Vector2(15.2, 11.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("369_msri8")
 centered = false
 
-[node name="CobCannon_fuse" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=211485101]
+[node name="CobCannon_fuse" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=211485101]
 position = Vector2(-12.5, 19.5)
 rotation = -0.783653
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("370_7lapw")
 centered = false
 
-[node name="CobCannon_husk4" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=672732820]
+[node name="CobCannon_husk4" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=672732820]
 position = Vector2(51.2, 5.3)
 texture = ExtResource("371_pupom")
 centered = false
 
-[node name="CobCannon_husk4_2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1949603423]
+[node name="CobCannon_husk4_2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1949603423]
 visible = false
 self_modulate = Color(1, 1, 1, 0)
 position = Vector2(51.4, 5.3)
 texture = ExtResource("371_pupom")
 centered = false
 
-[node name="CobCannon_husk3" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=811007643]
+[node name="CobCannon_husk3" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=811007643]
 position = Vector2(67.2, -8.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("372_b70e6")
 centered = false
 
-[node name="CobCannon_husk3_2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=501218841]
+[node name="CobCannon_husk3_2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=501218841]
 visible = false
 self_modulate = Color(1, 1, 1, 0)
 position = Vector2(67.3, -8.1)
@@ -6354,44 +6508,44 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("372_b70e6")
 centered = false
 
-[node name="CobCannon_cob" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=700268996]
+[node name="CobCannon_cob" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=700268996]
 position = Vector2(24.1, -6.1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("373_45g8r")
 centered = false
 
-[node name="CobCannon_husk2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1537165895]
+[node name="CobCannon_husk2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1537165895]
 position = Vector2(13.5, 0.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("374_cnu4l")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=506235599]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=506235599]
 position = Vector2(11.8, -17.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("375_vxcot")
 centered = false
 
-[node name="CobCannon_blink" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1465374596]
+[node name="CobCannon_blink" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1465374596]
 visible = false
 position = Vector2(51.8, 0)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("376_3fnx5")
 centered = false
 
-[node name="CobCannon_log1" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1162732313]
+[node name="CobCannon_log1" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1162732313]
 position = Vector2(6.2, 35)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("369_msri8")
 centered = false
 
-[node name="CobCannon_outerwheels" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=44221759]
+[node name="CobCannon_outerwheels" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=44221759]
 position = Vector2(13, 31.9)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("368_te8ao")
 centered = false
 
-[node name="CobCannon_outerwheels2" type="Sprite2D" parent="PlantCards/Card48/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1137190297]
+[node name="CobCannon_outerwheels2" type="Sprite2D" parent="PlantCards/Card49/CardBg/CharacterStatic/Plant547CobCannon/Body/BodyCorrect" unique_id=1137190297]
 position = Vector2(87.3, 31.9)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("368_te8ao")
@@ -6406,161 +6560,7 @@ offset_right = -17.070007
 offset_bottom = 368.0
 columns = 8
 
-[node name="Card4" parent="PlantCards2" unique_id=1202022465 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 20
-card_plant_type = 49
-sun_cost = 200
-
-[node name="CardBg" parent="PlantCards2/Card4" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Plant008PeaShooterDoubleReverse" type="Node2D" parent="PlantCards2/Card4/CardBg/CharacterStatic" index="0" unique_id=1345860080]
-position = Vector2(1, 14)
-scale = Vector2(0.5, 0.5)
-
-[node name="Body" type="Node2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse" unique_id=1297535003]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body" unique_id=537700809]
-position = Vector2(44, -70)
-scale = Vector2(-1, 1)
-
-[node name="Backleaf" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1747747164]
-position = Vector2(27.6, 54.764)
-scale = Vector2(0.5874, 0.48144)
-texture = ExtResource("3_xm6ba")
-centered = false
-
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1530032498]
-position = Vector2(24.736, 55.228)
-rotation = 0.0102626
-scale = Vector2(0.61456, 0.515)
-texture = ExtResource("4_2m5n3")
-centered = false
-
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=2146726667]
-position = Vector2(47.876, 54.364)
-rotation = 0.0461463
-scale = Vector2(0.66084, 0.50884)
-texture = ExtResource("5_utnli")
-centered = false
-
-[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1152722391]
-position = Vector2(38.252, 49.072)
-rotation = 0.217049
-scale = Vector2(0.55988, 0.75092)
-skew = -0.0753286
-texture = ExtResource("6_1j6ba")
-centered = false
-
-[node name="Stalk_top" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1520292224]
-position = Vector2(34.216, 36.696)
-rotation = 0.188007
-scale = Vector2(0.56564, 0.85512)
-skew = -0.0766547
-texture = ExtResource("7_1qg83")
-centered = false
-
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1601294530]
-position = Vector2(22.212, 55.388)
-scale = Vector2(0.57664, 0.52172)
-texture = ExtResource("8_jrvjq")
-centered = false
-
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=1892983849]
-position = Vector2(55.536, 56.488)
-rotation = -0.15701
-scale = Vector2(0.72552, 0.54524)
-texture = ExtResource("9_lppa3")
-centered = false
-
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=2145018184]
-position = Vector2(19.612, 60.448)
-rotation = 0.14172
-scale = Vector2(0.62656, 0.54512)
-texture = ExtResource("10_xa6hp")
-centered = false
-
-[node name="Anim_stem" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect" unique_id=352492639]
-position = Vector2(39.952, 42.836)
-centered = false
-
-[node name="stem_correct" type="Node2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem" unique_id=725265076]
-position = Vector2(-36.5861, -47.9858)
-
-[node name="Idle_headleaf_farthest" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=457685114]
-position = Vector2(12.9, 38.1)
-rotation = -0.338594
-scale = Vector2(0.547, 0.501)
-skew = -0.0837757
-texture = ExtResource("91_orgcc")
-centered = false
-
-[node name="Idle_headleaf_3rdfarthest" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=73020849]
-position = Vector2(22.6, 17.7)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("92_1exfc")
-centered = false
-
-[node name="Idle_headleaf_2ndfarthest" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=340026642]
-position = Vector2(11.1, 29.1)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("93_a1y4x")
-centered = false
-
-[node name="Idle_headleaf_tip_bottom" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1059073795]
-position = Vector2(6.2, 33.1)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("94_bywlf")
-centered = false
-
-[node name="Idle_headleaf_nearest" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=49141783]
-position = Vector2(17, 18.4)
-scale = Vector2(0.527, 0.513)
-texture = ExtResource("95_biftl")
-centered = false
-
-[node name="Idle_headleaf_tip_top" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1291622114]
-position = Vector2(13, 18.4)
-scale = Vector2(0.527, 0.513)
-texture = ExtResource("96_5jdnp")
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1802516884]
-position = Vector2(19.2, 17.8)
-scale = Vector2(0.555, 0.5)
-texture = ExtResource("12_cgaa5")
-centered = false
-
-[node name="Idle_mouth" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1277091487]
-position = Vector2(52.4, 17.8)
-scale = Vector2(0.555, 0.5)
-texture = ExtResource("13_rata2")
-centered = false
-
-[node name="Idle_shoot_blink" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=548209557]
-centered = false
-
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1095063835]
-visible = false
-position = Vector2(37.5, 23.5)
-scale = Vector2(0.555, 0.555)
-texture = ExtResource("14_kp5c5")
-centered = false
-
-[node name="PeaShooter_eyebrow" type="Sprite2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1361819630]
-position = Vector2(34.8, 19.7)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("97_rcuue")
-centered = false
-
-[node name="Marker2DBullet" type="Marker2D" parent="PlantCards2/Card4/CardBg/CharacterStatic/Plant008PeaShooterDoubleReverse/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=1969223720]
-position = Vector2(60.9452, 30.6411)
-
-[node name="Card5" parent="PlantCards2" unique_id=135187478 instance=ExtResource("2_5pqky")]
+[node name="Card" parent="PlantCards2" unique_id=135187478 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6568,19 +6568,19 @@ imitater_gray_strength = 0.0
 card_id = 21
 card_plant_type = 1
 
-[node name="CardBg" parent="PlantCards2/Card5" index="0"]
+[node name="CardBg" parent="PlantCards2/Card" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant001PeaShooterSoldier76" type="Node2D" parent="PlantCards2/Card5/CardBg/CharacterStatic" index="0" unique_id=477947516]
+[node name="Plant001PeaShooterSoldier76" type="Node2D" parent="PlantCards2/Card/CardBg/CharacterStatic" index="0" unique_id=477947516]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Card" type="Sprite2D" parent="PlantCards2/Card5/CardBg/CharacterStatic/Plant001PeaShooterSoldier76" unique_id=1624404242]
+[node name="Card" type="Sprite2D" parent="PlantCards2/Card/CardBg/CharacterStatic/Plant001PeaShooterSoldier76" unique_id=1624404242]
 position = Vector2(-0.35998535, -27.419998)
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("382_pupom")
 
-[node name="Card6" parent="PlantCards2" unique_id=281935870 instance=ExtResource("2_5pqky")]
+[node name="Card2" parent="PlantCards2" unique_id=281935870 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6589,19 +6589,19 @@ card_id = 0
 card_plant_type = 2
 sun_cost = 50
 
-[node name="CardBg" parent="PlantCards2/Card6" index="0"]
+[node name="CardBg" parent="PlantCards2/Card2" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant002SunflowerMercy" type="Node2D" parent="PlantCards2/Card6/CardBg/CharacterStatic" index="0" unique_id=189195400]
+[node name="Plant002SunflowerMercy" type="Node2D" parent="PlantCards2/Card2/CardBg/CharacterStatic" index="0" unique_id=189195400]
 position = Vector2(0.75, 13.2)
 scale = Vector2(0.5, 0.5)
 
-[node name="Sunflower_Mercy_Card" type="Sprite2D" parent="PlantCards2/Card6/CardBg/CharacterStatic/Plant002SunflowerMercy" unique_id=1065491738]
+[node name="Sunflower_Mercy_Card" type="Sprite2D" parent="PlantCards2/Card2/CardBg/CharacterStatic/Plant002SunflowerMercy" unique_id=1065491738]
 position = Vector2(-0.27, -22.89)
 scale = Vector2(0.05, 0.05)
 texture = ExtResource("383_msri8")
 
-[node name="Card7" parent="PlantCards2" unique_id=931234083 instance=ExtResource("2_5pqky")]
+[node name="Card3" parent="PlantCards2" unique_id=931234083 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -6611,14 +6611,14 @@ card_plant_type = 3
 cool_time = 50.0
 sun_cost = 150
 
-[node name="CardBg" parent="PlantCards2/Card7" index="0"]
+[node name="CardBg" parent="PlantCards2/Card3" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant053CherryBombJunkrat" type="Node2D" parent="PlantCards2/Card7/CardBg/CharacterStatic" index="0" unique_id=1513017236]
+[node name="Plant053CherryBombJunkrat" type="Node2D" parent="PlantCards2/Card3/CardBg/CharacterStatic" index="0" unique_id=1513017236]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="card" type="Sprite2D" parent="PlantCards2/Card7/CardBg/CharacterStatic/Plant053CherryBombJunkrat" unique_id=472294907]
+[node name="card" type="Sprite2D" parent="PlantCards2/Card3/CardBg/CharacterStatic/Plant053CherryBombJunkrat" unique_id=472294907]
 position = Vector2(0, -26.49)
 scale = Vector2(0.68, 0.68)
 texture = ExtResource("384_b70e6")
@@ -7928,9 +7928,9 @@ centered = false
 [node name="PlantCards3" type="GridContainer" parent="." unique_id=819751303]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = -445.07
+offset_left = -894.3
 offset_top = 2.0
-offset_right = -17.070007
+offset_right = -466.3
 offset_bottom = 368.0
 columns = 8
 
@@ -8123,7 +8123,6 @@ tree_root = SubResource("AnimationNodeBlendTree_te8ao")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
-
 
 [node name="ZombieCards" type="GridContainer" parent="." unique_id=255774907]
 unique_name_in_owner = true
@@ -13202,7 +13201,7 @@ centered = false
 [node name="NodeDrop" type="Node2D" parent="ZombieCards/Card25/CardBg/CharacterStatic/Zombie524Imp/Body" unique_id=2014335878]
 visible = false
 
-[node name="Card26" parent="ZombieCards" unique_id=6000000001 instance=ExtResource("2_5pqky")]
+[node name="Card26" parent="ZombieCards" unique_id=1705032705 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -13338,15 +13337,13 @@ scale = Vector2(0.8, 0.8)
 texture = ExtResource("371_ea7g5")
 centered = false
 
-
-
 [node name="ZombieCards2" type="GridContainer" parent="." unique_id=561692043]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = -306.0
-offset_top = 124.0
-offset_right = -76.0
-offset_bottom = 198.0
+offset_left = 753.78
+offset_top = 3.09
+offset_right = 983.7795
+offset_bottom = 77.089966
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 8
 columns = 5
@@ -13487,10 +13484,10 @@ texture = ExtResource("799_h3i4j")
 [editable path="PlantCards/Card46"]
 [editable path="PlantCards/Card47"]
 [editable path="PlantCards/Card48"]
-[editable path="PlantCards2/Card4"]
-[editable path="PlantCards2/Card5"]
-[editable path="PlantCards2/Card6"]
-[editable path="PlantCards2/Card7"]
+[editable path="PlantCards/Card49"]
+[editable path="PlantCards2/Card"]
+[editable path="PlantCards2/Card2"]
+[editable path="PlantCards2/Card3"]
 [editable path="PlantCards2/Card8"]
 [editable path="PlantCards2/Card9"]
 [editable path="PlantCards2/Card10"]
@@ -13546,7 +13543,6 @@ texture = ExtResource("799_h3i4j")
 [editable path="ZombieCards/Card23"]
 [editable path="ZombieCards/Card24"]
 [editable path="ZombieCards/Card25"]
-
 [editable path="ZombieCards/Card26"]
 [editable path="ZombieCards2/Card1"]
 [editable path="ZombieCards2/Card2"]
