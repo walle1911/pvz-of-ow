@@ -130,7 +130,7 @@ mouth_overlay_highlight_color = Color(0.2, 0.65, 0.95, 0.88)
 mouth_overlay_pulse_amount = 0.18
 mouth_overlay_pulse_speed = 2.8
 mouth_overlay_flow_speed = 1.4
-damage_boost_target_plant_types = Array[int]([500, 505, 507, 518, 528, 540, 49, 50, 6, 41])
+damage_boost_target_plant_types = Array[int]([500, 505, 507, 518, 528, 540, 49, 1, 6, 41])
 plant_type = 2
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 

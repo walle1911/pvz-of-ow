@@ -148,7 +148,7 @@ func plant_be_flattened():
 
 #region 植物(僵尸)种植(死亡)
 ## 模仿者创建植物
-func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho):
+func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho):
 	await get_tree().process_frame
 	var plant = create_plant(plant_type, false, is_plant_start_effect, true, false, imitater_variant)
 	return plant
@@ -157,7 +157,7 @@ func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_star
 ##[is_plant_start_effect:bool] 是否有种植特效
 ##[is_imitater_material:bool] 是否为模仿者材质
 ##[is_zombie_mode:bool] 是否为我是僵尸模式
-func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho) -> Plant000Base:
+func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho) -> Plant000Base:
 	var plant_condition:ResourcePlantCondition
 	var plant :Plant000Base
 	plant_condition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)

@@ -1,5 +1,5 @@
 extends Plant000Base
-class_name Plant050PeaShooterSoldier76
+class_name Plant001PeaShooterSoldier76
 
 @onready var attack_component: AttackComponentBulletBase = $AttackComponent
 @onready var heal_animation_player: AnimationPlayer = $HealAnimationPlayer

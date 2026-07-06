@@ -33,7 +33,7 @@ var blacklist_plant_types_with_pot: Array[CharacterRegistry.PlantType] = [
 	CharacterRegistry.PlantType.Null,
 	CharacterRegistry.PlantType.P036CoffeeBeanAna,
 	CharacterRegistry.PlantType.P535CoffeeBean,
-	CharacterRegistry.PlantType.P999ImitaterEcho,
+	CharacterRegistry.PlantType.P053ImitaterEcho,
 	CharacterRegistry.PlantType.P548Imitater,
 	CharacterRegistry.PlantType.P1000Sprout,
 ]

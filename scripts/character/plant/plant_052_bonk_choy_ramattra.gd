@@ -1,5 +1,5 @@
 extends Plant000Base
-class_name Plant070BonkChoyRamattra
+class_name Plant052BonkChoyRamattra
 
 @onready var detect_component: DetectComponent = $DetectComponent
 @onready var frame_sprite: Sprite2D = $Body/BodyCorrect/FrameSprite

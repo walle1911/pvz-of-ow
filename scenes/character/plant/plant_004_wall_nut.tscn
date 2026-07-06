@@ -68,9 +68,9 @@ sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Anim_face")])
 sprite_change_texture = Array[Texture2D]([ExtResource("13_akyvq")])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
-[node name="Plant503WallNut" instance=ExtResource("1_rscpg")]
+[node name="Plant004WallNut" instance=ExtResource("1_rscpg")]
 script = ExtResource("2_v6xc2")
-plant_type = 503
+plant_type = 4
 is_can_ladder = true
 
 [node name="Shadow" parent="." index="0"]

@@ -234,9 +234,9 @@ shader_parameter/emission_shape_scale = 0.6
 shader_parameter/emission_sphere_radius = 30.0
 shader_parameter/random_direction_from_spread = Vector3(0, 0, 0)
 
-[node name="Plant999ImitaterEcho" unique_id=1325759597 instance=ExtResource("1_hjvtv")]
+[node name="Plant053ImitaterEcho" unique_id=1325759597 instance=ExtResource("1_hjvtv")]
 script = ExtResource("2_4e7mo")
-plant_type = 999
+plant_type = 53
 
 [node name="Body" parent="." index="1"]
 imitater_tint_color = Color(0.52901167, 0.7374851, 0.97492033, 1)

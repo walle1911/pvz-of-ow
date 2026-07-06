@@ -30,8 +30,10 @@ var curr_all_level_state_data: Dictionary = DEFAULT_CURR_ALL_LEVEL_STATE_DATA.du
 var selected_cards: Array = []
 
 @export var curr_plant :Array[CharacterRegistry.PlantType]= [
+	CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P002SunflowerMercy,
 	CharacterRegistry.PlantType.P003CherryBombJunkrat,
+	CharacterRegistry.PlantType.P004WallNut,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
 	CharacterRegistry.PlantType.P011FumeShroomRoadhog,
 	CharacterRegistry.PlantType.P013HypnoShroomJuno,
@@ -57,14 +59,12 @@ var selected_cards: Array = []
 	CharacterRegistry.PlantType.P044CattailJetpackCat,
 	CharacterRegistry.PlantType.P048CobCannonEmre,
 	CharacterRegistry.PlantType.P049PeaShooterDoubleReverse,
-	CharacterRegistry.PlantType.P050PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P051CattailSierra,
-	CharacterRegistry.PlantType.P070BonkChoyRamattra,
-	CharacterRegistry.PlantType.P999ImitaterEcho,
+	CharacterRegistry.PlantType.P052BonkChoyRamattra,
+	CharacterRegistry.PlantType.P053ImitaterEcho,
 	CharacterRegistry.PlantType.P500PeaShooterSingle,
 	CharacterRegistry.PlantType.P501SunFlower,
 	CharacterRegistry.PlantType.P502CherryBomb,
-	CharacterRegistry.PlantType.P503WallNut,
 	CharacterRegistry.PlantType.P504PotatoMine,
 	CharacterRegistry.PlantType.P505SnowPea,
 	CharacterRegistry.PlantType.P506Chomper,

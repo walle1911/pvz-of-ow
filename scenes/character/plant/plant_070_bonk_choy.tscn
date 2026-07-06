@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bo0qtyw3r4gun"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_base"]
-[ext_resource type="Script" uid="uid://duk0a5gr1x5r" path="res://scripts/character/plant/plant_070_bonk_choy_ramattra.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://duk0a5gr1x5r" path="res://scripts/character/plant/plant_052_bonk_choy_ramattra.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://cwh0rsg56vngu" path="res://assets/image/plant/070_bonk_choy/frame_sequences/idle/000.png" id="3_idle"]
 [ext_resource type="Script" uid="uid://t3g1fyasmwgx" path="res://scripts/character/components/anim_component/component_anim_empty.gd" id="4_anim_empty"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="5_detect"]

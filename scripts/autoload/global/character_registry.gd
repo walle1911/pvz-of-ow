@@ -18,8 +18,10 @@ enum PlantInfoAttribute{
 ## 植物类型
 enum PlantType {
 	Null = 0,
+	P001PeaShooterSoldier76 = 1,
 	P002SunflowerMercy = 2,
 	P003CherryBombJunkrat = 3,
+	P004WallNut = 4,
 	P006SnowPeaMei = 6,
 	P011FumeShroomRoadhog = 11,
 	P013HypnoShroomJuno = 13,
@@ -45,15 +47,16 @@ enum PlantType {
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
 	P049PeaShooterDoubleReverse = 49,
-	P050PeaShooterSoldier76,
+
 	P051CattailSierra = 51,
-	P070BonkChoyRamattra = 70,
+	P052BonkChoyRamattra = 52,
+	P053ImitaterEcho = 53,
 
 	## 后移的原版植物
 	P500PeaShooterSingle = 500,
 	P501SunFlower,
 	P502CherryBomb,
-	P503WallNut,
+
 	P504PotatoMine,
 	P505SnowPea,
 	P506Chomper,
@@ -100,8 +103,6 @@ enum PlantType {
 	P547CobCannon,
 	P548Imitater,
 
-	## 模仿者改版
-	P999ImitaterEcho = 999,
 	## 发芽
 	P1000Sprout = 1000,
 	## 保龄球
@@ -221,12 +222,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_502_cherry_bomb.tscn")
 		},
-	PlantType.P503WallNut: {
+	PlantType.P004WallNut: {
 		PlantInfoAttribute.PlantName: "WallNut",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_503_wall_nut.tscn")
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_004_wall_nut.tscn")
 		},
 	PlantType.P504PotatoMine: {
 		PlantInfoAttribute.PlantName: "PotatoMine",
@@ -555,12 +556,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_049_pea_shooter_double_reverse.tscn")
 		},
-	PlantType.P050PeaShooterSoldier76: {
+	PlantType.P001PeaShooterSoldier76: {
 		PlantInfoAttribute.PlantName: "PeaShooterSoldier76",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_050_pea_shooter_soldier76.tscn")
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn")
 		},
 	PlantType.P002SunflowerMercy: {
 		PlantInfoAttribute.PlantName: "Sunflower_Mercy",
@@ -626,12 +627,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_040_melon_pult_ashe.tscn")
 		},
-	PlantType.P999ImitaterEcho:{
+	PlantType.P053ImitaterEcho:{
 		PlantInfoAttribute.PlantName: "Imitater_Echo",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/999_imitater.tres"),
-		PlantInfoAttribute.PlantScenes :  preload("res://scenes/character/plant/plant_999_imitater_echo.tscn")
+		PlantInfoAttribute.PlantScenes :  preload("res://scenes/character/plant/plant_053_imitater_echo.tscn")
 		},
 
 	PlantType.P016DoomShroomDVA: {
@@ -690,12 +691,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_013_hypno_shroom_juno.tscn")
 		},
-	PlantType.P070BonkChoyRamattra: {
+	PlantType.P052BonkChoyRamattra: {
 		PlantInfoAttribute.PlantName: "BonkChoy_Ramattra",
 		PlantInfoAttribute.CoolTime: 5.0,
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_070_bonk_choy_ramattra.tscn")
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_052_bonk_choy_ramattra.tscn")
 		},
 	PlantType.P037GarlicMauga: {
 		PlantInfoAttribute.PlantName: "Garlic_Mauga",
