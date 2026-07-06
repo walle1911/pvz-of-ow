@@ -292,110 +292,38 @@ tracks/20/keys = {
 tracks/21/type = "value"
 tracks/21/imported = false
 tracks/21/enabled = true
-tracks/21/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:position")
+tracks/21/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:position")
 tracks/21/interp = 1
 tracks/21/loop_wrap = true
 tracks/21/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(31.822989, 20.131882), Vector2(32.938168, 18.937103), Vector2(33.001724, 15.592532), Vector2(32.888004, 19.932627), Vector2(31.938164, 23.937101), Vector2(31.869766, 19.670004), Vector2(31.938168, 17.937101), Vector2(31.938168, 19.937101), Vector2(31.938, 20.637)]
-}
-tracks/22/type = "value"
-tracks/22/imported = false
-tracks/22/enabled = true
-tracks/22/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:rotation")
-tracks/22/interp = 1
-tracks/22/loop_wrap = true
-tracks/22/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.08901179, 0.08901179, 0.08901179, 0.08901179, 0.08901179, 0.08901179, 0.08901179, 0.08901179, 0.08901179]
-}
-tracks/23/type = "value"
-tracks/23/imported = false
-tracks/23/enabled = true
-tracks/23/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:scale")
-tracks/23/interp = 1
-tracks/23/loop_wrap = true
-tracks/23/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.272, 0.272), Vector2(0.261935, 0.321), Vector2(0.19224487, 0.378), Vector2(0.27128565, 0.312), Vector2(0.272, 0.237), Vector2(0.272, 0.253), Vector2(0.272, 0.253), Vector2(0.272, 0.253), Vector2(0.272, 0.253)]
-}
-tracks/24/type = "value"
-tracks/24/imported = false
-tracks/24/enabled = true
-tracks/24/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:position")
-tracks/24/interp = 1
-tracks/24/loop_wrap = true
-tracks/24/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(-4.522, 9.237)]
 }
-tracks/25/type = "value"
-tracks/25/imported = false
-tracks/25/enabled = true
-tracks/25/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:rotation")
-tracks/25/interp = 1
-tracks/25/loop_wrap = true
-tracks/25/keys = {
+tracks/22/type = "value"
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:rotation")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [0.0]
 }
-tracks/26/type = "value"
-tracks/26/imported = false
-tracks/26/enabled = true
-tracks/26/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:scale")
-tracks/26/interp = 1
-tracks/26/loop_wrap = true
-tracks/26/keys = {
+tracks/23/type = "value"
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:scale")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0.174, 0.186)]
-}
-tracks/27/type = "value"
-tracks/27/imported = false
-tracks/27/enabled = true
-tracks/27/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:position")
-tracks/27/interp = 1
-tracks/27/loop_wrap = true
-tracks/27/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(43.342648, 27.325884), Vector2(44.342648, 26.32588), Vector2(42.14009, 24.123322), Vector2(44.963882, 25.987024), Vector2(44.794456, 29.036724), Vector2(44.116745, 25.98703), Vector2(44.060272, 25.422272), Vector2(44.68151, 26.608265), Vector2(45.076843, 27.342453)]
-}
-tracks/28/type = "value"
-tracks/28/imported = false
-tracks/28/enabled = true
-tracks/28/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:rotation")
-tracks/28/interp = 1
-tracks/28/loop_wrap = true
-tracks/28/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [-0.08901179, -0.08901179, -0.08901179, -0.08901179, -0.08901179, -0.08901179, -0.08901179, -0.08901179, -0.08901179]
-}
-tracks/29/type = "value"
-tracks/29/imported = false
-tracks/29/enabled = true
-tracks/29/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:scale")
-tracks/29/interp = 1
-tracks/29/loop_wrap = true
-tracks/29/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.168, 0.157), Vector2(0.168, 0.168), Vector2(0.168, 0.231), Vector2(0.168, 0.165), Vector2(0.168, 0.133), Vector2(0.168, 0.174), Vector2(0.168, 0.183), Vector2(0.168, 0.162), Vector2(0.168, 0.151)]
 }
 
 [sub_resource type="Animation" id="Animation_6f6l5"]
@@ -594,78 +522,6 @@ tracks/15/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(37.5, 23.5), Vector2(38.0088, 18.85), Vector2(38.0088, 18.85), Vector2(38.0088, 18.85), Vector2(38.0088, 21.85), Vector2(38.0088, 22.8501), Vector2(38.0088, 21.85), Vector2(38.0088, 18.85), Vector2(38.0088, 18.85)]
-}
-tracks/16/type = "value"
-tracks/16/imported = false
-tracks/16/enabled = true
-tracks/16/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:position")
-tracks/16/interp = 1
-tracks/16/loop_wrap = true
-tracks/16/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(31.342648, 23.32588), Vector2(32.783, 19.326), Vector2(31.343, 22.449), Vector2(31.343, 18.047)]
-}
-tracks/17/type = "value"
-tracks/17/imported = false
-tracks/17/enabled = true
-tracks/17/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:rotation")
-tracks/17/interp = 1
-tracks/17/loop_wrap = true
-tracks/17/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.08901179, 0.08901179, 0.08901179, 0.08901179]
-}
-tracks/18/type = "value"
-tracks/18/imported = false
-tracks/18/enabled = true
-tracks/18/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:scale")
-tracks/18/interp = 1
-tracks/18/loop_wrap = true
-tracks/18/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.239, 0.223), Vector2(0.248, 0.23), Vector2(0.248, 0.231), Vector2(0.248, 0.231)]
-}
-tracks/19/type = "value"
-tracks/19/imported = false
-tracks/19/enabled = true
-tracks/19/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:position")
-tracks/19/interp = 1
-tracks/19/loop_wrap = true
-tracks/19/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(42.26961, 30.060068), Vector2(43.34265, 26.325884), Vector2(42.34265, 29.325884), Vector2(43.342648, 26.32588)]
-}
-tracks/20/type = "value"
-tracks/20/imported = false
-tracks/20/enabled = true
-tracks/20/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:rotation")
-tracks/20/interp = 1
-tracks/20/loop_wrap = true
-tracks/20/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [-0.08901179, -0.08901179, -0.08901179, -0.08901179]
-}
-tracks/21/type = "value"
-tracks/21/imported = false
-tracks/21/enabled = true
-tracks/21/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:scale")
-tracks/21/interp = 1
-tracks/21/loop_wrap = true
-tracks/21/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.168, 0.162), Vector2(0.168, 0.162), Vector2(0.168, 0.162), Vector2(0.168, 0.162)]
 }
 
 [sub_resource type="Animation" id="Animation_heal76"]
@@ -1380,106 +1236,34 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:position")
+tracks/0/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(32.938168, 18.937103)]
+"values": [Vector2(0.013464912, 0.0136642745)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:rotation")
+tracks/1/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.08901179]
+"values": [0.0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Hair:scale")
+tracks/2/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.028361835, 0.032849986)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(44.997173, 26.27296)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:rotation")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.08901179]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/Anim_Soldier76_Glass:scale")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.056372494, 0.05299322)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:scale")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.013464912, 0.0136642745)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:rotation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("Body/BodyCorrect/Anim_stem/Anim_Soldier76_E:position")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -1516,7 +1300,6 @@ fadeout_time = 0.3
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_05k0c"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ul06u"]
-graph_offset = Vector2(-128.325, -17.2135)
 nodes/output/position = Vector2(980, 200)
 nodes/Add2/node = SubResource("AnimationNodeAdd2_qgupn")
 nodes/Add2/position = Vector2(533.519, 220.122)
@@ -1540,9 +1323,10 @@ size = Vector2(1000, 5)
 [node name="Plant050PeaShooterSoldier76" unique_id=1953579651 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_c75pq")]
 script = ExtResource("2_rdoq1")
 heal_delay_after_attack = 1.5
-heal_duration = 1.25
-heal_amount = 75
+heal_duration = 2.0
+heal_amount_per_second = 75
 escape_move_time = 0.15
+escape_hp_threshold = 100
 heal_animation_name = &"Heal"
 plant_type = 50
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
@@ -1552,111 +1336,111 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-43, -67)
 
 [node name="Backleaf" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1633351041]
-position = Vector2(27.7, 53.418148)
-scale = Vector2(0.56336296, 0.53618336)
+position = Vector2(27.7, 53.57002)
+scale = Vector2(0.5664004, 0.5293491)
 texture = ExtResource("2_866ce")
 centered = false
 
 [node name="Backleaf_left_tip" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=955626887]
-position = Vector2(25, 54.118145)
-rotation = 0.014279669
-scale = Vector2(0.56963515, 0.5434556)
+position = Vector2(25, 54.27002)
+rotation = 0.01692986
+scale = Vector2(0.5749507, 0.53889936)
 texture = ExtResource("3_w7gu6")
 centered = false
 
 [node name="Backleaf_right_tip" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=287919539]
-position = Vector2(47.4, 53.218147)
-rotation = 0.0055527594
-scale = Vector2(0.5884518, 0.5434556)
+position = Vector2(47.4, 53.37002)
+rotation = 0.00820371
+scale = Vector2(0.6006016, 0.53889936)
 texture = ExtResource("4_hlxsk")
 centered = false
 
 [node name="Stalk_bottom" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=954714321]
-position = Vector2(36.63629, 51.563705)
-rotation = 0.075042084
-scale = Vector2(0.5570907, 0.59363323)
-skew = -0.024272507
+position = Vector2(36.94004, 51.25996)
+rotation = 0.10420026
+scale = Vector2(0.5578501, 0.6073019)
+skew = -0.0375265
 texture = ExtResource("5_rgmag")
 centered = false
 
 [node name="Stalk_top" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=890188945]
-position = Vector2(32.04537, 40.682236)
-rotation = 0.0693319
-scale = Vector2(0.557, 0.71698666)
-skew = -0.02728893
+position = Vector2(32.425053, 38.859753)
+rotation = 0.09451327
+scale = Vector2(0.557, 0.7754579)
+skew = -0.036566194
 texture = ExtResource("6_rdoq1")
 centered = false
 
 [node name="Frontleaf" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=519975587]
-position = Vector2(22.590927, 54.809074)
-scale = Vector2(0.56327224, 0.5434556)
+position = Vector2(22.51499, 54.88501)
+scale = Vector2(0.5655503, 0.53889936)
 texture = ExtResource("7_ul06u")
 centered = false
 
 [node name="Frontleaf_right_tip" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1172495752]
-position = Vector2(55.990925, 56.118145)
-rotation = -0.052990377
-scale = Vector2(0.61563134, 0.5518185)
+position = Vector2(55.91499, 56.27002)
+rotation = -0.07286985
+scale = Vector2(0.637653, 0.5502998)
 texture = ExtResource("8_6f6l5")
 centered = false
 
 [node name="Frontleaf_tip_left" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=290351647]
-position = Vector2(19.409073, 61.190926)
-rotation = 0.050769374
-scale = Vector2(0.58108884, 0.5518185)
+position = Vector2(19.48501, 61.11499)
+rotation = 0.06667356
+scale = Vector2(0.59020126, 0.5502998)
 texture = ExtResource("9_7rwin")
 centered = false
 
 [node name="Anim_stem" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=1578858073]
-position = Vector2(38.32722, 45.34575)
+position = Vector2(38.55503, 44.054825)
 centered = false
 
 [node name="stem_correct" type="Node2D" parent="Body/BodyCorrect/Anim_stem" index="0" unique_id=1764110131]
 position = Vector2(-37.6, -48.7)
 
 [node name="Anim_sprout" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="0" unique_id=396648234]
-position = Vector2(7.7090735, 26.136486)
-rotation = -0.23831815
-scale = Vector2(0.799, 0.799)
+position = Vector2(7.5, 28.2)
+rotation = -0.258309
+scale = Vector2(0.786, 0.652)
 texture = ExtResource("10_q6tdq")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="1" unique_id=832823026]
-position = Vector2(19.309072, 14.454823)
-scale = Vector2(0.555, 0.54699624)
-texture = ExtResource("11_ydmpl")
-centered = false
-
-[node name="Idle_mouth" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="2" unique_id=1274584265]
-position = Vector2(52.509075, 14.445749)
-scale = Vector2(0.555, 0.54699624)
+[node name="Idle_mouth" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="1" unique_id=1274584265]
+position = Vector2(52.4, 13.9)
+scale = Vector2(0.555, 0.555)
 texture = ExtResource("12_tjilp")
 centered = false
 
-[node name="Idle_shoot_blink" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="3" unique_id=1744075098]
+[node name="Idle_shoot_blink" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="2" unique_id=1744075098]
+position = Vector2(37.7, 19.9)
+scale = Vector2(0.555, 0.521)
 centered = false
 
-[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="4" unique_id=132141633]
+[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="3" unique_id=132141633]
 visible = false
-position = Vector2(37.76595, 21.069454)
+position = Vector2(38.0088, 21.047302)
 scale = Vector2(0.555, 0.555)
 texture = ExtResource("13_dkjuv")
 centered = false
 
-[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="5" unique_id=1709565426]
-position = Vector2(60.9452, 30.6411)
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="4" unique_id=832823026]
+position = Vector2(19.1, 14)
+scale = Vector2(0.555, 0.555)
+texture = ExtResource("11_ydmpl")
+centered = false
 
-[node name="Anim_Soldier76_Hair" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="6" unique_id=1756366489]
-position = Vector2(32.938168, 18.937103)
-rotation = 0.08901179
-scale = Vector2(0.028361835, 0.032849986)
+[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct/Anim_face" index="0" unique_id=1078613872]
+position = Vector2(23.12, 13.31)
+scale = Vector2(0.51, 0.51)
 texture = ExtResource("22_s76hair")
 
-[node name="Anim_Soldier76_Glass" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="7" unique_id=909635742]
-position = Vector2(44.997173, 26.27296)
-rotation = 0.08901179
-scale = Vector2(0.056372494, 0.05299322)
+[node name="glass" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem/stem_correct/Anim_face" index="1" unique_id=1005584813]
+position = Vector2(41.59, 25.82)
+scale = Vector2(0.29, 0.29)
 texture = ExtResource("21_s76glass")
+
+[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect/Anim_stem/stem_correct" index="5" unique_id=1709565426]
+position = Vector2(60.9452, 30.6411)
 
 [node name="Anim_Soldier76_E" type="Sprite2D" parent="Body/BodyCorrect/Anim_stem" index="1" unique_id=821656594]
 texture_filter = 1
@@ -1667,8 +1451,8 @@ texture = ExtResource("20_s76e")
 [node name="HealPlusEffect" type="Node2D" parent="Body/BodyCorrect" index="9" unique_id=336345087]
 visible = false
 modulate = Color(1, 1, 1, 0)
-position = Vector2(39, 22)
-scale = Vector2(0.75, 0.75)
+position = Vector2(39, -2)
+scale = Vector2(0.9, 0.9)
 
 [node name="PlusCenter" type="Sprite2D" parent="Body/BodyCorrect/HealPlusEffect" index="0" unique_id=1077649124]
 scale = Vector2(0.42, 0.42)

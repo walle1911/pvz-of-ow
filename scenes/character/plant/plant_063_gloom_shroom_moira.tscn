@@ -118,6 +118,13 @@ alpha_curve = SubResource("CurveTexture_fdqap")
 
 [node name="Plant043GloomShroom" unique_id=1802928863 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_185k3")]
 script = ExtResource("2_52sk1")
+yellow_fume_chance = 0.35
+yellow_fume_color = Color(1, 0.95, 0, 1)
+yellow_fume_alpha_scale = 1.45
+yellow_fume_heal_value = 45
+normal_fume_color = Color(1, 1, 1, 1)
+attack_value = 20
+attack_cd = 2.0
 plant_type = 63
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
@@ -141,8 +148,8 @@ visible = false
 centered = false
 
 [node name="GloomShroom_base" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1781309040]
-position = Vector2(12.5, 40.3)
-scale = Vector2(0.8, 0.8)
+position = Vector2(11.978094, 41.165718)
+scale = Vector2(0.8128762, 0.7784666)
 texture = ExtResource("2_bucvu")
 centered = false
 
@@ -152,8 +159,8 @@ scale = Vector2(0.7430322, 1.0918165)
 texture = ExtResource("4_mj0p0")
 
 [node name="GloomShroom_shooter4" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=579369290]
-position = Vector2(7.6, 3.3)
-scale = Vector2(0.8, 0.8)
+position = Vector2(7.178094, 5.9971547)
+scale = Vector2(0.8106572, 0.7935619)
 texture = ExtResource("3_f5ptl")
 centered = false
 
@@ -162,9 +169,9 @@ position = Vector2(7.7, 8.19)
 texture = ExtResource("6_ato5c")
 
 [node name="GloomShroom_shooter42" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=409887415]
-position = Vector2(75.3, 3.5)
+position = Vector2(75.7219, 6.2752485)
 rotation = 3.14159
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.8106572, 0.7935619)
 skew = -3.14159
 texture = ExtResource("3_f5ptl")
 centered = false
@@ -174,14 +181,14 @@ position = Vector2(10.7, 7.62)
 texture = ExtResource("6_ato5c")
 
 [node name="GloomShroom_shooter5" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1444345954]
-position = Vector2(28.3, -1.4)
-scale = Vector2(0.8, 0.8)
+position = Vector2(27.978094, 1.2971547)
+scale = Vector2(0.8225334, 0.7849047)
 texture = ExtResource("4_il08b")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=1111153694]
-position = Vector2(7.2, 5.7)
-scale = Vector2(0.8, 0.8)
+position = Vector2(6.234282, 7.5314364)
+scale = Vector2(0.8225334, 0.7849047)
 texture = ExtResource("5_r6v0n")
 centered = false
 
@@ -195,14 +202,14 @@ scale = Vector2(0.9, 0.9230046)
 texture = ExtResource("10_uk8yi")
 
 [node name="GloomShroom_shooter1" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=2147384733]
-position = Vector2(29.3, 51.1)
-scale = Vector2(0.8, 0.8)
+position = Vector2(28.978094, 53.131435)
+scale = Vector2(0.8225334, 0.7849047)
 texture = ExtResource("7_fdqap")
 centered = false
 
 [node name="GloomShroom_shooter2" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=167829425]
-position = Vector2(8.1, 41.4)
-scale = Vector2(0.8, 0.8)
+position = Vector2(7.678094, 43.331436)
+scale = Vector2(0.8106572, 0.7935619)
 texture = ExtResource("9_sj1qt")
 centered = false
 
@@ -212,9 +219,9 @@ scale = Vector2(0.69046867, 0.63849556)
 texture = ExtResource("13_dvp82")
 
 [node name="GloomShroom_shooter22" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=556208045]
-position = Vector2(73.2, 42.6)
+position = Vector2(73.54381, 44.531437)
 rotation = 3.14159
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.8106572, 0.7935619)
 skew = -3.14159
 texture = ExtResource("9_sj1qt")
 centered = false
@@ -225,22 +232,22 @@ scale = Vector2(0.69046867, 0.63849556)
 texture = ExtResource("13_dvp82")
 
 [node name="GloomShroom_stem3" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=1325834453]
-position = Vector2(2.4, 24)
-scale = Vector2(0.8, 0.8)
+position = Vector2(1.6342819, 25.953342)
+scale = Vector2(0.81587625, 0.7935619)
 texture = ExtResource("10_xenpt")
 centered = false
 
 [node name="GloomShroom_stem32" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=1111663867]
-position = Vector2(78.9, 25.2)
+position = Vector2(79.7219, 27.253342)
 rotation = 3.14159
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.81587625, 0.7935619)
 skew = -3.14159
 texture = ExtResource("10_xenpt")
 centered = false
 
 [node name="GloomShroom_shooter3" type="Sprite2D" parent="Body/BodyCorrect" index="14" unique_id=662135988]
-position = Vector2(-0.4, 22.5)
-scale = Vector2(0.8, 0.8)
+position = Vector2(-1.1657182, 25.17525)
+scale = Vector2(0.81587625, 0.7935619)
 texture = ExtResource("11_kxswi")
 centered = false
 
@@ -250,9 +257,9 @@ scale = Vector2(0.36, 0.36)
 texture = ExtResource("16_jp63d")
 
 [node name="GloomShroom_shooter32" type="Sprite2D" parent="Body/BodyCorrect" index="15" unique_id=823773852]
-position = Vector2(81.8, 23.8)
+position = Vector2(82.643814, 26.37525)
 rotation = 3.14159
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.81587625, 0.7935619)
 skew = -3.14159
 texture = ExtResource("11_kxswi")
 centered = false

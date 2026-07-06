@@ -44,4 +44,3 @@ var game_para:ResourceLevelData
 
 ## 游戏倍速
 var time_scale := 1.0
-

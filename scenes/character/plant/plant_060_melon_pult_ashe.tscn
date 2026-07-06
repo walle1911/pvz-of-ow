@@ -106,56 +106,54 @@ position = Vector2(-42, -65)
 
 [node name="Frontleaf_right_tip" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1465811727]
 visible = false
-position = Vector2(28.013376, 57.703648)
-rotation = -2.4786034
-scale = Vector2(0.63171744, 0.443)
-skew = 3.2493546
+position = Vector2(29.591864, 58.122967)
+rotation = -2.5054357
+scale = Vector2(0.71500313, 0.4434099)
+skew = 3.3974433
 texture = ExtResource("2_ese8j")
 centered = false
 
 [node name="Frontleaf_tip_left" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1969245662]
 visible = false
-position = Vector2(63.689056, 48.90365)
-rotation = 2.4584696
-scale = Vector2(0.571, 0.49901217)
-skew = -3.1875005
+position = Vector2(62.390114, 49.322968)
+rotation = 2.379395
+scale = Vector2(0.5714099, 0.50122964)
+skew = -3.2492006
 texture = ExtResource("3_g6087")
 centered = false
 
 [node name="Cabbagepult_basket" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=27853326]
-position = Vector2(-26.503649, 24.16202)
-rotation = -0.2488982
-scale = Vector2(0.7990122, 0.7990122)
+position = Vector2(-26.922966, 29.650875)
+rotation = -0.35084143
+scale = Vector2(0.7991802, 0.7991802)
 texture = ExtResource("4_myj7b")
 centered = false
 
 [node name="Melonpult_mellon" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1886276970]
-position = Vector2(-43.631615, 3.1045802)
-rotation = -0.29644668
-scale = Vector2(0.9980122, 0.9980122)
+position = Vector2(-46.732853, 12.952627)
+rotation = -0.44074187
+scale = Vector2(0.9981802, 0.9981802)
 texture = ExtResource("10_bobface")
 centered = false
 
 [node name="Cabbagepult_basket_overlay" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=539425658]
-position = Vector2(-26.503649, 24.16202)
-rotation = -0.2488982
-scale = Vector2(0.7990122, 0.7990122)
+position = Vector2(-26.922966, 29.650875)
+rotation = -0.35084143
+scale = Vector2(0.7991802, 0.7991802)
 texture = ExtResource("6_3h8kf")
 centered = false
 
 [node name="Melonpult_stalk" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=738536938]
-position = Vector2(14.996352, 26.820673)
-rotation = -0.16989127
-scale = Vector2(0.80201215, 0.7990122)
-skew = 0.08394569
+position = Vector2(14.781977, 28.090113)
+rotation = -0.20528899
+scale = Vector2(0.8025901, 0.7995901)
+skew = 0.09201517
 texture = ExtResource("7_y7nur")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=523248320]
-position = Vector2(14.297568, 35.00608)
-rotation = -9.270371e-05
-scale = Vector2(0.8301216, 0.7618298)
-skew = -0.006374179
+position = Vector2(14.018023, 35.8689)
+scale = Vector2(0.8412296, 0.74144185)
 texture = ExtResource("8_lue24")
 centered = false
 
@@ -167,19 +165,18 @@ texture = ExtResource("10_0dakq")
 [node name="Melonpult_blink" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1751820093]
 visible = false
 position = Vector2(35.3, 47.7)
-rotation = -0.008700932
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("9_5c13o")
 centered = false
 
 [node name="Melonpult_eyebrow1" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=710500687]
-position = Vector2(53.4, 45.02189)
+position = Vector2(53.4, 47.496807)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("10_ru083")
 centered = false
 
 [node name="Melonpult_eyebrow2" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=1907635262]
-position = Vector2(35.5, 45.920673)
+position = Vector2(35.5, 48.378784)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("10_ru083")
 centered = false
@@ -192,19 +189,18 @@ centered = false
 
 [node name="Frontleaf_right_tip1" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=640357647]
 visible = false
-position = Vector2(57.4073, 60.102432)
-rotation = 0.05299672
-scale = Vector2(0.572, 0.43096352)
-skew = -0.006896505
+position = Vector2(57.836044, 60.25901)
+rotation = 0.08683539
+scale = Vector2(0.5732297, 0.42881978)
 texture = ExtResource("2_ese8j")
 centered = false
 
 [node name="Frontleaf_tip_left1" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=1187351997]
 visible = false
-position = Vector2(20.795135, 60.103645)
-rotation = 0.11836364
-scale = Vector2(0.57792705, 0.45307297)
-skew = 0.008047832
+position = Vector2(20.522966, 60.277035)
+rotation = 0.105379015
+scale = Vector2(0.5732297, 0.45654067)
+skew = -0.03925418
 texture = ExtResource("3_g6087")
 centered = false
 

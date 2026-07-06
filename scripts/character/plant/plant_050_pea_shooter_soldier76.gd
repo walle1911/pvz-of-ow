@@ -9,8 +9,9 @@ class_name Plant050PeaShooterSoldier76
 @export_group("PeaShooter 76")
 @export var heal_delay_after_attack:float = 1.0
 @export var heal_duration:float = 1.25
-@export var heal_amount:int = 300
+@export var heal_amount_per_second:int = 240
 @export var escape_move_time:float = 0.15
+@export var escape_hp_threshold:int = 100
 @export var heal_animation_name:StringName = &"Heal"
 
 const FRONT_CELL_OFFSET := Vector2i(0, 1)
@@ -77,16 +78,26 @@ func _heal_after_delay(token:int):
 
 func _begin_heal(token:int):
 	_is_healing = true
+	_has_used_heal = true
 	body.body_light()
 	_play_heal_anim()
-	await get_tree().create_timer(heal_duration).timeout
-	if token != _heal_wait_token or _has_used_heal or is_death or not _is_healing:
+	var elapsed := 0.0
+	while elapsed < heal_duration:
+		var prev_msec := Time.get_ticks_msec()
+		await get_tree().process_frame
+		if token != _heal_wait_token or is_death or not _is_healing:
+			return
+		var delta := (Time.get_ticks_msec() - prev_msec) / 1000.0
+		elapsed += delta
+		hp_component.curr_hp = min(hp_component.curr_hp + int(heal_amount_per_second * delta), hp_component.max_hp)
+	if token != _heal_wait_token or is_death or not _is_healing:
 		return
-	hp_component.curr_hp = min(hp_component.curr_hp + heal_amount, hp_component.max_hp)
-	_has_used_heal = true
 	_is_healing = false
 
 func _play_heal_anim():
+	var anim := heal_animation_player.get_animation(heal_animation_name)
+	if anim and anim.length > 0:
+		heal_animation_player.speed_scale = anim.length / heal_duration
 	heal_animation_player.play(heal_animation_name)
 
 func _interrupt_heal():
@@ -103,6 +114,8 @@ func _reset_heal_visual():
 
 func _try_escape_once(attack_zombie:Zombie000Base):
 	if _has_escaped or is_death or not is_instance_valid(plant_cell):
+		return
+	if hp_component.curr_hp >= escape_hp_threshold:
 		return
 	var threat_dir := _get_facing_threat_direction(attack_zombie)
 	if threat_dir == 0:

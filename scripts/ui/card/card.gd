@@ -119,11 +119,14 @@ func card_ready():
 		_cool_mask.visible = false
 		is_can_click = false
 		return
+	if _is_cooling:
+		return
 
 	var should_emit_ready := not _is_ready_state
 	if is_hidden_by_squash_doomfist:
 		is_hidden_by_squash_doomfist = false
-		character_static.visible = true
+		if is_instance_valid(character_static):
+			character_static.visible = true
 		should_emit_ready = true
 	_cool_mask.visible = false
 	is_can_click = true
@@ -155,10 +158,11 @@ func get_squash_doomfist_attack_screen_position() -> Vector2:
 	return get_global_transform_with_canvas() * (size * 0.5 + Vector2(0, 24))
 
 func hide_by_squash_doomfist():
+	card_cool()
 	is_being_attacked_by_squash_doomfist = false
 	is_hidden_by_squash_doomfist = true
-	character_static.visible = false
-	card_cool()
+	if is_instance_valid(character_static):
+		character_static.visible = false
 
 ## 点击卡片时
 func _on_button_pressed() -> void:

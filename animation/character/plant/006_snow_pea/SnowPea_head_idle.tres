@@ -407,39 +407,3 @@ tracks/32/keys = {
 "update": 0,
 "values": [Vector2(37.5, 23.5), Vector2(37.9957, 20.0183), Vector2(37.631, 19.2267), Vector2(37.9957, 21.0183), Vector2(37.7041, 22.0393), Vector2(37.5167, 21.3932), Vector2(37.6163, 19.9359), Vector2(37.7435, 19.0556), Vector2(37.6739, 19.6627), Vector2(37.5, 23.5)]
 }
-tracks/33/type = "value"
-tracks/33/imported = false
-tracks/33/enabled = true
-tracks/33/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/SnowPea_Mei_Hair:position")
-tracks/33/interp = 1
-tracks/33/loop_wrap = true
-tracks/33/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(35.256, 24.629), Vector2(35.336, 20.414), Vector2(35.309, 23.541), Vector2(35.283, 21.007414)]
-}
-tracks/34/type = "value"
-tracks/34/imported = false
-tracks/34/enabled = true
-tracks/34/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/SnowPea_Mei_Hair:rotation")
-tracks/34/interp = 1
-tracks/34/loop_wrap = true
-tracks/34/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0, 0.0]
-}
-tracks/35/type = "value"
-tracks/35/imported = false
-tracks/35/enabled = true
-tracks/35/path = NodePath("Body/BodyCorrect/Anim_stem/stem_correct/SnowPea_Mei_Hair:scale")
-tracks/35/interp = 1
-tracks/35/loop_wrap = true
-tracks/35/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.3333333, 0.29629636), Vector2(0.3333333, 0.32027793), Vector2(0.3333333, 0.2837348), Vector2(0.3333333, 0.2957116)]
-}

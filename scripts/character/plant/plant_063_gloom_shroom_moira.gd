@@ -3,11 +3,12 @@ class_name Plant063GloomShroomMoira
 
 const MOIRA_FUME_RECOLOR_SHADER: Shader = preload("res://shaders/moira_fume_recolor.gdshader")
 
+@export_group("Moira Yellow Fume")
 @export_range(0.0, 1.0, 0.01) var yellow_fume_chance: float = 0.35
-@export var normal_fume_color: Color = Color.WHITE
 @export var yellow_fume_color: Color = Color(1.0, 0.95, 0.0, 1.0)
 @export_range(1.0, 3.0, 0.05) var yellow_fume_alpha_scale: float = 1.45
 @export var yellow_fume_heal_value: int = 45
+@export var normal_fume_color: Color = Color.WHITE
 
 @onready var create_sun_component: CreateSunComponent = $CreateSunComponent
 var yellow_fume_material: ShaderMaterial
@@ -50,7 +51,7 @@ func attack_once():
 
 	var all_enemy: Array[Character000Base] = attack_component.detect_component.get_all_enemy_can_be_attacked()
 	for enemy in all_enemy:
-		enemy.be_attacked_bullet(20, BulletRegistry.AttackMode.Penetration)
+		enemy.be_attacked_bullet(attack_value, BulletRegistry.AttackMode.Penetration)
 
 func heal_plants_in_fume():
 	for plant in get_all_plants_in_fume():

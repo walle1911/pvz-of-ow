@@ -2125,84 +2125,48 @@ tracks/173/keys = {
 tracks/174/type = "value"
 tracks/174/imported = false
 tracks/174/enabled = true
-tracks/174/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingL:scale")
+tracks/174/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:rotation")
 tracks/174/interp = 1
 tracks/174/loop_wrap = true
 tracks/174/keys = {
-"times": PackedFloat32Array(0, 0.5, 1, 1.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0.07, 0.07), Vector2(0.07, 0.07), Vector2(0.07, 0.07), Vector2(0.07, 0.07)]
-}
-tracks/175/type = "value"
-tracks/175/imported = false
-tracks/175/enabled = true
-tracks/175/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:position")
-tracks/175/interp = 1
-tracks/175/loop_wrap = true
-tracks/175/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(34, 23), Vector2(37, 17), Vector2(40, 17.999996), Vector2(42.71, 18.833), Vector2(46.038, 24.626), Vector2(41.258, 19.389), Vector2(38.279, 18.483), Vector2(36.879, 18.852)]
-}
-tracks/176/type = "value"
-tracks/176/imported = false
-tracks/176/enabled = true
-tracks/176/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:rotation")
-tracks/176/interp = 1
-tracks/176/loop_wrap = true
-tracks/176/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [0.0, 0.0, 0.0]
-}
-tracks/177/type = "value"
-tracks/177/imported = false
-tracks/177/enabled = true
-tracks/177/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_Hair:scale")
-tracks/177/interp = 1
-tracks/177/loop_wrap = true
-tracks/177/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0.06, 0.061), Vector2(0.06, 0.061), Vector2(0.06, 0.061)]
-}
-tracks/178/type = "value"
-tracks/178/imported = false
-tracks/178/enabled = true
-tracks/178/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:rotation")
-tracks/178/interp = 1
-tracks/178/loop_wrap = true
-tracks/178/keys = {
 "times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 0.0]
 }
-tracks/179/type = "value"
-tracks/179/imported = false
-tracks/179/enabled = true
-tracks/179/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:scale")
-tracks/179/interp = 1
-tracks/179/loop_wrap = true
-tracks/179/keys = {
-"times": PackedFloat32Array(0, 0.25),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Vector2(0.071128406, 0.07219316), Vector2(0.071128406, 0.07219316)]
-}
-tracks/180/type = "value"
-tracks/180/imported = false
-tracks/180/enabled = true
-tracks/180/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:position")
-tracks/180/interp = 1
-tracks/180/loop_wrap = true
-tracks/180/keys = {
+tracks/175/type = "value"
+tracks/175/imported = false
+tracks/175/enabled = true
+tracks/175/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:position")
+tracks/175/interp = 1
+tracks/175/loop_wrap = true
+tracks/175/keys = {
 "times": PackedFloat32Array(0, 0.5, 1, 1.5),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(50.186, 65.662), Vector2(50.641, 62.032), Vector2(51.096, 65.902), Vector2(49.711, 63.262)]
+}
+tracks/176/type = "value"
+tracks/176/imported = false
+tracks/176/enabled = true
+tracks/176/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingR:scale")
+tracks/176/interp = 1
+tracks/176/loop_wrap = true
+tracks/176/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.41, 0.41)]
+}
+tracks/177/type = "value"
+tracks/177/imported = false
+tracks/177/enabled = true
+tracks/177/path = NodePath("Body/BodyCorrect/Sunflower_Mercy_WingL:scale")
+tracks/177/interp = 1
+tracks/177/loop_wrap = true
+tracks/177/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.46, 0.46)]
 }

@@ -1,6 +1,10 @@
 extends Plant000Base
 class_name Plant043GloomShroom
 
+@export_group("GloomShroom Attack")
+@export var attack_value: int = 20
+@export var attack_cd: float = 2.0
+
 @onready var attack_component: AttackComponentBulletBase = $AttackComponent
 @onready var all_bullet_fx: Array[Node2D] = [%Bullet_FX, %Bullet_FX2, %Bullet_FX3, %Bullet_FX4]
 var all_bullet_fx_particles :Array[Array]
@@ -8,6 +12,8 @@ var num_attack :int = 0
 
 func ready_norm():
 	super()
+	attack_component.attack_cd = attack_cd
+	attack_component.bullet_attack_cd_timer.wait_time = attack_cd
 	for bullet_fx in all_bullet_fx:
 		var bullet_fx_particles :Array[GPUParticles2D] = []
 		for p in bullet_fx.get_children():
@@ -29,4 +35,4 @@ func attack_once():
 
 	var all_enemy:Array[Character000Base] = attack_component.detect_component.get_all_enemy_can_be_attacked()
 	for enemy in all_enemy:
-		enemy.be_attacked_bullet(20,BulletRegistry.AttackMode.Penetration)
+		enemy.be_attacked_bullet(attack_value, BulletRegistry.AttackMode.Penetration)

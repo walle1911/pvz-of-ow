@@ -43,19 +43,6 @@ func _ready() -> void:
 				init_card(card, card_para)
 				all_plant_card_prefabs[card.card_plant_type] = card
 				plant_card_ids[card.card_plant_type] = plant_i
-	var mccree_plant_type:CharacterRegistry.PlantType = 51
-	if not all_plant_card_prefabs.has(mccree_plant_type) \
-	and all_plant_card_prefabs.has(CharacterRegistry.PlantType.P050PeaShooterSoldier76):
-		var mccree_card:Card = all_plant_card_prefabs[CharacterRegistry.PlantType.P050PeaShooterSoldier76].duplicate()
-		mccree_card.card_plant_type = mccree_plant_type
-		plant_i += 1
-		init_card(mccree_card, {
-			Card.E_CInitAttr.CardId:plant_i,
-			Card.E_CInitAttr.CoolTime:Global.character_registry.PlantInfo[mccree_card.card_plant_type][CharacterRegistry.PlantInfoAttribute.CoolTime],
-			Card.E_CInitAttr.SunCost:Global.character_registry.PlantInfo[mccree_card.card_plant_type][CharacterRegistry.PlantInfoAttribute.SunCost]
-		})
-		all_plant_card_prefabs[mccree_card.card_plant_type] = mccree_card
-		plant_card_ids[mccree_card.card_plant_type] = plant_i
 	var zombie_i = -1
 	all_zombie_card_prefabs.clear()
 	for zombie_cards_parent_node in all_zombie_cards_parent_node_root:
