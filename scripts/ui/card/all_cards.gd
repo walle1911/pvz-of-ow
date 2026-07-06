@@ -25,6 +25,9 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		visible = false
 
+	if not is_instance_valid(Global.global_game_state):
+		return
+
 	var plant_cards_by_type: Dictionary[CharacterRegistry.PlantType, Card] = {}
 	var plant_card_order: Array[CharacterRegistry.PlantType] = []
 	all_plant_card_prefabs.clear()
