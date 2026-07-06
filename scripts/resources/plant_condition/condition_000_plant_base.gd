@@ -30,7 +30,7 @@ func judge_is_can_plant(plant_cell:PlantCell, curr_plant_type:CharacterRegistry.
 			## 如果是壳类植物,若当前植物格子中Norm为玉米加农炮
 			if place_plant_in_cell == CharacterRegistry.PlacePlantInCell.Shell \
 			and is_instance_valid(plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm])\
-			and plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm].plant_type == CharacterRegistry.PlantType.P048CobCannon:
+			and plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm].plant_type == CharacterRegistry.PlantType.P547CobCannon:
 				return false
 
 			return true

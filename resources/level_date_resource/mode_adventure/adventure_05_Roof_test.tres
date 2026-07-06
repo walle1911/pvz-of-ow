@@ -5,14 +5,14 @@
 
 [sub_resource type="Resource" id="Resource_hl02h"]
 script = ExtResource("1_hl02h")
-plant_type = 34
+plant_type = 533
 plant_cell_pos = Vector2i(0, 1)
 is_imitater_plant = true
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_i5mhj"]
 script = ExtResource("1_hl02h")
-plant_type = 34
+plant_type = 533
 plant_cell_pos = Vector2i(0, 2)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
@@ -22,26 +22,26 @@ game_sences = 2
 game_BG = 4
 game_BGM = 4
 all_pre_plant_data = Array[ExtResource("1_hl02h")]([SubResource("Resource_hl02h"), SubResource("Resource_i5mhj")])
-zombie_refresh_types = Array[int]([7, 1, 3, 5, 6, 8, 24, 22, 9, 15])
+zombie_refresh_types = Array[int]([506, 500, 502, 504, 505, 507, 523, 521, 508, 514])
 is_bungi = true
 start_sun = 50000
 all_card_plant_type_probability = Dictionary[int, int]({
-3: 1,
-7: 1,
-18: 1,
-21: 1,
-33: 1,
-34: 1,
-35: 1,
-40: 1
+502: 1,
+506: 1,
+517: 1,
+520: 1,
+532: 1,
+533: 1,
+534: 1,
+539: 1
 })
 card_order_plant = Dictionary[int, int]({
-0: 5,
-1: 24,
-2: 40,
-3: 32,
-4: 36,
-9: 45
+0: 504,
+1: 523,
+2: 539,
+3: 531,
+4: 535,
+9: 544
 })
 create_new_card_speed = 1.5
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

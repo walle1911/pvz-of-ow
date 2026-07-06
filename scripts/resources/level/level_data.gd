@@ -72,11 +72,11 @@ func set_choose_level(curr_game_mode: MainSceneRegistry.MainScenes, curr_level_p
 @export var max_wave := 30
 ## 僵尸种类刷新列表 多轮游戏且自然出怪 自动更新自然出怪列表
 @export var zombie_refresh_types: Array[CharacterRegistry.ZombieType] = [
-	CharacterRegistry.ZombieType.Z001Norm, # 普通僵尸
-	#CharacterRegistry.ZombieType.Z002Flag, # 旗帜僵尸
-	CharacterRegistry.ZombieType.Z003Cone, # 路障僵尸
-	CharacterRegistry.ZombieType.Z004PoleVaulter, # 撑杆僵尸
-	CharacterRegistry.ZombieType.Z005Bucket, # 铁桶僵尸
+	CharacterRegistry.ZombieType.Z500Norm, # 普通僵尸
+	#CharacterRegistry.ZombieType.Z501Flag, # 旗帜僵尸
+	CharacterRegistry.ZombieType.Z502Cone, # 路障僵尸
+	CharacterRegistry.ZombieType.Z503PoleVaulter, # 撑杆僵尸
+	CharacterRegistry.ZombieType.Z504Bucket, # 铁桶僵尸
 ]
 ## 是否有蹦极僵尸
 @export var is_bungi := false
@@ -201,8 +201,9 @@ var save_game_data_main_game: ResourceSaveGameMainGame
 
 ## 游戏开始会根据参数初始化一些硬性的参数。
 ## 卡槽: 传送带禁止选卡、禁止天降阳光。预选卡用 0 补全。
-## 出怪: 正常模式下刷新列表会按白名单过滤；禁止在列表中写 Z021Bungi，应使用 is_bungi。
+## 出怪: 正常模式下刷新列表会按白名单过滤；禁止在列表中写 Z520Bungi，应使用 is_bungi。
 func init_para() -> void:
+	_migrate_legacy_character_type_ids()
 	_apply_card_mode_constraints()
 	_pad_prechosen_cards()
 	_init_zombie_refresh_from_whitelist()
@@ -210,6 +211,33 @@ func init_para() -> void:
 	_init_pot_mode()
 	_apply_zombie_mode_rules()
 	_maybe_load_multi_round_save()
+
+
+func _migrate_legacy_character_type_ids() -> void:
+	var force_legacy_ids := false
+	zombie_refresh_types = GlobalUtils.migrate_legacy_zombie_type_array(zombie_refresh_types, force_legacy_ids)
+	pre_choosed_card_list_plant = GlobalUtils.migrate_legacy_plant_type_array(pre_choosed_card_list_plant, force_legacy_ids)
+	pre_choosed_card_list_zombie = GlobalUtils.migrate_legacy_zombie_type_array(pre_choosed_card_list_zombie, force_legacy_ids)
+
+	all_card_plant_type_probability = GlobalUtils.migrate_legacy_plant_type_key_dict(all_card_plant_type_probability, force_legacy_ids)
+	all_card_zombie_type_probability = GlobalUtils.migrate_legacy_zombie_type_key_dict(all_card_zombie_type_probability, force_legacy_ids)
+	card_order_plant = GlobalUtils.migrate_legacy_plant_type_value_dict(card_order_plant, force_legacy_ids)
+	card_order_zombie = GlobalUtils.migrate_legacy_zombie_type_value_dict(card_order_zombie, force_legacy_ids)
+
+	all_card_plant_type_probability_seed_rain = GlobalUtils.migrate_legacy_plant_type_key_dict(all_card_plant_type_probability_seed_rain, force_legacy_ids)
+	all_card_zombie_type_probability_seed_rain = GlobalUtils.migrate_legacy_zombie_type_key_dict(all_card_zombie_type_probability_seed_rain, force_legacy_ids)
+	card_order_plant_seed_rain = GlobalUtils.migrate_legacy_plant_type_value_dict(card_order_plant_seed_rain, force_legacy_ids)
+	card_order_zombie_seed_rain = GlobalUtils.migrate_legacy_zombie_type_value_dict(card_order_zombie_seed_rain, force_legacy_ids)
+
+	candidate_plant_pot = GlobalUtils.migrate_legacy_plant_type_key_dict(candidate_plant_pot, force_legacy_ids)
+	candidate_zombie_pot = GlobalUtils.migrate_legacy_zombie_type_key_dict(candidate_zombie_pot, force_legacy_ids)
+	random_pot_plant = GlobalUtils.migrate_legacy_plant_type_key_dict(random_pot_plant, force_legacy_ids)
+	random_pot_zombie = GlobalUtils.migrate_legacy_zombie_type_key_dict(random_pot_zombie, force_legacy_ids)
+	plant_pot = GlobalUtils.migrate_legacy_plant_type_key_dict(plant_pot, force_legacy_ids)
+	zombie_pot = GlobalUtils.migrate_legacy_zombie_type_key_dict(zombie_pot, force_legacy_ids)
+
+	all_plants_weight_on_zombie_mode = GlobalUtils.migrate_legacy_plant_type_key_dict(all_plants_weight_on_zombie_mode, force_legacy_ids)
+	all_must_plants_on_zombie_mode = GlobalUtils.migrate_legacy_plant_type_key_dict(all_must_plants_on_zombie_mode, force_legacy_ids)
 
 
 func _apply_card_mode_constraints() -> void:
@@ -389,7 +417,7 @@ func delete_game_data():
 var whitelist_refresh_zombie_types: Array[CharacterRegistry.ZombieType] = []
 
 ## 根据白名单过滤出怪类型列表。
-## 不修改入参 zombie_types，返回新数组。若列表中含 Z021Bungi，会将本资源的 is_bungi 设为 true。
+## 不修改入参 zombie_types，返回新数组。若列表中含 Z520Bungi，会将本资源的 is_bungi 设为 true。
 func filter_invalid_zombie_refresh_types(
 	zombie_types: Array[CharacterRegistry.ZombieType],
 	curr_whitelist_refresh_zombie_types: Array[CharacterRegistry.ZombieType]
@@ -405,8 +433,8 @@ func filter_invalid_zombie_refresh_types(
 			)
 			is_err = true
 			continue
-		if zt == CharacterRegistry.ZombieType.Z021Bungi:
-			print("warning: 出怪刷新列表禁止使用 Z021Bungi ,已修改为选择 is_bungi 参数")
+		if zt == CharacterRegistry.ZombieType.Z520Bungi:
+			print("warning: 出怪刷新列表禁止使用 Z520Bungi ,已修改为选择 is_bungi 参数")
 			is_bungi = true
 			is_err = true
 			continue

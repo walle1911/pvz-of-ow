@@ -5,12 +5,12 @@
 [ext_resource type="Script" uid="uid://jru6xfv7g4f1" path="res://scripts/choose_level/choose_level.gd" id="1_qbhvk"]
 [ext_resource type="PackedScene" uid="uid://bhjnqm3kqr2fq" path="res://scenes/choose_level/choose_level_button.tscn" id="4_nodl8"]
 [ext_resource type="Texture2D" uid="uid://hb4b6ujaahoc" path="res://assets/image/Almanac/Almanac_GroundDay.jpg" id="5_2o48a"]
-[ext_resource type="PackedScene" uid="uid://cfc5vrs1dcy0j" path="res://scenes/character/plant/plant_001_pea_shooter_single.tscn" id="5_k1h2l"]
+[ext_resource type="PackedScene" uid="uid://cfc5vrs1dcy0j" path="res://scenes/character/plant/plant_500_pea_shooter_single.tscn" id="5_k1h2l"]
 [ext_resource type="Texture2D" uid="uid://bvp2j68muqgm8" path="res://assets/image/Almanac/Almanac_GroundNight.jpg" id="7_7gy53"]
 [ext_resource type="Resource" uid="uid://cdcg662one7df" path="res://resources/level_date_resource/mode_adventure/adventure_01_day.tres" id="9_ykbb6"]
 [ext_resource type="Resource" uid="uid://d06li2axn7r16" path="res://resources/level_date_resource/mode_adventure/adventure_03_pool.tres" id="11_0fwuh"]
 [ext_resource type="Texture2D" uid="uid://bx8xtt6oantp1" path="res://assets/image/Almanac/Almanac_GroundPool.jpg" id="11_ddvl6"]
-[ext_resource type="PackedScene" uid="uid://prux5sri4p8i" path="res://scenes/character/plant/plant_009_puff.tscn" id="11_k1h2l"]
+[ext_resource type="PackedScene" uid="uid://prux5sri4p8i" path="res://scenes/character/plant/plant_508_puff.tscn" id="11_k1h2l"]
 [ext_resource type="Texture2D" uid="uid://xc3kqag3vqlq" path="res://assets/image/ui/ui_level/Almanac_CloseButton.png" id="11_y0ybt"]
 [ext_resource type="Texture2D" uid="uid://bqtnl31pv3rv3" path="res://assets/reanim/Hammer_3.png" id="12_1i0xb"]
 [ext_resource type="Texture2D" uid="uid://c82uuprowr5d" path="res://assets/image/ui/ui_level/Almanac_CloseButtonHighlight.png" id="12_7gy53"]
@@ -18,11 +18,11 @@
 [ext_resource type="BitMap" uid="uid://bc7yq02xscrlr" path="res://assets/image/ui/ui_level/Almanac_CloseButton_Mask.png" id="13_c1hwb"]
 [ext_resource type="Texture2D" uid="uid://qtifu6lsmq6x" path="res://assets/reanim/hammer_1.png" id="13_ddvl6"]
 [ext_resource type="Texture2D" uid="uid://dweon5ml8otw5" path="res://assets/reanim/Hammer_2.png" id="14_a108d"]
-[ext_resource type="PackedScene" uid="uid://w2cplfosy68e" path="res://scenes/character/plant/plant_017_lily_pad.tscn" id="14_dw7cd"]
+[ext_resource type="PackedScene" uid="uid://w2cplfosy68e" path="res://scenes/character/plant/plant_516_lily_pad.tscn" id="14_dw7cd"]
 [ext_resource type="Resource" uid="uid://b0r3pbho2r7o7" path="res://resources/level_date_resource/mode_adventure/adventure_04_fog.tres" id="14_i8cvr"]
 [ext_resource type="Texture2D" uid="uid://dwva3w3r5kjvb" path="res://assets/image/Almanac/Almanac_GroundNightPool.jpg" id="16_5nyce"]
 [ext_resource type="Resource" uid="uid://c8yt6n65ponc6" path="res://resources/level_date_resource/mode_minigame/minigame_01_bowling.tres" id="17_7hqj2"]
-[ext_resource type="PackedScene" uid="uid://dvtg44jen3lb6" path="res://scenes/character/plant/plant_025_sea_shroom.tscn" id="17_i3mhq"]
+[ext_resource type="PackedScene" uid="uid://dvtg44jen3lb6" path="res://scenes/character/plant/plant_524_sea_shroom.tscn" id="17_i3mhq"]
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="18_7hqj2"]
 [ext_resource type="Resource" uid="uid://3mvuumsl5v6c" path="res://resources/level_date_resource/mode_minigame/minigame_02_hammer_zombie.tres" id="19_om7pm"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="19_x6sup"]
@@ -30,8 +30,8 @@
 [ext_resource type="Resource" uid="uid://cxdnr4j80e85h" path="res://resources/level_date_resource/mode_minigame/minigame_03_mini_zombie.tres" id="23_x6sup"]
 [ext_resource type="Resource" uid="uid://bdrb4tnjvx61w" path="res://resources/level_date_resource/mode_minigame/minigame_04_seed_rain.tres" id="25_nodl8"]
 [ext_resource type="Texture2D" uid="uid://bj57iq2dgnb0g" path="res://assets/image/Almanac/Almanac_GroundRoof.jpg" id="26_dfwdo"]
-[ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_001_norm.tscn" id="26_hm51y"]
-[ext_resource type="PackedScene" uid="uid://g6ybgmhkx6rj" path="res://scenes/character/plant/plant_033_cabbage_pult.tscn" id="27_pcq3e"]
+[ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_500_norm.tscn" id="26_hm51y"]
+[ext_resource type="PackedScene" uid="uid://g6ybgmhkx6rj" path="res://scenes/character/plant/plant_532_cabbage_pult.tscn" id="27_pcq3e"]
 [ext_resource type="PackedScene" uid="uid://cv3iw5srgpusv" path="res://scenes/main_game_bg/rain.tscn" id="28_0fwuh"]
 [ext_resource type="Theme" uid="uid://em12la0rqibq" path="res://data/PVZ_theme.tres" id="29_bfj22"]
 [ext_resource type="Texture2D" uid="uid://cdm356vgex30b" path="res://assets/image/ui/ui_card/SeedPacket_Larger.png" id="30_7hqj2"]
@@ -206,7 +206,7 @@ scale = Vector2(0.6, 0.6)
 mouse_filter = 2
 texture = ExtResource("5_2o48a")
 
-[node name="Plant001PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("5_k1h2l")]
+[node name="Plant500PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("5_k1h2l")]
 position = Vector2(89.166626, 88.11499)
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 character_init_type = 1
@@ -249,7 +249,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("7_7gy53")
 
-[node name="Plant009Puff" parent="AllPage/GridContainer/ChooseLevelButton2/Panel/TextureRect" instance=ExtResource("11_k1h2l")]
+[node name="Plant508Puff" parent="AllPage/GridContainer/ChooseLevelButton2/Panel/TextureRect" instance=ExtResource("11_k1h2l")]
 position = Vector2(92.5, 94.166664)
 character_init_type = 1
 
@@ -291,7 +291,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_ddvl6")
 
-[node name="Plant017LilyPad" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("14_dw7cd")]
+[node name="Plant516LilyPad" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("14_dw7cd")]
 position = Vector2(98.6383, 129.902)
 character_init_type = 1
 
@@ -333,7 +333,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("16_5nyce")
 
-[node name="Plant025SeaShroom" parent="AllPage/GridContainer/ChooseLevelButton4/Panel/TextureRect" instance=ExtResource("17_i3mhq")]
+[node name="Plant524SeaShroom" parent="AllPage/GridContainer/ChooseLevelButton4/Panel/TextureRect" instance=ExtResource("17_i3mhq")]
 position = Vector2(93.6383, 116.569)
 character_init_type = 1
 
@@ -530,12 +530,12 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("5_2o48a")
 
-[node name="Plant001PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButton7/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("5_k1h2l")]
+[node name="Plant500PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButton7/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("5_k1h2l")]
 position = Vector2(85.8333, 88.115)
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 character_init_type = 1
 
-[node name="Zombie001Norm" parent="AllPage/GridContainer/ChooseLevelButton7/Panel/TextureRect" instance=ExtResource("26_hm51y")]
+[node name="Zombie500Norm" parent="AllPage/GridContainer/ChooseLevelButton7/Panel/TextureRect" instance=ExtResource("26_hm51y")]
 position = Vector2(151.66666, 93.33333)
 scale = Vector2(0.5, 0.5)
 character_init_type = 1
@@ -637,31 +637,31 @@ vertical_alignment = 1
 [node name="CharacterStatic" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg"]
 position = Vector2(24, 30)
 
-[node name="Plant017LilyPad" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic"]
+[node name="Plant516LilyPad" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic"]
 position = Vector2(3, 15)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad"]
+[node name="Shadow" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad"]
 visible = false
 texture = ExtResource("31_om7pm")
 
-[node name="Body" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad"]
+[node name="Body" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad"]
 
-[node name="BodyCorrect" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad/Body"]
+[node name="BodyCorrect" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad/Body"]
 position = Vector2(-44, -67)
 
-[node name="shadow" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad/Body/BodyCorrect"]
+[node name="shadow" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad/Body/BodyCorrect"]
 visible = false
 position = Vector2(40, 61)
 texture = ExtResource("31_om7pm")
 
-[node name="Anim_idle" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad/Body/BodyCorrect"]
+[node name="Anim_idle" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad/Body/BodyCorrect"]
 position = Vector2(-0.2, 5.5)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("32_x6sup")
 centered = false
 
-[node name="Anim_blink" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant017LilyPad/Body/BodyCorrect"]
+[node name="Anim_blink" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton8/Panel/TextureRect/Card17/CardBg/CharacterStatic/Plant516LilyPad/Body/BodyCorrect"]
 visible = false
 position = Vector2(46, 50)
 scale = Vector2(0.735294, 0.695652)
@@ -709,7 +709,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("26_dfwdo")
 
-[node name="Plant033CabbagePult" parent="AllPage/GridContainer/ChooseLevelButton9/Panel/TextureRect" instance=ExtResource("27_pcq3e")]
+[node name="Plant532CabbagePult" parent="AllPage/GridContainer/ChooseLevelButton9/Panel/TextureRect" instance=ExtResource("27_pcq3e")]
 position = Vector2(103.233, 113.353)
 character_init_type = 1
 

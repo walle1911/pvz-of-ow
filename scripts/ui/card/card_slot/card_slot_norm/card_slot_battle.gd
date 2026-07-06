@@ -106,7 +106,7 @@ func _try_squash_doomfist_attack_coffee_bean_ana():
 			return
 
 func _try_squash_doomfist_attack_card(card:Card) -> bool:
-	if card.card_plant_type != CharacterRegistry.PlantType.P067CoffeeBeanAna:
+	if card.card_plant_type != CharacterRegistry.PlantType.P036CoffeeBeanAna:
 		return false
 	if card.is_hidden_by_squash_doomfist:
 		return false

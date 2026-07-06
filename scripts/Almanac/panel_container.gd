@@ -62,7 +62,7 @@ func create_plant(curr_plant_type:CharacterRegistry.PlantType):
 ## 生成的特殊植物修改位置
 func special_plant_update_pos(new_show_plant:Plant000Base):
 	match new_show_plant.plant_type:
-		CharacterRegistry.PlantType.P048CobCannon:
+		CharacterRegistry.PlantType.P547CobCannon:
 			new_show_plant.position = Vector2(60,130)
 
 
@@ -87,7 +87,7 @@ func create_zombie(curr_zombie_type:CharacterRegistry.ZombieType):
 ## 生成的特殊僵尸修改位置
 func special_zombie_update_pos(new_show_zombie:Zombie000Base):
 	match new_show_zombie.zombie_type:
-		CharacterRegistry.ZombieType.Z024Gargantuar:
+		CharacterRegistry.ZombieType.Z024GargantuarReinhardt, CharacterRegistry.ZombieType.Z523Gargantuar:
 			new_show_zombie.position = Vector2(100,200)
 
 

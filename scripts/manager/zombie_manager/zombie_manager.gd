@@ -262,29 +262,29 @@ func update_multi_round_zombie_refresh_types(curr_round:int, game_sences:MainSce
 	zombie_refresh_types.clear()
 	# 第一次选卡 (curr_round == 1) 的 “固定三种”：普僵 + 路障 + 铁桶
 	if curr_round == 1:
-		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z001Norm)
-		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z003Cone)
-		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z005Bucket)
+		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z500Norm)
+		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z502Cone)
+		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z504Bucket)
 	else:
 		var whitelist_refresh_zombie_types_copy = Global.global_read_data.whitelist_refresh_zombie_types_with_zombie_row_type[Global.main_scene_registry.ZombieRowTypewithMainScenesMap[game_sences]].duplicate(true)
-		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z001Norm)
-		whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z001Norm)
+		zombie_refresh_types.append(CharacterRegistry.ZombieType.Z500Norm)
+		whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z500Norm)
 		# 第二种：80% 路障 (Cone)，20% 报纸 (Paper)
 		var prob = randf()
 		if prob < 0.8:
-			zombie_refresh_types.append(CharacterRegistry.ZombieType.Z003Cone)
-			whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z003Cone)
+			zombie_refresh_types.append(CharacterRegistry.ZombieType.Z502Cone)
+			whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z502Cone)
 		else:
-			zombie_refresh_types.append(CharacterRegistry.ZombieType.Z006Paper)
-			whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z006Paper)
+			zombie_refresh_types.append(CharacterRegistry.ZombieType.Z505Paper)
+			whitelist_refresh_zombie_types_copy.erase(CharacterRegistry.ZombieType.Z505Paper)
 		## 第二轮之后可能刷新僵尸(min(轮次*2,8)+2)个
 		for i in range(min(curr_round * 2, 8)):
 			var zombie_type_choose = whitelist_refresh_zombie_types_copy.pick_random()
 			zombie_refresh_types.append(zombie_type_choose)
 			whitelist_refresh_zombie_types_copy.erase(zombie_type_choose)
 
-			if zombie_type_choose == CharacterRegistry.ZombieType.Z021Bungi:
-				print("warning: 出怪刷新列表禁止使用 Z021Bungi ,已修改为选择 is_bungi 参数")
+			if zombie_type_choose == CharacterRegistry.ZombieType.Z520Bungi:
+				print("warning: 出怪刷新列表禁止使用 Z520Bungi ,已修改为选择 is_bungi 参数")
 				is_bungi = true
 				zombie_refresh_types.erase(zombie_type_choose)
 
@@ -295,7 +295,7 @@ func update_multi_round_zombie_refresh_types(curr_round:int, game_sences:MainSce
 	for zombie_type in zombie_refresh_types:
 		print(Global.character_registry.get_zombie_info(zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieName))
 	if is_bungi:
-		print(Global.character_registry.get_zombie_info(CharacterRegistry.ZombieType.Z021Bungi, CharacterRegistry.ZombieInfoAttribute.ZombieName))
+		print(Global.character_registry.get_zombie_info(CharacterRegistry.ZombieType.Z520Bungi, CharacterRegistry.ZombieInfoAttribute.ZombieName))
 
 
 #endregion

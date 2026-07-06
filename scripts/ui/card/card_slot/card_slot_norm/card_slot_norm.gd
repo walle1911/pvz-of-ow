@@ -38,15 +38,19 @@ func _on_re_card_button_pressed() -> void:
 			if card_type_data.get("is_imitater", false):
 				## 未选择模仿者时
 				if not card_slot_candidate.card_imitater.is_be_choosed_imitater:
-					card_slot_candidate.all_card_candidate_containers_plant_imitater[AllCards.plant_card_ids[plant_type]].card._on_button_pressed()
+					var plant_imitater_container := _get_candidate_plant_container(plant_type, true)
+					if plant_imitater_container != null:
+						plant_imitater_container.card._on_button_pressed()
 			else:
-				if not card_slot_candidate.all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].card.is_choosed_pre_card:
-					card_slot_candidate.all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].card._on_button_pressed()
+				var plant_container := _get_candidate_plant_container(plant_type)
+				if plant_container != null and not plant_container.card.is_choosed_pre_card:
+					plant_container.card._on_button_pressed()
 
 		elif card_type_data.has("zombie_type"):
 			var zombie_type:CharacterRegistry.ZombieType = card_type_data["zombie_type"]
-			if not card_slot_candidate.all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].card.is_choosed_pre_card:
-				card_slot_candidate.all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].card._on_button_pressed()
+			var zombie_container := _get_candidate_zombie_container(zombie_type)
+			if zombie_container != null and not zombie_container.card.is_choosed_pre_card:
+				zombie_container.card._on_button_pressed()
 
 
 
@@ -86,13 +90,21 @@ func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], ca
 		var character_type:CharacterRegistry.CharacterType = GlobalUtils.get_character_type(plant_type, zombie_type)
 		match character_type:
 			CharacterRegistry.CharacterType.Plant:
-				card_slot_candidate.all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].card.visible = false
-				card_slot_candidate.all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].card.is_choosed_pre_card = true
-				card = AllCards.all_plant_card_prefabs[plant_type].duplicate()
+				var plant_container := _get_candidate_plant_container(plant_type)
+				var plant_card_prefab := _get_plant_card_prefab(plant_type)
+				if plant_container == null or plant_card_prefab == null:
+					continue
+				plant_container.card.visible = false
+				plant_container.card.is_choosed_pre_card = true
+				card = plant_card_prefab.duplicate()
 			CharacterRegistry.CharacterType.Zombie:
-				card_slot_candidate.all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].card.visible = false
-				card_slot_candidate.all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].card.is_choosed_pre_card = true
-				card = AllCards.all_zombie_card_prefabs[zombie_type].duplicate()
+				var zombie_container := _get_candidate_zombie_container(zombie_type)
+				var zombie_card_prefab := _get_zombie_card_prefab(zombie_type)
+				if zombie_container == null or zombie_card_prefab == null:
+					continue
+				zombie_container.card.visible = false
+				zombie_container.card.is_choosed_pre_card = true
+				card = zombie_card_prefab.duplicate()
 			CharacterRegistry.CharacterType.Null:
 				continue
 
@@ -103,6 +115,39 @@ func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], ca
 		pre_choosed_card(card, card_slot_battle.cards_placeholder[len(card_slot_battle.curr_cards)-1])
 	## 预选卡断开鼠标点击信号
 	card_disconnect_click_in_choose()
+
+func _get_candidate_plant_container(plant_type: CharacterRegistry.PlantType, is_imitater := false) -> CardCandidateContainer:
+	if not AllCards.plant_card_ids.has(plant_type):
+		push_warning("跳过不存在的植物卡片编号: %s" % plant_type)
+		return null
+	var card_id: int = AllCards.plant_card_ids[plant_type]
+	var containers: Dictionary = card_slot_candidate.all_card_candidate_containers_plant_imitater if is_imitater else card_slot_candidate.all_card_candidate_containers_plant
+	if not containers.has(card_id):
+		push_warning("跳过不存在的植物卡槽编号: %s" % card_id)
+		return null
+	return containers[card_id]
+
+func _get_candidate_zombie_container(zombie_type: CharacterRegistry.ZombieType) -> CardCandidateContainer:
+	if not AllCards.zombie_card_ids.has(zombie_type):
+		push_warning("跳过不存在的僵尸卡片编号: %s" % zombie_type)
+		return null
+	var card_id: int = AllCards.zombie_card_ids[zombie_type]
+	if not card_slot_candidate.all_card_candidate_containers_zombie.has(card_id):
+		push_warning("跳过不存在的僵尸卡槽编号: %s" % card_id)
+		return null
+	return card_slot_candidate.all_card_candidate_containers_zombie[card_id]
+
+func _get_plant_card_prefab(plant_type: CharacterRegistry.PlantType) -> Card:
+	if not AllCards.all_plant_card_prefabs.has(plant_type):
+		push_warning("跳过不存在的植物卡片预制: %s" % plant_type)
+		return null
+	return AllCards.all_plant_card_prefabs[plant_type]
+
+func _get_zombie_card_prefab(zombie_type: CharacterRegistry.ZombieType) -> Card:
+	if not AllCards.all_zombie_card_prefabs.has(zombie_type):
+		push_warning("跳过不存在的僵尸卡片预制: %s" % zombie_type)
+		return null
+	return AllCards.all_zombie_card_prefabs[zombie_type]
 
 ## 游戏选卡阶段时，卡片被点击
 func _on_card_click(card:Card):
@@ -224,4 +269,3 @@ func move_card_slot_battle(is_appeal:bool, appeal_time:= 0.2):
 	else:
 		tween.tween_property(card_slot_battle, "position",Vector2(0, -100.0), appeal_time)
 	await tween.finished
-

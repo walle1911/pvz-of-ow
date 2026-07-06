@@ -11,10 +11,10 @@ var whitelist_refresh_zombie_types_with_zombie_row_type: Dictionary[CharacterReg
 ## 自然刷怪出现的僵尸黑名单类型
 var blacklist_refresh_zombie_types: Array[CharacterRegistry.ZombieType] = [
 	CharacterRegistry.ZombieType.Null,
-	CharacterRegistry.ZombieType.Z002Flag,
-	CharacterRegistry.ZombieType.Z011Duckytube,
-	CharacterRegistry.ZombieType.Z010Dancer,
-	CharacterRegistry.ZombieType.Z025Imp,
+	CharacterRegistry.ZombieType.Z501Flag,
+	CharacterRegistry.ZombieType.Z510Duckytube,
+	CharacterRegistry.ZombieType.Z509Dancer,
+	CharacterRegistry.ZombieType.Z524Imp,
 	CharacterRegistry.ZombieType.Z1001BobsledSingle,
 ]
 
@@ -22,22 +22,25 @@ var blacklist_refresh_zombie_types: Array[CharacterRegistry.ZombieType] = [
 var whitelist_plant_types_with_pot: Array[CharacterRegistry.PlantType] = []
 ## 罐子模式无冷却植物卡牌类型
 var zero_cd_plnat_card_type_on_pot_mode: Array = [
-	CharacterRegistry.PlantType.P017LilyPad,
-	CharacterRegistry.PlantType.P034FlowerPot,
-	CharacterRegistry.PlantType.P036CoffeeBean,
+	CharacterRegistry.PlantType.P516LilyPad,
+	CharacterRegistry.PlantType.P533FlowerPot,
+	CharacterRegistry.PlantType.P036CoffeeBeanAna,
+	CharacterRegistry.PlantType.P535CoffeeBean,
 ]
 
 ## 随机罐子刷新的植物黑名单类型(null等)
 var blacklist_plant_types_with_pot: Array[CharacterRegistry.PlantType] = [
 	CharacterRegistry.PlantType.Null,
-	CharacterRegistry.PlantType.P036CoffeeBean,
-	CharacterRegistry.PlantType.P999Imitater,
+	CharacterRegistry.PlantType.P036CoffeeBeanAna,
+	CharacterRegistry.PlantType.P535CoffeeBean,
+	CharacterRegistry.PlantType.P999ImitaterEcho,
+	CharacterRegistry.PlantType.P548Imitater,
 	CharacterRegistry.PlantType.P1000Sprout,
 ]
 ## 随机罐子刷新的僵尸黑名单,白名单使用自然刷怪白名单
 var blacklist_zombie_types_with_pot: Array[CharacterRegistry.ZombieType] = [
 	CharacterRegistry.ZombieType.Null,
-	CharacterRegistry.ZombieType.Z011Duckytube,
+	CharacterRegistry.ZombieType.Z510Duckytube,
 ]
 
 func _ready() -> void:

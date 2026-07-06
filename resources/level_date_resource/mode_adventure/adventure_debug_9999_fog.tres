@@ -5,27 +5,27 @@
 
 [sub_resource type="Resource" id="Resource_pre_repeater"]
 script = ExtResource("2_preplant")
-plant_type = 8
+plant_type = 507
 plant_cell_pos = Vector2i(0, 1)
 
 [sub_resource type="Resource" id="Resource_pre_fume"]
 script = ExtResource("2_preplant")
-plant_type = 11
+plant_type = 510
 plant_cell_pos = Vector2i(0, 2)
 
 [sub_resource type="Resource" id="Resource_pre_lilypad"]
 script = ExtResource("2_preplant")
-plant_type = 17
+plant_type = 516
 plant_cell_pos = Vector2i(0, 3)
 
 [sub_resource type="Resource" id="Resource_pre_cornpult"]
 script = ExtResource("2_preplant")
-plant_type = 35
+plant_type = 534
 plant_cell_pos = Vector2i(0, 4)
 
 [sub_resource type="Resource" id="Resource_pre_magnet"]
 script = ExtResource("2_preplant")
-plant_type = 32
+plant_type = 531
 plant_cell_pos = Vector2i(0, 5)
 
 [resource]
@@ -41,6 +41,6 @@ is_zombie_can_home = false
 look_show_zombie = true
 monster_mode = 1
 max_wave = 30
-zombie_refresh_types = Array[int]([1, 3, 5, 8, 12, 15])
+zombie_refresh_types = Array[int]([500, 502, 504, 507, 511, 514])
 max_choosed_card_num = 15
 start_sun = 9999

@@ -688,32 +688,32 @@ sun_cost = 0
 [node name="CardBg" parent="CardSlotCandidate/ImitaterBG/CardImitater" index="0"]
 texture = ExtResource("15_v6er4")
 
-[node name="Plant999Imitater" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic" index="0" unique_id=1198145327]
+[node name="Plant548Imitater" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic" index="0" unique_id=1198145327]
 position = Vector2(1, 15)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater" unique_id=821437405]
+[node name="Shadow" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater" unique_id=821437405]
 visible = false
 texture = ExtResource("16_336fv")
 
-[node name="Body" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater" unique_id=2060421850]
+[node name="Body" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater" unique_id=2060421850]
 script = ExtResource("17_0r41g")
 
-[node name="BodyCorrect" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body" unique_id=1929732417]
+[node name="BodyCorrect" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body" unique_id=1929732417]
 position = Vector2(-40, -69)
 
-[node name="Anim_blink" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=1390124733]
+[node name="Anim_blink" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=1390124733]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=1024171751]
+[node name="Anim_idle" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=1024171751]
 visible = false
 centered = false
 
-[node name="Anim_explode" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=780183857]
+[node name="Anim_explode" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=780183857]
 centered = false
 
-[node name="Imitater_root4" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=602232660]
+[node name="Imitater_root4" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=602232660]
 visible = false
 position = Vector2(62.8, 49.1)
 rotation = 2.572615
@@ -722,7 +722,7 @@ skew = -3.1154125
 texture = ExtResource("18_b6s1c")
 centered = false
 
-[node name="Imitater_root3" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=1666911874]
+[node name="Imitater_root3" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=1666911874]
 visible = false
 position = Vector2(55.8, 29.6)
 rotation = 0.249582
@@ -730,7 +730,7 @@ scale = Vector2(0.799, 0.819)
 texture = ExtResource("19_kuj76")
 centered = false
 
-[node name="Imitater_root2" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=337413407]
+[node name="Imitater_root2" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=337413407]
 visible = false
 position = Vector2(15.8, 49)
 rotation = -0.26529
@@ -738,14 +738,14 @@ scale = Vector2(0.799, 0.819)
 texture = ExtResource("18_b6s1c")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=1127921248]
+[node name="Anim_face" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=1127921248]
 visible = false
 position = Vector2(17.3, 3.7)
 scale = Vector2(0.8, 0.819)
 texture = ExtResource("20_nbi47")
 centered = false
 
-[node name="Imitater_root1" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=157126482]
+[node name="Imitater_root1" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=157126482]
 visible = false
 position = Vector2(14.7, 31.7)
 rotation = -0.342085
@@ -754,27 +754,27 @@ skew = 0.2286386
 texture = ExtResource("21_56ytc")
 centered = false
 
-[node name="Imitater_blink" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=2136559815]
+[node name="Imitater_blink" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=2136559815]
 visible = false
 position = Vector2(26.9, 13.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("22_mkt77")
 centered = false
 
-[node name="Imitater_hat" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=253003721]
+[node name="Imitater_hat" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=253003721]
 visible = false
 position = Vector2(15.8, -0.5)
 scale = Vector2(0.8, 0.819)
 texture = ExtResource("23_bfwmx")
 centered = false
 
-[node name="Imitater_spin" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=635189871]
+[node name="Imitater_spin" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=635189871]
 position = Vector2(14.2, -3.8)
 scale = Vector2(0.801, 0.799)
 texture = ExtResource("24_5qt4t")
 centered = false
 
-[node name="Imitater_explode" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999Imitater/Body/BodyCorrect" unique_id=1269354410]
+[node name="Imitater_explode" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant548Imitater/Body/BodyCorrect" unique_id=1269354410]
 visible = false
 centered = false
 

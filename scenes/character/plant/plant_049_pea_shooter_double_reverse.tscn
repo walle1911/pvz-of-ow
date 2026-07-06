@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cgjb5lhdsspor"]
 
-[ext_resource type="PackedScene" uid="uid://bb3ca0a5g0fr0" path="res://scenes/character/plant/plant_008_pea_shooter_double.tscn" id="1_s1wyg"]
+[ext_resource type="PackedScene" uid="uid://bb3ca0a5g0fr0" path="res://scenes/character/plant/plant_507_pea_shooter_double.tscn" id="1_s1wyg"]
 
 [node name="Plant049PeaShooterDoubleReverse" instance=ExtResource("1_s1wyg")]
 

@@ -13,12 +13,12 @@ is_lawn_mover = false
 look_show_zombie = false
 can_choosed_card = false
 monster_mode = 0
-zombie_refresh_types = Array[int]([1, 3, 4, 5, 6, 7, 8, 9])
+zombie_refresh_types = Array[int]([500, 502, 503, 504, 505, 506, 507, 508])
 card_mode = 0
 is_pot_mode = true
 pot_mode = 1
 candidate_zombie_pot = Dictionary[int, int]({
-21: 1
+520: 1
 })
 weight_pot_type = Vector3i(6, 0, 4)
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

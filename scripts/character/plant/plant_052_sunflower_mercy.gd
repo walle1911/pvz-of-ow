@@ -23,16 +23,16 @@ class_name Plant052SunflowerMercy
 @export var mouth_overlay_flow_speed := 1.4
 
 @export var damage_boost_target_plant_types:Array[CharacterRegistry.PlantType] = [
-	CharacterRegistry.PlantType.P001PeaShooterSingle,
-	CharacterRegistry.PlantType.P006SnowPea,
-	CharacterRegistry.PlantType.P008PeaShooterDouble,
-	CharacterRegistry.PlantType.P019ThreePeater,
-	CharacterRegistry.PlantType.P029SplitPea,
-	CharacterRegistry.PlantType.P041GatlingPea,
+	CharacterRegistry.PlantType.P500PeaShooterSingle,
+	CharacterRegistry.PlantType.P505SnowPea,
+	CharacterRegistry.PlantType.P507PeaShooterDouble,
+	CharacterRegistry.PlantType.P518ThreePeater,
+	CharacterRegistry.PlantType.P528SplitPea,
+	CharacterRegistry.PlantType.P540GatlingPea,
 	CharacterRegistry.PlantType.P049PeaShooterDoubleReverse,
 	CharacterRegistry.PlantType.P050PeaShooterSoldier76,
-	CharacterRegistry.PlantType.P055SnowPeaMei,
-	CharacterRegistry.PlantType.P056GatlingPeaBastion,
+	CharacterRegistry.PlantType.P006SnowPeaMei,
+	CharacterRegistry.PlantType.P041GatlingPeaBastion,
 ]
 
 var damage_boost_target:Plant000Base

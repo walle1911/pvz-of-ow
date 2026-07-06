@@ -7,6 +7,6 @@
 script = ExtResource("1_level")
 is_day_sun = false
 is_zombie_can_home = false
-zombie_refresh_types = Array[int]([1, 3, 5, 8])
+zombie_refresh_types = Array[int]([500, 502, 504, 507])
 max_choosed_card_num = 15
 start_sun = 9999

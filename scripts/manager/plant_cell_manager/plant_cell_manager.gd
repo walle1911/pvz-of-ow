@@ -489,9 +489,9 @@ func start_next_game_plant_cell_manager_update():
 			await get_tree().process_frame
 			await get_tree().process_frame
 			is_clear_plant = true
-		if plant_random_pool_on_zombie_mode.get_item_weight(CharacterRegistry.PlantType.P002SunFlower) > 1:
+		if plant_random_pool_on_zombie_mode.get_item_weight(CharacterRegistry.PlantType.P002SunflowerMercy) > 1:
 			print("我是僵尸多轮游戏模式，更新向日葵随机权重为:", max(9-Global.main_game.curr_game_round, 1))
-			plant_random_pool_on_zombie_mode.update_item_weight(CharacterRegistry.PlantType.P002SunFlower, max(9-Global.main_game.curr_game_round, 1))
+			plant_random_pool_on_zombie_mode.update_item_weight(CharacterRegistry.PlantType.P002SunflowerMercy, max(9-Global.main_game.curr_game_round, 1))
 		print("我是僵尸模式创建植物")
 		## 创建植物
 		create_pre_plant()

@@ -50,8 +50,8 @@ func click_card(card:Card) -> void:
 	if curr_card.card_plant_type != CharacterRegistry.PlantType.Null:
 		## 记住上一个非模仿者植物类型
 		if not curr_card.is_imitater\
-			and curr_card.card_plant_type != CharacterRegistry.PlantType.P999Imitater\
-			and curr_card.card_plant_type != CharacterRegistry.PlantType.P061ImitaterEcho:
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P548Imitater\
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P999ImitaterEcho:
 			last_non_imitater_plant_type = curr_card.card_plant_type
 
 		plant_condition = Global.character_registry.get_plant_info(curr_card.card_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
@@ -147,7 +147,7 @@ func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2
 	## 僵尸
 	else:
 		## 如果当前格子不能种植僵尸(蹦极除外)
-		if not plant_cell.can_common_zombie and curr_card.card_zombie_type != CharacterRegistry.ZombieType.Z021Bungi:
+		if not plant_cell.can_common_zombie and curr_card.card_zombie_type != CharacterRegistry.ZombieType.Z520Bungi:
 			return false
 		## 如果不是双地形
 		if zombie_row_type != CharacterRegistry.ZombieRowType.Both:
@@ -189,12 +189,12 @@ func click_cell(plant_cell:PlantCell):
 		if curr_card.card_plant_type != 0:
 			var plant_type := curr_card.card_plant_type
 			var is_imitater := curr_card.is_imitater
-			var imitater_variant := CharacterRegistry.PlantType.P999Imitater  # 默认原版模仿者
+			var imitater_variant := CharacterRegistry.PlantType.P999ImitaterEcho  # 默认改版模仿者
 			## 如果卡牌是模仿者本体（没有指定模仿目标），复制上一次选中的植物
 			if not is_imitater\
-				and (plant_type == CharacterRegistry.PlantType.P999Imitater or plant_type == CharacterRegistry.PlantType.P061ImitaterEcho)\
+				and (plant_type == CharacterRegistry.PlantType.P548Imitater or plant_type == CharacterRegistry.PlantType.P999ImitaterEcho)\
 				and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
-				imitater_variant = plant_type  # 记住具体变体（999 或 61）
+				imitater_variant = plant_type  # 记住具体变体
 				plant_type = last_non_imitater_plant_type
 				is_imitater = true
 			plant_cell.create_plant(plant_type, is_imitater, true, false, false, imitater_variant)
@@ -268,9 +268,9 @@ func _click_cell_column(plant_cell:PlantCell):
 				var _plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[i][plant_cell.row_col.y]
 				var _plant_type := curr_card.card_plant_type
 				var _is_imitater := curr_card.is_imitater
-				var _imitater_variant := CharacterRegistry.PlantType.P999Imitater  # 默认原版模仿者
+				var _imitater_variant := CharacterRegistry.PlantType.P999ImitaterEcho  # 默认改版模仿者
 				if not _is_imitater\
-					and (_plant_type == CharacterRegistry.PlantType.P999Imitater or _plant_type == CharacterRegistry.PlantType.P061ImitaterEcho)\
+					and (_plant_type == CharacterRegistry.PlantType.P548Imitater or _plant_type == CharacterRegistry.PlantType.P999ImitaterEcho)\
 					and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
 					_imitater_variant = _plant_type  # 记住具体变体
 					_plant_type = last_non_imitater_plant_type
