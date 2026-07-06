@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://lifeweaver001"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_m9n0o"]
+[ext_resource type="Script" uid="uid://ct2atsslxclte" path="res://scripts/character/plant/plant_038_umbrella_leaf.gd" id="2_m9n0o"]
+
+[node name="Plant038UmbrellaLeafLifeweaver" instance=ExtResource("1_m9n0o")]
+script = ExtResource("2_m9n0o")
+plant_type = 38

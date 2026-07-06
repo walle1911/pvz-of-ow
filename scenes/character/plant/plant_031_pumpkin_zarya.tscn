@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://zarya001"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_j7k8l"]
+[ext_resource type="Script" uid="uid://br2u6pu5d68b8" path="res://scripts/character/plant/plant_031_pumpkin.gd" id="2_j7k8l"]
+
+[node name="Plant031PumpkinZarya" instance=ExtResource("1_j7k8l")]
+script = ExtResource("2_j7k8l")
+plant_type = 31

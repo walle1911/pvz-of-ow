@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cassidy001"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_g5h6i"]
+[ext_resource type="Script" uid="uid://cqowwxado0yfh" path="res://scripts/character/plant/plant_027_cactus.gd" id="2_g5h6i"]
+
+[node name="Plant027CactusCassidy" instance=ExtResource("1_g5h6i")]
+script = ExtResource("2_g5h6i")
+plant_type = 27

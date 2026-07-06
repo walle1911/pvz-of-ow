@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://emre001"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_p1q2r"]
+[ext_resource type="Script" uid="uid://d4decu0vw6c8b" path="res://scripts/character/plant/plant_048_cob_cannon.gd" id="2_p1q2r"]
+
+[node name="Plant048CobCannonEmre" instance=ExtResource("1_p1q2r")]
+script = ExtResource("2_p1q2r")
+plant_type = 48

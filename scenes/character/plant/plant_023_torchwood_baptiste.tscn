@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://baptiste001"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_d3e4f"]
+[ext_resource type="Script" uid="uid://xmyk51geyxx8" path="res://scripts/character/plant/plant_023_torch_wood.gd" id="2_d3e4f"]
+
+[node name="Plant023TorchwoodBaptiste" instance=ExtResource("1_d3e4f")]
+script = ExtResource("2_d3e4f")
+plant_type = 23
