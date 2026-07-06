@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://ya20eehvbnqh"]
+
+[ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/character/plant/plant_070_bonk_choy_ramattra.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://cwh0rsg56vngu" path="res://assets/image/plant/070_bonk_choy/frame_sequences/idle/000.png" id="3_idle"]
+[ext_resource type="Script" uid="uid://t3g1fyasmwgx" path="res://scripts/character/components/anim_component/component_anim_empty.gd" id="4_anim_empty"]
+[ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="5_detect"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_attack"]
+size = Vector2(85, 58)
+
+[node name="Plant052BonkChoyRamattra" unique_id=892976847 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+attack_value = 15
+uppercut_attack_multiplier = 2.0
+normal_attacks_before_uppercut = 15
+plant_food_attack_value = 45
+frame_time = 0.033
+frame_scale = 0.55
+idle_frame_blend_enabled = true
+idle_frame_blend_strength = 1.0
+is_attack = false
+is_plant_food = false
+plant_type = 52
+node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("DetectComponent/FrontArea"), NodePath("DetectComponent/BackArea")]
+
+[node name="Shadow" parent="." index="0"]
+scale = Vector2(1.25, 0.85)
+
+[node name="FrameSprite" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1635960187]
+position = Vector2(-52.58, -91.08)
+scale = Vector2(0.44, 0.44)
+texture = ExtResource("3_idle")
+centered = false
+
+[node name="AnimComponent" parent="." index="2"]
+script = ExtResource("4_anim_empty")
+
+[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
+sleep_influence_components = []
+
+[node name="BlinkComponent" parent="." index="5"]
+is_enable_default = false
+
+[node name="CollisionShape2D" parent="HurtBoxComponent/HurtBoxDetection" index="0"]
+position = Vector2(0, -52)
+
+[node name="CollisionShape2D" parent="HurtBoxComponent/HurtBoxReal" index="0"]
+position = Vector2(0, -52)
+
+[node name="DetectComponent" type="Node2D" parent="." index="8" unique_id=1896342411]
+script = ExtResource("5_detect")
+
+[node name="FrontArea" type="Area2D" parent="DetectComponent" index="0" unique_id=1588459560]
+position = Vector2(60, -53)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/FrontArea" index="0" unique_id=216531324]
+position = Vector2(7.5, 0)
+shape = SubResource("RectangleShape2D_attack")
+
+[node name="BackArea" type="Area2D" parent="DetectComponent" index="1" unique_id=1929004656]
+position = Vector2(-60, -53)
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/BackArea" index="0" unique_id=522534326]
+shape = SubResource("RectangleShape2D_attack")

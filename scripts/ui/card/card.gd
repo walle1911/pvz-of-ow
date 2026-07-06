@@ -88,6 +88,7 @@ func _process(delta: float) -> void:
 		# 卡片冷却完成
 		if _cool_timer <= 0:
 			_is_cooling = false
+			_restore_squash_doomfist_card_visual()
 			judge_card_ready()
 
 ## 修改阳光时会调用
@@ -112,6 +113,7 @@ func set_card_cool_end():
 	_cool_timer = 0
 	_cool_mask.value = _cool_timer
 	_is_cooling = false
+	_restore_squash_doomfist_card_visual()
 
 ## 卡片可以点击
 func card_ready():
@@ -124,9 +126,7 @@ func card_ready():
 
 	var should_emit_ready := not _is_ready_state
 	if is_hidden_by_squash_doomfist:
-		is_hidden_by_squash_doomfist = false
-		if is_instance_valid(character_static):
-			character_static.visible = true
+		_restore_squash_doomfist_card_visual()
 		should_emit_ready = true
 	_cool_mask.visible = false
 	is_can_click = true
@@ -161,8 +161,43 @@ func hide_by_squash_doomfist():
 	card_cool()
 	is_being_attacked_by_squash_doomfist = false
 	is_hidden_by_squash_doomfist = true
+	if not _set_squash_doomfist_ana_visual(true):
+		if is_instance_valid(character_static):
+			character_static.visible = false
+
+func _restore_squash_doomfist_card_visual():
+	if not is_hidden_by_squash_doomfist:
+		return
+
+	is_hidden_by_squash_doomfist = false
+	if not _set_squash_doomfist_ana_visual(false):
+		if is_instance_valid(character_static):
+			character_static.visible = true
+
+func _set_squash_doomfist_ana_visual(is_hidden:bool) -> bool:
+	if card_plant_type != CharacterRegistry.PlantType.P036CoffeeBeanAna:
+		return false
+
+	var normal_card_sprite := _find_character_static_canvas_item(["card", "Card"])
+	var hi_sprite := _find_character_static_canvas_item(["Hi", "hi"])
+	if not is_instance_valid(normal_card_sprite) or not is_instance_valid(hi_sprite):
+		return false
+
 	if is_instance_valid(character_static):
-		character_static.visible = false
+		character_static.visible = true
+	normal_card_sprite.visible = not is_hidden
+	hi_sprite.visible = is_hidden
+	return true
+
+func _find_character_static_canvas_item(node_names:Array[String]) -> CanvasItem:
+	if not is_instance_valid(character_static):
+		return null
+
+	for node_name in node_names:
+		var node := character_static.find_child(node_name, true, false)
+		if node is CanvasItem:
+			return node as CanvasItem
+	return null
 
 ## 点击卡片时
 func _on_button_pressed() -> void:

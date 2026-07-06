@@ -44,8 +44,7 @@ var curr_page_imitater := 0
 var all_show_page_imitater:Array[GridContainer] =[]
 
 func _ready() -> void:
-	_init_card_slot_candidate_plant()
-	_init_card_slot_candidate_zombie()
+	_init_card_slot_candidate_pages()
 	_init_card_slot_candidate_imitater()
 
 	_init_card_page()
@@ -82,82 +81,65 @@ func _init_card_page():
 				all_show_page_imitater.append(card_page)
 				break
 
-## 初始化生成植物待选卡槽 生成所有卡片，将非当前植物卡片隐藏
-func _init_card_slot_candidate_plant():
-	## 每一页的卡片数量
-	var num_card_every_page = grid_container_plant.get_child_count()
+## 初始化生成正式选卡页
+func _init_card_slot_candidate_pages():
 	all_card_page.remove_child(grid_container_plant)
-	## 当前页面的所有卡片占位
-	var all_card_selected_placeholder:Array
-	var curr_num_page:int = -1
-	#for i:int in Global.global_game_state.curr_plant.size():
-	for i:int in AllCards.all_plant_card_prefabs.size():
-		var page_i:int = int(float(i) / num_card_every_page)
-		if curr_num_page < page_i:
-			curr_num_page += 1
-			var new_grid_container = grid_container_plant.duplicate()
-			all_card_page.add_child(new_grid_container)
-			all_card_page_array.append(new_grid_container)
-			new_grid_container.visible = false
-			## 当前页面的所有卡片占位
-			all_card_selected_placeholder = new_grid_container.get_children()
-		## 当前植物类型对应的card
-		#var curr_plant_card = AllCards.all_plant_card_prefabs[Global.global_game_state.curr_plant[i]]
-		var curr_plant_card = AllCards.all_plant_card_prefabs[AllCards.all_plant_card_prefabs.keys()[i]]
-		var new_card = curr_plant_card.duplicate()
-		var card_candidate_container: CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
+	all_card_page.remove_child(grid_container_zombie)
 
-		card_candidate_container.init_card_in_seed_chooser(new_card)
-		all_card_selected_placeholder[curr_plant_card.card_id % num_card_every_page].add_child(card_candidate_container)
-		all_card_candidate_containers_plant[curr_plant_card.card_id] = card_candidate_container
-
-		card_candidate_container.visible = false
-
-	for plant_type:CharacterRegistry.PlantType in Global.global_game_state.curr_plant:
-		if not AllCards.plant_card_ids.has(plant_type):
-			continue
-		all_card_candidate_containers_plant[AllCards.plant_card_ids[plant_type]].visible = true
-
+	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[0])
+	_add_zombie_card_page(AllCards.all_zombie_cards_parent_node_root[0])
+	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[1])
+	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[2])
+	_add_zombie_card_page(AllCards.all_zombie_cards_parent_node_root[1])
 
 	grid_container_plant.queue_free()
+	grid_container_zombie.queue_free()
 
-## 初始化生成僵尸待选卡槽
-func _init_card_slot_candidate_zombie():
-	## 每一页的卡片数量
-	var num_card_every_page = grid_container_zombie.get_child_count()
-	all_card_page.remove_child(grid_container_zombie)
-	## 当前页面的所有卡片占位
-	var all_card_selected_placeholder:Array
-	var curr_num_page:int = -1
-	#for i:int in Global.global_game_state.curr_zombie.size():
-	for i:int in AllCards.all_zombie_card_prefabs.size():
-		var page_i:int = int(float(i) / num_card_every_page)
-		if curr_num_page < page_i:
-			curr_num_page += 1
-			var new_grid_container = grid_container_zombie.duplicate()
-			all_card_page.add_child(new_grid_container)
-			all_card_page_array.append(new_grid_container)
-			new_grid_container.visible = false
-			## 当前页面的所有卡片占位
-			all_card_selected_placeholder = new_grid_container.get_children()
-		## 当前僵尸类型对应的card
-		#var curr_zombie_card = AllCards.all_zombie_card_prefabs[Global.global_game_state.curr_zombie[i]]
-		var curr_zombie_card = AllCards.all_zombie_card_prefabs[AllCards.all_zombie_card_prefabs.keys()[i]]
-		var new_card = curr_zombie_card.duplicate()
-		var card_candidate_container: CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
+
+func _add_plant_card_page(cards_parent_node:GridContainer):
+	var ordered_cards:Array[Card] = []
+	for node in cards_parent_node.get_children():
+		var card := node as Card
+		if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
+			continue
+		ordered_cards.append(card)
+
+	_add_card_page(grid_container_plant, ordered_cards, all_card_candidate_containers_plant)
+
+
+func _add_zombie_card_page(cards_parent_node:GridContainer):
+	var ordered_cards:Array[Card] = []
+	for node in cards_parent_node.get_children():
+		var card := node as Card
+		if card == null or card.card_zombie_type == CharacterRegistry.ZombieType.Null:
+			continue
+		ordered_cards.append(card)
+
+	_add_card_page(grid_container_zombie, ordered_cards, all_card_candidate_containers_zombie)
+
+
+func _add_card_page(page_template:GridContainer, ordered_cards:Array[Card], card_candidate_containers:Dictionary[int, CardCandidateContainer]):
+	if ordered_cards.is_empty():
+		return
+
+	var new_grid_container:GridContainer = page_template.duplicate()
+	all_card_page.add_child(new_grid_container)
+	all_card_page_array.append(new_grid_container)
+	new_grid_container.visible = false
+
+	var all_card_selected_placeholder:Array = new_grid_container.get_children()
+	for page_card_i:int in min(ordered_cards.size(), all_card_selected_placeholder.size()):
+		var curr_card:Card = ordered_cards[page_card_i]
+		var new_card:Card = curr_card.duplicate()
+		var card_candidate_container:CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
 
 		card_candidate_container.init_card_in_seed_chooser(new_card)
-		all_card_selected_placeholder[curr_zombie_card.card_id % num_card_every_page].add_child(card_candidate_container)
-		all_card_candidate_containers_zombie[curr_zombie_card.card_id] = card_candidate_container
+		all_card_selected_placeholder[page_card_i].add_child(card_candidate_container)
+		card_candidate_containers[curr_card.card_id] = card_candidate_container
+		card_candidate_container.visible = true
 
-		card_candidate_container.visible = false
-
-	for zombie_type:CharacterRegistry.ZombieType in Global.global_game_state.curr_zombie:
-		if not AllCards.zombie_card_ids.has(zombie_type):
-			continue
-		all_card_candidate_containers_zombie[AllCards.zombie_card_ids[zombie_type]].visible = true
-
-	grid_container_zombie.queue_free()
+	if ordered_cards.size() > all_card_selected_placeholder.size():
+		push_warning("选卡页面容量不足，已跳过 %s 张卡片" % (ordered_cards.size() - all_card_selected_placeholder.size()))
 
 ## 初始化生成模仿者待选卡槽
 func _init_card_slot_candidate_imitater():
@@ -167,9 +149,15 @@ func _init_card_slot_candidate_imitater():
 	## 当前页面的所有卡片占位
 	var all_card_selected_placeholder:Array
 	var curr_num_page_imitater:=-1
-	#for i:int in Global.global_game_state.curr_plant.size():
-	for i:int in AllCards.all_plant_card_prefabs.size():
-		var page_i:int = int(float(i) / num_card_every_page)
+	for idx:int in Global.global_game_state.curr_plant.size():
+		var plant_type = Global.global_game_state.curr_plant[idx]
+		if not AllCards.all_plant_card_prefabs.has(plant_type):
+			continue
+		var page_i:int
+		if idx < 25:
+			page_i = 0
+		else:
+			page_i = 1 + int(float(idx - 25) / num_card_every_page)
 		if curr_num_page_imitater < page_i:
 			curr_num_page_imitater += 1
 			var new_grid_container = grid_container_plant_imitater.duplicate()
@@ -179,8 +167,7 @@ func _init_card_slot_candidate_imitater():
 			## 当前页面的所有卡片占位
 			all_card_selected_placeholder = new_grid_container.get_children()
 		## 当前植物类型对应的card
-		#var curr_plant_card = AllCards.all_plant_card_prefabs[Global.global_game_state.curr_plant[i]]
-		var curr_plant_card = AllCards.all_plant_card_prefabs[AllCards.all_plant_card_prefabs.keys()[i]]
+		var curr_plant_card = AllCards.all_plant_card_prefabs[plant_type]
 		var new_card = curr_plant_card.duplicate()
 		new_card.is_imitater = true
 		var card_candidate_container: CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
@@ -189,12 +176,7 @@ func _init_card_slot_candidate_imitater():
 		all_card_selected_placeholder[curr_plant_card.card_id % num_card_every_page].add_child(card_candidate_container)
 		all_card_candidate_containers_plant_imitater[curr_plant_card.card_id] = card_candidate_container
 
-		card_candidate_container.visible = false
-
-	for plant_type:CharacterRegistry.PlantType in Global.global_game_state.curr_plant:
-		if not AllCards.plant_card_ids.has(plant_type):
-			continue
-		all_card_candidate_containers_plant_imitater[AllCards.plant_card_ids[plant_type]].visible = true
+		card_candidate_container.visible = true
 
 	grid_container_plant_imitater.queue_free()
 
