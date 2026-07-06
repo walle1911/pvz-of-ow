@@ -30,6 +30,13 @@ var curr_all_level_state_data: Dictionary = DEFAULT_CURR_ALL_LEVEL_STATE_DATA.du
 var selected_cards: Array = []
 
 @export var curr_plant :Array[CharacterRegistry.PlantType]= [
+	CharacterRegistry.PlantType.P019ThreepeaterDaotian,
+	CharacterRegistry.PlantType.P023TorchwoodBaptiste,
+	CharacterRegistry.PlantType.P027CactusCassidy,
+	CharacterRegistry.PlantType.P031PumpkinZarya,
+	CharacterRegistry.PlantType.P038UmbrellaLeafLifeweaver,
+	CharacterRegistry.PlantType.P048CobCannonEmre,
+	CharacterRegistry.PlantType.P051CattailSierra,
 	CharacterRegistry.PlantType.P002SunflowerMercy,
 	CharacterRegistry.PlantType.P003CherryBombJunkrat,
 	CharacterRegistry.PlantType.P006SnowPeaMei,

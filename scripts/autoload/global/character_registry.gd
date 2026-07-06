@@ -26,20 +26,27 @@ enum PlantType {
 	P014ScaredyShroomWidowmaker = 14,
 	P016DoomShroomDVA = 16,
 	P018SquashDoomfist = 18,
+	P019ThreepeaterDaotian = 19,
 	P020TangleKelpMizuki = 20,
 	P021JalapenoVendetta = 21,
 	P022CaltropHazard = 22,
+	P023TorchwoodBaptiste = 23,
 	P024TallNutSigma = 24,
 	P025SeaShroomWuyang = 25,
+	P027CactusCassidy = 27,
+	P031PumpkinZarya = 31,
 	P032MagnetShroomSombra = 32,
 	P036CoffeeBeanAna = 36,
 	P037GarlicMauga = 37,
+	P038UmbrellaLeafLifeweaver = 38,
 	P040MelonPultAshe = 40,
 	P041GatlingPeaBastion = 41,
 	P043GloomShroomMoira = 43,
 	P044CattailJetpackCat = 44,
+	P048CobCannonEmre = 48,
 	P049PeaShooterDoubleReverse = 49,
 	P050PeaShooterSoldier76,
+	P051CattailSierra = 51,
 	P070BonkChoyRamattra = 70,
 
 	## 后移的原版植物
@@ -183,11 +190,13 @@ enum ZombieInfoAttribute{
 	PlantType.P043GloomShroomMoira:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
 	PlantType.P542GloomShroom:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
 	PlantType.P044CattailJetpackCat:[PlantType.P516LilyPad],
+	PlantType.P051CattailSierra:[PlantType.P516LilyPad],
 	PlantType.P543Cattail:[PlantType.P516LilyPad],
 	PlantType.P544WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P539MelonPult],
 	PlantType.P545GoldMagnet:[PlantType.P032MagnetShroomSombra, PlantType.P531MagnetShroom],
 	PlantType.P546SpikeRock:[PlantType.P022CaltropHazard, PlantType.P521Caltrop],
 	PlantType.P547CobCannon:[PlantType.P534CornPult],
+	PlantType.P048CobCannonEmre:[PlantType.P534CornPult],
 }
 
 const PlantInfo = {
@@ -708,6 +717,55 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_020_tanglekelp_mizuki.tscn")
+		},
+	PlantType.P019ThreepeaterDaotian: {
+		PlantInfoAttribute.PlantName: "Threepeater_Daotian",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 325,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_019_threepeater_daotian.tscn")
+		},
+	PlantType.P023TorchwoodBaptiste: {
+		PlantInfoAttribute.PlantName: "Torchwood_Baptiste",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 175,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_023_torchwood_baptiste.tscn")
+		},
+	PlantType.P027CactusCassidy: {
+		PlantInfoAttribute.PlantName: "Cactus_Cassidy",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_027_cactus_cassidy.tscn")
+		},
+	PlantType.P031PumpkinZarya: {
+		PlantInfoAttribute.PlantName: "Pumpkin_Zarya",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 125,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/031_Pumpkin.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_031_pumpkin_zarya.tscn")
+		},
+	PlantType.P038UmbrellaLeafLifeweaver: {
+		PlantInfoAttribute.PlantName: "UmbrellaLeaf_Lifeweaver",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 100,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_038_umbrella_leaf_lifeweaver.tscn")
+		},
+	PlantType.P048CobCannonEmre: {
+		PlantInfoAttribute.PlantName: "CobCannon_Emre",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 500,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/048_cob_cannon.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_048_cob_cannon_emre.tscn")
+		},
+	PlantType.P051CattailSierra: {
+		PlantInfoAttribute.PlantName: "Cattail_Sierra",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 225,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_051_cattail_sierra.tscn")
 		},
 	## 模仿者
 	PlantType.P548Imitater:{
