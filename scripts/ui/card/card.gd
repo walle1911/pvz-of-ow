@@ -158,12 +158,12 @@ func get_squash_doomfist_attack_screen_position() -> Vector2:
 	return get_global_transform_with_canvas() * (size * 0.5 + Vector2(0, 24))
 
 func hide_by_squash_doomfist():
-	card_cool()
 	is_being_attacked_by_squash_doomfist = false
 	is_hidden_by_squash_doomfist = true
 	if not _set_squash_doomfist_ana_visual(true):
 		if is_instance_valid(character_static):
 			character_static.visible = false
+	card_cool()
 
 func _restore_squash_doomfist_card_visual():
 	if not is_hidden_by_squash_doomfist:
@@ -178,8 +178,12 @@ func _set_squash_doomfist_ana_visual(is_hidden:bool) -> bool:
 	if card_plant_type != CharacterRegistry.PlantType.P036CoffeeBeanAna:
 		return false
 
-	var normal_card_sprite := _find_character_static_canvas_item(["card", "Card"])
-	var hi_sprite := _find_character_static_canvas_item(["Hi", "hi"])
+	var ana_card_root := _get_squash_doomfist_ana_card_root()
+	if not is_instance_valid(ana_card_root):
+		return false
+
+	var normal_card_sprite := _get_canvas_item_child(ana_card_root, ["card", "Card"])
+	var hi_sprite := _get_canvas_item_child(ana_card_root, ["Hi", "hi"])
 	if not is_instance_valid(normal_card_sprite) or not is_instance_valid(hi_sprite):
 		return false
 
@@ -189,12 +193,18 @@ func _set_squash_doomfist_ana_visual(is_hidden:bool) -> bool:
 	hi_sprite.visible = is_hidden
 	return true
 
-func _find_character_static_canvas_item(node_names:Array[String]) -> CanvasItem:
+func _get_squash_doomfist_ana_card_root() -> Node:
 	if not is_instance_valid(character_static):
 		return null
 
+	var ana_card_root := character_static.get_node_or_null(^"Plant067CoffeeBeanAna")
+	if is_instance_valid(ana_card_root):
+		return ana_card_root
+	return character_static.get_node_or_null(^"Plant036CoffeeBeanAna")
+
+func _get_canvas_item_child(parent_node:Node, node_names:Array[String]) -> CanvasItem:
 	for node_name in node_names:
-		var node := character_static.find_child(node_name, true, false)
+		var node := parent_node.get_node_or_null(NodePath(node_name))
 		if node is CanvasItem:
 			return node as CanvasItem
 	return null
