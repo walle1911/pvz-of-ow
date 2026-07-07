@@ -38,9 +38,11 @@ signal signal_card_ready(card:Card)
 
 var is_hidden_by_squash_doomfist := false
 var is_being_attacked_by_squash_doomfist := false
+var _original_cool_time: float
 
 func _ready() -> void:
 	super()
+	_original_cool_time = cool_time
 	_cool_mask.value = 0
 	if is_imitater:
 		var mat := IMITATER.duplicate()
@@ -163,7 +165,13 @@ func hide_by_squash_doomfist():
 	if not _set_squash_doomfist_ana_visual(true):
 		if is_instance_valid(character_static):
 			character_static.visible = false
-	card_cool()
+	_cool_mask.max_value = _original_cool_time
+	_is_cooling = true
+	_cool_mask.visible = true
+	_cool_timer = _original_cool_time
+	_cool_mask.value = _original_cool_time
+	is_can_click = false
+	_is_ready_state = false
 
 func _restore_squash_doomfist_card_visual():
 	if not is_hidden_by_squash_doomfist:

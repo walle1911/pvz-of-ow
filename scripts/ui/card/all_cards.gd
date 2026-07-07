@@ -18,6 +18,9 @@ class_name AllCardsClass
 
 var frame_num := 0
 
+var character_registry: CharacterRegistry
+var global_game_state: GlobalGameState
+
 
 ## 更新每个已经制作的卡片（卡片类型不为空）
 func _ready() -> void:
@@ -25,7 +28,16 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		visible = false
 
-	if not is_instance_valid(Global.global_game_state):
+	if not Global.has_node("GlobalGameState"):
+		return
+	global_game_state = Global.get_node("GlobalGameState") as GlobalGameState
+	if not is_instance_valid(global_game_state):
+		return
+
+	if not Global.has_node("Registry/CharacterRegistry"):
+		return
+	character_registry = Global.get_node("Registry/CharacterRegistry") as CharacterRegistry
+	if not is_instance_valid(character_registry):
 		return
 
 	var plant_cards_by_type: Dictionary[CharacterRegistry.PlantType, Card] = {}
@@ -35,12 +47,12 @@ func _ready() -> void:
 		for i in range(plant_cards_parent_node.get_children().size()):
 			var card:Card = plant_cards_parent_node.get_children()[i]
 			if card.card_plant_type != 0:
-				if not Global.character_registry.PlantInfo.has(card.card_plant_type):
+				if not character_registry.PlantInfo.has(card.card_plant_type):
 					push_warning("缺少植物卡牌注册信息: %s" % card.card_plant_type)
 					continue
 				plant_cards_by_type[card.card_plant_type] = card
 				plant_card_order.append(card.card_plant_type)
-	_register_ordered_plant_cards(plant_cards_by_type, Global.global_game_state.curr_plant, plant_card_order)
+	_register_ordered_plant_cards(plant_cards_by_type, global_game_state.curr_plant, plant_card_order)
 
 	var zombie_cards_by_type: Dictionary[CharacterRegistry.ZombieType, Card] = {}
 	var zombie_card_order: Array[CharacterRegistry.ZombieType] = []
@@ -49,12 +61,12 @@ func _ready() -> void:
 		for i in range(zombie_cards_parent_node.get_children().size()):
 			var card:Card = zombie_cards_parent_node.get_children()[i]
 			if card.card_zombie_type != 0:
-				if not Global.character_registry.ZombieInfo.has(card.card_zombie_type):
+				if not character_registry.ZombieInfo.has(card.card_zombie_type):
 					push_warning("缺少僵尸卡牌注册信息: %s" % card.card_zombie_type)
 					continue
 				zombie_cards_by_type[card.card_zombie_type] = card
 				zombie_card_order.append(card.card_zombie_type)
-	_register_ordered_zombie_cards(zombie_cards_by_type, Global.global_game_state.curr_zombie, zombie_card_order)
+	_register_ordered_zombie_cards(zombie_cards_by_type, global_game_state.curr_zombie, zombie_card_order)
 
 func _register_ordered_plant_cards(
 		cards_by_type: Dictionary[CharacterRegistry.PlantType, Card],
@@ -69,8 +81,8 @@ func _register_ordered_plant_cards(
 		plant_i += 1
 		var card_para:Dictionary[Card.E_CInitAttr, Variant] = {
 			Card.E_CInitAttr.CardId:plant_i,
-			Card.E_CInitAttr.CoolTime:Global.character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.CoolTime],
-			Card.E_CInitAttr.SunCost:Global.character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.SunCost]
+			Card.E_CInitAttr.CoolTime:character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.CoolTime],
+			Card.E_CInitAttr.SunCost:character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.SunCost]
 		}
 		init_card(card, card_para)
 		all_plant_card_prefabs[card.card_plant_type] = card
@@ -88,8 +100,8 @@ func _register_ordered_zombie_cards(
 		var card := cards_by_type[zombie_type]
 		zombie_i += 1
 		card.card_id = zombie_i
-		card.cool_time = Global.character_registry.ZombieInfo[card.card_zombie_type][CharacterRegistry.ZombieInfoAttribute.CoolTime]
-		card.sun_cost = Global.character_registry.ZombieInfo[card.card_zombie_type][CharacterRegistry.ZombieInfoAttribute.SunCost]
+		card.cool_time = character_registry.ZombieInfo[card.card_zombie_type][CharacterRegistry.ZombieInfoAttribute.CoolTime]
+		card.sun_cost = character_registry.ZombieInfo[card.card_zombie_type][CharacterRegistry.ZombieInfoAttribute.SunCost]
 		all_zombie_card_prefabs[card.card_zombie_type] = card
 		zombie_card_ids[card.card_zombie_type] = zombie_i
 

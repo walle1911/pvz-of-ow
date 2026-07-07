@@ -924,7 +924,7 @@ alpha_curve = SubResource("CurveTexture_24dwr")
 anim_offset_min = 1.0
 anim_offset_max = 1.0
 
-[node name="AllCards" type="Control" unique_id=1493789430 node_paths=PackedStringArray("all_zombie_card_prefabs")]
+[node name="AllCards" type="Control" unique_id=1493789430 node_paths=PackedStringArray("all_plant_card_prefabs", "all_zombie_card_prefabs")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -883.0
@@ -932,6 +932,90 @@ offset_top = 6.0
 offset_right = -883.0
 offset_bottom = 6.0
 script = ExtResource("1_qtbte")
+all_plant_card_prefabs = {
+1: NodePath("PlantCards/Card"),
+2: NodePath("PlantCards/Card2"),
+3: NodePath("PlantCards/Card3"),
+4: NodePath("PlantCards/Card4"),
+6: NodePath("PlantCards/Card6"),
+11: NodePath("PlantCards/Card16"),
+13: NodePath("PlantCards/Card20"),
+14: NodePath("PlantCards/Card19"),
+16: NodePath("PlantCards/Card13"),
+18: NodePath("PlantCards/Card5"),
+19: NodePath("PlantCards/Card25"),
+20: NodePath("PlantCards/Card21"),
+21: NodePath("PlantCards/Card10"),
+22: NodePath("PlantCards/Card23"),
+23: NodePath("PlantCards/Card26"),
+24: NodePath("PlantCards/Card8"),
+25: NodePath("PlantCards/Card15"),
+27: NodePath("PlantCards/Card27"),
+31: NodePath("PlantCards/Card28"),
+32: NodePath("PlantCards/Card17"),
+36: NodePath("PlantCards/Card18"),
+37: NodePath("PlantCards/Card24"),
+38: NodePath("PlantCards/Card29"),
+40: NodePath("PlantCards/Card11"),
+41: NodePath("PlantCards/Card7"),
+43: NodePath("PlantCards/Card14"),
+44: NodePath("PlantCards/Card9"),
+48: NodePath("PlantCards/Card30"),
+49: NodePath("PlantCards2/Card34"),
+51: NodePath("PlantCards/Card31"),
+52: NodePath("PlantCards/Card22"),
+53: NodePath("PlantCards/Card12"),
+500: NodePath("PlantCards2/Card1"),
+501: NodePath("PlantCards2/Card2"),
+502: NodePath("PlantCards2/Card3"),
+504: NodePath("PlantCards2/Card4"),
+505: NodePath("PlantCards2/Card5"),
+506: NodePath("PlantCards2/Card6"),
+507: NodePath("PlantCards2/Card7"),
+508: NodePath("PlantCards2/Card8"),
+509: NodePath("PlantCards2/Card9"),
+510: NodePath("PlantCards2/Card10"),
+511: NodePath("PlantCards2/Card11"),
+512: NodePath("PlantCards2/Card12"),
+513: NodePath("PlantCards2/Card13"),
+514: NodePath("PlantCards2/Card14"),
+515: NodePath("PlantCards2/Card15"),
+516: NodePath("PlantCards2/Card16"),
+517: NodePath("PlantCards2/Card17"),
+518: NodePath("PlantCards2/Card18"),
+519: NodePath("PlantCards2/Card19"),
+520: NodePath("PlantCards2/Card20"),
+521: NodePath("PlantCards2/Card21"),
+522: NodePath("PlantCards2/Card22"),
+523: NodePath("PlantCards2/Card23"),
+524: NodePath("PlantCards2/Card24"),
+525: NodePath("PlantCards2/Card25"),
+526: NodePath("PlantCards2/Card26"),
+527: NodePath("PlantCards2/Card27"),
+528: NodePath("PlantCards2/Card28"),
+529: NodePath("PlantCards2/Card29"),
+530: NodePath("PlantCards2/Card30"),
+531: NodePath("PlantCards2/Card31"),
+532: NodePath("PlantCards2/Card32"),
+533: NodePath("PlantCards2/Card33"),
+534: NodePath("PlantCards2/Card35"),
+535: NodePath("PlantCards2/Card36"),
+536: NodePath("PlantCards2/Card37"),
+537: NodePath("PlantCards2/Card38"),
+538: NodePath("PlantCards2/Card39"),
+539: NodePath("PlantCards2/Card40"),
+540: NodePath("PlantCards2/Card41"),
+541: NodePath("PlantCards2/Card42"),
+542: NodePath("PlantCards2/Card43"),
+543: NodePath("PlantCards2/Card44"),
+544: NodePath("PlantCards2/Card45"),
+545: NodePath("PlantCards2/Card46"),
+546: NodePath("PlantCards2/Card47"),
+547: NodePath("PlantCards2/Card48"),
+1001: NodePath("PlantCards3/Card"),
+1002: NodePath("PlantCards3/Card2"),
+1003: NodePath("PlantCards3/Card3")
+}
 all_zombie_card_prefabs = {
 16: NodePath("ZombieCards/Card4"),
 18: NodePath("ZombieCards/Card3"),
@@ -965,82 +1049,88 @@ all_zombie_card_prefabs = {
 1001: NodePath("ZombieCards2/Card26")
 }
 plant_card_ids = Dictionary[int, int]({
-2: 0,
-3: 1,
-6: 2,
-11: 3,
-13: 4,
-14: 5,
-16: 6,
-18: 7,
-20: 8,
-21: 9,
-22: 10,
-24: 11,
-25: 12,
-32: 13,
-36: 14,
-37: 15,
-40: 16,
-41: 17,
-43: 18,
-44: 19,
-49: 20,
-50: 21,
-70: 22,
-500: 24,
-501: 25,
-502: 26,
-503: 27,
-504: 28,
-505: 29,
-506: 30,
-507: 31,
-508: 32,
-509: 33,
-510: 34,
-511: 35,
-512: 36,
-513: 37,
-514: 38,
-515: 39,
-516: 40,
-517: 41,
-518: 42,
-519: 43,
-520: 44,
-521: 45,
-522: 46,
-523: 47,
-524: 48,
-525: 49,
-526: 50,
-527: 51,
-528: 52,
-529: 53,
-530: 54,
-531: 55,
-532: 56,
-533: 57,
-534: 58,
-535: 59,
-536: 60,
-537: 61,
-538: 62,
-539: 63,
-540: 64,
-541: 65,
-542: 66,
-543: 67,
-544: 68,
-545: 69,
-546: 70,
-547: 71,
-548: 72,
-999: 23,
-1001: 73,
-1002: 74,
-1003: 75
+1: 0,
+2: 1,
+3: 2,
+4: 3,
+6: 4,
+11: 5,
+13: 6,
+14: 7,
+16: 8,
+18: 9,
+19: 10,
+20: 11,
+21: 12,
+22: 13,
+23: 14,
+24: 15,
+25: 16,
+27: 17,
+31: 18,
+32: 19,
+36: 20,
+37: 21,
+38: 22,
+40: 23,
+41: 24,
+43: 25,
+44: 26,
+48: 27,
+49: 28,
+51: 29,
+52: 30,
+53: 31,
+500: 32,
+501: 33,
+502: 34,
+504: 35,
+505: 36,
+506: 37,
+507: 38,
+508: 39,
+509: 40,
+510: 41,
+511: 42,
+512: 43,
+513: 44,
+514: 45,
+515: 46,
+516: 47,
+517: 48,
+518: 49,
+519: 50,
+520: 51,
+521: 52,
+522: 53,
+523: 54,
+524: 55,
+525: 56,
+526: 57,
+527: 58,
+528: 59,
+529: 60,
+530: 61,
+531: 62,
+532: 63,
+533: 64,
+534: 65,
+535: 66,
+536: 67,
+537: 68,
+538: 69,
+539: 70,
+540: 71,
+541: 72,
+542: 73,
+543: 74,
+544: 75,
+545: 76,
+546: 77,
+547: 78,
+1001: 79,
+1002: 80,
+1003: 81
 })
 zombie_card_ids = Dictionary[int, int]({
 16: 0,
@@ -1189,6 +1279,7 @@ offset_left = -445.07007
 offset_top = 2.0
 offset_right = -17.070068
 offset_bottom = 368.0
+scale = Vector2(1, 1.0014796)
 columns = 8
 
 [node name="Card" parent="PlantCards" unique_id=135187478 instance=ExtResource("2_5pqky")]
@@ -1196,7 +1287,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 21
+card_id = 0
 card_plant_type = 1
 
 [node name="CardBg" parent="PlantCards/Card" index="0"]
@@ -1216,7 +1307,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 0
+card_id = 1
 card_plant_type = 2
 sun_cost = 50
 
@@ -1237,7 +1328,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 1
+card_id = 2
 card_plant_type = 3
 cool_time = 50.0
 sun_cost = 150
@@ -1259,7 +1350,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 27
+card_id = 3
 card_plant_type = 4
 cool_time = 30.0
 sun_cost = 50
@@ -1309,7 +1400,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 7
+card_id = 9
 card_plant_type = 18
 cool_time = 30.0
 sun_cost = 50
@@ -1335,7 +1426,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 2
+card_id = 4
 card_plant_type = 6
 sun_cost = 175
 
@@ -1356,7 +1447,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 17
+card_id = 24
 card_plant_type = 41
 cool_time = 50.0
 sun_cost = 250
@@ -1379,7 +1470,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 11
+card_id = 15
 card_plant_type = 24
 cool_time = 30.0
 sun_cost = 175
@@ -1405,7 +1496,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 19
+card_id = 26
 card_plant_type = 44
 cool_time = 50.0
 sun_cost = 225
@@ -1428,7 +1519,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 9
+card_id = 12
 card_plant_type = 21
 cool_time = 50.0
 sun_cost = 125
@@ -1454,7 +1545,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 16
+card_id = 23
 card_plant_type = 40
 sun_cost = 300
 
@@ -1475,10 +1566,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 23
+card_id = 31
 card_plant_type = 53
 curr_card_gb = 2
-cool_time = 0.0
+cool_time = 50.0
 sun_cost = 0
 
 [node name="CardBg" parent="PlantCards/Card12" index="0"]
@@ -1508,7 +1599,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 6
+card_id = 8
 card_plant_type = 16
 cool_time = 50.0
 sun_cost = 125
@@ -1534,7 +1625,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 18
+card_id = 25
 card_plant_type = 43
 cool_time = 50.0
 sun_cost = 150
@@ -1557,7 +1648,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 12
+card_id = 16
 card_plant_type = 25
 cool_time = 30.0
 sun_cost = 0
@@ -1579,7 +1670,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 3
+card_id = 5
 card_plant_type = 11
 sun_cost = 75
 
@@ -1604,7 +1695,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 13
+card_id = 19
 card_plant_type = 32
 
 [node name="CardBg" parent="PlantCards/Card17" index="0"]
@@ -1628,7 +1719,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 14
+card_id = 20
 card_plant_type = 36
 sun_cost = 75
 
@@ -1655,7 +1746,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 5
+card_id = 7
 card_plant_type = 14
 sun_cost = 25
 
@@ -1679,7 +1770,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 4
+card_id = 6
 card_plant_type = 13
 cool_time = 30.0
 sun_cost = 75
@@ -1705,7 +1796,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 22
+card_id = 30
 card_plant_type = 52
 cool_time = 5.0
 sun_cost = 150
@@ -1714,17 +1805,12 @@ sun_cost = 150
 texture = ExtResource("3_m4n4y")
 
 [node name="Plant052BonkChoyRamattra" type="Node2D" parent="PlantCards/Card22/CardBg/CharacterStatic" index="0" unique_id=2089000011]
-position = Vector2(25, 67)
-scale = Vector2(0.32, 0.32)
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card22/CardBg/CharacterStatic/Plant052BonkChoyRamattra" unique_id=2089000012]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card22/CardBg/CharacterStatic/Plant052BonkChoyRamattra/Body" unique_id=2089000013]
-position = Vector2(-108.745, -188.37)
-
-[node name="FrameSprite" type="Sprite2D" parent="PlantCards/Card22/CardBg/CharacterStatic/Plant052BonkChoyRamattra/Body/BodyCorrect" unique_id=2089000014]
-position = Vector2(-47.42, -93.96)
-scale = Vector2(1.19, 1.19)
+[node name="FrameSprite" type="Sprite2D" parent="PlantCards/Card22/CardBg/CharacterStatic/Plant052BonkChoyRamattra" unique_id=2089000014]
+position = Vector2(-56.58, -78.33)
+scale = Vector2(0.79, 0.79)
 texture = ExtResource("400_10mhf")
 centered = false
 
@@ -1733,7 +1819,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 8
+card_id = 11
 card_plant_type = 20
 cool_time = 30.0
 sun_cost = 25
@@ -1759,7 +1845,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 10
+card_id = 13
 card_plant_type = 22
 sun_cost = 125
 
@@ -1784,7 +1870,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 15
+card_id = 21
 card_plant_type = 37
 sun_cost = 50
 
@@ -1805,6 +1891,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 10
 card_plant_type = 19
 sun_cost = 325
 
@@ -2058,6 +2145,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 14
 card_plant_type = 23
 sun_cost = 175
 
@@ -2132,6 +2220,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 17
 card_plant_type = 27
 sun_cost = 125
 
@@ -2250,6 +2339,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 18
 card_plant_type = 31
 cool_time = 30.0
 sun_cost = 125
@@ -2286,6 +2376,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 22
 card_plant_type = 38
 
 [node name="CardBg" parent="PlantCards/Card29" index="0"]
@@ -2364,6 +2455,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 27
 card_plant_type = 48
 cool_time = 50.0
 sun_cost = 500
@@ -2502,6 +2594,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
+card_id = 29
 card_plant_type = 51
 cool_time = 50.0
 sun_cost = 225
@@ -2620,7 +2713,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 24
+card_id = 32
 card_plant_type = 500
 
 [node name="CardBg" parent="PlantCards2/Card1" index="0"]
@@ -2736,7 +2829,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 25
+card_id = 33
 card_plant_type = 501
 sun_cost = 50
 
@@ -2983,7 +3076,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 26
+card_id = 34
 card_plant_type = 502
 cool_time = 50.0
 sun_cost = 150
@@ -3112,10 +3205,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 28
+card_id = 35
 card_plant_type = 504
-cool_time = 30.0
-sun_cost = 25
+sun_cost = 175
 
 [node name="CardBg" parent="PlantCards2/Card4" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3253,9 +3345,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 29
+card_id = 36
 card_plant_type = 505
-sun_cost = 175
+sun_cost = 150
 
 [node name="CardBg" parent="PlantCards2/Card5" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3387,9 +3479,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 30
+card_id = 37
 card_plant_type = 506
-sun_cost = 150
+sun_cost = 200
 
 [node name="CardBg" parent="PlantCards2/Card6" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3588,9 +3680,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 31
+card_id = 38
 card_plant_type = 507
-sun_cost = 200
+sun_cost = 0
 
 [node name="CardBg" parent="PlantCards2/Card7" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3742,9 +3834,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 32
+card_id = 39
 card_plant_type = 508
-sun_cost = 0
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card8" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3821,9 +3913,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 33
+card_id = 40
 card_plant_type = 509
-sun_cost = 25
+sun_cost = 75
 
 [node name="CardBg" parent="PlantCards2/Card9" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -3873,7 +3965,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 34
+card_id = 41
 card_plant_type = 510
 sun_cost = 75
 
@@ -3953,8 +4045,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 35
+card_id = 42
 card_plant_type = 511
+cool_time = 30.0
 sun_cost = 75
 
 [node name="CardBg" parent="PlantCards2/Card11" index="0"]
@@ -4080,10 +4173,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 36
+card_id = 43
 card_plant_type = 512
-cool_time = 30.0
-sun_cost = 75
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card12" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4134,9 +4226,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 37
+card_id = 44
 card_plant_type = 513
-sun_cost = 25
+cool_time = 50.0
+sun_cost = 75
 
 [node name="CardBg" parent="PlantCards2/Card13" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4264,10 +4357,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 38
+card_id = 45
 card_plant_type = 514
 cool_time = 50.0
-sun_cost = 75
+sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card14" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4319,10 +4412,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 39
+card_id = 46
 card_plant_type = 515
-cool_time = 50.0
-sun_cost = 125
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card15" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4369,9 +4461,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 40
+card_id = 47
 card_plant_type = 516
-sun_cost = 25
+cool_time = 30.0
+sun_cost = 50
 
 [node name="CardBg" parent="PlantCards2/Card16" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4412,10 +4505,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 41
+card_id = 48
 card_plant_type = 517
-cool_time = 30.0
-sun_cost = 50
+sun_cost = 325
 
 [node name="CardBg" parent="PlantCards2/Card17" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4462,9 +4554,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 42
+card_id = 49
 card_plant_type = 518
-sun_cost = 325
+cool_time = 30.0
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card18" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4716,10 +4809,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 43
+card_id = 50
 card_plant_type = 519
-cool_time = 30.0
-sun_cost = 25
+cool_time = 50.0
+sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card19" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4825,9 +4918,8 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 44
+card_id = 51
 card_plant_type = 520
-cool_time = 50.0
 sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card20" index="0"]
@@ -4910,9 +5002,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 45
+card_id = 52
 card_plant_type = 521
-sun_cost = 125
+sun_cost = 175
 
 [node name="CardBg" parent="PlantCards2/Card21" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -4979,8 +5071,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 46
+card_id = 53
 card_plant_type = 522
+cool_time = 30.0
 sun_cost = 175
 
 [node name="CardBg" parent="PlantCards2/Card22" index="0"]
@@ -5054,10 +5147,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 47
+card_id = 54
 card_plant_type = 523
 cool_time = 30.0
-sun_cost = 175
+sun_cost = 0
 
 [node name="CardBg" parent="PlantCards2/Card23" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5100,10 +5193,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 48
+card_id = 55
 card_plant_type = 524
 cool_time = 30.0
-sun_cost = 0
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card24" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5178,10 +5271,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 49
+card_id = 56
 card_plant_type = 525
-cool_time = 30.0
-sun_cost = 25
+sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card25" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5281,9 +5373,8 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 50
+card_id = 57
 card_plant_type = 526
-sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card26" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5400,8 +5491,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 51
+card_id = 58
 card_plant_type = 527
+sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card27" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5494,7 +5586,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 52
+card_id = 59
 card_plant_type = 528
 sun_cost = 125
 
@@ -5668,8 +5760,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 53
+card_id = 60
 card_plant_type = 529
+cool_time = 30.0
 sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card29" index="0"]
@@ -5772,10 +5865,8 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 54
+card_id = 61
 card_plant_type = 530
-cool_time = 30.0
-sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card30" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -5809,7 +5900,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 55
+card_id = 62
 card_plant_type = 531
 
 [node name="CardBg" parent="PlantCards2/Card31" index="0"]
@@ -5930,8 +6021,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 56
+card_id = 63
 card_plant_type = 532
+sun_cost = 25
 
 [node name="CardBg" parent="PlantCards2/Card32" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6068,9 +6160,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 57
+card_id = 64
 card_plant_type = 533
-sun_cost = 25
+sun_cost = 125
 
 [node name="CardBg" parent="PlantCards2/Card33" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6130,7 +6222,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 20
+card_id = 28
 card_plant_type = 49
 sun_cost = 200
 
@@ -6284,9 +6376,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 58
+card_id = 65
 card_plant_type = 534
-sun_cost = 125
+sun_cost = 75
 
 [node name="CardBg" parent="PlantCards2/Card35" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6449,9 +6541,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 59
+card_id = 66
 card_plant_type = 535
-sun_cost = 75
+sun_cost = 50
 
 [node name="CardBg" parent="PlantCards2/Card36" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6485,9 +6577,8 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 60
+card_id = 67
 card_plant_type = 536
-sun_cost = 50
 
 [node name="CardBg" parent="PlantCards2/Card37" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6541,8 +6632,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 61
+card_id = 68
 card_plant_type = 537
+cool_time = 30.0
+sun_cost = 50
 
 [node name="CardBg" parent="PlantCards2/Card38" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6620,10 +6713,9 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 62
+card_id = 69
 card_plant_type = 538
-cool_time = 30.0
-sun_cost = 50
+sun_cost = 300
 
 [node name="CardBg" parent="PlantCards2/Card39" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6728,9 +6820,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 63
+card_id = 70
 card_plant_type = 539
-sun_cost = 300
+cool_time = 50.0
+sun_cost = 250
 
 [node name="CardBg" parent="PlantCards2/Card40" index="0"]
 texture = ExtResource("3_m4n4y")
@@ -6834,10 +6927,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 64
+card_id = 71
 card_plant_type = 540
 cool_time = 50.0
-sun_cost = 250
+sun_cost = 150
 
 [node name="Plant540GatlingPea" type="Node2D" parent="PlantCards2/Card41/CardBg/CharacterStatic" index="0" unique_id=1154396821]
 position = Vector2(1, 14)
@@ -7013,7 +7106,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 65
+card_id = 72
 card_plant_type = 541
 cool_time = 50.0
 sun_cost = 150
@@ -7161,10 +7254,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 66
+card_id = 73
 card_plant_type = 542
 cool_time = 50.0
-sun_cost = 150
+sun_cost = 225
 
 [node name="Plant542GloomShroom" type="Node2D" parent="PlantCards2/Card43/CardBg/CharacterStatic" index="0" unique_id=433617370]
 position = Vector2(1, 14)
@@ -7310,10 +7403,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 67
+card_id = 74
 card_plant_type = 543
 cool_time = 50.0
-sun_cost = 225
+sun_cost = 200
 
 [node name="Plant543Cattail" type="Node2D" parent="PlantCards2/Card44/CardBg/CharacterStatic" index="0" unique_id=277002124]
 position = Vector2(1, 14)
@@ -7417,10 +7510,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 68
+card_id = 75
 card_plant_type = 544
 cool_time = 50.0
-sun_cost = 200
+sun_cost = 50
 
 [node name="Plant544WinterMelon" type="Node2D" parent="PlantCards2/Card45/CardBg/CharacterStatic" index="0" unique_id=1912755704]
 position = Vector2(8, 16)
@@ -7538,10 +7631,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 69
+card_id = 76
 card_plant_type = 545
 cool_time = 50.0
-sun_cost = 50
+sun_cost = 125
 
 [node name="Plant545GoldMagnet" type="Node2D" parent="PlantCards2/Card46/CardBg/CharacterStatic" index="0" unique_id=1933564007]
 position = Vector2(1, 14)
@@ -7658,10 +7751,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 70
+card_id = 77
 card_plant_type = 546
 cool_time = 50.0
-sun_cost = 125
+sun_cost = 500
 
 [node name="Plant546SpikeRock" type="Node2D" parent="PlantCards2/Card47/CardBg/CharacterStatic" index="0" unique_id=926799873]
 position = Vector2(1, 14)
@@ -7791,10 +7884,10 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 71
+card_id = 78
 card_plant_type = 547
 cool_time = 50.0
-sun_cost = 500
+sun_cost = 0
 
 [node name="CharacterStatic" parent="PlantCards2/Card48/CardBg" index="1"]
 position = Vector2(12, 31)
@@ -7939,7 +8032,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 73
+card_id = 79
 card_plant_type = 1001
 sun_cost = 50
 
@@ -8001,7 +8094,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 74
+card_id = 80
 card_plant_type = 1002
 sun_cost = 50
 
@@ -8064,7 +8157,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 75
+card_id = 81
 card_plant_type = 1003
 sun_cost = 50
 

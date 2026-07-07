@@ -31,6 +31,9 @@ var curr_all_preplant_purple:Array[Plant000Base]
 ## 上一次选中的非模仿者植物类型，模仿者种植时自动复制它
 var last_non_imitater_plant_type: CharacterRegistry.PlantType = CharacterRegistry.PlantType.Null
 
+## 缓存：游戏场景中的 BodyCorrect 位置，按植物类型索引
+var _game_body_correct_cache: Dictionary = {}
+
 func init_hm_character():
 	self.is_mode_column = hand_manager.game_para.is_mode_column
 
@@ -60,8 +63,11 @@ func click_card(card:Card) -> void:
 			plant_condition = Global.character_registry.get_plant_info(last_non_imitater_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 		## 静态植物以及植物虚影
 		characte_static = card.character_static.duplicate()
-		characte_static.get_child(0).scale = Vector2.ONE
-		characte_static_shadow = characte_static.get_child(0).duplicate()
+		var plant_child: Node2D = characte_static.get_child(0)
+		plant_child.scale = Vector2.ONE
+		plant_child.position = Vector2.ZERO
+		_fix_body_correct_from_game_scene(plant_child, curr_card.card_plant_type)
+		characte_static_shadow = plant_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
 
@@ -80,8 +86,10 @@ func click_card(card:Card) -> void:
 		zombie_row_type = Global.character_registry.get_zombie_info(curr_card.card_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieRowType)
 		## 静态僵尸以及僵尸虚影
 		characte_static = card.character_static.duplicate()
-		characte_static.get_child(0).scale = Vector2.ONE
-		characte_static_shadow = characte_static.get_child(0).duplicate()
+		var zombie_child: Node2D = characte_static.get_child(0)
+		zombie_child.scale = Vector2.ONE
+		zombie_child.position = Vector2.ZERO
+		characte_static_shadow = zombie_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
 
@@ -223,6 +231,64 @@ func click_cell(plant_cell:PlantCell):
 ## 退出当前状态
 func exit_status():
 	_clear_curr_data()
+
+
+## 从游戏场景获取正确的 BodyCorrect 及其子节点结构，应用到卡片预览节点上
+func _fix_body_correct_from_game_scene(plant_child: Node2D, plant_type: CharacterRegistry.PlantType) -> void:
+	if not _game_body_correct_cache.has(plant_type):
+		_game_body_correct_cache[plant_type] = _make_game_body_correct_snapshot(plant_type)
+
+	var snapshot: Dictionary = _game_body_correct_cache.get(plant_type, {})
+	if snapshot.is_empty():
+		return
+
+	var card_body_correct = plant_child.get_node_or_null("Body/BodyCorrect") as Node2D
+	if not card_body_correct:
+		return
+
+	_apply_node_snapshot(card_body_correct, snapshot)
+
+
+func _make_game_body_correct_snapshot(plant_type: CharacterRegistry.PlantType) -> Dictionary:
+	var snapshot: Dictionary = {}
+	var plant_scene = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantScenes)
+	if not plant_scene:
+		return snapshot
+
+	var instance = plant_scene.instantiate()
+	var body_correct = instance.get_node_or_null("Body/BodyCorrect") as Node2D
+	if body_correct:
+		_collect_node_snapshot(body_correct, snapshot)
+	instance.queue_free()
+	return snapshot
+
+
+func _collect_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
+	snapshot[&"pos"] = node.position
+	snapshot[&"scale"] = node.scale
+	var children_snapshot: Dictionary = {}
+	for child in node.get_children():
+		var child_node2d := child as Node2D
+		if child_node2d:
+			var child_snap: Dictionary = {}
+			_collect_node_snapshot(child_node2d, child_snap)
+			children_snapshot[child.name] = child_snap
+	if not children_snapshot.is_empty():
+		snapshot[&"children"] = children_snapshot
+
+
+func _apply_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
+	if snapshot.has("pos"):
+		node.position = snapshot["pos"]
+	if snapshot.has("scale"):
+		node.scale = snapshot["scale"]
+	var children_snapshot: Dictionary = snapshot.get("children", {})
+	for child in node.get_children():
+		var child_name: String = child.name
+		if children_snapshot.has(child_name):
+			var child_node2d := child as Node2D
+			if child_node2d:
+				_apply_node_snapshot(child_node2d, children_snapshot[child_name])
 
 
 #region 柱子模式额外操作函数
