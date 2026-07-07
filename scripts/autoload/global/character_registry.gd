@@ -57,7 +57,7 @@ enum PlantType {
 	P501SunFlower,
 	P502CherryBomb,
 
-	P504PotatoMine,
+	P504PotatoMine = 504,
 	P505SnowPea,
 	P506Chomper,
 	P507PeaShooterDouble,
