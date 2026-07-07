@@ -28,6 +28,9 @@
 [ext_resource type="Animation" uid="uid://bjebn2uedwhsr" path="res://animation/character/plant/019_ThreePeater/ThreePeater_shooting3.tres" id="24_akh6a"]
 [ext_resource type="Script" uid="uid://4hno3wiv8vxd" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_three_pea.gd" id="26_jdor8"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="27_wvqqo"]
+[ext_resource type="Texture2D" uid="uid://clhflcopa48tl" path="res://assets/image/projectile/Genji_Bullet.png" id="29_xlmxl"]
+[ext_resource type="Texture2D" uid="uid://caakseej5d6sd" path="res://assets/image/projectile/Kiriko_Bullet.png" id="30_wvqqo"]
+[ext_resource type="Texture2D" uid="uid://dbxolatu4w0s4" path="res://assets/image/projectile/Hanzo_Bullet.png" id="31_jdor8"]
 
 [sub_resource type="Resource" id="Resource_ci3mc"]
 script = ExtResource("18_wvqqo")
@@ -391,6 +394,7 @@ parameters/TimeScale/scale = 1.0
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1509550506 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("26_jdor8")
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
+bullet_textures = Array[Texture2D]([ExtResource("31_jdor8"), ExtResource("29_xlmxl"), ExtResource("30_wvqqo")])
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=992679642]
 
