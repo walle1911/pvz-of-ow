@@ -7,6 +7,9 @@ class_name AttackComponentBulletThreePea
 @export var bullet_scales: Array[Vector2] = [Vector2.ONE, Vector2.ONE, Vector2.ONE]
 @export var bullet_attack_values: Array[int] = [-1, -1, -1]
 @export var bullet_attack_intervals: Array[float] = [0.0, 0.0, 0.0]
+@export var bullet_speeds: Array[float] = [-1.0, -1.0, -1.0]
+@export var middle_triple_shot_enabled := false
+@export var middle_triple_shot_interval := 0.12
 
 ## 边路补偿(0：正常，1：上路补偿，-1：下路补偿)
 var bullet_border_compensation := 0
@@ -14,6 +17,8 @@ var bullet_border_compensation := 0
 ## 攻击检测射线区域
 var attack_ray_coll_shape:Array[CollisionShape2D]
 var bullet_last_shoot_msec: Array[int] = [-1, -1, -1]
+const MIDDLE_BULLET_INDEX := 1
+const MIDDLE_TRIPLE_SHOT_COUNT := 3
 
 ## 初始化三线射手攻击组件
 func _ready() -> void:
@@ -34,22 +39,25 @@ func _shoot_bullet():
 	for i in range(3):
 		## 边路补偿补偿
 		if (bullet_border_compensation == 1 and i == 0) or (bullet_border_compensation == -1 and i == 2):
-			_create_bullte(0.3, 1)
+			_create_bullte(0.3, MIDDLE_BULLET_INDEX)
 
+		elif middle_triple_shot_enabled and i == MIDDLE_BULLET_INDEX:
+			_create_middle_triple_shot(true)
 		else:
 			_create_bullte(0, i, true)
 
 	## 攻击音效
 	SoundManager.play_character_SFX(&"Throw")
 
-func _create_bullte(await_time:float, i:int=1, change_y_target:bool=false):
+func _create_bullte(await_time:float, i:int=1, change_y_target:bool=false, check_attack_interval:=true, is_rotate_bullet:=false):
 	if await_time:
 		await get_tree().create_timer(await_time).timeout
-	if not _can_create_bullet(i):
+	if check_attack_interval and not _can_create_bullet(i):
 		return
 	var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 	var bullet_paras: Dictionary = _build_three_pea_bullet_paras(i, change_y_target)
 	_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
+	_apply_bullet_motion(bullet, i, is_rotate_bullet)
 	bullet.init_bullet(bullet_paras)
 	_apply_bullet_visuals(bullet, i)
 	bullets.add_child(bullet)
@@ -57,6 +65,14 @@ func _create_bullte(await_time:float, i:int=1, change_y_target:bool=false):
 	## 有偏移的为正常发射的子弹：再 tween 到对应行高
 	if change_y_target and bullet is BulletLinear000Base:
 		(bullet as BulletLinear000Base).change_y(markers_2d_bullet[0].global_position.y + (i - 1) * 100)
+
+
+func _create_middle_triple_shot(change_y_target: bool):
+	if not _can_create_bullet(MIDDLE_BULLET_INDEX):
+		return
+	var burst_interval := maxf(middle_triple_shot_interval, 0.0)
+	for shot_idx in range(MIDDLE_TRIPLE_SHOT_COUNT):
+		_create_bullte(burst_interval * shot_idx, MIDDLE_BULLET_INDEX, change_y_target, false, true)
 
 
 func _can_create_bullet(i: int) -> bool:
@@ -83,6 +99,16 @@ func _get_bullet_attack_interval(i: int) -> float:
 	if i >= bullet_attack_intervals.size():
 		return 0.0
 	return bullet_attack_intervals[i]
+
+
+func _apply_bullet_motion(bullet: Bullet000Base, i: int, is_rotate_bullet: bool):
+	if not bullet is Bullet000NormBase:
+		return
+	var norm_bullet := bullet as Bullet000NormBase
+	if i >= 0 and i < bullet_speeds.size() and bullet_speeds[i] > 0.0:
+		norm_bullet.speed = bullet_speeds[i]
+	if is_rotate_bullet:
+		norm_bullet.is_rotate = true
 
 
 func _apply_bullet_visuals(bullet: Bullet000Base, i: int):
