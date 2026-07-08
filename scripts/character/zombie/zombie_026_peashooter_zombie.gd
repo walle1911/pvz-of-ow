@@ -32,14 +32,14 @@ func _random_anim_status():
 ## 初始化正常出战角色
 func ready_norm():
 	super()
-	## 启用远程子弹攻击(不禁用近战，两者共存)
-	attack_bullet.update_is_attack_factors(true, AttackComponentBase.E_IsAttackFactors.Character)
-	## 运行时设置 markers_2d_bullet，因为 PeashooterHead 是实例化子场景，
-	## 场景文件中的 NodePath 无法可靠解析跨场景引用
+	## 先设置 markers_2d_bullet（必须在 attack 启用之前，否则 CD 触发时
+	## markers 为空数组，_shoot_bullet 访问空 index 会崩溃）
 	if is_instance_valid(peashooter_head):
 		var marker = peashooter_head.get_node_or_null("Anim_stem/stem_correct/Marker2DBullet")
 		if is_instance_valid(marker):
 			attack_bullet.markers_2d_bullet = [marker]
+	## 启用远程子弹攻击(不禁用近战，两者共存)
+	attack_bullet.update_is_attack_factors(true, AttackComponentBase.E_IsAttackFactors.Character)
 	## 头部待机动画由 PeashooterHead 自身 _ready 播放
 
 ## 初始化正常出战角色信号连接

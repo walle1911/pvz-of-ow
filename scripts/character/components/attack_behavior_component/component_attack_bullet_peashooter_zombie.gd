@@ -80,6 +80,8 @@ func _on_bullet_attack_cd_timer_timeout() -> void:
 
 ## 发射僵尸阵营豌豆，固定向左(植物方向)。
 func _shoot_bullet():
+	if markers_2d_bullet.is_empty():
+		return
 	signal_shoot_bullet.emit()
 	for i in range(markers_2d_bullet.size()):
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
