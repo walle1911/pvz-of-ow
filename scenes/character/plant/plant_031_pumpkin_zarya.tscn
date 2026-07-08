@@ -60,6 +60,8 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant031PumpkinZarya" unique_id=462202408 instance=ExtResource("1_j7k8l")]
 script = ExtResource("2_j7k8l")
+covered_front_child_path = NodePath("Body/BodyCorrect/Pumpkin_front/hair")
+covered_front_child_alpha_percent = 50.0
 plant_type = 31
 
 [node name="BodyCorrect" parent="Body" index="0"]
@@ -69,19 +71,14 @@ position = Vector2(-43, -66)
 centered = false
 
 [node name="Pumpkin_back" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1733089858]
-position = Vector2(-3.4046361, 8.989688)
-scale = Vector2(0.7534948, 0.8396547)
+position = Vector2(-4.6337976, 10.22897)
+scale = Vector2(0.7714828, 0.82361376)
 texture = ExtResource("2_ua2hr")
 centered = false
 
-[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Pumpkin_back" index="0" unique_id=1308425813]
-position = Vector2(58.7, 7.75)
-scale = Vector2(0.78, 0.78)
-texture = ExtResource("7_2b1r0")
-
 [node name="Pumpkin_front" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=2132548177]
-position = Vector2(-3.9046361, 8.989688)
-scale = Vector2(0.7534948, 0.8396547)
+position = Vector2(-5.1337976, 10.22897)
+scale = Vector2(0.7714828, 0.82361376)
 texture = ExtResource("3_ep6lu")
 centered = false
 
@@ -96,6 +93,11 @@ z_as_relative = false
 position = Vector2(46.04, 30.37)
 scale = Vector2(0.62, 0.62)
 texture = ExtResource("6_1ixbl")
+
+[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Pumpkin_front" index="2" unique_id=1308425813]
+position = Vector2(60.497, 10.42)
+scale = Vector2(0.81, 0.81)
+texture = ExtResource("7_2b1r0")
 
 [node name="HpComponent" parent="." index="3"]
 max_hp = 4000
