@@ -60,4 +60,5 @@ func _assert(cond, msg):
 		push_error("ASSERT FAIL: " + msg)
 		print("ASSERT FAIL: ", msg)
 		get_tree().quit(1)
-func _L(p1="", p2="", p3="", p4="", p5=""): print(p1, p2, p3, p4, p5)
+func _L(p1="", p2="", p3="", p4="", p5="", p6="", p7="", p8=""):
+	print(p1, p2, p3, p4, p5, p6, p7, p8)
