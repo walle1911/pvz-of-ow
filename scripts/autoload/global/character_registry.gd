@@ -137,6 +137,8 @@ enum ZombieType {
 	Z020ZombieYetiWinston = 20,
 	Z024GargantuarReinhardt = 24,
 	Z025GargantuarAshe = 25,
+		Z026PeashooterHead = 26,
+		Z027PeashooterZombie = 27,
 
 	## 后移的原版僵尸
 	Z500Norm = 500,
@@ -1070,7 +1072,21 @@ const ZombieInfo = {
 		ZombieInfoAttribute.SunCost: 300,
 		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_025_gargantuar_ashe.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
-	},
+		},
+		ZombieType.Z026PeashooterHead:{
+			ZombieInfoAttribute.ZombieName: "PeashooterHead",
+			ZombieInfoAttribute.CoolTime: 0.0,
+			ZombieInfoAttribute.SunCost: 100,
+			ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_500_norm.tscn"),
+			ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+		},
+		ZombieType.Z027PeashooterZombie:{
+			ZombieInfoAttribute.ZombieName: "PeashooterZombie",
+			ZombieInfoAttribute.CoolTime: 0.0,
+			ZombieInfoAttribute.SunCost: 100,
+			ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_027_peashooter_zombie.tscn"),
+			ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+		},
 	## 单独雪橇僵尸
 	ZombieType.Z1001BobsledSingle:{
 		ZombieInfoAttribute.ZombieName: "ZombieBobsledSingle",

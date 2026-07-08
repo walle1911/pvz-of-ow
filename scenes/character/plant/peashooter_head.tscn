@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/character/plant/peashooter_head.gd" id="1_head"]
+[ext_resource type="Texture2D" uid="uid://b00drwni3ja82" path="res://assets/reanim/PeaShooter_Head.png" id="2_face"]
+[ext_resource type="Texture2D" uid="uid://txlm4fwvygkx" path="res://assets/reanim/PeaShooter_mouth.png" id="3_mouth"]
+[ext_resource type="Texture2D" uid="uid://cyyk1hmvx7u05" path="res://assets/reanim/anim_sprout.png" id="4_sprout"]
+[ext_resource type="Texture2D" uid="uid://dp8034ogayq0f" path="res://assets/reanim/PeaShooter_blink1.png" id="5_blink"]
+[ext_resource type="AnimationLibrary" path="res://animation/character/zombie/027_peashooter_zombie/peashooter_head_animations.tres" id="6_animlib"]
+
+[node name="PeashooterHead" type="Node2D"]
+script = ExtResource("1_head")
+
+[node name="Anim_stem" type="Sprite2D" parent="."]
+position = Vector2(39.577797, 43.11776)
+centered = false
+
+[node name="stem_correct" type="Node2D" parent="Anim_stem"]
+position = Vector2(-37.6, -48.7)
+
+[node name="Anim_sprout" type="Sprite2D" parent="Anim_stem/stem_correct"]
+position = Vector2(7.70444, 24.713322)
+rotation = -0.17402793
+scale = Vector2(0.799, 0.799)
+texture = ExtResource("4_sprout")
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="Anim_stem/stem_correct"]
+position = Vector2(19.3, 12.70888)
+scale = Vector2(0.555, 0.5719112)
+texture = ExtResource("2_face")
+centered = false
+
+[node name="Idle_mouth" type="Sprite2D" parent="Anim_stem/stem_correct"]
+position = Vector2(52.50444, 12.513321)
+scale = Vector2(0.555, 0.57873356)
+texture = ExtResource("3_mouth")
+centered = false
+
+[node name="Idle_shoot_blink" type="Sprite2D" parent="Anim_stem/stem_correct"]
+position = Vector2(37.7, 19.9)
+scale = Vector2(0.555, 0.521)
+centered = false
+
+[node name="Anim_blink" type="Sprite2D" parent="Anim_stem/stem_correct"]
+visible = false
+position = Vector2(38.0088, 18.85)
+scale = Vector2(0.555, 0.555)
+texture = ExtResource("5_blink")
+centered = false
+
+[node name="Marker2DBullet" type="Marker2D" parent="Anim_stem/stem_correct"]
+position = Vector2(60.9452, 30.6411)
+
+[node name="HeadAnimPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("..")
+libraries = {
+"": ExtResource("6_animlib")
+}
