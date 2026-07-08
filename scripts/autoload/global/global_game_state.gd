@@ -55,6 +55,7 @@ var selected_cards: Array = []
 	CharacterRegistry.PlantType.P038UmbrellaLeafLifeweaver,
 	CharacterRegistry.PlantType.P040MelonPultAshe,
 	CharacterRegistry.PlantType.P041GatlingPeaBastion,
+	CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 	CharacterRegistry.PlantType.P043GloomShroomMoira,
 	CharacterRegistry.PlantType.P044CattailJetpackCat,
 	CharacterRegistry.PlantType.P048CobCannonEmre,
@@ -116,10 +117,14 @@ var selected_cards: Array = []
 ]
 
 @export var curr_zombie :Array[CharacterRegistry.ZombieType]= [
+	CharacterRegistry.ZombieType.Z009DancingZombieLucio,
+	CharacterRegistry.ZombieType.Z010BackupDancerLucio,
+	CharacterRegistry.ZombieType.Z013ZomboniShion,
 	CharacterRegistry.ZombieType.Z016JackboxReaper,
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt,
+	CharacterRegistry.ZombieType.Z025GargantuarAshe,
 	CharacterRegistry.ZombieType.Z500Norm,
 	CharacterRegistry.ZombieType.Z501Flag,
 	CharacterRegistry.ZombieType.Z502Cone,

@@ -12,36 +12,251 @@ rg --files | rg "关键词"
 
 确认目标文件后再改。若工作区已有用户改动，读 diff，保留不相关改动。
 
-## 新增或复制植物
+## 新增或复制植物（含 OW 变体）
 
-1. 找一个最接近的已有植物，读它的脚本、场景、动画资源、卡牌预览和注册表。
-2. 新植物脚本放 `scripts/character/plant/`，场景放 `scenes/character/plant/`。
-3. 在 `scripts/autoload/global/character_registry.gd` 增加 `PlantType` 和 `PlantInfo`，包含名字、冷却、阳光、种植条件和场景 preload。
-4. 若是紫卡，在 `AllPrePlantPurple` 添加前置植物关系。
-5. 需要正式可选时，检查 `scripts/autoload/global/global_game_state.gd` 的 `curr_plant`。
-6. 需要卡牌时，更新 `scenes/autoload/all_cards.tscn` 中对应卡牌和 `CharacterStatic` 预览。
-7. 需要图鉴时，更新 `data/almanac_data.json`。
-8. 验证：`rg` 新 id、新名字、新场景路径；必要时跑 Godot headless。
+当基于已有植物原型创建新变体（如 `MelonPult_Ashe`、`TwinSunFlower_Illari`）时，**必须**按以下完整流程操作，每一步都不可省略。
 
-注意：
+### 1. 新建脚本
 
-- 不要只加脚本。角色通常还需要场景、注册、卡牌、图鉴或关卡资源串联。
-- 复制变体时优先沿用相邻变体的写法。
-- 调整静态卡牌预览时改 `scenes/autoload/all_cards.tscn`，不是猜一个新的 all_cards 场景。
+复制原型脚本，新脚本直接 `extends` 原型类：
 
-## 新增或复制僵尸
+```gdscript
+# scripts/character/plant/plant_XXX_variant.gd
+extends Plant042TwinSunFlower   # 原型类
+class_name PlantXXXVariant
+```
 
-1. 从 `scripts/character/zombie/` 和 `scenes/character/zombie/` 找相似僵尸。
-2. 场景通常继承 `scenes/character/zombie/zombie_000_base.tscn`。
-3. 在 `scripts/autoload/global/character_registry.gd` 增加 `ZombieType` 和 `ZombieInfo`，包含名字、冷却、阳光、场景 preload、`ZombieRowType`。
-4. 若出现在关卡波次中，检查 `resources/level_date_resource/` 相关 `.tres`。
-5. 若可作为卡牌或解谜僵尸使用，检查 `global_game_state.gd`、`all_cards.tscn`、对应卡槽逻辑。
+文件编号取现有 `plant_*.gd` 脚本最大号 +1。
 
-僵尸动画要注意：
+### 2. 新建场景 `.tscn`
 
-- 移动动画开头通常有移动组件方法调用。
-- 死亡动画末尾通常走已有 fade/remove 流程。
-- 攻击动画打点应调用攻击组件，不要在脚本里另造平行伤害路径。
+```bash
+cp scenes/character/plant/原型.tscn scenes/character/plant/plant_Number_variant.tscn
+```
+
+**必须修改**：
+- 开头的 `[gd_scene format=3]` **不写 uid**（避免冲突）
+- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/plant/新脚本.gd" id="..."]`
+- 其他 ext_resource 引用和节点树保持不变
+
+Number 用 `PlantType` 枚举值（如 MelonPultAshe 枚举 =40，场景用 `plant_040_...`）。
+
+### 3. 注册到 `character_registry.gd`
+
+#### 3.1 PlantType 枚举
+
+在 OW 变体区块（`P500PeaShooterSingle` 上方）添加：
+
+```gdscript
+P042TwinSunFlowerIllari = 42,
+```
+
+枚举值用植物在原版 PvZ 中的编号，查阅相邻变体确定可用值。
+
+#### 3.2 PlantInfo 字典
+
+在最近的同类变体条目后添加。`PlantName` 用 `"PrototypeName_OWName"` 格式，`PlantScenes` 指向新 `.tscn`，`CoolTime`、`SunCost`、`PlantConditionResource` 照抄原型。
+
+#### 3.3 AllPrePlantPurple（仅紫卡）
+
+若原型在 `AllPrePlantPurple` 中有前置植物关系，新变体复制一份：
+
+```gdscript
+PlantType.P042TwinSunFlowerIllari:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
+```
+
+### 4. 添加到 `global_game_state.gd`
+
+在 `curr_plant` 数组的 OW 变体区块添加新条目。
+
+### 5. 添加存档 ID 映射
+
+`save_service.gd` 和 `global_utils.gd` 的 `legacy_plant_type_map` 末尾追加，key 取现有最大 +1。
+
+### 6. 添加图鉴
+
+`data/almanac_data.json` 中 plants 对象的对应位置（紧邻原型条目）追加，key 与 `PlantInfo.PlantName` 一致。
+
+### 7. 添加卡牌到 `all_cards.tscn`（**关键步骤，易遗漏**）
+
+#### 7.1 定位 PlantCards 容器
+
+OW 变体卡牌放在 `PlantCards` GridContainer（第一个植物卡牌网格），放在该容器的最后一个 Card 之后。
+
+#### 7.2 添加 Card 节点
+
+```tscn
+[node name="CardN" parent="PlantCards" unique_id=NEG_VALUE instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_plant_type = N    # 枚举值
+cool_time = XXX        # 照抄原型
+sun_cost = XXX         # 照抄原型
+
+[node name="CardBg" parent="PlantCards/CardN" index="0"]
+texture = ExtResource("3_m4n4y")
+```
+
+#### 7.3 复制原型的完整 Body 层级（**严格照抄**）
+
+1. 在 `PlantCards2` 中搜索原型的 `card_plant_type = 原型枚举值` 定位其卡牌
+2. 将该卡牌 `CharacterStatic` 下的**完整节点树**整段复制
+3. 替换父路径：`PlantCards2/CardX` → `PlantCards/CardN`
+4. 替换顶层 Node2D 节点名为变体名（如 `Plant042TwinSunFlowerIllari`）
+5. **移除**所有 `unique_name_in_owner = true` 行
+6. unique_id 换为不重复的负数序列
+
+#### 7.4 更新 all_plant_card_prefabs 字典
+
+添加映射（按枚举值排序）：
+
+```gdscript
+42: NodePath("PlantCards/Card32"),
+```
+
+### 8. 验证
+
+```bash
+python3 -m json.tool data/almanac_data.json
+HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --quit 2>&1
+```
+
+关注输出中是否有 `缺少植物卡牌注册信息` 或 `parse error`。退出码 0 且无新增 WARNING 即通过。
+
+### 检查清单
+
+- [ ] 脚本 exists + extends 原型类
+- [ ] 场景 exists + 无 uid + 脚本引用用 path 格式
+- [ ] PlantType 枚举 + PlantInfo + AllPrePlantPurple（如为紫卡）
+- [ ] global_game_state.curr_plant 已添加
+- [ ] save_service + global_utils save ID 映射
+- [ ] almanac_data.json 条目 + JSON 校验
+- [ ] all_cards.tscn：Card 节点 + 完整 Body 层级 + all_plant_card_prefabs 字典
+- [ ] Godot headless 退出码 0，无新增 warning
+
+## 新增或复制僵尸（含 OW 变体）
+
+当基于已有僵尸原型创建新变体（如 `Gargantuar_Reinhardt`、`Zomboni_Shion`）时，**必须**按以下完整流程操作，每一步都不可省略。
+
+### 1. 新建脚本
+
+复制原型脚本，新脚本直接 `extends` 原型类：
+
+```gdscript
+# scripts/character/zombie/zombie_XXX_variant.gd
+extends Zombie013Zamboni   # 原型类
+class_name ZombieXXXVariant
+```
+
+文件编号取现有 `zombie_*.gd` 脚本最大号 +1。文件名用下划线连接英文名。
+
+### 2. 新建场景 `.tscn`
+
+```bash
+cp scenes/character/zombie/原型.tscn scenes/character/zombie/zombie_Number_variant.tscn
+```
+
+**必须修改**：
+- 开头的 `[gd_scene format=3]` **不写 uid**（避免冲突）
+- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/zombie/新脚本.gd" id="..."]`
+- 其他 ext_resource 引用和节点树保持不变
+
+Number 用原始僵尸的场景文件编号（如 Zamboni 是 013，Gargantuar 多变体时用下一个空闲号）。
+
+### 3. 注册到 `character_registry.gd`
+
+#### 3.1 ZombieType 枚举
+
+在 OW 变体区块（`Z016JackboxReaper` 上方）添加：
+
+```gdscript
+Z013ZomboniShion = 13,
+```
+
+枚举值用原始僵尸编号。同一僵尸有多个变体时用下一个空闲值。
+
+#### 3.2 ZombieInfo 字典
+
+在 `Z016JackboxReaper` 条目**之后**紧邻添加。`ZombieName` 用 `"VariantName"` 格式，scene 指向新 `.tscn`，其他参数照抄原型。
+
+### 4. 添加到 `global_game_state.gd`
+
+在 `curr_zombie` 数组的 OW 变体区块添加新条目。
+
+### 5. 添加存档 ID 映射
+
+`save_service.gd` 和 `global_utils.gd` 中的 `legacy_zombie_type_map` 末尾追加新映射，key 取现有最大 +1。
+
+### 6. 添加图鉴
+
+`data/almanac_data.json` 中 zombies 对象的最后一个原版变体条目后追加，key 与 `ZombieInfo.ZombieName` 一致。**验证 JSON**：
+
+```bash
+python3 -m json.tool data/almanac_data.json
+```
+
+### 7. 添加卡牌到 `all_cards.tscn`（**关键步骤，易遗漏**）
+
+#### 7.1 添加 Card 节点到 ZombieCards
+
+在 `ZombieCards` GridContainer 的最后一个 Card 节点之后（`ZombieCards2` 之前）插入：
+
+```tscn
+[node name="CardN" parent="ZombieCards" unique_id=NEG_VALUE instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_zombie_type = N   # 枚举值
+cool_time = 0.0
+sun_cost = XXX         # 照抄原型
+
+[node name="CardBg" parent="ZombieCards/CardN" index="0"]
+texture = ExtResource("3_m4n4y")
+```
+
+unique_id 用不重复的负数。
+
+#### 7.2 复制原型的完整 Body 层级（**严格照抄，不自作主张**）
+
+1. 在 `ZombieCards2` 中搜索原型的 `card_zombie_type = 原型枚举值` 定位其卡牌
+2. 将该卡牌 `CharacterStatic` 下的**完整节点树**（从 `Node2D` 起，包括 `Body > BodyCorrect > ...` 所有子孙 Sprite2D）整段复制
+3. 替换父路径：`ZombieCards2/CardX` → `ZombieCards/CardN`
+4. 替换顶层 Node2D 节点名为变体名（如 `Z009DancingZombieLucio`）
+5. **移除**所有 `unique_name_in_owner = true` 行，避免与原版冲突
+6. unique_id 统一换为不重复的负数序列
+
+#### 7.3 更新 all_zombie_card_prefabs 字典
+
+在字典顶部添加新映射（按枚举值排序）：
+
+```gdscript
+N: NodePath("ZombieCards/CardX"),
+```
+
+### 8. 验证
+
+```bash
+HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --quit 2>&1
+```
+
+关注输出：
+- **绝不能有** `缺少僵尸卡牌注册信息` 或 `parse error`
+- 退出码为 0 且无新增 WARNING 即通过
+- 预存的 UID 相关 warning（如 `uid://ql7tf5nsep8d`）和 `resources still in use at exit` 非阻塞
+
+### 检查清单
+
+- [ ] 脚本 exists + extends 原型类
+- [ ] 场景 exists + 无 uid + 脚本引用用 path 格式
+- [ ] 枚举 + ZombieInfo 注册
+- [ ] global_game_state.curr_zombie 已添加
+- [ ] save_service + global_utils save ID 映射
+- [ ] almanac_data.json 条目 + JSON 校验通过
+- [ ] all_cards.tscn：Card 节点 + 完整 Body 层级 + all_zombie_card_prefabs 字典
+- [ ] Godot headless 退出码 0，无新增 warning
 
 ## 修改植物动画或状态
 

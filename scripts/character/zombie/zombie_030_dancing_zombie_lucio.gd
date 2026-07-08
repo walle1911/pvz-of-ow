@@ -1,0 +1,2 @@
+extends Zombie009Jackson
+class_name Zombie030DancingZombieLucio

@@ -195,6 +195,7 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		71: CharacterRegistry.PlantType.P037GarlicMauga,
 		72: CharacterRegistry.PlantType.P022CaltropHazard,
 		73: CharacterRegistry.PlantType.P020TangleKelpMizuki,
+		74: CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 		999: CharacterRegistry.PlantType.P548Imitater,
 	}
 	var legacy_zombie_type_map := {
@@ -227,6 +228,10 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		27: CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 		28: CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 		29: CharacterRegistry.ZombieType.Z016JackboxReaper,
+		30: CharacterRegistry.ZombieType.Z009DancingZombieLucio,
+		31: CharacterRegistry.ZombieType.Z010BackupDancerLucio,
+		32: CharacterRegistry.ZombieType.Z013ZomboniShion,
+		33: CharacterRegistry.ZombieType.Z025GargantuarAshe,
 	}
 	var should_migrate_legacy_ids := save_version != SaveGameVersion
 	if not should_migrate_legacy_ids:

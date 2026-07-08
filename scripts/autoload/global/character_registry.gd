@@ -43,6 +43,7 @@ enum PlantType {
 	P038UmbrellaLeafLifeweaver = 38,
 	P040MelonPultAshe = 40,
 	P041GatlingPeaBastion = 41,
+	P042TwinSunFlowerIllari = 42,
 	P043GloomShroomMoira = 43,
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
@@ -128,10 +129,14 @@ enum PlacePlantInCell{
 enum ZombieType {
 	Null = 0,
 
+	Z009DancingZombieLucio = 9,
+	Z010BackupDancerLucio = 10,
+	Z013ZomboniShion = 13,
 	Z016JackboxReaper = 16,
 	Z018DiggerZombieVenture = 18,
 	Z020ZombieYetiWinston = 20,
 	Z024GargantuarReinhardt = 24,
+	Z025GargantuarAshe = 25,
 
 	## 后移的原版僵尸
 	Z500Norm = 500,
@@ -186,6 +191,7 @@ enum ZombieInfoAttribute{
 ## 紫卡植物种植前置植物（一个紫卡可对应多个可叠加的前置植物）
 @export var AllPrePlantPurple:Dictionary[PlantType, Array]= {
 	PlantType.P041GatlingPeaBastion:[PlantType.P507PeaShooterDouble],
+	PlantType.P042TwinSunFlowerIllari:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
 	PlantType.P540GatlingPea:[PlantType.P507PeaShooterDouble],
 	PlantType.P541TwinSunFlower:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
 	PlantType.P043GloomShroomMoira:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
@@ -598,6 +604,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 250,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_041_gatling_pea_bastion.tscn")
+		},
+	PlantType.P042TwinSunFlowerIllari: {
+		PlantInfoAttribute.PlantName: "TwinSunFlower_Illari",
+		PlantInfoAttribute.CoolTime: 50.0,
+		PlantInfoAttribute.SunCost: 150,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_042_twin_sun_flower_illari.tscn")
 		},
 	PlantType.P024TallNutSigma: {
 		PlantInfoAttribute.PlantName: "TallNut_Sigma",
@@ -1028,6 +1041,34 @@ const ZombieInfo = {
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
 		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_016_jackbox_reaper.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z009DancingZombieLucio:{
+		ZombieInfoAttribute.ZombieName: "DancingZombie_Lucio",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 300,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_009_dancing_zombie_lucio.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z010BackupDancerLucio:{
+		ZombieInfoAttribute.ZombieName: "BackupDancer_Lucio",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 50,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_010_backup_dancer_lucio.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z013ZomboniShion:{
+		ZombieInfoAttribute.ZombieName: "Zomboni_Shion",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 250,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_013_zamboni_shion.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
+	ZombieType.Z025GargantuarAshe:{
+		ZombieInfoAttribute.ZombieName: "Gargantuar_Ashe",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 300,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_025_gargantuar_ashe.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
 	## 单独雪橇僵尸

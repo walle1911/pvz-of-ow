@@ -139,6 +139,7 @@ const LEGACY_PLANT_TYPE_MAP := {
 	71: CharacterRegistry.PlantType.P037GarlicMauga,
 	72: CharacterRegistry.PlantType.P022CaltropHazard,
 	73: CharacterRegistry.PlantType.P020TangleKelpMizuki,
+	74: CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 	999: CharacterRegistry.PlantType.P548Imitater,
 }
 
@@ -172,6 +173,10 @@ const LEGACY_ZOMBIE_TYPE_MAP := {
 	27: CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 	28: CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 	29: CharacterRegistry.ZombieType.Z016JackboxReaper,
+	30: CharacterRegistry.ZombieType.Z009DancingZombieLucio,
+	31: CharacterRegistry.ZombieType.Z010BackupDancerLucio,
+	32: CharacterRegistry.ZombieType.Z013ZomboniShion,
+	33: CharacterRegistry.ZombieType.Z025GargantuarAshe,
 }
 
 func migrate_legacy_plant_type(value, force_legacy_ids := true) -> CharacterRegistry.PlantType:

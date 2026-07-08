@@ -1,0 +1,2 @@
+extends Zombie024Gargantuar
+class_name Zombie032GargantuarAshe

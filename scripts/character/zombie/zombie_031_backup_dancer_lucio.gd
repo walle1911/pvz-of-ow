@@ -1,0 +1,2 @@
+extends Zombie010Dancer
+class_name Zombie031BackupDancerLucio

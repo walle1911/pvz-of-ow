@@ -1,0 +1,2 @@
+extends Zombie013Zamboni
+class_name Zombie029ZomboniShion
