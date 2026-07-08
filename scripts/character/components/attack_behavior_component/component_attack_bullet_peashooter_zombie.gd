@@ -84,6 +84,8 @@ func _shoot_bullet():
 		return
 	signal_shoot_bullet.emit()
 	for i in range(markers_2d_bullet.size()):
+		if not is_instance_valid(markers_2d_bullet[i]):
+			continue
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, ZOMBIE_PEA_DIRECTION)

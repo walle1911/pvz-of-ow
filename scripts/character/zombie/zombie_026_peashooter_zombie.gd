@@ -22,7 +22,16 @@ class_name Zombie026PeashooterZombie
 
 func _ready() -> void:
 	super()
+	_setup_markers_2d_bullet()
 	_random_anim_status()
+
+## 尽早设置 markers_2d_bullet，防止任何时机 _shoot_bullet 被触发时数组为空
+func _setup_markers_2d_bullet():
+	if not is_instance_valid(peashooter_head) or not is_instance_valid(attack_bullet):
+		return
+	var marker = peashooter_head.get_node_or_null("Anim_stem/stem_correct/Marker2DBullet")
+	if is_instance_valid(marker) and attack_bullet.markers_2d_bullet.is_empty():
+		attack_bullet.markers_2d_bullet = [marker]
 
 func _random_anim_status():
 	idle_status = randi_range(1, idle_status_max)
