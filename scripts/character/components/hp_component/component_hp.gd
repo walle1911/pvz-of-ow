@@ -6,6 +6,9 @@ class_name HpComponent
 @onready var progress_bar_hp: ProgressBar = %ProgressBarHp
 @onready var label_hp: Label = %LabelHp
 
+const _HP_CONTROL_FOOT_POSITION := Vector2(0.0, 28.0)
+const _HP_STACK_FOOT_POSITION := Vector2(-33.0, 14.0)
+
 @export var max_hp:int
 ## 本体受击音效
 @export var sfx_be_attack_body :SoundManagerClass.TypeBeAttackSFX= SoundManagerClass.TypeBeAttackSFX.Null
@@ -36,6 +39,7 @@ signal signal_hp_loss(curr_hp:int, is_drop:bool)
 signal signal_hp_component_death
 
 func _ready() -> void:
+	place_hp_display_at_feet()
 	curr_hp = max_hp
 	## 出战角色连接信号，显示血量
 	if owner_character.character_init_type == Character000Base.E_CharacterInitType.IsNorm:
@@ -53,6 +57,21 @@ func _ready() -> void:
 func change_display_HP_label(value:bool):
 	if is_can_look_hp:
 		visible = value
+
+func place_hp_display_at_feet() -> void:
+	var hp_display_root := _get_hp_display_root()
+	if not is_instance_valid(hp_display_root):
+		return
+	if hp_display_root is VBoxContainer:
+		hp_display_root.position = _HP_STACK_FOOT_POSITION
+	else:
+		hp_display_root.position = _HP_CONTROL_FOOT_POSITION
+
+func _get_hp_display_root() -> Control:
+	var hp_stack := get_node_or_null("VBoxContainer") as Control
+	if is_instance_valid(hp_stack):
+		return hp_stack
+	return get_node_or_null("HpControl") as Control
 
 func set_death_hp(new_death_hp:int):
 	self.death_hp = new_death_hp
