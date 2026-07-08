@@ -266,6 +266,40 @@ HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --qui
 4. 若状态会中断攻击或 idle，先确认 `_ready`、`ready_norm_signal_connect()`、DetectComponent、AttackComponent 的原始信号路径。
 5. 对循环卡顿、对齐、锚点问题，优先在运行时脚本、场景节点 transform 或动画资源上做小改，不直接重写原始素材。
 
+### 成功案例：植物杂交动画迁移
+
+案例：`plant_042_twin_sun_flower_illari.tscn` 右侧花头替换为原版豌豆射手模块，来源为 `plant_500_pea_shooter_single.tscn`。
+
+核心原则：不要把杂交部件拆成几张 Sprite 手搓动画。若目标是复用原版生命感，应把原版部件当成完整动画模块迁移，只在目标场景外层做位置、缩放和连接关系适配。
+
+推荐流程：
+
+1. 先找到源植物的完整动画子树和动画资源。豌豆射手头部不是只有 `PeaShooter_Head` 和 `PeaShooter_mouth`，还包含 `Anim_stem/stem_correct/Anim_sprout`、`Anim_face`、`Idle_mouth`、`Idle_shoot_blink`、`Anim_blink`、`Marker2DBullet`。
+2. 在目标植物里加一个外层容器节点，例如 `PeaShooterRightRoot`。这个节点只负责杂交部件整体位置、缩放和跟随目标根茎，不承载源部件的内部关键帧。
+3. 将源植物内部子树挂到外层容器下，并保留源部件的相对结构。迁移动画时只重映射 `NodePath` 和 `ExtResource` id，不重新设计头、嘴、嫩芽、眨眼的关键帧。
+4. 将动画层拆清楚：
+   - 目标植物原 idle：继续驱动目标身体和根茎，例如 `TwinSunFlower_idle`。
+   - 杂交部件锚点 idle：只驱动外层容器，例如 `PeaAnchor_Idle` 驱动 `PeaShooterRightRoot:position`。
+   - 源部件局部 idle/attack：继续使用原版 `Head_Idle`、`Head_Attack`，驱动 `Anim_sprout`、头、嘴、眨眼等局部节点。
+5. 若杂交部件需要和目标根茎连接紧密，不要让源部件根节点和目标根茎各自使用独立摆动曲线。更稳的做法是复用目标连接根茎的位移曲线，再加固定偏移。例如让 `PeaAnchor_Idle` 复用 `TwinSunflower_stem1:position` 曲线，使豌豆整体和右根茎同方向移动。
+6. 攻击点也随模块迁移。`AttackComponent.markers_2d_bullet` 应指向迁移后的 `Marker2DBullet`，例如 `../Body/BodyCorrect/PeaShooterRightRoot/Anim_stem/stem_correct/Marker2DBullet`。
+7. 若源攻击动画含 `_shoot_bullet` 方法轨道，确认轨道仍指向目标场景里的 `AttackComponent`，不要丢掉方法轨道。
+
+容易失败的做法：
+
+- 只复制头和嘴两张贴图，手调位置和 scale。这样会丢失 `Anim_sprout`、眨眼层、头嘴联动和攻击挤压感。
+- 直接修改源动画内部关键帧来适配目标植物。优先改外层容器；内部关键帧越少动，越能保留原版动画质量。
+- 同时保留目标根茎摆动和源部件根摆动，且两者相位不同。结果会出现根茎和头部反向移动、连接断裂。
+- 只改 `.tscn` 节点默认值，不检查动画轨道。动画每帧会覆盖默认值，视觉上仍可能没有变化。
+
+验证：
+
+- `git diff --check`
+- `HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path /Users/liuyu-yangpocunban/GameDve/PVZ-of-OW res://scenes/character/plant/plant_042_twin_sun_flower_illari.tscn --quit`
+- `HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path /Users/liuyu-yangpocunban/GameDve/PVZ-of-OW --quit`
+
+退出码为 0 且没有新增解析错误即可。macOS CA 证书提示、既有资源 UID warning、直接加载角色场景时的 `lane == -1` 初始化提示通常不是此类动画迁移的阻塞项。
+
 ## 修改卡牌、预览或卡槽
 
 相关路径：
@@ -346,4 +380,3 @@ HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --qui
 - 行为约束：哪些原有 idle、攻击、卡牌、种植或关卡流程必须保留。
 - 验证：跑过什么命令，退出码和关键输出。
 - 剩余风险：未跑的场景、现有无关脏文件、非阻塞警告。
-

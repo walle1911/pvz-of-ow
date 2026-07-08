@@ -6,7 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://cpvkl0j1s5bbe" path="res://assets/reanim/Pumpkin_front.png" id="3_ep6lu"]
 [ext_resource type="Animation" uid="uid://crpcy55uglh0q" path="res://animation/character/plant/031_pumpkin/ALL_ANIMS.res" id="4_4j68l"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="5_ep6lu"]
+[ext_resource type="Texture2D" uid="uid://byfh3gp16cnp8" path="res://assets/reanim/Pumpkin_Zarya_body.png" id="5_rviye"]
+[ext_resource type="Texture2D" uid="uid://ciwaoe8w3cw2t" path="res://assets/reanim/Pumpkin_Zarya_face.png" id="6_1ixbl"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="6_4j68l"]
+[ext_resource type="Texture2D" uid="uid://bh2xp3ts0f2qs" path="res://assets/reanim/Pumpkin_Zarya_hair.png" id="7_2b1r0"]
 [ext_resource type="Texture2D" uid="uid://pk1kj7t44va0" path="res://assets/reanim/pumpkin_damage1.png" id="7_btwas"]
 [ext_resource type="Texture2D" uid="uid://dgpnvemftf3h1" path="res://assets/reanim/Pumpkin_damage2.png" id="8_scv1d"]
 [ext_resource type="Texture2D" uid="uid://bo1033fu5244l" path="res://assets/reanim/Pumpkin_damage3.png" id="9_3u6d4"]
@@ -55,27 +58,44 @@ sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Pumpkin_front")])
 sprite_change_texture = Array[Texture2D]([ExtResource("9_3u6d4")])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
-[node name="Plant031PumpkinZarya" instance=ExtResource("1_j7k8l")]
+[node name="Plant031PumpkinZarya" unique_id=462202408 instance=ExtResource("1_j7k8l")]
 script = ExtResource("2_j7k8l")
 plant_type = 31
 
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-43, -66)
 
-[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1823749041]
 centered = false
 
-[node name="Pumpkin_back" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
-position = Vector2(-7.663828, 14.936874)
-scale = Vector2(0.82482266, 0.7665391)
+[node name="Pumpkin_back" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1733089858]
+position = Vector2(-3.4046361, 8.989688)
+scale = Vector2(0.7534948, 0.8396547)
 texture = ExtResource("2_ua2hr")
 centered = false
 
-[node name="Pumpkin_front" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(-8.118437, 14.936874)
-scale = Vector2(0.82482266, 0.7665391)
+[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Pumpkin_back" index="0" unique_id=1308425813]
+position = Vector2(58.7, 7.75)
+scale = Vector2(0.78, 0.78)
+texture = ExtResource("7_2b1r0")
+
+[node name="Pumpkin_front" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=2132548177]
+position = Vector2(-3.9046361, 8.989688)
+scale = Vector2(0.7534948, 0.8396547)
 texture = ExtResource("3_ep6lu")
 centered = false
+
+[node name="body" type="Sprite2D" parent="Body/BodyCorrect/Pumpkin_front" index="0" unique_id=925925395]
+position = Vector2(62.23, 50.99)
+scale = Vector2(0.93, 0.93)
+texture = ExtResource("5_rviye")
+
+[node name="face" type="Sprite2D" parent="Body/BodyCorrect/Pumpkin_front" index="1" unique_id=646197292]
+z_index = 10
+z_as_relative = false
+position = Vector2(46.04, 30.37)
+scale = Vector2(0.62, 0.62)
+texture = ExtResource("6_1ixbl")
 
 [node name="HpComponent" parent="." index="3"]
 max_hp = 4000
@@ -86,19 +106,17 @@ shape = SubResource("RectangleShape2D_btwas")
 [node name="CollisionShape2D" parent="HurtBoxComponent/HurtBoxReal" index="0"]
 shape = SubResource("CapsuleShape2D_btwas")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_6x5pj")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=538831863]
+libraries/ = SubResource("AnimationLibrary_6x5pj")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=39219542]
 deterministic = false
 tree_root = SubResource("AnimationNodeBlendTree_bbrx8")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 
-[node name="HpStageChangeComponent" type="Node2D" parent="." index="10"]
+[node name="HpStageChangeComponent" type="Node2D" parent="." index="10" unique_id=126248313]
 script = ExtResource("5_ep6lu")
 boundary_value_hp = Array[int]([3000, 2000, 1000, 0])
 body_change = Array[ExtResource("6_4j68l")]([SubResource("Resource_sum7j"), SubResource("Resource_hev76"), SubResource("Resource_e83t0"), null])

@@ -6,16 +6,23 @@
 [ext_resource type="Texture2D" uid="uid://c650cxd5fsti8" path="res://assets/reanim/CobCannon_log.png" id="3_vaxr0"]
 [ext_resource type="Texture2D" uid="uid://dhpv2m52i8tnu" path="res://assets/reanim/CobCannon_fuse.png" id="4_jw2jr"]
 [ext_resource type="Texture2D" uid="uid://dev0upxoidgky" path="res://assets/reanim/CobCannon_husk4.png" id="5_6s6ux"]
+[ext_resource type="Texture2D" uid="uid://ddooon735k1qy" path="res://assets/reanim/CobCannon_emre_fuse.png" id="6_1cvfw"]
 [ext_resource type="Texture2D" uid="uid://bw1eaerjcpf15" path="res://assets/reanim/CobCannon_husk3.png" id="6_q5hnh"]
 [ext_resource type="Texture2D" uid="uid://dnkk3vyykr511" path="res://assets/reanim/CobCannon_husk2.png" id="7_sqcik"]
 [ext_resource type="Texture2D" uid="uid://c0b2nxclwkjxn" path="res://assets/reanim/CobCannon_cob.png" id="7_vaxr0"]
 [ext_resource type="Texture2D" uid="uid://dg8oaxgqbdu2g" path="res://assets/reanim/CobCannon_husk1.png" id="8_2gymn"]
 [ext_resource type="Animation" uid="uid://d07tekmuhcwct" path="res://animation/character/plant/048_cob_cannon/CobCannon_charge.tres" id="10_gp4se"]
-[ext_resource type="Texture2D" uid="uid://bjfgnxqtsjeal" path="res://assets/reanim/CobCannon_blink1.png" id="11_q5hnh"]
 [ext_resource type="Animation" uid="uid://b4x146r6tjdqi" path="res://animation/character/plant/048_cob_cannon/CobCannon_idle.tres" id="11_ytr4m"]
 [ext_resource type="Animation" uid="uid://2idek3cowas8" path="res://animation/character/plant/048_cob_cannon/CobCannon_shooting.tres" id="12_i0iy0"]
+[ext_resource type="Texture2D" uid="uid://c6dr8rx3ojdff" path="res://assets/reanim/CobCannon_emre_hair.png" id="12_mhen4"]
 [ext_resource type="Animation" uid="uid://bjjcvhwaghocs" path="res://animation/character/plant/048_cob_cannon/CobCannon_unarmed_idle.tres" id="13_23ndk"]
+[ext_resource type="Texture2D" uid="uid://755medrweq0h" path="res://assets/reanim/CobCannon_emre_face2.png" id="13_noaol"]
+[ext_resource type="Texture2D" uid="uid://bbvua1svv7oro" path="res://assets/reanim/CobCannon_emre_belt.png" id="13_rkadt"]
+[ext_resource type="Texture2D" uid="uid://h1tnhxoru3jm" path="res://assets/reanim/CobCannon_emre_eye.png" id="14_noaol"]
+[ext_resource type="Texture2D" uid="uid://dh45kav7t1e8s" path="res://assets/reanim/CobCannon_emre_body1.png" id="15_noaol"]
 [ext_resource type="Texture2D" uid="uid://dbniigaxrufrg" path="res://assets/image/main_game_item/CobCannon_target.png" id="16_q5hnh"]
+[ext_resource type="Texture2D" uid="uid://hhdxljas5e6q" path="res://assets/reanim/CobCannon_emre_body2 (2).png" id="17_dbmm3"]
+[ext_resource type="Texture2D" uid="uid://dwcms13yrcwmp" path="res://assets/reanim/CobCannon_emre_body3.png" id="17_f83d8"]
 [ext_resource type="Script" uid="uid://stwigyda6xaj" path="res://scripts/character/components/p_048_cob_cannon_target.gd" id="17_sqcik"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6s6ux"]
@@ -90,7 +97,7 @@ nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_lek30")
 nodes/TimeScale/position = Vector2(620, 180)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"]
 
-[node name="Plant048CobCannonEmre" instance=ExtResource("1_p1q2r")]
+[node name="Plant048CobCannonEmre" unique_id=1056211332 instance=ExtResource("1_p1q2r")]
 script = ExtResource("2_p1q2r")
 charge_cd = 35.0
 is_bullet = true
@@ -105,130 +112,181 @@ scale = Vector2(2.02326, 0.916667)
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-37, -75)
 
-[node name="Anim_unarmed_idle" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
+[node name="Anim_unarmed_idle" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1811758357]
 visible = false
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
-centered = false
-
-[node name="Anim_shooting" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=961291057]
 visible = false
 centered = false
 
-[node name="Anim_charge" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
+[node name="Anim_shooting" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1029273299]
+centered = false
+
+[node name="Anim_charge" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=972520666]
 visible = false
 centered = false
 
-[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
+[node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1502824800]
 visible = false
 centered = false
 
-[node name="CobCannon_backwheels" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
+[node name="CobCannon_backwheels" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=84186137]
 position = Vector2(31.7, -5.7)
 scale = Vector2(0.72, 0.72)
 texture = ExtResource("2_1lbhp")
 centered = false
 
-[node name="CobCannon_backwheels2" type="Sprite2D" parent="Body/BodyCorrect" index="6"]
+[node name="CobCannon_backwheels2" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1732784394]
 position = Vector2(98.6, -5.7)
 scale = Vector2(0.72, 0.72)
 texture = ExtResource("2_1lbhp")
 centered = false
 
-[node name="CobCannon_log2" type="Sprite2D" parent="Body/BodyCorrect" index="7"]
-position = Vector2(15.2, 12.416448)
-scale = Vector2(0.8, 0.8)
+[node name="CobCannon_log2" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=973355042]
+position = Vector2(15.2, 9.712484)
+scale = Vector2(0.8, 0.81017774)
 texture = ExtResource("3_vaxr0")
 centered = false
 
-[node name="CobCannon_fuse" type="Sprite2D" parent="Body/BodyCorrect" index="8"]
-position = Vector2(-15.316447, 31.789803)
-rotation = -0.98041
-scale = Vector2(0.802, 0.81416446)
-skew = -0.17029037
+[node name="CobCannon_fuse" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=1289775989]
+position = Vector2(38.6, 74.3)
+rotation = -2.35445
+scale = Vector2(0.8, 0.8)
 texture = ExtResource("4_jw2jr")
 centered = false
 
-[node name="CobCannon_husk4" type="Sprite2D" parent="Body/BodyCorrect" index="9"]
-position = Vector2(50.641777, 10.149342)
-scale = Vector2(1.0267467, 0.9802533)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/CobCannon_fuse" index="0" unique_id=743550449]
+position = Vector2(13.9, 12.89)
+rotation = -0.17802358
+texture = ExtResource("6_1cvfw")
+
+[node name="CobCannon_husk4" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=1938684868]
+position = Vector2(22.703936, 7.265806)
+rotation = -1.5826323
+scale = Vector2(1.1077694, 0.9837245)
+skew = 0.0135840485
 texture = ExtResource("5_6s6ux")
 centered = false
 
-[node name="CobCannon_husk4_2" type="Sprite2D" parent="Body/BodyCorrect" index="10"]
-visible = false
-self_modulate = Color(1, 1, 1, 0)
-position = Vector2(51.4, 5.3)
+[node name="CobCannon_husk4_2" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=672762730]
+position = Vector2(22.703936, 7.0658064)
+rotation = -1.5826323
+scale = Vector2(1.1069864, 0.9837245)
+skew = 0.013583949
 texture = ExtResource("5_6s6ux")
 centered = false
 
-[node name="CobCannon_husk3" type="Sprite2D" parent="Body/BodyCorrect" index="11"]
-position = Vector2(67.1, -3.1924343)
-scale = Vector2(0.8217467, 0.78383553)
+[node name="CobCannon_husk3" type="Sprite2D" parent="Body/BodyCorrect" index="11" unique_id=1345461427]
+position = Vector2(2.5381293, -12.451291)
+rotation = -1.5861223
+scale = Vector2(0.8860326, 0.78706646)
+skew = 0.017074266
 texture = ExtResource("6_q5hnh")
 centered = false
 
-[node name="CobCannon_husk3_2" type="Sprite2D" parent="Body/BodyCorrect" index="12"]
+[node name="CobCannon_husk3_2" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=1921232955]
+position = Vector2(1.8815489, -12.529581)
+rotation = -1.5833899
+scale = Vector2(0.8858155, 0.78706646)
+skew = 0.014341834
+texture = ExtResource("6_q5hnh")
+centered = false
+
+[node name="CobCannon_cob" type="Sprite2D" parent="Body/BodyCorrect" index="13" unique_id=642760133]
 visible = false
-self_modulate = Color(1, 1, 1, 0)
-position = Vector2(67.3, -8.1)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("6_q5hnh")
-centered = false
-
-[node name="CobCannon_cob" type="Sprite2D" parent="Body/BodyCorrect" index="13"]
-position = Vector2(22.941776, -1.0924343)
-scale = Vector2(0.8217467, 0.78383553)
+position = Vector2(2, -73)
+rotation = -1.56905
+scale = Vector2(0.9, 0.9)
 texture = ExtResource("7_vaxr0")
 centered = false
 
-[node name="CobCannon_husk2" type="Sprite2D" parent="Body/BodyCorrect" index="14"]
-position = Vector2(11.983553, 5.207566)
-scale = Vector2(0.8217467, 0.78383553)
+[node name="CobCannon_husk2" type="Sprite2D" parent="Body/BodyCorrect" index="14" unique_id=88293064]
+position = Vector2(15.155903, 55.17829)
+rotation = -1.5265554
+scale = Vector2(0.9190326, 0.78706646)
+skew = -0.04249608
 texture = ExtResource("7_sqcik")
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="15"]
-position = Vector2(10.283552, -12.150658)
-scale = Vector2(0.8217467, 0.78383553)
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="15" unique_id=1525006764]
+position = Vector2(-2.4750319, 57)
+rotation = -1.6032023
+scale = Vector2(0.9394668, 0.78706646)
+skew = 0.034149315
 texture = ExtResource("8_2gymn")
 centered = false
 
-[node name="CobCannon_blink" type="Sprite2D" parent="Body/BodyCorrect" index="16"]
+[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="0" unique_id=1433883886]
 visible = false
-position = Vector2(51.8, 0)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("11_q5hnh")
+position = Vector2(40.78, 20.21)
+scale = Vector2(0.92, 0.92)
+texture = ExtResource("12_mhen4")
+
+[node name="beard" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="1" unique_id=32078931]
+position = Vector2(66.377335, 63.171013)
+scale = Vector2(0.9998522, 1.3963245)
+texture = ExtResource("13_noaol")
+
+[node name="CobCannon_blink" type="Sprite2D" parent="Body/BodyCorrect" index="16" unique_id=1077566478]
+position = Vector2(13.299323, 9.8309355)
+rotation = -1.60047
+scale = Vector2(0.8922958, 0.76936907)
+skew = 0.031416
+texture = ExtResource("14_noaol")
 centered = false
 
-[node name="CobCannon_log1" type="Sprite2D" parent="Body/BodyCorrect" index="17"]
-position = Vector2(6.2, 36.216446)
-scale = Vector2(0.8, 0.8)
+[node name="CobCannon_log1" type="Sprite2D" parent="Body/BodyCorrect" index="17" unique_id=1225113104]
+position = Vector2(6.2, 33.825645)
+scale = Vector2(0.8, 0.81017774)
 texture = ExtResource("3_vaxr0")
 centered = false
 
-[node name="CobCannon_outerwheels" type="Sprite2D" parent="Body/BodyCorrect" index="18"]
+[node name="belt" type="Sprite2D" parent="Body/BodyCorrect/CobCannon_log1" index="0" unique_id=883813405]
+z_index = 10
+z_as_relative = false
+position = Vector2(34.945, 39.471)
+scale = Vector2(1.096, 0.887)
+texture = ExtResource("13_rkadt")
+
+[node name="body1" type="Sprite2D" parent="Body/BodyCorrect/CobCannon_log1" index="1" unique_id=1489789352]
+position = Vector2(169.89, 19.92)
+scale = Vector2(1.0694997, 1)
+texture = ExtResource("15_noaol")
+
+[node name="body2" type="Sprite2D" parent="Body/BodyCorrect/CobCannon_log1" index="2" unique_id=588063368]
+position = Vector2(87.158, 20.45)
+scale = Vector2(1.113421, 1)
+texture = ExtResource("17_dbmm3")
+
+[node name="bdoy3" type="Sprite2D" parent="Body/BodyCorrect/CobCannon_log1" index="3" unique_id=2079665413]
+position = Vector2(6.49, 22.14)
+texture = ExtResource("17_f83d8")
+
+[node name="CobCannon_outerwheels" type="Sprite2D" parent="Body/BodyCorrect" index="18" unique_id=1253006243]
 position = Vector2(13, 31.9)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("2_1lbhp")
 centered = false
 
-[node name="CobCannon_outerwheels2" type="Sprite2D" parent="Body/BodyCorrect" index="19"]
+[node name="CobCannon_outerwheels2" type="Sprite2D" parent="Body/BodyCorrect" index="19" unique_id=413237224]
 position = Vector2(87.3, 31.9)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("2_1lbhp")
 centered = false
 
-[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect" index="20"]
+[node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect" index="20" unique_id=356381305]
 position = Vector2(37, -138)
 
-[node name="Area2DMouse" type="Area2D" parent="Body" index="1"]
+[node name="Area2DMouse" type="Area2D" parent="Body" index="1" unique_id=883290317]
 visible = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0" unique_id=1746214188]
 position = Vector2(43.625, -38.75)
 shape = SubResource("RectangleShape2D_6s6ux")
+
+[node name="HurtBoxComponent" parent="." index="7"]
+visible = false
 
 [node name="CollisionShape2D" parent="HurtBoxComponent/HurtBoxDetection" index="0"]
 position = Vector2(44, -40)
@@ -239,16 +297,16 @@ position = Vector2(41.000004, -40.000004)
 rotation = 1.5810992
 shape = SubResource("CapsuleShape2D_q5hnh")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=1675668975]
 libraries/ = SubResource("AnimationLibrary_lek30")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=134929731]
 tree_root = SubResource("AnimationNodeBlendTree_35v1m")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 
-[node name="CobCannonTarget" type="Sprite2D" parent="." index="10"]
+[node name="CobCannonTarget" type="Sprite2D" parent="." index="10" unique_id=54454939]
 visible = false
 position = Vector2(208, 1)
 texture = ExtResource("16_q5hnh")
