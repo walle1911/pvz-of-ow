@@ -145,7 +145,7 @@ func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2
 			curr_characte_static_shadow.modulate.a = 0
 			return false
 		if plant_condition.judge_is_can_plant(plant_cell, curr_card.card_plant_type):
-			curr_characte_static_shadow.global_position = plant_cell.get_new_plant_static_shadow_global_position(plant_condition.place_plant_in_cell)
+			curr_characte_static_shadow.global_position = _get_plant_static_shadow_global_position(plant_cell)
 			curr_characte_static_shadow.modulate.a = 0.5
 			return true
 		else:
@@ -170,6 +170,17 @@ func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2
 			curr_characte_static_shadow.global_position = get_zombie_static_shadow_global_position(plant_cell)
 			curr_characte_static_shadow.modulate.a = 0.5
 			return true
+
+func _get_plant_static_shadow_global_position(plant_cell:PlantCell) -> Vector2:
+	var global_pos:Vector2 = plant_cell.get_new_plant_static_shadow_global_position(plant_condition.place_plant_in_cell)
+	if curr_card.card_plant_type == CharacterRegistry.PlantType.P048CobCannonEmre:
+		var next_col := plant_cell.row_col.y + 1
+		if next_col < Global.main_game.plant_cell_manager.row_col.y:
+			var next_plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[plant_cell.row_col.x][next_col]
+			var next_global_pos:Vector2 = next_plant_cell.get_new_plant_static_shadow_global_position(plant_condition.place_plant_in_cell)
+			global_pos = (global_pos + next_global_pos) * 0.5
+
+	return global_pos
 
 ## 获取种植僵尸的虚影位置
 func get_zombie_static_shadow_global_position(plant_cell)->Vector2:

@@ -1,18 +1,26 @@
 [gd_scene format=3 uid="uid://drlnqageaeaii"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_m9n0o"]
-[ext_resource type="Script" uid="uid://ct2atsslxclte" path="res://scripts/character/plant/plant_038_umbrella_leaf.gd" id="2_m9n0o"]
 [ext_resource type="Texture2D" uid="uid://dkyp1upt321re" path="res://assets/reanim/Umbrellaleaf_body.png" id="2_kjldc"]
+[ext_resource type="Script" uid="uid://ct2atsslxclte" path="res://scripts/character/plant/plant_038_umbrella_leaf.gd" id="2_m9n0o"]
 [ext_resource type="Texture2D" uid="uid://dlrvn6rpf5r15" path="res://assets/reanim/Umbrellaleaf_blink1.png" id="3_7nhj0"]
 [ext_resource type="Texture2D" uid="uid://dm7kvxxhm4uel" path="res://assets/reanim/Umbrellaleaf_leaf5.png" id="4_f4cmm"]
+[ext_resource type="Texture2D" uid="uid://cm8o4aftdlb8g" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_face.png" id="4_gdq5b"]
 [ext_resource type="Texture2D" uid="uid://d0umbuark08ak" path="res://assets/reanim/Umbrellaleaf_leaf4.png" id="5_xi1k3"]
 [ext_resource type="Texture2D" uid="uid://do46elh3ankjy" path="res://assets/reanim/Umbrellaleaf_leaf6.png" id="6_yc2dj"]
 [ext_resource type="Texture2D" uid="uid://cx1iqwgjlil8n" path="res://assets/reanim/Umbrellaleaf_leaf3.png" id="7_gg6xg"]
+[ext_resource type="Texture2D" uid="uid://bcpm7gw5pv2lx" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left5.png" id="7_jj6vr"]
 [ext_resource type="Texture2D" uid="uid://bhf6nf1hac1uj" path="res://assets/reanim/Umbrellaleaf_leaf7.png" id="8_2w244"]
 [ext_resource type="Texture2D" uid="uid://dmao52cen7wl3" path="res://assets/reanim/Umbrellaleaf_leaf2.png" id="9_gsw7f"]
+[ext_resource type="Texture2D" uid="uid://dcxc4vsa24724" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left4.png" id="9_kxwq2"]
 [ext_resource type="Texture2D" uid="uid://elsoyk2l1qy" path="res://assets/reanim/Umbrellaleaf_leaf1.png" id="10_dwrju"]
+[ext_resource type="Texture2D" uid="uid://byjdbutl25j3g" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left3.png" id="10_gr81d"]
+[ext_resource type="Texture2D" uid="uid://divhaguvhgqex" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left6.png" id="11_35bka"]
 [ext_resource type="Animation" uid="uid://bujkw8rjwdgve" path="res://animation/character/plant/038_umbrella_leaf/Umbrellaleaf_block.tres" id="11_vgk28"]
 [ext_resource type="Animation" uid="uid://cja5a5h7l26gr" path="res://animation/character/plant/038_umbrella_leaf/Umbrellaleaf_idle.tres" id="12_qy8mi"]
+[ext_resource type="Texture2D" uid="uid://cx22ybtsi78u0" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left2.png" id="13_qx8dy"]
+[ext_resource type="Texture2D" uid="uid://c8n2kgua7nw13" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left7.png" id="15_jx0x8"]
+[ext_resource type="Texture2D" uid="uid://cqpta2wpi7kf3" path="res://assets/reanim/UmbrellaLeaf_Lifeweaver_left1.png" id="15_ykqmu"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rg7sp"]
 _data = {
@@ -59,7 +67,7 @@ node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kuurk"]
 size = Vector2(240, 180)
 
-[node name="Plant038UmbrellaLeafLifeweaver" node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_m9n0o")]
+[node name="Plant038UmbrellaLeafLifeweaver" unique_id=693371937 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_m9n0o")]
 script = ExtResource("2_m9n0o")
 is_activate_umbrella = false
 plant_type = 38
@@ -68,84 +76,115 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-40, -66)
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
-position = Vector2(26.980001, 31.540003)
-scale = Vector2(0.6744, 0.6744)
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1411733628]
+position = Vector2(27.6, 33.5)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("2_kjldc")
 centered = false
 
-[node name="Umbrellaleaf_blink" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="0" unique_id=512551774]
+z_index = 10
+position = Vector2(17.37, 42.07)
+texture = ExtResource("4_gdq5b")
+
+[node name="Umbrellaleaf_blink" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=912774548]
 visible = false
 position = Vector2(33.1, 50.6)
 scale = Vector2(0.665, 0.665)
 texture = ExtResource("3_7nhj0")
 centered = false
 
-[node name="Umbrellaleaf_leaf5" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(30.120003, -7.859988)
-rotation = -0.061086535
-scale = Vector2(0.8145999, 0.77519983)
+[node name="Umbrellaleaf_leaf5" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1581117819]
+position = Vector2(32.9, 3.9)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("4_f4cmm")
 centered = false
 
-[node name="Umbrellaleaf_leaf4" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
-position = Vector2(2.4800067, -9.099985)
-rotation = 0.06492633
-scale = Vector2(0.8145999, 0.77519983)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf5" index="0" unique_id=1916962381]
+position = Vector2(28.209, 18.215)
+scale = Vector2(0.7171519, 0.66099304)
+texture = ExtResource("7_jj6vr")
+
+[node name="Umbrellaleaf_leaf4" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=2071502859]
+position = Vector2(9.6, 4.8)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("5_xi1k3")
 centered = false
 
-[node name="Umbrellaleaf_leaf6" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
-position = Vector2(33.02, 1.580009)
-rotation = -0.04014256
-scale = Vector2(0.8539998, 0.7757999)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf4" index="0" unique_id=862676944]
+position = Vector2(22.21, 16.5)
+scale = Vector2(0.75, 0.963969)
+texture = ExtResource("9_kxwq2")
+
+[node name="Umbrellaleaf_leaf6" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1647897865]
+position = Vector2(33.5, 11.4)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("6_yc2dj")
 centered = false
 
-[node name="Umbrellaleaf_leaf3" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
-position = Vector2(-11.719989, 4.1600122)
-rotation = 0.03839716
-scale = Vector2(0.8557998, 0.7757999)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf6" index="0" unique_id=1186558114]
+position = Vector2(33.74, 11.03)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("11_35bka")
+
+[node name="Umbrellaleaf_leaf3" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1885928135]
+position = Vector2(0, 16.3)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("7_gg6xg")
 centered = false
 
-[node name="Umbrellaleaf_leaf7" type="Sprite2D" parent="Body/BodyCorrect" index="6"]
-position = Vector2(35.460003, 10.780008)
-rotation = -0.03665216
-scale = Vector2(0.8567998, 0.7757999)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf3" index="0" unique_id=988795025]
+position = Vector2(35.06, 23.46)
+rotation = 0.059341196
+texture = ExtResource("10_gr81d")
+
+[node name="Umbrellaleaf_leaf7" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=40265833]
+position = Vector2(37.7, 19.1)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("8_2w244")
 centered = false
 
-[node name="Umbrellaleaf_leaf2" type="Sprite2D" parent="Body/BodyCorrect" index="7"]
-position = Vector2(-0.2599895, 13.18001)
-rotation = 0.03316116
-scale = Vector2(0.89139974, 0.7761999)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf7" index="0" unique_id=904280476]
+position = Vector2(32.9, 19.75)
+scale = Vector2(0.81, 0.81)
+texture = ExtResource("15_jx0x8")
+
+[node name="Umbrellaleaf_leaf2" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1715240363]
+position = Vector2(11.1, 23.2)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("9_gsw7f")
 centered = false
 
-[node name="Umbrellaleaf_leaf1" type="Sprite2D" parent="Body/BodyCorrect" index="8"]
-position = Vector2(30.680002, 15.480007)
-rotation = -0.05235994
-scale = Vector2(0.8231998, 0.8389998)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf2" index="0" unique_id=1124238072]
+position = Vector2(26.203892, 27.81)
+scale = Vector2(0.7930974, 0.7)
+texture = ExtResource("13_qx8dy")
+
+[node name="Umbrellaleaf_leaf1" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=1107591560]
+position = Vector2(32, 24)
+scale = Vector2(0.637, 0.637)
 texture = ExtResource("10_dwrju")
 centered = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_rg7sp")
-}
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Umbrellaleaf_leaf1" index="0" unique_id=629648818]
+position = Vector2(23.31, 30.18)
+scale = Vector2(0.77, 0.77)
+texture = ExtResource("15_ykqmu")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=32278608]
+libraries/ = SubResource("AnimationLibrary_rg7sp")
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=1834945663]
 tree_root = SubResource("AnimationNodeBlendTree_2w244")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 
-[node name="Area2DUmbrella" type="Area2D" parent="." index="10"]
+[node name="Area2DUmbrella" type="Area2D" parent="." index="10" unique_id=464132595]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DUmbrella" index="0"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2DUmbrella" index="0" unique_id=1198790271]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_kuurk")
 
