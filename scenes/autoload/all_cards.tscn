@@ -1029,8 +1029,7 @@ all_zombie_card_prefabs = {
 20: NodePath("ZombieCards/Card2"),
 24: NodePath("ZombieCards/Card1"),
 25: NodePath("ZombieCards/Card8"),
-26: NodePath("ZombieCards/Card9"),
-27: NodePath("ZombieCards/Card10"),
+26: NodePath("ZombieCards/Card10"),
 500: NodePath("ZombieCards2/Card1"),
 501: NodePath("ZombieCards2/Card2"),
 502: NodePath("ZombieCards2/Card3"),
@@ -1152,8 +1151,7 @@ zombie_card_ids = Dictionary[int, int]({
 20: 5,
 24: 6,
 25: 7,
-26: 34,
-27: 35,
+26: 35,
 500: 8,
 501: 9,
 502: 10,
@@ -14126,113 +14124,59 @@ texture = ExtResource("371_ea7g5")
 centered = false
 
 
-[node name="Card9" parent="ZombieCards" instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 34
-card_zombie_type = 26
-cool_time = 0.0
-sun_cost = 100
-
-[node name="CardBg" parent="ZombieCards/Card9" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Zombie026PeashooterHead" type="Node2D" parent="ZombieCards/Card9/CardBg/CharacterStatic" index="0"]
-position = Vector2(2, 17)
-scale = Vector2(0.3, 0.3)
-
-[node name="Body" type="Node2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead"]
-
-[node name="BodyCorrect" type="Node2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body"]
-position = Vector2(-46, -121)
-
-[node name="Zombie_body" type="Sprite2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body/BodyCorrect"]
-position = Vector2(22.4, 43.9)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("212_20o7m")
-centered = false
-
-[node name="Zombie_neck" type="Sprite2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body/BodyCorrect"]
-position = Vector2(29.4, 34)
-scale = Vector2(0.838, 0.798)
-texture = ExtResource("203_3svsw")
-centered = false
-
-[node name="Zombie_head" type="Sprite2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body/BodyCorrect"]
-visible = false
-position = Vector2(6.7, 8.8)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("204_guhh7")
-centered = false
-
-[node name="PeaShooter_Head" type="Sprite2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body/BodyCorrect"]
-position = Vector2(10.4, 12.3)
-scale = Vector2(0.555, 0.555)
-texture = ExtResource("12_cgaa5")
-centered = false
-
-[node name="PeaShooter_mouth" type="Sprite2D" parent="ZombieCards/Card9/CardBg/CharacterStatic/Zombie026PeashooterHead/Body/BodyCorrect"]
-position = Vector2(43.2, 12.1)
-scale = Vector2(0.555, 0.555)
-texture = ExtResource("13_rata2")
-centered = false
-
 [node name="Card10" parent="ZombieCards" instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
 card_id = 35
-card_zombie_type = 27
+card_zombie_type = 26
 cool_time = 0.0
 sun_cost = 100
 
 [node name="CardBg" parent="ZombieCards/Card10" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Zombie027PeashooterZombie" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic" index="0"]
+[node name="Zombie026PeashooterZombie" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic" index="0"]
 position = Vector2(2, 17)
 scale = Vector2(0.3, 0.3)
 
-[node name="Body" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie"]
+[node name="Body" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie"]
 
-[node name="BodyCorrect" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body"]
+[node name="BodyCorrect" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body"]
 position = Vector2(-46, -121)
 
-[node name="Zombie_body" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body/BodyCorrect"]
+[node name="Zombie_body" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body/BodyCorrect"]
 position = Vector2(22.4, 43.9)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("212_20o7m")
 centered = false
 
-[node name="Zombie_neck" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body/BodyCorrect"]
+[node name="Zombie_neck" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body/BodyCorrect"]
 position = Vector2(29.4, 34)
 scale = Vector2(0.838, 0.798)
 texture = ExtResource("203_3svsw")
 centered = false
 
-[node name="Zombie_head" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body/BodyCorrect"]
+[node name="Zombie_head" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body/BodyCorrect"]
 visible = false
 position = Vector2(6.7, 8.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("204_guhh7")
 centered = false
 
-[node name="PeaShooter_Head" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body/BodyCorrect"]
+[node name="PeaShooter_Head" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body/BodyCorrect"]
 position = Vector2(10.4, 12.3)
 scale = Vector2(-0.555, 0.555)
 texture = ExtResource("12_cgaa5")
 centered = false
 
-[node name="PeaShooter_mouth" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie027PeashooterZombie/Body/BodyCorrect"]
+[node name="PeaShooter_mouth" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie/Body/BodyCorrect"]
 position = Vector2(43.2, 12.1)
 scale = Vector2(-0.555, 0.555)
 texture = ExtResource("13_rata2")
 centered = false
 
-[editable path="ZombieCards/Card9"]
 [editable path="ZombieCards/Card10"]
 [editable path="CardImitater"]
 [editable path="PlantCards/Card"]

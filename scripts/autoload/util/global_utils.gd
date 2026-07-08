@@ -177,8 +177,7 @@ const LEGACY_ZOMBIE_TYPE_MAP := {
 	31: CharacterRegistry.ZombieType.Z010BackupDancerLucio,
 	32: CharacterRegistry.ZombieType.Z013ZomboniShion,
 	33: CharacterRegistry.ZombieType.Z025GargantuarAshe,
-		34: CharacterRegistry.ZombieType.Z026PeashooterHead,
-	35: CharacterRegistry.ZombieType.Z027PeashooterZombie,
+		34: CharacterRegistry.ZombieType.Z026PeashooterZombie,
 }
 
 func migrate_legacy_plant_type(value, force_legacy_ids := true) -> CharacterRegistry.PlantType:

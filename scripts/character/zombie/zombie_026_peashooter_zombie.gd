@@ -1,7 +1,7 @@
 extends Zombie000Base
-class_name Zombie027PeashooterZombie
+class_name Zombie026PeashooterZombie
 
-## 豌豆射手僵尸(027)
+## 豌豆射手僵尸(026)
 ## 身体完全复用普通僵尸(zombie_500_norm): 移动/受击/死亡/状态机/行走动画全部继承。
 ## 头部复用普通豌豆射手头部(PeashooterHead 场景)，镜像后朝植物方向。
 ## 远程攻击由 AttackComponentBulletPeashooterZombie 驱动: 边走边射(不停步)，

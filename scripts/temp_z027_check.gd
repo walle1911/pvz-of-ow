@@ -4,7 +4,7 @@ func _ready():
 	_run()
 
 func _run():
-	var ps = load("res://scenes/character/zombie/zombie_027_peashooter_zombie.tscn")
+	var ps = load("res://scenes/character/zombie/zombie_026_peashooter_zombie.tscn")
 	var z = ps.instantiate()
 	z.character_init_type = Character000Base.E_CharacterInitType.IsShow
 	add_child(z)
