@@ -1,0 +1,201 @@
+[gd_scene format=3 uid="uid://bfjarrqcmb05n"]
+
+[ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_500_norm.tscn" id="1_norm"]
+[ext_resource type="Script" path="res://scripts/character/zombie/zombie_027_peashooter_zombie.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/character/plant/peashooter_head.tscn" id="3_head"]
+[ext_resource type="Texture2D" uid="uid://yiqb02oqfffo" path="res://assets/reanim/Zombie_whitewater3.png" id="4_5eufy"]
+[ext_resource type="Script" uid="uid://du0n0or3bya51" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_peashooter_zombie.gd" id="4_attack"]
+[ext_resource type="Texture2D" uid="uid://but82r6h7qmdr" path="res://assets/reanim/Zombie_snorkle_whitewater2.png" id="5_4d3ld"]
+[ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="5_detect"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bullet"]
+size = Vector2(1000, 5)
+
+[node name="Zombie027PeashooterZombie" unique_id=1412154441 instance=ExtResource("1_norm")]
+script = ExtResource("2_script")
+
+[node name="Anim_innerarm3" parent="Body/BodyCorrect/Anim_innerarm" index="0"]
+position = Vector2(26.684961, 84.80903)
+rotation = 6.103941
+scale = Vector2(0.799, 0.799)
+
+[node name="Anim_innerarm2" parent="Body/BodyCorrect/Anim_innerarm" index="1"]
+position = Vector2(24.890976, 69.98195)
+rotation = 6.103941
+scale = Vector2(0.799, 0.799)
+
+[node name="Anim_innerarm1" parent="Body/BodyCorrect/Anim_innerarm" index="2"]
+position = Vector2(24.793983, 49.38797)
+rotation = 6.169844
+scale = Vector2(0.999, 0.999)
+
+[node name="Zombie_flaghand" parent="Body/BodyCorrect/Zombie_flaghand" index="0"]
+position = Vector2(-8.9030075, 54.07894)
+rotation = 5.648305
+scale = Vector2(0.7960301, 0.7960301)
+
+[node name="Zombie_flagpole" parent="Body/BodyCorrect/Zombie_flag" index="0"]
+position = Vector2(8.446277, 0.18220544)
+rotation = -0.5858895
+
+[node name="Zombie_flag" parent="Body/BodyCorrect/Zombie_flag" index="1"]
+position = Vector2(10.446258, 0.18220544)
+rotation = -0.5858895
+
+[node name="Zombie_innerarm_screendoor" parent="Body/BodyCorrect/Zombie_innerarm_screendoor" index="0"]
+position = Vector2(1.3, 52.472927)
+
+[node name="Zombie_neck" parent="Body/BodyCorrect" index="5"]
+position = Vector2(27.612032, 36.98496)
+rotation = -0.08150503
+scale = Vector2(0.8350301, 0.796)
+
+[node name="Anim_head1" parent="Body/BodyCorrect/Anim_head" index="0"]
+position = Vector2(1.1909763, 16.01504)
+rotation = -0.17034698
+scale = Vector2(0.799, 0.799)
+texture = null
+
+[node name="ZombieSeaweed3" parent="Body/BodyCorrect/Anim_head/Anim_head1" index="0"]
+position = Vector2(46.428, 1.626)
+
+[node name="PeashooterHead" parent="Body/BodyCorrect/Anim_head/Anim_head1" index="2" unique_id=1190529282 instance=ExtResource("3_head")]
+unique_name_in_owner = true
+position = Vector2(72.752, -16.439)
+rotation = 2.911209
+scale = Vector2(1.2531329, -1.2531329)
+
+[node name="Zombie_innerleg_upper" parent="Body/BodyCorrect/leg" index="0"]
+position = Vector2(43.903008, 77.79398)
+rotation = -0.0988015
+scale = Vector2(0.799, 0.92921793)
+
+[node name="Zombie_innerleg_lower" parent="Body/BodyCorrect/leg" index="1"]
+position = Vector2(34.481953, 89.40601)
+rotation = 0.14746052
+scale = Vector2(0.799, 0.799)
+
+[node name="Zombie_outerleg_upper" parent="Body/BodyCorrect/leg" index="3"]
+position = Vector2(54.8, 67.8)
+rotation = 0.0
+scale = Vector2(0.8, 0.8)
+
+[node name="Zombie_outerleg_foot" parent="Body/BodyCorrect/leg" index="4"]
+position = Vector2(44.6, 109.3)
+rotation = 0.0
+
+[node name="Zombie_outerleg_lower" parent="Body/BodyCorrect/leg" index="5"]
+position = Vector2(60.4, 93.6)
+rotation = 0.0
+scale = Vector2(0.8, 0.8)
+skew = 0.0
+
+[node name="Zombie_body" parent="Body/BodyCorrect" index="8"]
+position = Vector2(27.31203, 36.38496)
+rotation = -0.07626903
+scale = Vector2(0.8, 0.8)
+
+[node name="Zombie_duckytube" parent="Body/BodyCorrect/Zombie_duckytube" index="0"]
+position = Vector2(-0.7969921, 49.972927)
+rotation = -0.04331801
+
+[node name="Zombie_whitewater" parent="Body/BodyCorrect/Zombie_whitewater" index="0"]
+position = Vector2(23.295115, 80.02772)
+texture = ExtResource("4_5eufy")
+
+[node name="Zombie_tie" parent="Body/BodyCorrect/Zombie_tie" index="0"]
+position = Vector2(23.406015, 52.95488)
+rotation = 6.1591883
+scale = Vector2(0.7989699, 0.812391)
+
+[node name="Anim_head2" parent="Body/BodyCorrect/Anim_head2" index="0"]
+position = Vector2(13.218047, 47.04211)
+rotation = -0.22417691
+scale = Vector2(0.799, 0.799)
+texture = null
+
+[node name="Anim_tongue" parent="Body/BodyCorrect/Anim_tongue" index="0"]
+position = Vector2(21.109024, 45.91805)
+rotation = 6.496916
+scale = Vector2(0.798, 0.78751135)
+skew = 0.13960026
+texture = null
+
+[node name="Zombie_mustache" parent="Body/BodyCorrect/Zombie_mustache" index="0"]
+position = Vector2(2.9150398, 38.11504)
+rotation = -0.17034698
+scale = Vector2(0.799, 0.799)
+
+[node name="Anim_screendoor" parent="Body/BodyCorrect/Anim_screendoor" index="0"]
+position = Vector2(-4.2909765, 36.772926)
+rotation = -0.09023203
+scale = Vector2(0.7980301, 0.7980301)
+
+[node name="Zombie_innerarm_screendoor_hand" parent="Body/BodyCorrect/Zombie_innerarm_screendoor_hand" index="0"]
+position = Vector2(-3.5939841, 54.760895)
+rotation = -0.09885402
+scale = Vector2(0.7990301, 0.7990301)
+
+[node name="Zombie_outerarm_screendoor" parent="Body/BodyCorrect/Zombie_outerarm_screendoor" index="0"]
+position = Vector2(31.012032, 45.38797)
+rotation = -0.10234402
+scale = Vector2(0.799, 0.799)
+
+[node name="Zombie_outerarm_hand" parent="Body/BodyCorrect/Zombie_outerarm_hand" index="0"]
+position = Vector2(35.084957, 86.31504)
+rotation = 6.1527586
+scale = Vector2(0.799, 0.799)
+
+[node name="Zombie_whitewater2" parent="Body/BodyCorrect/Zombie_whitewater2" index="0"]
+position = Vector2(39.4, 87.2)
+scale = Vector2(0.113, 0.27)
+texture = ExtResource("5_4d3ld")
+
+[node name="Zombie_outerarm_upper" parent="Body/BodyCorrect/Zombie_outerarm_upper" index="0"]
+position = Vector2(41.806015, 43.98797)
+rotation = 6.1527586
+scale = Vector2(0.799, 0.799)
+
+[node name="Zombie_outerarm_lower" parent="Body/BodyCorrect/Zombie_outerarm_lower" index="0"]
+position = Vector2(37.193985, 67.890976)
+rotation = 6.1527586
+scale = Vector2(0.799, 0.799)
+
+[node name="Anim_hair" parent="Body/BodyCorrect" index="22"]
+visible = false
+
+[node name="Anim_hair" parent="Body/BodyCorrect/Anim_hair" index="0"]
+position = Vector2(-3.0060158, 14.851134)
+rotation = -0.19731441
+scale = Vector2(0.7990301, 0.799)
+skew = 0.026967553
+
+[node name="Anim_cone" parent="Body/BodyCorrect/Anim_cone" index="0"]
+position = Vector2(-3.4203165, -6.703747)
+rotation = -0.2598179
+scale = Vector2(0.795, 0.795)
+
+[node name="Anim_bucket" parent="Body/BodyCorrect/Anim_bucket" index="0"]
+position = Vector2(-9.875198, 4.3112926)
+rotation = -0.2912339
+scale = Vector2(0.797, 0.797)
+
+[node name="AttackComponentBullet" type="Node2D" parent="." index="13" unique_id=1301001376]
+unique_name_in_owner = true
+script = ExtResource("4_attack")
+
+[node name="BulletAttackCdTimer" type="Timer" parent="AttackComponentBullet" index="0" unique_id=1314535028]
+
+[node name="DetectComponentBullet" type="Node2D" parent="AttackComponentBullet" index="1" unique_id=414347227]
+script = ExtResource("5_detect")
+
+[node name="Area2D" type="Area2D" parent="AttackComponentBullet/DetectComponentBullet" index="0" unique_id=854944341]
+position = Vector2(0, -25)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackComponentBullet/DetectComponentBullet/Area2D" index="0" unique_id=1692798177]
+position = Vector2(-500, 0)
+shape = SubResource("RectangleShape2D_bullet")
+
+[connection signal="timeout" from="AttackComponentBullet/BulletAttackCdTimer" to="AttackComponentBullet" method="_on_bullet_attack_cd_timer_timeout"]

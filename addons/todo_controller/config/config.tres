@@ -213,7 +213,6 @@ script_list_meta = {
 "res://scripts/character/zombie/zombie_024_gargantuar.gd": [-1, -1],
 "res://scripts/character/zombie/zombie_025_imp.gd": [-1, -1],
 "res://scripts/character/zombie/zombie_026_gargantuar_reinhardt.gd": [-1, -1],
-"res://scripts/character/zombie/zombie_026_peashooter_head.gd": [-1, -1],
 "res://scripts/character/zombie/zombie_026_peashooter_zombie.gd": [-1, -1],
 "res://scripts/character/zombie/zombie_027_zombie_yeti_winston.gd": [-1, -1],
 "res://scripts/character/zombie/zombie_028_digger_zombie_venture.gd": [-1, -1],

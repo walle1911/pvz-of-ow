@@ -1,13 +1,14 @@
 extends AttackComponentBulletBase
 class_name AttackComponentBulletPeashooterZombie
 
-## 豌豆射手僵尸(027)的子弹攻击组件。
+## 豌豆射手僵尸(026)的子弹攻击组件。
 ## - 用独立 DetectComponentBullet 检测植物(替换基类会误绑的近战 DetectComponent)
 ## - 攻击时让 PeashooterHead 播放 Head_Attack；发射时机由头部动画的方法轨道
 ##   回调 PeashooterHead._shoot_bullet() -> fire_pea 信号 -> 本组件 _shoot_bullet()
 ## - 修复026失败根因之一: 僵尸豌豆必须把 Area2DAttack.collision_mask 覆盖为
 ##   257(1 斜坡 | 256 植物真实受击层)，且必须在 bullets.add_child 之后设置——
 ##   因为 area_2d_attack 是 @onready，节点进树前为 null，提前设置不生效(026 因此豌豆穿模植物)
+## - _try_auto_find_marker: 攻击组件自我定位 Marker2DBullet，不依赖外部脚本
 
 @onready var peashooter_head: PeashooterHead = %PeashooterHead
 
@@ -33,6 +34,8 @@ func _ready() -> void:
 	## 头部开火信号 -> 本组件发射豌豆(发射时机由头部攻击动画的方法轨道决定)
 	if is_instance_valid(peashooter_head):
 		peashooter_head.fire_pea.connect(_shoot_bullet)
+	## 尽早定位 Marker2DBullet，不依赖僵尸脚本外部设置
+	_try_auto_find_marker()
 
 func _physics_process(delta: float) -> void:
 	if not is_enabling or not is_instance_valid(detect_component):
@@ -73,13 +76,25 @@ func update_is_attack_factors(value: bool, factor: E_IsAttackFactors):
 
 ## 攻击间隔到时播放头部攻击动画；真正发射由 Head_Attack 方法轨道回调 _shoot_bullet
 func _on_bullet_attack_cd_timer_timeout() -> void:
+	_try_auto_find_marker()
 	if is_instance_valid(peashooter_head):
 		peashooter_head.play_attack()
 	else:
 		_shoot_bullet()
 
+## 从 PeashooterHead 内部定位 Marker2DBullet，不依赖外部设置
+func _try_auto_find_marker() -> void:
+	if not markers_2d_bullet.is_empty():
+		return  # 已设置，跳过
+	if not is_instance_valid(peashooter_head):
+		return
+	var marker = peashooter_head.get_node_or_null("Anim_stem/stem_correct/Marker2DBullet")
+	if is_instance_valid(marker):
+		markers_2d_bullet = [marker]
+
 ## 发射僵尸阵营豌豆，固定向左(植物方向)。
 func _shoot_bullet():
+	_try_auto_find_marker()  # 最后兜底
 	if markers_2d_bullet.is_empty():
 		return
 	signal_shoot_bullet.emit()
