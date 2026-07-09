@@ -16,6 +16,7 @@ var _squash_doomfist_card_attack_check_timer := 0.0
 var sun_value:
 	set(value):
 		sun_value = value
+		_remove_invalid_curr_cards()
 		curr_sun_value.text = str(value)
 
 		for card in curr_cards:
@@ -67,6 +68,7 @@ func add_card_placeholder() -> Control:
 
 ## 主游戏刷新卡片
 func main_game_refresh_card():
+	_remove_invalid_curr_cards()
 	update_card_purple_sun_cost()
 	for i in range(curr_cards.size()):
 		var card:Card = curr_cards[i]
@@ -80,6 +82,7 @@ func main_game_refresh_card():
 
 ## 开始下一轮出战卡槽更新数据
 func start_next_game_card_slot_battle_update():
+	_remove_invalid_curr_cards()
 	for i in range(curr_cards.size()):
 		var card:Card = curr_cards[i]
 		## 卡牌冷却结束,可以点击
@@ -101,11 +104,14 @@ func _on_card_ready(card:Card):
 	_try_squash_doomfist_attack_card(card)
 
 func _try_squash_doomfist_attack_coffee_bean_ana():
+	_remove_invalid_curr_cards()
 	for card:Card in curr_cards:
 		if _try_squash_doomfist_attack_card(card):
 			return
 
 func _try_squash_doomfist_attack_card(card:Card) -> bool:
+	if not _is_valid_card(card):
+		return false
 	if card.card_plant_type != CharacterRegistry.PlantType.P036CoffeeBeanAna:
 		return false
 	if card.is_hidden_by_squash_doomfist:
@@ -158,7 +164,23 @@ func judge_disappear_add_card_bar():
 ## 等待一帧(阳光减少)后 更新当前卡片的紫卡价格,每次植物种植或死亡时调用
 func update_card_purple_sun_cost():
 	await get_tree().process_frame
+	_remove_invalid_curr_cards()
 	for card:Card in curr_cards:
 		if card.is_purple_card and Global.main_game.plant_cell_manager.curr_plant_num.has(card.card_plant_type):
 			card.sun_cost = Global.character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost) + 50 * Global.main_game.plant_cell_manager.curr_plant_num[card.card_plant_type]
 			card.judge_sun_enough(sun_value)
+
+func _remove_invalid_curr_cards() -> void:
+	for i in range(curr_cards.size() - 1, -1, -1):
+		var card: Card = curr_cards[i]
+		if not _is_valid_card(card):
+			if is_instance_valid(card):
+				card.queue_free()
+			curr_cards.remove_at(i)
+
+func _is_valid_card(card: Card) -> bool:
+	return is_instance_valid(card) \
+		and (
+			card.card_plant_type != CharacterRegistry.PlantType.Null \
+			or card.card_zombie_type != CharacterRegistry.ZombieType.Null
+		)

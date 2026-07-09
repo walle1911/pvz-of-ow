@@ -45,13 +45,14 @@ func _ready() -> void:
 	all_plant_card_prefabs.clear()
 	for plant_cards_parent_node in all_plant_cards_parent_node_root:
 		for i in range(plant_cards_parent_node.get_children().size()):
-			var card:Card = plant_cards_parent_node.get_children()[i]
-			if card.card_plant_type != 0:
-				if not character_registry.PlantInfo.has(card.card_plant_type):
-					push_warning("缺少植物卡牌注册信息: %s" % card.card_plant_type)
-					continue
-				plant_cards_by_type[card.card_plant_type] = card
-				plant_card_order.append(card.card_plant_type)
+			var card := plant_cards_parent_node.get_children()[i] as Card
+			if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
+				continue
+			if not character_registry.PlantInfo.has(card.card_plant_type):
+				push_warning("缺少植物卡牌注册信息: %s" % card.card_plant_type)
+				continue
+			plant_cards_by_type[card.card_plant_type] = card
+			plant_card_order.append(card.card_plant_type)
 	_register_ordered_plant_cards(plant_cards_by_type, global_game_state.curr_plant, plant_card_order)
 
 	var zombie_cards_by_type: Dictionary[CharacterRegistry.ZombieType, Card] = {}
@@ -59,13 +60,14 @@ func _ready() -> void:
 	all_zombie_card_prefabs.clear()
 	for zombie_cards_parent_node in all_zombie_cards_parent_node_root:
 		for i in range(zombie_cards_parent_node.get_children().size()):
-			var card:Card = zombie_cards_parent_node.get_children()[i]
-			if card.card_zombie_type != 0:
-				if not character_registry.ZombieInfo.has(card.card_zombie_type):
-					push_warning("缺少僵尸卡牌注册信息: %s" % card.card_zombie_type)
-					continue
-				zombie_cards_by_type[card.card_zombie_type] = card
-				zombie_card_order.append(card.card_zombie_type)
+			var card := zombie_cards_parent_node.get_children()[i] as Card
+			if card == null or card.card_zombie_type == CharacterRegistry.ZombieType.Null:
+				continue
+			if not character_registry.ZombieInfo.has(card.card_zombie_type):
+				push_warning("缺少僵尸卡牌注册信息: %s" % card.card_zombie_type)
+				continue
+			zombie_cards_by_type[card.card_zombie_type] = card
+			zombie_card_order.append(card.card_zombie_type)
 	_register_ordered_zombie_cards(zombie_cards_by_type, global_game_state.curr_zombie, zombie_card_order)
 
 func _register_ordered_plant_cards(

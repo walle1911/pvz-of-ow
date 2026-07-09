@@ -57,7 +57,9 @@ func _on_re_card_button_pressed() -> void:
 ## 取消所有已选卡片
 func _on_cancal_card_button_pressed() -> void:
 	for i in range(card_slot_battle.curr_cards.size()-1, -1, -1):
-		card_slot_battle.curr_cards[i]._on_button_pressed()
+		var card: Card = card_slot_battle.curr_cards[i]
+		if _is_valid_card(card):
+			card._on_button_pressed()
 
 ## 开始游戏按钮
 func _on_texture_button_pressed() -> void:
@@ -67,6 +69,8 @@ func _on_texture_button_pressed() -> void:
 	## 保存上次选卡
 	Global.global_game_state.selected_cards.clear()
 	for card:Card in card_slot_battle.curr_cards:
+		if not _is_valid_card(card):
+			continue
 		var card_type_data:={}
 		if card.card_plant_type != CharacterRegistry.PlantType.Null:
 			card_type_data["plant_type"] = card.card_plant_type
@@ -151,6 +155,8 @@ func _get_zombie_card_prefab(zombie_type: CharacterRegistry.ZombieType) -> Card:
 
 ## 游戏选卡阶段时，卡片被点击
 func _on_card_click(card:Card):
+	if not _is_valid_card(card):
+		return
 	## 非选卡阶段直接返回
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
@@ -178,6 +184,8 @@ func _on_card_click(card:Card):
 
 ## 游戏选卡阶段时，模仿者卡片被点击
 func _on_imitater_card_click(card:Card):
+	if not _is_valid_card(card):
+		return
 	## 非选卡阶段直接返回
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
@@ -211,6 +219,8 @@ func _on_imitater_card_click(card:Card):
 
 ## 移动card到目标点位置
 func move_card_to(card:Card, target_parent):
+	if not _is_valid_card(card) or not is_instance_valid(target_parent):
+		return
 	card.button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.reparent(temporary_card)
 
@@ -225,11 +235,15 @@ func move_card_to(card:Card, target_parent):
 ## 选卡结束后，卡片断开连接，游戏开始后修改点击信号连接
 func card_disconnect_click_in_choose():
 	for card in card_slot_battle.curr_cards:
+		if not _is_valid_card(card):
+			continue
 		if card.signal_card_click.is_connected(_on_card_click.bind(card)):
 			card.signal_card_click.disconnect(_on_card_click.bind(card))
 
 ## 系统预选卡
 func pre_choosed_card(card:Card, target_parent):
+	if not _is_valid_card(card) or not is_instance_valid(target_parent):
+		return
 	target_parent.add_child(card)
 	card.position = Vector2.ZERO
 	#card.card_change_cool_time(0)
@@ -260,6 +274,13 @@ func move_card_slot_candidate(is_appeal:bool):
 		tween.tween_property(card_slot_candidate, "position",Vector2(0, 615.0), 0.2) # 时间可以改短点
 
 	await tween.finished
+
+func _is_valid_card(card: Card) -> bool:
+	return is_instance_valid(card) \
+		and (
+			card.card_plant_type != CharacterRegistry.PlantType.Null \
+			or card.card_zombie_type != CharacterRegistry.ZombieType.Null
+		)
 
 ## 移动待选卡槽（出现或隐藏）
 func move_card_slot_battle(is_appeal:bool, appeal_time:= 0.2):

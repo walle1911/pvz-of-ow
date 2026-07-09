@@ -607,6 +607,7 @@
 [ext_resource type="Texture2D" uid="uid://c35d32esorc1n" path="res://assets/image/ui/Character_Card/Tanglekelp_Mizuki_Card.png" id="402_repef"]
 [ext_resource type="Texture2D" uid="uid://t5r3hpemowiq" path="res://assets/image/ui/Character_Card/Caltrop_Hazard_Card.png" id="403_odne4"]
 [ext_resource type="Texture2D" uid="uid://cw78c2yeffgip" path="res://assets/image/ui/Character_Card/Garlic_Mauga_Card.png" id="404_grlnh"]
+[ext_resource type="Texture2D" uid="uid://dxvlqvahfmjaa" path="res://pvz_icon.png" id="413_ysrnk"]
 [ext_resource type="Texture2D" uid="uid://bpwq05kghn85" path="res://assets/reanim/Zombie_jackbox_innerleg_foot.png" id="444_7f486"]
 [ext_resource type="Texture2D" uid="uid://c0xi6knhqwb5t" path="res://assets/reanim/Zombie_jackbox_outerarm_upper.png" id="445_deuj6"]
 [ext_resource type="Texture2D" uid="uid://cwce4k76w0sgw" path="res://assets/reanim/Zombie_jackbox_innerleg_lower.png" id="445_ih4no"]
@@ -1151,33 +1152,33 @@ zombie_card_ids = Dictionary[int, int]({
 20: 5,
 24: 6,
 25: 7,
-26: 35,
-500: 8,
-501: 9,
-502: 10,
-503: 11,
-504: 12,
-505: 13,
-506: 14,
-507: 15,
-508: 16,
-509: 17,
-510: 18,
-511: 19,
-512: 20,
-513: 21,
-514: 22,
-515: 23,
-516: 24,
-517: 25,
-518: 26,
-519: 27,
-520: 28,
-521: 29,
-522: 30,
-523: 31,
-524: 32,
-1001: 33
+26: 8,
+500: 9,
+501: 10,
+502: 11,
+503: 12,
+504: 13,
+505: 14,
+506: 15,
+507: 16,
+508: 17,
+509: 18,
+510: 19,
+511: 20,
+512: 21,
+513: 22,
+514: 23,
+515: 24,
+516: 25,
+517: 26,
+518: 27,
+519: 28,
+520: 29,
+521: 30,
+522: 31,
+523: 32,
+524: 33,
+1001: 34
 })
 
 [node name="CardImitater" parent="." unique_id=349133254 instance=ExtResource("2_5pqky")]
@@ -8124,6 +8125,17 @@ card_zombie_type = 9
 cool_time = 0.0
 sun_cost = 300
 
+[node name="CardBg" parent="ZombieCards/Card5" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie009DancingZombieLucio" type="Node2D" parent="ZombieCards/Card5/CardBg/CharacterStatic" index="0" unique_id=1090297044]
+position = Vector2(2, 17)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards/Card5/CardBg/CharacterStatic/Zombie009DancingZombieLucio" unique_id=942428663]
+position = Vector2(-2.32, -15.55)
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("413_ysrnk")
+
 [node name="Card6" parent="ZombieCards" unique_id=-666666666 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
@@ -8133,6 +8145,17 @@ card_id = 1
 card_zombie_type = 10
 cool_time = 0.0
 sun_cost = 50
+
+[node name="CardBg" parent="ZombieCards/Card6" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie010BackupDancerLucio" type="Node2D" parent="ZombieCards/Card6/CardBg/CharacterStatic" index="0" unique_id=1090297046]
+position = Vector2(2, 17)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards/Card6/CardBg/CharacterStatic/Zombie010BackupDancerLucio" unique_id=1504477690]
+position = Vector2(-2.32, -15.55)
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("413_ysrnk")
 
 [node name="Card7" parent="ZombieCards" unique_id=-777777777 instance=ExtResource("2_5pqky")]
 layout_mode = 2
@@ -8144,6 +8167,17 @@ card_zombie_type = 13
 cool_time = 0.0
 sun_cost = 250
 
+[node name="CardBg" parent="ZombieCards/Card7" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie013ZomboniShion" type="Node2D" parent="ZombieCards/Card7/CardBg/CharacterStatic" index="0" unique_id=1090297048]
+position = Vector2(2, 17)
+
+[node name="Card2" type="Sprite2D" parent="ZombieCards/Card7/CardBg/CharacterStatic/Zombie013ZomboniShion" unique_id=1162322649]
+position = Vector2(-2.32, -15.55)
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("413_ysrnk")
+
 [node name="Card8" parent="ZombieCards" unique_id=-888888888 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
@@ -8154,12 +8188,23 @@ card_zombie_type = 25
 cool_time = 0.0
 sun_cost = 300
 
+[node name="CardBg" parent="ZombieCards/Card8" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Zombie025GargantuarAshe" type="Node2D" parent="ZombieCards/Card8/CardBg/CharacterStatic" index="0" unique_id=1090297050]
+position = Vector2(2, 17)
+
+[node name="Card" type="Sprite2D" parent="ZombieCards/Card8/CardBg/CharacterStatic/Zombie025GargantuarAshe" unique_id=1090297051]
+position = Vector2(-2.32, -15.55)
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("413_ysrnk")
+
 [node name="Card10" parent="ZombieCards" unique_id=1044802427 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 35
+card_id = 8
 card_zombie_type = 26
 cool_time = 0.0
 
@@ -8168,7 +8213,12 @@ texture = ExtResource("3_m4n4y")
 
 [node name="Zombie026PeashooterZombie" type="Node2D" parent="ZombieCards/Card10/CardBg/CharacterStatic" index="0" unique_id=1640398296]
 position = Vector2(2, 17)
-scale = Vector2(0.3, 0.3)
+scale = Vector2(2.06, 2.06)
+
+[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card10/CardBg/CharacterStatic/Zombie026PeashooterZombie" unique_id=308095190]
+position = Vector2(-1.75, -7.81)
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("413_ysrnk")
 
 [node name="ZombieCards2" type="GridContainer" parent="." unique_id=255774907]
 unique_name_in_owner = true
@@ -8185,7 +8235,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 8
+card_id = 9
 card_zombie_type = 500
 cool_time = 0.0
 sun_cost = 50
@@ -8456,7 +8506,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 9
+card_id = 10
 card_zombie_type = 501
 cool_time = 0.0
 sun_cost = 50
@@ -8726,7 +8776,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 10
+card_id = 11
 card_zombie_type = 502
 cool_time = 0.0
 sun_cost = 75
@@ -9013,7 +9063,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 11
+card_id = 12
 card_zombie_type = 503
 cool_time = 0.0
 sun_cost = 75
@@ -9186,7 +9236,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 12
+card_id = 13
 card_zombie_type = 504
 cool_time = 0.0
 sun_cost = 125
@@ -9473,7 +9523,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 13
+card_id = 14
 card_zombie_type = 505
 cool_time = 0.0
 sun_cost = 125
@@ -9650,7 +9700,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 14
+card_id = 15
 card_zombie_type = 506
 cool_time = 0.0
 sun_cost = 125
@@ -9925,7 +9975,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 15
+card_id = 16
 card_zombie_type = 507
 cool_time = 0.0
 sun_cost = 175
@@ -10088,7 +10138,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 16
+card_id = 17
 card_zombie_type = 508
 cool_time = 0.0
 sun_cost = 300
@@ -10259,7 +10309,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 17
+card_id = 18
 card_zombie_type = 509
 cool_time = 0.0
 sun_cost = 50
@@ -10434,7 +10484,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 18
+card_id = 19
 card_zombie_type = 510
 cool_time = 0.0
 sun_cost = 50
@@ -10773,7 +10823,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 19
+card_id = 20
 card_zombie_type = 511
 cool_time = 0.0
 sun_cost = 75
@@ -10961,7 +11011,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 20
+card_id = 21
 card_zombie_type = 512
 cool_time = 0.0
 sun_cost = 250
@@ -11134,7 +11184,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 21
+card_id = 22
 card_zombie_type = 513
 cool_time = 0.0
 sun_cost = 200
@@ -11278,7 +11328,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 22
+card_id = 23
 card_zombie_type = 514
 cool_time = 0.0
 sun_cost = 150
@@ -11492,7 +11542,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 23
+card_id = 24
 card_zombie_type = 515
 cool_time = 0.0
 sun_cost = 75
@@ -11640,7 +11690,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 24
+card_id = 25
 card_zombie_type = 516
 cool_time = 0.0
 sun_cost = 75
@@ -11794,7 +11844,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 25
+card_id = 26
 card_zombie_type = 517
 cool_time = 0.0
 sun_cost = 125
@@ -11943,7 +11993,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 26
+card_id = 27
 card_zombie_type = 518
 cool_time = 0.0
 sun_cost = 125
@@ -12125,7 +12175,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 27
+card_id = 28
 card_zombie_type = 519
 cool_time = 0.0
 
@@ -12244,7 +12294,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 28
+card_id = 29
 card_zombie_type = 520
 cool_time = 0.0
 sun_cost = 125
@@ -12424,7 +12474,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 29
+card_id = 30
 card_zombie_type = 521
 cool_time = 0.0
 sun_cost = 150
@@ -12583,7 +12633,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 30
+card_id = 31
 card_zombie_type = 522
 cool_time = 0.0
 sun_cost = 200
@@ -12844,7 +12894,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 31
+card_id = 32
 card_zombie_type = 523
 cool_time = 0.0
 sun_cost = 300
@@ -13123,7 +13173,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 32
+card_id = 33
 card_zombie_type = 524
 cool_time = 0.0
 sun_cost = 50
@@ -13252,7 +13302,7 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 33
+card_id = 34
 card_zombie_type = 1001
 cool_time = 0.0
 sun_cost = 50
@@ -13470,6 +13520,10 @@ centered = false
 [editable path="ZombieCards/Card2"]
 [editable path="ZombieCards/Card3"]
 [editable path="ZombieCards/Card4"]
+[editable path="ZombieCards/Card5"]
+[editable path="ZombieCards/Card6"]
+[editable path="ZombieCards/Card7"]
+[editable path="ZombieCards/Card8"]
 [editable path="ZombieCards/Card10"]
 [editable path="ZombieCards2/Card1"]
 [editable path="ZombieCards2/Card2"]

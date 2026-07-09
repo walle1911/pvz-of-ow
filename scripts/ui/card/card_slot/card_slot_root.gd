@@ -21,7 +21,8 @@ func _unhandled_key_input(event):
 			## 0-9
 			var card_i = i - 1
 			if card_i < curr_cards.size():
-				curr_cards[card_i]._on_button_pressed()
+				var card: Card = curr_cards[card_i]
+				if is_instance_valid(card):
+					card._on_button_pressed()
 			else:
 				return
-

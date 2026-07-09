@@ -261,7 +261,17 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 			var zombie_type := int(migrated_card["zombie_type"])
 			var should_migrate_zombie_id := should_migrate_legacy_ids or not GlobalUtils.is_current_zombie_type(zombie_type)
 			migrated_card["zombie_type"] = legacy_zombie_type_map.get(zombie_type, zombie_type) if should_migrate_zombie_id else zombie_type
-		migrated.append(migrated_card)
+		var final_plant_type := int(migrated_card.get("plant_type", CharacterRegistry.PlantType.Null))
+		var final_zombie_type := int(migrated_card.get("zombie_type", CharacterRegistry.ZombieType.Null))
+		if final_plant_type != CharacterRegistry.PlantType.Null and GlobalUtils.is_current_plant_type(final_plant_type):
+			migrated_card["plant_type"] = final_plant_type
+			migrated_card.erase("zombie_type")
+			migrated.append(migrated_card)
+		elif final_zombie_type != CharacterRegistry.ZombieType.Null and GlobalUtils.is_current_zombie_type(final_zombie_type):
+			migrated_card["zombie_type"] = final_zombie_type
+			migrated_card.erase("plant_type")
+			migrated_card.erase("is_imitater")
+			migrated.append(migrated_card)
 	return migrated
 
 func _save_json(data: Dictionary, path: String) -> bool:

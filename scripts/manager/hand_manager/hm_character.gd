@@ -38,19 +38,51 @@ func init_hm_character():
 	self.is_mode_column = hand_manager.game_para.is_mode_column
 
 func character_process() -> void:
+	if not is_instance_valid(characte_static):
+		return
 	## CanvasItem方法获取位置
 	characte_static.global_position = temporary_character.get_global_mouse_position()
 
 ## 点击卡片
-func click_card(card:Card) -> void:
+func click_card(card:Card) -> bool:
+	if not _is_valid_hand_card(card):
+		return false
+	var character_type := GlobalUtils.get_character_type(card.card_plant_type, card.card_zombie_type)
+	match character_type:
+		CharacterRegistry.CharacterType.Plant:
+			if not Global.character_registry.PlantInfo.has(card.card_plant_type):
+				push_warning("手持卡失败，植物未注册: %s" % card.card_plant_type)
+				return false
+		CharacterRegistry.CharacterType.Zombie:
+			if not Global.character_registry.ZombieInfo.has(card.card_zombie_type):
+				push_warning("手持卡失败，僵尸未注册: %s" % card.card_zombie_type)
+				return false
+		CharacterRegistry.CharacterType.Null:
+			push_warning("手持卡失败，卡牌没有植物或僵尸类型")
+			return false
+
+	var character_static_copy := card.character_static.duplicate() as Node2D
+	if not is_instance_valid(character_static_copy) or character_static_copy.get_child_count() == 0:
+		if is_instance_valid(character_static_copy):
+			character_static_copy.queue_free()
+		push_warning("手持卡失败，卡牌缺少静态角色节点: %s" % card.name)
+		return false
+
+	var character_child := character_static_copy.get_child(0) as Node2D
+	if not is_instance_valid(character_child):
+		character_static_copy.queue_free()
+		push_warning("手持卡失败，静态角色节点不是 Node2D: %s" % card.name)
+		return false
+
 	## 清除之前数据
 	if curr_card != null:
 		_clear_curr_data()
 	## 新植物数据
 	curr_card = card
 	EventBus.push_event("hm_character_hand_card", [curr_card])
+	characte_static = character_static_copy
 	## 植物
-	if curr_card.card_plant_type != CharacterRegistry.PlantType.Null:
+	if character_type == CharacterRegistry.CharacterType.Plant:
 		## 记住上一个非模仿者植物类型
 		if not curr_card.is_imitater\
 			and curr_card.card_plant_type != CharacterRegistry.PlantType.P548Imitater\
@@ -62,12 +94,10 @@ func click_card(card:Card) -> void:
 		if plant_condition == null and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
 			plant_condition = Global.character_registry.get_plant_info(last_non_imitater_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 		## 静态植物以及植物虚影
-		characte_static = card.character_static.duplicate()
-		var plant_child: Node2D = characte_static.get_child(0)
-		plant_child.scale = Vector2.ONE
-		plant_child.position = Vector2.ZERO
-		_fix_body_correct_from_game_scene(plant_child, curr_card.card_plant_type)
-		characte_static_shadow = plant_child.duplicate()
+		character_child.scale = Vector2.ONE
+		character_child.position = Vector2.ZERO
+		_fix_body_correct_from_game_scene(character_child, curr_card.card_plant_type)
+		characte_static_shadow = character_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
 
@@ -85,11 +115,9 @@ func click_card(card:Card) -> void:
 	else:
 		zombie_row_type = Global.character_registry.get_zombie_info(curr_card.card_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieRowType)
 		## 静态僵尸以及僵尸虚影
-		characte_static = card.character_static.duplicate()
-		var zombie_child: Node2D = characte_static.get_child(0)
-		zombie_child.scale = Vector2.ONE
-		zombie_child.position = Vector2.ZERO
-		characte_static_shadow = zombie_child.duplicate()
+		character_child.scale = Vector2.ONE
+		character_child.position = Vector2.ZERO
+		characte_static_shadow = character_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
 
@@ -98,6 +126,8 @@ func click_card(card:Card) -> void:
 
 		if click_card_column:
 			click_card_column()
+
+	return true
 
 ## 紫卡预种植植物身体明暗发光开始
 func start_preplant_purple_light(curr_plant_condition:ResourcePlantCondition, plant_type:CharacterRegistry.PlantType):
@@ -123,8 +153,12 @@ func _clear_curr_data():
 		EventBus.push_event("hm_character_clear_card", [curr_card])
 
 	curr_card = null
-	characte_static.queue_free()
-	characte_static_shadow.queue_free()
+	if is_instance_valid(characte_static):
+		characte_static.queue_free()
+	if is_instance_valid(characte_static_shadow):
+		characte_static_shadow.queue_free()
+	characte_static = null
+	characte_static_shadow = null
 	plant_condition = null
 	zombie_row_type = CharacterRegistry.ZombieRowType.Land
 	if is_mode_column:
@@ -132,12 +166,16 @@ func _clear_curr_data():
 
 ## 鼠标进入cell
 func mouse_enter(plant_cell:PlantCell):
+	if not is_instance_valid(curr_card) or not is_instance_valid(characte_static_shadow):
+		return
 	is_shadow_in_cell = _update_cell_shadow(plant_cell, characte_static_shadow)
 	if is_shadow_in_cell and is_mode_column:
 		_mouse_enter_column(plant_cell)
 
 ## 更新植物格子虚影,返回是否能种植
 func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2D) -> bool:
+	if not is_instance_valid(curr_card) or not is_instance_valid(curr_characte_static_shadow):
+		return false
 	## 植物
 	if curr_card.card_plant_type != 0:
 		## 如果是判定是否可以种植植物
@@ -198,12 +236,15 @@ func get_zombie_static_shadow_global_position(plant_cell)->Vector2:
 
 ## 鼠标移出cell
 func mouse_exit(_plant_cell:PlantCell):
-	characte_static_shadow.modulate.a = 0
+	if is_instance_valid(characte_static_shadow):
+		characte_static_shadow.modulate.a = 0
 	if is_mode_column:
 		_mouse_exit_column()
 
 ## 点击种植植物\僵尸
 func click_cell(plant_cell:PlantCell):
+	if not is_instance_valid(curr_card):
+		return
 	if is_shadow_in_cell:
 		if curr_card.card_plant_type != 0:
 			var plant_type := curr_card.card_plant_type
@@ -300,6 +341,14 @@ func _apply_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
 			var child_node2d := child as Node2D
 			if child_node2d:
 				_apply_node_snapshot(child_node2d, children_snapshot[child_name])
+
+func _is_valid_hand_card(card: Card) -> bool:
+	return is_instance_valid(card) \
+		and is_instance_valid(card.character_static) \
+		and (
+			card.card_plant_type != CharacterRegistry.PlantType.Null \
+			or card.card_zombie_type != CharacterRegistry.ZombieType.Null
+		)
 
 
 #region 柱子模式额外操作函数

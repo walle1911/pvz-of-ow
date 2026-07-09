@@ -61,6 +61,7 @@ func init_card_slot_battle(max_choosed_card_num:int):
 
 ## 主游戏刷新卡片
 func main_game_refresh_card():
+	_remove_invalid_curr_cards()
 	for i in range(curr_cards.size()):
 		var card:Card = curr_cards[i]
 		card.judge_sun_enough(int(Global.global_game_state.coin_value / 10.0))
@@ -70,6 +71,8 @@ func main_game_refresh_card():
 
 ## 卡片种植后信号调用函数
 func card_use_end(card:Card):
+	if not _is_valid_card(card):
+		return
 	## 减少阳光，卡片冷却
 	Global.global_game_state.coin_value = Global.global_game_state.coin_value - card.sun_cost * 10
 	#card.card_cool()
@@ -101,7 +104,9 @@ func next_wave():
 
 	Global.main_game.p_yeti_run = curr_p
 	next_wave_timer.stop()
-	curr_cards[0].set_card_cool_time_start_cool(0)
+	_remove_invalid_curr_cards()
+	if not curr_cards.is_empty():
+		curr_cards[0].set_card_cool_time_start_cool(0)
 	EventBus.push_event("replenish_lawn_mover")
 	update_label_info()
 	if curr_wave == 10:
@@ -129,3 +134,18 @@ func _on_next_wave_timer_timeout() -> void:
 ## 每秒触发刷新小推车
 func _on_replenish_lawn_mover_timer_timeout() -> void:
 	EventBus.push_event("replenish_lawn_mover")
+
+func _remove_invalid_curr_cards() -> void:
+	for i in range(curr_cards.size() - 1, -1, -1):
+		var card: Card = curr_cards[i]
+		if not _is_valid_card(card):
+			if is_instance_valid(card):
+				card.queue_free()
+			curr_cards.remove_at(i)
+
+func _is_valid_card(card: Card) -> bool:
+	return is_instance_valid(card) \
+		and (
+			card.card_plant_type != CharacterRegistry.PlantType.Null \
+			or card.card_zombie_type != CharacterRegistry.ZombieType.Null
+		)

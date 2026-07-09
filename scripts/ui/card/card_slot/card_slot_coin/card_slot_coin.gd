@@ -23,20 +23,40 @@ func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], ca
 		var character_type:CharacterRegistry.CharacterType = GlobalUtils.get_character_type(plant_type, zombie_type)
 		match character_type:
 			CharacterRegistry.CharacterType.Plant:
+				if not AllCards.all_plant_card_prefabs.has(plant_type):
+					push_warning("跳过不存在的植物金币卡片预制: %s" % plant_type)
+					continue
 				card = AllCards.all_plant_card_prefabs[plant_type].duplicate()
 			CharacterRegistry.CharacterType.Zombie:
+				if not AllCards.all_zombie_card_prefabs.has(zombie_type):
+					push_warning("跳过不存在的僵尸金币卡片预制: %s" % zombie_type)
+					continue
 				card = AllCards.all_zombie_card_prefabs[zombie_type].duplicate()
 			CharacterRegistry.CharacterType.Null:
 				continue
 
+		if not _is_valid_card(card):
+			continue
+		if card_slot_battle_coin.curr_cards.size() >= card_slot_battle_coin.cards_placeholder.size():
+			push_warning("金币卡槽预选卡超过占位数量，已跳过: %s/%s" % [plant_type, zombie_type])
+			continue
 		card_slot_battle_coin.curr_cards.append(card)
 		pre_choosed_card(card, card_slot_battle_coin.cards_placeholder[len(card_slot_battle_coin.curr_cards)-1])
 
 ## 系统预选卡
 func pre_choosed_card(card:Card, target_parent):
+	if not _is_valid_card(card) or not is_instance_valid(target_parent):
+		return
 	target_parent.add_child(card)
 	card.position = Vector2.ZERO
 	#card.card_change_cool_time(0)
+
+func _is_valid_card(card: Card) -> bool:
+	return is_instance_valid(card) \
+		and (
+			card.card_plant_type != CharacterRegistry.PlantType.Null \
+			or card.card_zombie_type != CharacterRegistry.ZombieType.Null
+		)
 
 ## 移动卡槽（出现或隐藏）
 func move_card_slot_candidate(is_appeal:bool):

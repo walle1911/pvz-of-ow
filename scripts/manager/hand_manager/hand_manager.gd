@@ -17,6 +17,8 @@ enum E_HandManagerStatus{
 ## 当前手持管理器状态
 var curr_hm_status := E_HandManagerStatus.Null:
 	set(value):
+		if curr_hm_status == value:
+			return
 		hm_status_change(curr_hm_status, value)
 		curr_hm_status = value
 ## 当前植物格子
@@ -50,9 +52,17 @@ func init_manager() -> void:
 
 ## 点击卡片
 func _click_card(card:Card) -> void:
+	if not is_instance_valid(card):
+		SoundManager.play_other_SFX("buzzer")
+		return
+	if curr_hm_status == E_HandManagerStatus.Item:
+		curr_hm_status = E_HandManagerStatus.Null
+	if not hm_character.click_card(card):
+		curr_hm_status = E_HandManagerStatus.Null
+		SoundManager.play_other_SFX("buzzer")
+		return
 	SoundManager.play_other_SFX("seedlift")
 	curr_hm_status = E_HandManagerStatus.Character
-	hm_character.click_card(card)
 	## 如果当前在植物格子中
 	if curr_plant_cell:
 		_on_cell_mouse_enter(curr_plant_cell)
