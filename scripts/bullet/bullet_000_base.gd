@@ -9,3 +9,5 @@ class_name Bullet000Base
 @export var bullet_type:BulletRegistry.BulletType
 ## 子弹阵营
 @export var bullet_camp:CharacterRegistry.CharacterType = CharacterRegistry.CharacterType.Plant
+## 只叠加蓝光不升级类型（三线射手等特殊植物使用）
+@export var is_glow_upgrade_only: bool = false

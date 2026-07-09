@@ -6,6 +6,7 @@
 
 [node name="BulletLinear007Cactus" instance=ExtResource("1_vyo5q")]
 script = ExtResource("2_djihw")
+is_can_up = true
 bullet_type = 7
 
 [node name="BulletBody" parent="Body" index="0"]
