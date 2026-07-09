@@ -6,7 +6,7 @@ class_name Plant052SunflowerMercy
 @export_group("蓝线增伤")
 @export var damage_boost_multiplier := 1.25
 @export var damage_boost_target_check_interval := 0.15
-@export var damage_boost_target_cell_offset := 1
+@export var damage_boost_target_cell_max_range := 2
 @export var damage_boost_source_anchor_path:NodePath = ^"Body/BodyCorrect/Stalk_bottom"
 @export var damage_boost_source_anchor_offset := Vector2(2, 4)
 @export var damage_boost_target_anchor_offset := Vector2(2, 4)
@@ -188,17 +188,22 @@ func _get_damage_boost_target() -> Plant000Base:
 	var current_index := lane_cells.find(plant_cell)
 	if current_index == -1:
 		return null
-	var target_index := current_index + damage_boost_target_cell_offset
-	if target_index < 0 or target_index >= lane_cells.size():
-		return null
 
-	var target_cell:PlantCell = lane_cells[target_index]
-	var target_plant:Plant000Base = target_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
-	if not is_instance_valid(target_plant):
-		return null
-	if not damage_boost_target_plant_types.has(target_plant.plant_type):
-		return null
-	return target_plant
+	# 从近到远扫描前方格子（1, 2, ..., max_range），优先连接最近的
+	for offset in range(1, damage_boost_target_cell_max_range + 1):
+		var target_index := current_index + offset
+		if target_index >= lane_cells.size():
+			break
+
+		var target_cell:PlantCell = lane_cells[target_index]
+		var target_plant:Plant000Base = target_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
+		if not is_instance_valid(target_plant):
+			continue
+		if not damage_boost_target_plant_types.has(target_plant.plant_type):
+			continue
+		return target_plant
+
+	return null
 
 
 func _get_target_anchor_node(target_plant:Plant000Base) -> Node2D:
