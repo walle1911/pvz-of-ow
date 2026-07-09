@@ -41,10 +41,13 @@
 [ext_resource type="Texture2D" uid="uid://dlayj8ftlothc" path="res://assets/reanim/CherryBomb_lefteye11.png" id="38_s5ym1"]
 [ext_resource type="Texture2D" uid="uid://cuv0j6lkkkr5d" path="res://assets/reanim/CherryBomb_lefteye21.png" id="39_wief5"]
 [ext_resource type="Texture2D" uid="uid://b6gaqdfa477uw" path="res://assets/reanim/CherryBomb_leftmouth1.png" id="40_0ojfb"]
+[ext_resource type="Texture2D" uid="uid://betnalq3q1efs" path="res://assets/image/ui/Character_Card/daotian_card.png" id="40_13hcx"]
+[ext_resource type="Texture2D" uid="uid://cn42noh04u8lc" path="res://assets/image/ui/Character_Card/Torchwood_Baptiste_card.png" id="41_v6elg"]
 [ext_resource type="Texture2D" uid="uid://bjdqpef0ve0pg" path="res://assets/reanim/CherryBomb_rightstem.png" id="41_v7gpl"]
 [ext_resource type="Texture2D" uid="uid://dspmy0uy0cacv" path="res://assets/reanim/CherryBomb_right1.png" id="42_dap4d"]
 [ext_resource type="Texture2D" uid="uid://cfdwh0bhgcrlb" path="res://assets/reanim/CherryBomb_righteye11.png" id="43_nq15w"]
 [ext_resource type="Texture2D" uid="uid://d0dmytj04iew5" path="res://assets/reanim/CherryBomb_righteye21.png" id="44_eabf5"]
+[ext_resource type="Texture2D" uid="uid://1gdtlhja5xvu" path="res://assets/image/ui/Character_Card/UmbrellaLeaf_Lifeweaver_card.png" id="44_katit"]
 [ext_resource type="Texture2D" uid="uid://biffa3h6h5rxy" path="res://assets/reanim/CherryBomb_rightmouth1.png" id="45_evstp"]
 [ext_resource type="Texture2D" uid="uid://d2cv50584w3k7" path="res://assets/reanim/CherryBomb_leaf3.png" id="46_q0hna"]
 [ext_resource type="Texture2D" uid="uid://b6robscgti75e" path="res://assets/reanim/CherryBomb_leaf2tip.png" id="47_44drx"]
@@ -962,12 +965,12 @@ all_plant_card_prefabs = {
 38: NodePath("PlantCards/Card29"),
 40: NodePath("PlantCards/Card11"),
 41: NodePath("PlantCards/Card7"),
-42: NodePath("PlantCards/Card32"),
+42: NodePath("PlantCards/Card31"),
 43: NodePath("PlantCards/Card14"),
 44: NodePath("PlantCards/Card9"),
 48: NodePath("PlantCards/Card30"),
 49: NodePath("PlantCards2/Card34"),
-51: NodePath("PlantCards/Card31"),
+51: NodePath(""),
 52: NodePath("PlantCards/Card22"),
 53: NodePath("PlantCards/Card12"),
 500: NodePath("PlantCards2/Card1"),
@@ -1922,239 +1925,10 @@ scale = Vector2(0.5, 0.5)
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian" unique_id=705032707]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body" unique_id=705032708]
-position = Vector2(-42, -69)
-
-[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032709]
-position = Vector2(27.6675, 53.6975)
-scale = Vector2(0.56795, 0.526099)
-texture = ExtResource("3_xm6ba")
-centered = false
-
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032710]
-position = Vector2(24.9, 54.265)
-rotation = 0.0202899
-scale = Vector2(0.577926, 0.536399)
-texture = ExtResource("4_2m5n3")
-centered = false
-
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032711]
-position = Vector2(47.365, 53.465)
-rotation = 0.0104291
-scale = Vector2(0.607477, 0.536399)
-texture = ExtResource("5_utnli")
-centered = false
-
-[node name="ThreePeater_stem3" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032712]
-position = Vector2(21.2576, 19.505)
-rotation = 0.0422826
-scale = Vector2(0.64, 0.664576)
-texture = ExtResource("153_etbto")
-centered = false
-
-[node name="ThreePeater_stem1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032713]
-position = Vector2(29.0601, 42.3724)
-rotation = -0.0879201
-scale = Vector2(0.64, 0.677201)
-skew = 0.0510086
-texture = ExtResource("154_jnm8r")
-centered = false
-
-[node name="ThreePeater_stem2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032714]
-position = Vector2(21.0749, 31.2724)
-rotation = -0.0214247
-scale = Vector2(0.64, 0.647152)
-skew = -0.0405803
-texture = ExtResource("155_qq07m")
-centered = false
-
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032715]
-position = Vector2(22.5675, 54.865)
-scale = Vector2(0.563975, 0.54205)
-texture = ExtResource("8_jrvjq")
-centered = false
-
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032716]
-position = Vector2(56.0675, 56.1)
-rotation = -0.0591251
-scale = Vector2(0.622427, 0.55135)
-texture = ExtResource("9_lppa3")
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032717]
-position = Vector2(19.5, 61.235)
-rotation = 0.0556773
-scale = Vector2(0.583901, 0.55135)
-texture = ExtResource("10_xa6hp")
-centered = false
-
-[node name="Anim_head1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032718]
-position = Vector2(54.2625, 50.235)
-centered = false
-
-[node name="Node2D" type="Node2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1" unique_id=705032719]
-position = Vector2(-51.3189, -51.1473)
-
-[node name="ThreePeater_head1_leaf1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032720]
-position = Vector2(42.8, 38.7)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("156_ap7r3")
-centered = false
-
-[node name="Anim_face1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032721]
-position = Vector2(50.5, 34.9)
-rotation = 0.251327
-scale = Vector2(0.638, 0.616)
-skew = 0.0209444
-texture = ExtResource("157_o7it4")
-centered = false
-
-[node name="ThreePeater_head1_blink" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032722]
-visible = false
-position = Vector2(58.9, 38.9)
-rotation = 0.256563
-scale = Vector2(0.707, 0.626)
-texture = ExtResource("158_w8min")
-centered = false
-
-[node name="ThreePeater_head1_blink2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032723]
-visible = false
-position = Vector2(58.9, 38.9)
-rotation = 0.256563
-scale = Vector2(0.707, 0.626)
-texture = ExtResource("158_w8min")
-centered = false
-
-[node name="ThreePeater_mouth1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032724]
-position = Vector2(67.9, 32.4)
-rotation = 0.251327
-scale = Vector2(0.638, 0.616)
-skew = 0.0209444
-texture = ExtResource("159_7f486")
-centered = false
-
-[node name="Projectile" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head1/Node2D" unique_id=705032725]
-visible = false
-position = Vector2(75.1682, 45.4086)
-texture = ExtResource("160_ih4no")
-
-[node name="Anim_head3" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032726]
-position = Vector2(23.3251, 21.0375)
-centered = false
-
-[node name="Node2D" type="Node2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3" unique_id=705032727]
-position = Vector2(-20.4577, -22.2722)
-
-[node name="ThreePeater_head3_leaf3" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032728]
-position = Vector2(13.3625, 14.2074)
-rotation = 0.122577
-scale = Vector2(0.799, 0.799)
-texture = ExtResource("161_angoc")
-centered = false
-
-[node name="ThreePeater_head3_leaf2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032729]
-position = Vector2(10.4601, 10.0124)
-rotation = 0.155566
-scale = Vector2(0.799, 0.799)
-texture = ExtResource("162_yrvmv")
-centered = false
-
-[node name="ThreePeater_head3_leaf1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032730]
-position = Vector2(8.76006, 7.08236)
-rotation = 0.0888541
-scale = Vector2(0.799, 0.799)
-texture = ExtResource("156_ap7r3")
-centered = false
-
-[node name="Anim_face3" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032731]
-position = Vector2(15.1675, 5.43994)
-scale = Vector2(0.64, 0.652102)
-texture = ExtResource("157_o7it4")
-centered = false
-
-[node name="ThreePeater_head3_blink" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032732]
-visible = false
-position = Vector2(24.5, 8.8)
-rotation = 0.022689
-scale = Vector2(0.684, 0.683)
-texture = ExtResource("158_w8min")
-centered = false
-
-[node name="ThreePeater_head3_blink2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032733]
-visible = false
-position = Vector2(24.4697, 7.40452)
-rotation = 0.022689
-scale = Vector2(0.684, 0.683)
-texture = ExtResource("158_w8min")
-centered = false
-
-[node name="ThreePeater_mouth3" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032734]
-position = Vector2(31.7, -0.0275504)
-scale = Vector2(0.64, 0.627176)
-texture = ExtResource("159_7f486")
-centered = false
-
-[node name="Projectile" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head3/Node2D" unique_id=705032735]
-visible = false
-position = Vector2(43.359, 12.1988)
-texture = ExtResource("160_ih4no")
-
-[node name="Anim_head2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect" unique_id=705032736]
-position = Vector2(33.5399, 33.0399)
-centered = false
-
-[node name="Node2D" type="Node2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2" unique_id=705032737]
-position = Vector2(-34.1467, -35.2009)
-
-[node name="ThreePeater_head2_leaf2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032738]
-position = Vector2(26.8975, 22.4074)
-rotation = 0.188982
-scale = Vector2(0.799, 0.799)
-texture = ExtResource("162_yrvmv")
-centered = false
-
-[node name="ThreePeater_head2_leaf1" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032739]
-position = Vector2(26.8926, 18.6774)
-rotation = 0.345499
-scale = Vector2(0.798, 0.798)
-texture = ExtResource("156_ap7r3")
-centered = false
-
-[node name="Anim_face2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032740]
-position = Vector2(33, 16.205)
-rotation = 0.275108
-scale = Vector2(0.642325, 0.682176)
-skew = -0.0330312
-texture = ExtResource("157_o7it4")
-centered = false
-
-[node name="ThreePeater_mouth2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032741]
-position = Vector2(50.2675, 13.6749)
-rotation = 0.275108
-scale = Vector2(0.642325, 0.682176)
-skew = -0.0330312
-texture = ExtResource("159_7f486")
-centered = false
-
-[node name="ThreePeater_head2_blink" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032742]
-visible = false
-position = Vector2(41.6, 21.6)
-rotation = 0.29147
-scale = Vector2(0.696, 0.752)
-skew = -0.0244346
-texture = ExtResource("158_w8min")
-centered = false
-
-[node name="ThreePeater_head2_blink2" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian/Body/BodyCorrect/Anim_head2/Node2D" unique_id=705032743]
-visible = false
-position = Vector2(41.64, 20.8592)
-rotation = 0.29147
-scale = Vector2(0.696, 0.752)
-skew = -0.0244346
-texture = ExtResource("158_w8min")
-centered = false
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card25/CardBg/CharacterStatic/Plant019ThreepeaterDaotian" unique_id=1650867118]
+position = Vector2(2.01, -32.36)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("40_13hcx")
 
 [node name="Card26" parent="PlantCards" unique_id=-294967285 instance=ExtResource("2_5pqky")]
 layout_mode = 2
@@ -2176,60 +1950,10 @@ scale = Vector2(0.5, 0.5)
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste" unique_id=705032806]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body" unique_id=705032807]
-position = Vector2(-40, -67)
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032808]
-centered = false
-
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032809]
-visible = false
-centered = false
-
-[node name="Layer 35" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032810]
-position = Vector2(58.5, 36.5)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("188_xbns8")
-centered = false
-
-[node name="Layer 33" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032811]
-position = Vector2(32.7, 33.1)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("188_xbns8")
-centered = false
-
-[node name="Layer 34" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032812]
-visible = false
-centered = false
-
-[node name="Torchwood_fire1" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032813]
-position = Vector2(17.9, -12.2)
-scale = Vector2(0.715, 1.032)
-texture = ExtResource("189_jnetc")
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032814]
-position = Vector2(7, 27.8)
-scale = Vector2(0.72, 0.72)
-texture = ExtResource("190_x4ed2")
-centered = false
-
-[node name="Torchwood_mouth" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032815]
-position = Vector2(23, 42.6)
-rotation = -0.006981
-scale = Vector2(0.742, 0.8)
-skew = 0.006981
-texture = ExtResource("191_g74nx")
-centered = false
-
-[node name="Torchwood_blink" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste/Body/BodyCorrect" unique_id=705032816]
-visible = false
-position = Vector2(30.3, 38.9)
-scale = Vector2(0.737, 0.787)
-texture = ExtResource("192_kkciq")
-centered = false
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card26/CardBg/CharacterStatic/Plant023TorchwoodBaptiste" unique_id=1876479860]
+position = Vector2(2.55, -30.45)
+scale = Vector2(0.47, 0.47)
+texture = ExtResource("41_v6elg")
 
 [node name="Card27" parent="PlantCards" unique_id=-294967275 instance=ExtResource("2_5pqky")]
 layout_mode = 2
@@ -2293,65 +2017,10 @@ scale = Vector2(0.5, 0.5)
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver" unique_id=705033106]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body" unique_id=705033107]
-position = Vector2(-40, -66)
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033108]
-position = Vector2(27.6, 33.5)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("290_jnetc")
-centered = false
-
-[node name="Umbrellaleaf_blink" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033109]
-visible = false
-position = Vector2(33.1, 50.6)
-scale = Vector2(0.665, 0.665)
-texture = ExtResource("291_x4ed2")
-centered = false
-
-[node name="Umbrellaleaf_leaf5" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033110]
-position = Vector2(32.9, 3.9)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("292_g74nx")
-centered = false
-
-[node name="Umbrellaleaf_leaf4" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033111]
-position = Vector2(9.6, 4.8)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("293_kkciq")
-centered = false
-
-[node name="Umbrellaleaf_leaf6" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033112]
-position = Vector2(33.5, 11.4)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("294_d31db")
-centered = false
-
-[node name="Umbrellaleaf_leaf3" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033113]
-position = Vector2(0, 16.3)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("295_5wf4j")
-centered = false
-
-[node name="Umbrellaleaf_leaf7" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033114]
-position = Vector2(37.7, 19.1)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("296_q2ynx")
-centered = false
-
-[node name="Umbrellaleaf_leaf2" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033115]
-position = Vector2(11.1, 23.2)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("297_pct5d")
-centered = false
-
-[node name="Umbrellaleaf_leaf1" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver/Body/BodyCorrect" unique_id=705033116]
-position = Vector2(32, 24)
-scale = Vector2(0.637, 0.637)
-texture = ExtResource("298_m376l")
-centered = false
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card29/CardBg/CharacterStatic/Plant038UmbrellaLeafLifeweaver" unique_id=1750726231]
+position = Vector2(1.19, -31.44)
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("44_katit")
 
 [node name="Card30" parent="PlantCards" unique_id=-294967245 instance=ExtResource("2_5pqky")]
 layout_mode = 2
@@ -2379,117 +2048,7 @@ position = Vector2(0, -45.62)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("72_fw713")
 
-[node name="Card31" parent="PlantCards" unique_id=-294967235 instance=ExtResource("2_5pqky")]
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 29
-card_plant_type = 51
-cool_time = 50.0
-sun_cost = 225
-
-[node name="CardBg" parent="PlantCards/Card31" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="Plant051CattailSierra" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic" index="0" unique_id=705033304]
-position = Vector2(1, 14)
-scale = Vector2(0.5, 0.5)
-
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra" unique_id=705033305]
-visible = false
-texture = ExtResource("98_ev02b")
-
-[node name="Body" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra" unique_id=705033306]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body" unique_id=705033307]
-position = Vector2(-42, -66)
-
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033308]
-visible = false
-centered = false
-
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033309]
-centered = false
-
-[node name="Anim_shooting" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033310]
-visible = false
-centered = false
-
-[node name="Cattail_paw2" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033311]
-position = Vector2(6.5, 54)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("332_7x32i")
-centered = false
-
-[node name="Cattail_paw3" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033312]
-position = Vector2(57.8, 50.6)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("333_5hyh1")
-centered = false
-
-[node name="Cattail_tail" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033313]
-position = Vector2(2.4, 33.8)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("334_stc33")
-centered = false
-
-[node name="Cattail_tail2" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033314]
-position = Vector2(-1.4, 4.7)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("335_agc5q")
-centered = false
-
-[node name="Cattail_spike" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033315]
-position = Vector2(8.3, 2.4)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("336_7dndd")
-centered = false
-
-[node name="Cattail_tail2_overlay" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033316]
-position = Vector2(-0.7, 8.8)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("337_3bba4")
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033317]
-position = Vector2(26, 25.1)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("338_5d2eo")
-centered = false
-
-[node name="Cattail_paw1" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033318]
-position = Vector2(31.2, 59.4)
-scale = Vector2(0.85, 0.85)
-texture = ExtResource("339_aliup")
-centered = false
-
-[node name="Cattail_hat" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033319]
-position = Vector2(11.8, 9.3)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("340_63kfc")
-centered = false
-
-[node name="Cattail_blink" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033320]
-visible = false
-position = Vector2(41.1, 33.8)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("341_ij2p4")
-centered = false
-
-[node name="Cattail_eyebrow1" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033321]
-position = Vector2(38.6, 34)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("342_77b3v")
-centered = false
-
-[node name="Cattail_eyebrow2" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant051CattailSierra/Body/BodyCorrect" unique_id=705033322]
-position = Vector2(60.9, 31.4)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("343_8nnpu")
-centered = false
-
-[node name="Card32" parent="PlantCards" unique_id=1257254692 instance=ExtResource("2_5pqky")]
+[node name="Card31" parent="PlantCards" unique_id=1257254692 instance=ExtResource("2_5pqky")]
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
@@ -2499,18 +2058,18 @@ card_plant_type = 42
 cool_time = 50.0
 sun_cost = 150
 
-[node name="CardBg" parent="PlantCards/Card32" index="0"]
+[node name="CardBg" parent="PlantCards/Card31" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="lant042TwinsunflowerIllari" type="Node2D" parent="PlantCards/Card32/CardBg/CharacterStatic" index="0" unique_id=1679902851]
+[node name="lant042TwinsunflowerIllari" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic" index="0" unique_id=1679902851]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card32/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=2015382191]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=2015382191]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card32/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=1724240049]
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=1724240049]
 position = Vector2(-3.84, -22.84)
 scale = Vector2(0.66, 0.66)
 texture = ExtResource("413_ysrnk")
@@ -13481,7 +13040,6 @@ centered = false
 [editable path="PlantCards/Card29"]
 [editable path="PlantCards/Card30"]
 [editable path="PlantCards/Card31"]
-[editable path="PlantCards/Card32"]
 [editable path="PlantCards2/Card1"]
 [editable path="PlantCards2/Card2"]
 [editable path="PlantCards2/Card3"]
