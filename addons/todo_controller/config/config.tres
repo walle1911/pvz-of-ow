@@ -329,6 +329,7 @@ script_list_meta = {
 "res://scripts/resources/plant_condition/condition_036_coffee_bean.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_048_CobCannon.gd": [-1, -1],
 "res://scripts/resources/resource_body_change.gd": [-1, -1],
+"res://scripts/resources/resource_damage_boost_target_config.gd": [-1, -1],
 "res://scripts/resources/save_game/save_game_main_game.gd": [-1, -1],
 "res://scripts/resources/save_game/save_game_plant_cell.gd": [-1, -1],
 "res://scripts/resources/save_game/save_game_plant_cell_manager.gd": [-1, -1],
