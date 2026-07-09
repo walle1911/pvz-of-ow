@@ -611,6 +611,7 @@
 [ext_resource type="Texture2D" uid="uid://t5r3hpemowiq" path="res://assets/image/ui/Character_Card/Caltrop_Hazard_Card.png" id="403_odne4"]
 [ext_resource type="Texture2D" uid="uid://cw78c2yeffgip" path="res://assets/image/ui/Character_Card/Garlic_Mauga_Card.png" id="404_grlnh"]
 [ext_resource type="Texture2D" uid="uid://dxvlqvahfmjaa" path="res://pvz_icon.png" id="413_ysrnk"]
+[ext_resource type="Texture2D" uid="uid://dsdoat4v14hbs" path="res://assets/image/ui/Character_Card/Zomboni_Shion_Card.png" id="417_v6elg"]
 [ext_resource type="Texture2D" uid="uid://bpwq05kghn85" path="res://assets/reanim/Zombie_jackbox_innerleg_foot.png" id="444_7f486"]
 [ext_resource type="Texture2D" uid="uid://c0xi6knhqwb5t" path="res://assets/reanim/Zombie_jackbox_outerarm_upper.png" id="445_deuj6"]
 [ext_resource type="Texture2D" uid="uid://cwce4k76w0sgw" path="res://assets/reanim/Zombie_jackbox_innerleg_lower.png" id="445_ih4no"]
@@ -7749,9 +7750,9 @@ texture = ExtResource("3_m4n4y")
 position = Vector2(2, 17)
 
 [node name="Card2" type="Sprite2D" parent="ZombieCards/Card7/CardBg/CharacterStatic/Zombie013ZomboniShion" unique_id=1162322649]
-position = Vector2(-2.32, -15.55)
-scale = Vector2(0.32, 0.32)
-texture = ExtResource("413_ysrnk")
+position = Vector2(0.23, -15.5)
+scale = Vector2(0.23, 0.23)
+texture = ExtResource("417_v6elg")
 
 [node name="Card8" parent="ZombieCards" unique_id=-888888888 instance=ExtResource("2_5pqky")]
 layout_mode = 2
