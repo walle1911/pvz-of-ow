@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_d3e4f"]
 [ext_resource type="Script" uid="uid://xmyk51geyxx8" path="res://scripts/character/plant/plant_023_torch_wood.gd" id="2_d3e4f"]
 [ext_resource type="Texture2D" uid="uid://bxf2w1rk7r03s" path="res://assets/reanim/Torchwood_spark.png" id="2_f3mgj"]
-[ext_resource type="Texture2D" uid="uid://cb0u1a7b8se76" path="res://assets/reanim/Torchwood_fire1c.png" id="4_frv33"]
+[ext_resource type="Texture2D" uid="uid://cg0kmdqyqdiu1" path="res://assets/reanim/Torchwood_fire1b.png" id="4_frv33"]
 [ext_resource type="Texture2D" uid="uid://dejh82cbf5y5q" path="res://assets/reanim/Torchwood_body.png" id="4_ji27e"]
 [ext_resource type="Texture2D" uid="uid://dskdfdfajmrkk" path="res://assets/reanim/Torchwood_mouth.png" id="5_w81nd"]
 [ext_resource type="Texture2D" uid="uid://cwhpp4e3mm63u" path="res://assets/reanim/Torchwood_eyes1.png" id="6_lpob7"]
@@ -48,6 +48,9 @@ size = Vector2(66, 66)
 
 [node name="Plant023TorchwoodBaptiste" unique_id=2099143003 instance=ExtResource("1_d3e4f")]
 script = ExtResource("2_d3e4f")
+bullet_damage_multiplier = 1.0
+use_fire_overlay_mode = true
+overlay_fire_types = Array[int]([1, 2, 7])
 plant_type = 23
 
 [node name="BodyCorrect" parent="Body" index="0"]
@@ -61,36 +64,37 @@ visible = false
 centered = false
 
 [node name="Layer 35" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=834428134]
-self_modulate = Color(1, 1, 1, 0.7125806)
-position = Vector2(39.7, 19.05294)
+visible = false
+self_modulate = Color(1, 1, 1, 0.01999998)
+position = Vector2(58.5, -14.7)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f3mgj")
 centered = false
 
 [node name="Layer 33" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=801051263]
 visible = false
-self_modulate = Color(1, 1, 1, 0.01999998)
-position = Vector2(42.7, -2.5)
+self_modulate = Color(1, 1, 1, 0.49285173)
+position = Vector2(37.525017, 7.565074)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f3mgj")
 centered = false
 
 [node name="Layer 34" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=211030247]
-self_modulate = Color(1, 1, 1, 0.7545353)
-position = Vector2(46.74554, 20.132645)
+self_modulate = Color(1, 1, 1, 0.4327997)
+position = Vector2(39.7, 8.208488)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f3mgj")
 centered = false
 
 [node name="Torchwood_fire1" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=565111788]
-position = Vector2(16.100948, -2.275332)
-scale = Vector2(0.77496773, 0.8682391)
+position = Vector2(16.723753, -5.9734926)
+scale = Vector2(0.7244125, 0.91043484)
 texture = ExtResource("4_frv33")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1734854339]
-position = Vector2(6.225047, 30.924858)
-scale = Vector2(0.73574954, 0.67125237)
+position = Vector2(6.5517497, 29.54475)
+scale = Vector2(0.728965, 0.6925875)
 texture = ExtResource("4_ji27e")
 centered = false
 
@@ -110,16 +114,16 @@ scale = Vector2(0.65437114, 0.62)
 texture = ExtResource("8_1pw72")
 
 [node name="Torchwood_mouth" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1279068901]
-position = Vector2(21.8, 43.1)
+position = Vector2(22.251749, 42.94825)
 rotation = -0.006981
-scale = Vector2(0.7859981, 0.9189943)
+scale = Vector2(0.76693, 0.86679006)
 skew = 0.006981
 texture = ExtResource("5_w81nd")
 centered = false
 
 [node name="Torchwood_blink" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=602491039]
 visible = false
-position = Vector2(30.253397, 41.447456)
+position = Vector2(30.273792, 40.332527)
 scale = Vector2(0.737, 0.787)
 texture = ExtResource("6_lpob7")
 centered = false

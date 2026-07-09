@@ -9,5 +9,3 @@ func attack_once(enemy:Character000Base):
 	if enemy is Zombie000Base:
 		if enemy.hp_component.curr_hp_armor2 <= 0:
 			enemy.be_ice_decelerate(time_be_decelerated)
-
-
