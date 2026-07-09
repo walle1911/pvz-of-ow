@@ -962,7 +962,7 @@ all_plant_card_prefabs = {
 38: NodePath("PlantCards/Card29"),
 40: NodePath("PlantCards/Card11"),
 41: NodePath("PlantCards/Card7"),
-42: NodePath(""),
+42: NodePath("PlantCards/Card32"),
 43: NodePath("PlantCards/Card14"),
 44: NodePath("PlantCards/Card9"),
 48: NodePath("PlantCards/Card30"),
@@ -1517,15 +1517,15 @@ card_plant_type = 44
 cool_time = 50.0
 sun_cost = 225
 
-[node name="Plant058CattailJetpackCat" type="Node2D" parent="PlantCards/Card9/CardBg/CharacterStatic" index="0" unique_id=322890687]
+[node name="Plant044CattailJetpackCat" type="Node2D" parent="PlantCards/Card9/CardBg/CharacterStatic" index="0" unique_id=322890687]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card9/CardBg/CharacterStatic/Plant058CattailJetpackCat" unique_id=424608322]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card9/CardBg/CharacterStatic/Plant044CattailJetpackCat" unique_id=424608322]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card9/CardBg/CharacterStatic/Plant058CattailJetpackCat" unique_id=1646936002]
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card9/CardBg/CharacterStatic/Plant044CattailJetpackCat" unique_id=1646936002]
 position = Vector2(1.02, -24.26)
 scale = Vector2(1.03, 1.03)
 texture = ExtResource("388_brt1f")
@@ -1769,15 +1769,15 @@ sun_cost = 25
 [node name="CardBg" parent="PlantCards/Card19" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant068ScaredyShroomWidowmaker" type="Node2D" parent="PlantCards/Card19/CardBg/CharacterStatic" index="0" unique_id=358332812]
+[node name="ScaredyShroomWidowmaker" type="Node2D" parent="PlantCards/Card19/CardBg/CharacterStatic" index="0" unique_id=358332812]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/Plant068ScaredyShroomWidowmaker" unique_id=980005720]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/ScaredyShroomWidowmaker" unique_id=980005720]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/Plant068ScaredyShroomWidowmaker" unique_id=1690901821]
+[node name="card" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/ScaredyShroomWidowmaker" unique_id=1690901821]
 position = Vector2(-2.23, -29.92)
 texture = ExtResource("389_knh0l")
 

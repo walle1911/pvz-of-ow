@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dlwrjkajjpdsb" path="res://assets/reanim/FumeShroom_tip.png" id="6_h5tkg"]
 [ext_resource type="Texture2D" uid="uid://xd0iwxppb2gb" path="res://assets/reanim/FumeShroom_Roadhog_Face (1).png" id="7_4our6"]
 [ext_resource type="Texture2D" uid="uid://yjc7pkf5hdn2" path="res://assets/image/particles/bullet/PuffShroom_puff1.png" id="7_060wc"]
+[ext_resource type="Texture2D" uid="uid://dhsxq0pua8s4" path="res://assets/reanim/Sun1.png" id="7_uvmcr"]
 [ext_resource type="Animation" uid="uid://du6mjid0siwe1" path="res://animation/character/plant/011_fume_shroom/FumeShroom_idle.tres" id="8_234co"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="8_h5tkg"]
 [ext_resource type="Texture2D" uid="uid://2iqrpnw4p81u" path="res://assets/reanim/FumeShroom_Roadhog_lip0.png" id="9_5ksfa"]
@@ -136,9 +137,6 @@ plant_type = 11
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
-[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
-sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent")]
-
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-36, -59)
 scale = Vector2(0.9, 0.9)
@@ -148,8 +146,8 @@ visible = false
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=616099046]
-position = Vector2(9.8, 38.294895)
-scale = Vector2(0.8, 0.80175173)
+position = Vector2(9.8, 39.98147)
+scale = Vector2(0.8, 0.76737064)
 texture = ExtResource("2_5mc0d")
 centered = false
 
@@ -159,24 +157,31 @@ texture = ExtResource("4_m6p15")
 
 [node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1659246017]
 visible = false
-position = Vector2(43, 50.37852)
+position = Vector2(43, 50.80511)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_bbimx")
 centered = false
 
 [node name="DoomShroom_head" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1159702315]
-position = Vector2(5.4051046, -3.1904888)
-scale = Vector2(0.7971972, 0.80420417)
+position = Vector2(3.9821095, 1.4172494)
+scale = Vector2(0.8326294, 0.76737064)
 texture = ExtResource("4_0qv5g")
 centered = false
 
-[node name="FumeShroom_Roadhog_Face" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_head" index="0" unique_id=92300434]
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_head" index="0" unique_id=1978172848]
+position = Vector2(46.23, 65.48)
+scale = Vector2(0.13, 0.12999998)
+texture = ExtResource("7_uvmcr")
+
+[node name="FumeShroom_Roadhog_Face" type="Sprite2D" parent="Body/BodyCorrect/DoomShroom_head" index="1" unique_id=92300434]
 position = Vector2(42.76, 26.14)
 texture = ExtResource("7_4our6")
 
 [node name="DoomShroom_spout" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1640136923]
-position = Vector2(67.729935, 16.014616)
-scale = Vector2(0.7971972, 0.80420417)
+position = Vector2(69.1179, 19.926516)
+rotation = 0.047112722
+scale = Vector2(0.83362937, 0.76737064)
+skew = -0.047112722
 texture = ExtResource("5_47ii7")
 centered = false
 
@@ -185,8 +190,10 @@ position = Vector2(5.527777, 11.444447)
 texture = ExtResource("9_5ksfa")
 
 [node name="DoomShroom_tip" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=311596581]
-position = Vector2(73.994896, 13.779581)
-scale = Vector2(0.7971972, 0.80420417)
+position = Vector2(75.68147, 19.244406)
+rotation = 0.047112722
+scale = Vector2(0.83362937, 0.76737064)
+skew = -0.047112722
 texture = ExtResource("6_h5tkg")
 centered = false
 
@@ -197,6 +204,9 @@ texture = ExtResource("11_02gsd")
 [node name="Marker2DBullet" type="Marker2D" parent="Body/BodyCorrect" index="6" unique_id=1851612954]
 position = Vector2(43.3333, 32.2222)
 scale = Vector2(0.5, 0.592593)
+
+[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
+sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent")]
 
 [node name="BlinkComponent" parent="." index="5"]
 all_blink_body_change = Array[ExtResource("8_h5tkg")]([SubResource("Resource_234co")])
