@@ -18,6 +18,9 @@ func _ready() -> void:
 	Global.time_scale = 1.0
 	Engine.time_scale = Global.time_scale
 
+	## 确保回到主菜单时鼠标可见（防止从锤子关等模式返回后鼠标残隐）
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
 ## 花园需要浇水
 var garden_need_water:=true
 
@@ -50,6 +53,11 @@ func _on_button_4_pressed() -> void:
 func _on_custom_button_pressed() -> void:
 	Global.game_para = null
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
+
+## 关卡工坊：运行时编辑并保存待审核 JSON 草稿
+func _on_level_workshop_button_pressed() -> void:
+	Global.game_para = null
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 
 #region 选项
 func _on_option_button_1_pressed() -> void:
@@ -87,5 +95,4 @@ func _on_item_button_3_pressed() -> void:
 ## 点击用户更新时
 func _on_button_update_user_pressed() -> void:
 	user.visible = true
-
 

@@ -66,5 +66,3 @@ func get_random_card_info() -> Dictionary:
 	else:
 		var card_zombie_type = card_choose_random_pool_zombie.get_random_item()
 		return {"plant_type": CharacterRegistry.PlantType.Null, "zombie_type": card_zombie_type}
-
-

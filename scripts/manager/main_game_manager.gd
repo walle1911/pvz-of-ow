@@ -186,6 +186,8 @@ func apply_test_display_overrides() -> void:
 	Global.config_service.display_zombie_HP_label = true
 
 func _exit_tree() -> void:
+	## 确保退出主游戏场景时鼠标恢复可见（防止锤子等工具残留隐藏状态）
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	## 避免切场景后主游戏节点已释放，Global 仍持有野指针
 	if Global.main_game == self:
 		Global.main_game = null

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "example_front_lawn",
+  "name": "前院防线（示例）",
+  "mapConfig": {"type": "front_lawn", "rows": 5, "columns": 9},
+  "playerConfig": {"initialSun": 150},
+  "availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
+  "waves": [
+    {
+      "id": "wave_1",
+      "name": "试探",
+      "startTime": 0.0,
+      "duration": 18.0,
+      "spawnGroups": [
+        {
+          "id": "group_1",
+          "zombieType": "normal",
+          "count": 8,
+          "startDelay": 1.0,
+          "intervalMode": "fixed",
+          "fixedInterval": 1.6,
+          "randomInterval": {"min": 0.8, "max": 1.8},
+          "laneRule": "random",
+          "fixedLane": 1,
+          "laneWeights": [1, 1, 1, 1, 1],
+          "healthMultiplier": 1.0,
+          "speedMultiplier": 1.0,
+          "maxAlive": 8
+        }
+      ]
+    },
+    {
+      "id": "wave_2",
+      "name": "压力",
+      "startTime": 20.0,
+      "duration": 22.0,
+      "spawnGroups": [
+        {
+          "id": "group_2",
+          "zombieType": "conehead",
+          "count": 6,
+          "startDelay": 1.0,
+          "intervalMode": "random",
+          "fixedInterval": 1.2,
+          "randomInterval": {"min": 0.8, "max": 1.8},
+          "laneRule": "weighted",
+          "fixedLane": 1,
+          "laneWeights": [2, 1, 2, 1, 2],
+          "healthMultiplier": 1.0,
+          "speedMultiplier": 1.0,
+          "maxAlive": 6
+        }
+      ]
+    }
+  ],
+  "winConditions": [{"type": "all_waves_cleared"}],
+  "loseConditions": [{"type": "zombie_reaches_house"}],
+  "randomSeed": 20260710
+}

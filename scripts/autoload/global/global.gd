@@ -23,6 +23,8 @@ extends Node
 
 
 func _ready() -> void:
+	## 确保游戏启动时鼠标可见（防止上次异常退出时鼠标被隐藏）
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	## 读取当前用户名
 	var is_have_user := user_manager.load_current_user()

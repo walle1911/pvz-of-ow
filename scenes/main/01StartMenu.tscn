@@ -2133,6 +2133,18 @@ offset_bottom = 96.0
 texture = ExtResource("84_x7dp7")
 stretch_mode = 2
 
+[node name="LevelWorkshopButton" type="Button" parent="BG_Right"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 446.0
+offset_right = 250.0
+offset_bottom = 493.0
+mouse_default_cursor_shape = 2
+theme = ExtResource("59_e0j7q")
+theme_override_font_sizes/font_size = 20
+text = "关卡工坊  ✎"
+tooltip_text = "在游戏里制作关卡并保存为待审核草稿"
+
 [node name="Version" type="Label" parent="BG_Right" unique_id=862557868]
 layout_mode = 0
 offset_left = 425.0
@@ -3043,6 +3055,7 @@ offset_bottom = -178.0
 [connection signal="mouse_entered" from="BG_Right/CustomButton" to="BG_Right/CustomButton" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="BG_Right/CustomButton" to="BG_Right/CustomButton" method="_on_mouse_exited"]
 [connection signal="pressed" from="BG_Right/CustomButton" to="." method="_on_custom_button_pressed"]
+[connection signal="pressed" from="BG_Right/LevelWorkshopButton" to="." method="_on_level_workshop_button_pressed"]
 [connection signal="pressed" from="WoodSign/ButtonUserUpdate" to="." method="_on_button_update_user_pressed"]
 [connection signal="toggled" from="StartMenuOptionDialog/Option/FullScreen/CheckButton" to="." method="_on_full_screen_button_toggled"]
 [connection signal="pressed" from="StartMenuOptionDialog/Return" to="StartMenuOptionDialog" method="return_button_pressed"]

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "res://addons/pvz_level_editor/level.schema.json",
+  "title": "PVZ Level Editor Level",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "availablePlants", "waves", "winConditions", "loseConditions", "randomSeed"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "id": {"type": "string", "minLength": 1},
+    "name": {"type": "string", "minLength": 1},
+    "mapConfig": {"$ref": "#/$defs/mapConfig"},
+    "playerConfig": {"$ref": "#/$defs/playerConfig"},
+    "availablePlants": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "waves": {"type": "array", "items": {"$ref": "#/$defs/wave"}},
+    "winConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}, "minItems": 1},
+    "loseConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}},
+    "randomSeed": {"type": "integer", "minimum": 1, "maximum": 2147483647}
+  },
+  "$defs": {
+    "mapConfig": {
+      "type": "object",
+      "required": ["type", "rows", "columns"],
+      "properties": {
+        "type": {"enum": ["front_lawn", "night_lawn", "pool", "fog", "roof"]},
+        "rows": {"type": "integer", "minimum": 1, "maximum": 8},
+        "columns": {"type": "integer", "minimum": 1, "maximum": 12}
+      }
+    },
+    "playerConfig": {
+      "type": "object",
+      "required": ["initialSun"],
+      "properties": {"initialSun": {"type": "integer", "minimum": 0}}
+    },
+    "condition": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {"type": {"type": "string", "minLength": 1}}
+    },
+    "wave": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "startTime", "duration", "spawnGroups"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "startTime": {"type": "number", "minimum": 0},
+        "duration": {"type": "number", "exclusiveMinimum": 0},
+        "spawnGroups": {"type": "array", "items": {"$ref": "#/$defs/spawnGroup"}}
+      }
+    },
+    "spawnGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "zombieType", "count", "startDelay", "intervalMode", "fixedInterval", "randomInterval", "laneRule", "fixedLane", "laneWeights", "healthMultiplier", "speedMultiplier", "maxAlive"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "zombieType": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 1},
+        "startDelay": {"type": "number", "minimum": 0},
+        "intervalMode": {"enum": ["fixed", "random"]},
+        "fixedInterval": {"type": "number", "exclusiveMinimum": 0},
+        "randomInterval": {
+          "type": "object",
+          "required": ["min", "max"],
+          "properties": {"min": {"type": "number", "exclusiveMinimum": 0}, "max": {"type": "number", "exclusiveMinimum": 0}}
+        },
+        "laneRule": {"enum": ["fixed", "random", "weighted"]},
+        "fixedLane": {"type": "integer", "minimum": 1},
+        "laneWeights": {"type": "array", "items": {"type": "number", "minimum": 0}},
+        "healthMultiplier": {"type": "number", "exclusiveMinimum": 0},
+        "speedMultiplier": {"type": "number", "exclusiveMinimum": 0},
+        "maxAlive": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

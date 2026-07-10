@@ -254,15 +254,27 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 			continue
 		var migrated_card: Dictionary = card_data.duplicate(true)
 		if migrated_card.has("plant_type"):
-			var plant_type := int(migrated_card["plant_type"])
+			var raw_plant: Variant = migrated_card["plant_type"]
+			if raw_plant is Dictionary or raw_plant is Array:
+				continue
+			var plant_type := int(raw_plant)
 			var should_migrate_plant_id := should_migrate_legacy_ids or not GlobalUtils.is_current_plant_type(plant_type)
 			migrated_card["plant_type"] = legacy_plant_type_map.get(plant_type, plant_type) if should_migrate_plant_id else plant_type
 		if migrated_card.has("zombie_type"):
-			var zombie_type := int(migrated_card["zombie_type"])
+			var raw_zombie: Variant = migrated_card["zombie_type"]
+			if raw_zombie is Dictionary or raw_zombie is Array:
+				continue
+			var zombie_type := int(raw_zombie)
 			var should_migrate_zombie_id := should_migrate_legacy_ids or not GlobalUtils.is_current_zombie_type(zombie_type)
 			migrated_card["zombie_type"] = legacy_zombie_type_map.get(zombie_type, zombie_type) if should_migrate_zombie_id else zombie_type
-		var final_plant_type := int(migrated_card.get("plant_type", CharacterRegistry.PlantType.Null))
-		var final_zombie_type := int(migrated_card.get("zombie_type", CharacterRegistry.ZombieType.Null))
+		var raw_final_plant: Variant = migrated_card.get("plant_type", CharacterRegistry.PlantType.Null)
+		var raw_final_zombie: Variant = migrated_card.get("zombie_type", CharacterRegistry.ZombieType.Null)
+		if raw_final_plant is Dictionary or raw_final_plant is Array:
+			raw_final_plant = CharacterRegistry.PlantType.Null
+		if raw_final_zombie is Dictionary or raw_final_zombie is Array:
+			raw_final_zombie = CharacterRegistry.ZombieType.Null
+		var final_plant_type := int(raw_final_plant)
+		var final_zombie_type := int(raw_final_zombie)
 		if final_plant_type != CharacterRegistry.PlantType.Null and GlobalUtils.is_current_plant_type(final_plant_type):
 			migrated_card["plant_type"] = final_plant_type
 			migrated_card.erase("zombie_type")

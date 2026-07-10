@@ -14,6 +14,7 @@ enum MainScenes{
 	ChooseLevelPuzzle,
 	ChooseLevelSurvival,
 	ChooseLevelCustom,
+	LevelWorkshop,
 
 	Garden = 200,
 	Almanac,
@@ -32,6 +33,7 @@ enum MainScenes{
 	MainScenes.ChooseLevelPuzzle: "res://scenes/main/04PuzzleChooesLevel.tscn",
 	MainScenes.ChooseLevelSurvival: "res://scenes/main/05SurvivalChooesLevel.tscn",
 	MainScenes.ChooseLevelCustom: "res://scenes/main/06CustomChooesLevel.tscn",
+	MainScenes.LevelWorkshop: "res://scenes/main/07LevelWorkshop.tscn",
 
 	MainScenes.Garden: "res://scenes/main/10Garden.tscn",
 	MainScenes.Almanac: "res://scenes/main/11Almanac.tscn",
