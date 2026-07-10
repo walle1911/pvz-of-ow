@@ -3,6 +3,7 @@ extends Control
 class_name StartMenuRoot
 
 const RETURN_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/button_return.png")
+const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/button_developer.png")
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
@@ -57,7 +58,7 @@ var normal_level_workshop_texture: Texture2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_apply_level_workshop_button_transform()
-	normal_level_workshop_texture = level_workshop_button.texture_normal
+	normal_level_workshop_texture = LEVEL_WORKSHOP_NORMAL_TEXTURE
 	if Engine.is_editor_hint():
 		_apply_editor_menu_preview()
 		return
