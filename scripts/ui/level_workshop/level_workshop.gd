@@ -5,6 +5,16 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
+const ALMANAC_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
+const ALMANAC_CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
+const ALMANAC_CLOSE_BUTTON_HOVER := preload("res://assets/image/Almanac/Almanac_CloseButtonHighlight.png")
+const DIALOG_BACKGROUND := preload("res://assets/image/ui/ui_main_game_menu/option_dialog.png")
+const DIALOG_BUTTON := preload("res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2.png")
+const PAGE_BUTTON := preload("res://assets/image/ui/ui_level/SeedChooser_Button2.png")
+const PAGE_BUTTON_HOVER := preload("res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png")
+const FLAG_METER := preload("res://assets/image/ui/ui_progress_bar/FlagMeter.png")
+const FLAG_PARTS := preload("res://assets/image/ui/ui_progress_bar/FlagMeterParts.png")
+const WORKSHOP_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 
 const ZOMBIE_TYPE_IDS := {
 	"normal": 500,
@@ -24,7 +34,11 @@ const ZOMBIE_NAMES := {
 }
 const HISTORY_LIMIT := 80
 const PREVIEW_MAX_ZOMBIES := 20
-const PREVIEW_COLUMNS := 5
+const DRAWER_WIDTH := 700.0
+const TIMELINE_SCALE := 1.25
+const CARDS_PER_PAGE := 24
+const FLAG_CENTER_LEFT := 18.0
+const FLAG_CENTER_RIGHT := 136.0
 
 var level: Dictionary = Logic.example_level()
 var selected_wave := 0
@@ -33,9 +47,7 @@ var history: Array[String] = []
 var future: Array[String] = []
 var preview_zombies: Array[Node2D] = []
 
-var sidebar_content: VBoxContainer
-var selected_list: VBoxContainer
-var rule_editor: VBoxContainer
+var sidebar_content: Control
 var preview_root: Control
 var road_hint: Label
 var road_title: Label
@@ -45,10 +57,17 @@ var wave_summary: Label
 var status_label: Label
 var draft_picker: OptionButton
 var draft_paths: Array[String] = []
-var timeline_stages: HBoxContainer
+var timeline_stages: Control
 var zombie_card_prefabs: Dictionary = {}
 var zombie_card_order: Array[int] = []
 var zombie_names: Dictionary = {}
+var drawer: Control
+var card_grid: GridContainer
+var card_scroll: ScrollContainer
+var timeline_meter: Control
+var quantity_dialog_layer: Control
+var card_page_label: Label
+var current_card_page := 0
 
 
 func _ready() -> void:
@@ -68,11 +87,8 @@ func _ready() -> void:
 
 
 func _apply_font() -> void:
-	var font := load("res://assets/fonts/NotoSansSC.ttf") as FontFile
-	if font == null:
-		return
 	var theme := Theme.new()
-	theme.default_font = font
+	theme.default_font = WORKSHOP_FONT
 	theme.default_font_size = 14
 	self.theme = theme
 
@@ -85,149 +101,124 @@ func _build_scene() -> void:
 	background.z_index = -100
 	add_child(background)
 
-	var shade := ColorRect.new()
-	shade.position = Vector2(0, 0)
-	shade.size = Vector2(370, 600)
-	shade.color = Color(0.035, 0.075, 0.05, 0.94)
-	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(shade)
-
 	preview_root = Control.new()
 	preview_root.name = "ShowZombiePanel"
-	preview_root.position = Vector2(745, 150)
-	preview_root.size = Vector2(290, 410)
+	preview_root.position = Vector2(746, 180)
+	preview_root.size = Vector2(280, 400)
 	preview_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview_root.y_sort_enabled = true
 	preview_root.z_index = 50
 	add_child(preview_root)
 
-	_build_top_bar()
-	_build_sidebar()
+	_build_drawer()
 	_build_road_overlay()
-	_build_timeline()
+	_animate_drawer_in()
 
 
-func _build_top_bar() -> void:
-	var panel := PanelContainer.new()
-	panel.position = Vector2(370, 0)
-	panel.size = Vector2(696, 70)
-	panel.add_theme_stylebox_override("panel", _style(Color(0.03, 0.08, 0.045, 0.93), Color("6e8b62"), 0, 1))
-	add_child(panel)
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 12)
-	margin.add_theme_constant_override("margin_top", 9)
-	margin.add_theme_constant_override("margin_right", 12)
-	margin.add_theme_constant_override("margin_bottom", 9)
-	panel.add_child(margin)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 7)
-	margin.add_child(row)
-	row.add_child(_button("← 返回", _back_to_menu))
-	row.add_child(_button("关卡设置", _open_level_settings))
-	row.add_child(_button("上一段", func(): _switch_wave(-1)))
-	wave_title = Label.new()
-	wave_title.custom_minimum_size.x = 115
-	wave_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	wave_title.add_theme_font_size_override("font_size", 22)
-	wave_title.add_theme_color_override("font_color", Color("f2dd75"))
-	row.add_child(wave_title)
-	row.add_child(_button("下一段", func(): _switch_wave(1)))
-	row.add_child(_button("＋新增旗帜", _create_next_wave))
-	var trial := _button("▶ 立即试玩", _playtest)
-	trial.add_theme_stylebox_override("normal", _style(Color("4b7f4d"), Color("a8d47f"), 6, 2))
-	row.add_child(trial)
-	var save := _button("保存并命名", _open_save_dialog)
-	save.add_theme_stylebox_override("normal", _style(Color("d9bd48"), Color("705b17"), 6, 2))
-	save.add_theme_color_override("font_color", Color("1d2a18"))
-	row.add_child(save)
+func _build_drawer() -> void:
+	drawer = Control.new()
+	drawer.name = "AlmanacDrawer"
+	drawer.position = Vector2(-DRAWER_WIDTH, 0)
+	drawer.size = Vector2(DRAWER_WIDTH, 600)
+	drawer.z_index = 100
+	add_child(drawer)
 
+	var paper := TextureRect.new()
+	paper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	paper.texture = ALMANAC_BACKGROUND
+	paper.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	paper.stretch_mode = TextureRect.STRETCH_SCALE
+	paper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	drawer.add_child(paper)
 
-func _build_sidebar() -> void:
-	var margin := MarginContainer.new()
-	margin.position = Vector2(0, 0)
-	margin.size = Vector2(370, 600)
-	margin.add_theme_constant_override("margin_left", 12)
-	margin.add_theme_constant_override("margin_top", 10)
-	margin.add_theme_constant_override("margin_right", 12)
-	margin.add_theme_constant_override("margin_bottom", 10)
-	add_child(margin)
-	sidebar_content = VBoxContainer.new()
-	sidebar_content.add_theme_constant_override("separation", 7)
-	margin.add_child(sidebar_content)
+	sidebar_content = Control.new()
+	sidebar_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	drawer.add_child(sidebar_content)
 
-	var title_row := HBoxContainer.new()
-	sidebar_content.add_child(title_row)
-	stage_heading = Label.new()
-	stage_heading.text = "当前阶段僵尸"
-	stage_heading.add_theme_font_size_override("font_size", 23)
-	stage_heading.add_theme_color_override("font_color", Color("f2dd75"))
-	stage_heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title_row.add_child(stage_heading)
-	title_row.add_child(_button("撤销", _undo))
-	title_row.add_child(_button("重做", _redo))
+	stage_heading = _paper_label("旗帜波僵尸", Vector2(150, 18), Vector2(500, 42), 27, Color("e7e4d1"))
+	stage_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stage_heading.add_theme_color_override("font_outline_color", Color("25263b"))
+	stage_heading.add_theme_constant_override("outline_size", 4)
+	sidebar_content.add_child(stage_heading)
 
-	wave_summary = Label.new()
-	wave_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	wave_summary.add_theme_color_override("font_color", Color("dbe7d4"))
+	wave_title = _paper_label("", Vector2(52, 74), Vector2(210, 28), 19, Color("6d310d"))
+	sidebar_content.add_child(wave_title)
+	wave_summary = _paper_label("", Vector2(290, 74), Vector2(360, 28), 14, Color("6d310d"))
+	wave_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	sidebar_content.add_child(wave_summary)
 
-	var instruction := Label.new()
-	instruction.text = "点击僵尸卡片：当前阶段数量 +1\n试玩时会按设定时间逐只随机分排出现。"
-	instruction.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	instruction.add_theme_color_override("font_color", Color("9fc58e"))
+	var instruction := _paper_label("点击卡片，设置本阶段出场数量", Vector2(52, 100), Vector2(610, 25), 16, Color("7e390f"))
+	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(instruction)
 
-	var card_scroll := ScrollContainer.new()
-	card_scroll.custom_minimum_size.y = 135
+	card_scroll = ScrollContainer.new()
+	card_scroll.position = Vector2(100, 126)
+	card_scroll.size = Vector2(524, 340)
 	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	card_scroll.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	sidebar_content.add_child(card_scroll)
-	var cards := GridContainer.new()
-	cards.columns = 6
-	cards.add_theme_constant_override("h_separation", 5)
-	cards.add_theme_constant_override("v_separation", 5)
-	card_scroll.add_child(cards)
-	for zombie_type in zombie_card_order:
-		cards.add_child(_make_zombie_card(zombie_type))
+	card_grid = GridContainer.new()
+	card_grid.custom_minimum_size.x = 472
+	card_grid.columns = 6
+	card_grid.add_theme_constant_override("h_separation", 20)
+	card_grid.add_theme_constant_override("v_separation", 8)
+	card_scroll.add_child(card_grid)
 
-	var selected_title := Label.new()
-	selected_title.text = "已选择（可直接增减数量）"
-	selected_title.add_theme_font_size_override("font_size", 17)
-	selected_title.add_theme_color_override("font_color", Color("f1d787"))
-	sidebar_content.add_child(selected_title)
-	var selected_scroll := ScrollContainer.new()
-	selected_scroll.custom_minimum_size.y = 75
-	selected_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	sidebar_content.add_child(selected_scroll)
-	selected_list = VBoxContainer.new()
-	selected_scroll.add_child(selected_list)
+	sidebar_content.add_child(_texture_button("上一页", Vector2(174, 476), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(-1), 14))
+	sidebar_content.add_child(_texture_button("下一页", Vector2(439, 476), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(1), 14))
+	card_page_label = _paper_label("", Vector2(292, 476), Vector2(140, 26), 14, Color("6d310d"))
+	card_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sidebar_content.add_child(card_page_label)
+	_refresh_card_page()
 
-	rule_editor = VBoxContainer.new()
-	sidebar_content.add_child(rule_editor)
+	_build_timeline()
+	_build_drawer_actions()
 
-	status_label = Label.new()
-	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	status_label.add_theme_color_override("font_color", Color("efc18a"))
-	status_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	status_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	status_label = _paper_label("所有修改都会自动保存", Vector2(118, 545), Vector2(530, 20), 13, Color("7e390f"))
+	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(status_label)
+
+
+func _build_drawer_actions() -> void:
+	var actions := [
+		{"text": "返回", "call": _back_to_menu},
+		{"text": "设置", "call": _open_level_settings},
+		{"text": "撤销", "call": _undo},
+		{"text": "重做", "call": _redo},
+		{"text": "试玩", "call": _playtest},
+		{"text": "保存", "call": _open_save_dialog},
+	]
+	for index in actions.size():
+		var item: Dictionary = actions[index]
+		var button := _texture_button(str(item["text"]), Vector2(84 + index * 98, 570), Vector2(89, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, item["call"], 14)
+		sidebar_content.add_child(button)
+
+
+func _animate_drawer_in() -> void:
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(drawer, "position:x", 0.0, 0.48)
 
 
 func _build_road_overlay() -> void:
 	road_title = Label.new()
-	road_title.position = Vector2(725, 82)
-	road_title.size = Vector2(325, 42)
+	road_title.position = Vector2(710, 70)
+	road_title.size = Vector2(345, 42)
 	road_title.text = "当前波次 · 道路预览"
 	road_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	road_title.add_theme_font_size_override("font_size", 22)
+	road_title.add_theme_font_override("font", WORKSHOP_FONT)
+	road_title.add_theme_font_size_override("font_size", 21)
 	road_title.add_theme_color_override("font_color", Color("fff0a8"))
 	road_title.add_theme_color_override("font_outline_color", Color("263420"))
 	road_title.add_theme_constant_override("outline_size", 5)
 	add_child(road_title)
 	road_hint = Label.new()
-	road_hint.position = Vector2(735, 125)
-	road_hint.size = Vector2(305, 55)
+	road_hint.position = Vector2(720, 112)
+	road_hint.size = Vector2(325, 55)
 	road_hint.text = "这一波还没有僵尸\n请点击左侧卡片"
 	road_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	road_hint.add_theme_font_override("font", WORKSHOP_FONT)
 	road_hint.add_theme_font_size_override("font_size", 17)
 	road_hint.add_theme_color_override("font_color", Color("e6efda"))
 	road_hint.add_theme_color_override("font_outline_color", Color("263420"))
@@ -236,50 +227,70 @@ func _build_road_overlay() -> void:
 
 
 func _build_timeline() -> void:
-	var panel := PanelContainer.new()
-	panel.position = Vector2(385, 482)
-	panel.size = Vector2(350, 108)
-	panel.add_theme_stylebox_override("panel", _style(Color(0.025, 0.06, 0.035, 0.95), Color("78936d"), 7, 1))
-	add_child(panel)
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 3)
-	panel.add_child(box)
-	var title := Label.new()
-	title.text = "刷怪进度 · 点击旗帜或波间间隔进行编辑"
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_color", Color("e9dc8c"))
-	var title_row := HBoxContainer.new()
-	title_row.add_child(title)
-	title_row.add_child(_button("删除波/间隔", _delete_current_stage))
-	box.add_child(title_row)
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size.y = 69
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	box.add_child(scroll)
-	timeline_stages = HBoxContainer.new()
-	timeline_stages.add_theme_constant_override("separation", 4)
-	scroll.add_child(timeline_stages)
+	var add_flag := _texture_button("＋旗帜", Vector2(902, 486), Vector2(89, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _create_next_wave, 14)
+	add_flag.z_index = 120
+	add_child(add_flag)
+	timeline_meter = Control.new()
+	timeline_meter.position = Vector2(830, 520)
+	timeline_meter.size = Vector2(158, 54)
+	timeline_meter.scale = Vector2.ONE * TIMELINE_SCALE
+	timeline_meter.z_index = 120
+	add_child(timeline_meter)
+	var meter_texture := AtlasTexture.new()
+	meter_texture.atlas = FLAG_METER
+	meter_texture.region = Rect2(0, 0, 158, 27)
+	var meter := TextureRect.new()
+	meter.position = Vector2(0, 12)
+	meter.size = Vector2(158, 27)
+	meter.texture = meter_texture
+	meter.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	meter.stretch_mode = TextureRect.STRETCH_KEEP
+	meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	timeline_meter.add_child(meter)
+	timeline_stages = Control.new()
+	timeline_stages.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	timeline_meter.add_child(timeline_stages)
 
 
 func _refresh_timeline() -> void:
 	_clear(timeline_stages)
+	var stages: Array = level.get("waves", [])
+	var flag_stage_indices: Array[int] = []
+	for stage_index in stages.size():
+		if str((stages[stage_index] as Dictionary).get("stageType", "flag")) == "flag":
+			flag_stage_indices.append(stage_index)
+	var flag_positions: Array[float] = []
+	var flag_count := maxi(1, flag_stage_indices.size())
+	for flag_index in flag_stage_indices.size():
+		var progress_ratio := float(flag_index + 1) / float(flag_count)
+		flag_positions.append(lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, progress_ratio))
+
 	var flag_number := 0
 	var interval_number := 0
-	for stage_index in (level.get("waves", []) as Array).size():
+	for stage_index in stages.size():
 		var stage: Dictionary = level["waves"][stage_index]
 		var is_flag := str(stage.get("stageType", "flag")) == "flag"
 		if is_flag:
 			flag_number += 1
+			var flag_button := _flag_stage_button(flag_number, stage_index == selected_wave)
+			flag_button.position = Vector2(flag_positions[flag_number - 1] - 18.0, 0)
+			flag_button.pressed.connect(_select_stage.bind(stage_index))
+			timeline_stages.add_child(flag_button)
 		else:
 			interval_number += 1
-		var text := "🚩\n第%d波" % flag_number if is_flag else "━━━━\n间隔%d" % interval_number
-		var button := _button(text, func(): _select_stage(stage_index))
-		button.custom_minimum_size = Vector2(57 if is_flag else 76, 58)
-		button.add_theme_font_size_override("font_size", 12)
-		if stage_index == selected_wave:
-			button.add_theme_stylebox_override("normal", _style(Color("b18b32") if is_flag else Color("4d7654"), Color("fff1a1"), 6, 2))
-		timeline_stages.add_child(button)
+			var segment_start := 148.0 if interval_number == 1 else flag_positions[mini(interval_number - 2, flag_positions.size() - 1)]
+			var segment_end := flag_positions[mini(interval_number - 1, flag_positions.size() - 1)] if not flag_positions.is_empty() else 2.0
+			var segment_left := minf(segment_start, segment_end) + 2.0
+			var segment_width := maxf(4.0, absf(segment_start - segment_end) - 4.0)
+			var interval_button := Button.new()
+			interval_button.position = Vector2(segment_left, 20.0)
+			interval_button.size = Vector2(segment_width, 12)
+			interval_button.tooltip_text = "点击编辑第 %d 个波间阶段" % interval_number
+			interval_button.add_theme_stylebox_override("normal", _segment_style(Color("ffd95a") if stage_index == selected_wave else Color(0, 0, 0, 0.03)))
+			interval_button.add_theme_stylebox_override("hover", _segment_style(Color("ffe99a")))
+			interval_button.add_theme_stylebox_override("pressed", _segment_style(Color("d89a31")))
+			interval_button.pressed.connect(_select_stage.bind(stage_index))
+			timeline_stages.add_child(interval_button)
 
 
 func _select_stage(stage_index: int) -> void:
@@ -313,21 +324,137 @@ func _delete_current_stage() -> void:
 
 func _make_zombie_card(zombie_type: int) -> Control:
 	var holder := Control.new()
-	holder.custom_minimum_size = Vector2(52, 72)
+	holder.custom_minimum_size = Vector2(62, 78)
 	var prefab: Card = zombie_card_prefabs.get(zombie_type)
 	if prefab == null:
 		return holder
 	var card := prefab.duplicate() as Card
 	card.position = Vector2.ZERO
-	card.tooltip_text = "添加%s" % _zombie_name(str(zombie_type))
+	card.scale = Vector2.ONE * 1.1
+	card.is_imitater = false
+	card.tooltip_text = "设置%s的数量" % _zombie_name(str(zombie_type))
 	card.set_process(false)
+	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
 	if button != null:
 		for connection in button.pressed.get_connections():
 			button.pressed.disconnect(connection.callable)
-		button.pressed.connect(_add_zombie.bind(str(zombie_type)))
+		button.pressed.connect(_open_zombie_quantity_dialog.bind(str(zombie_type)))
 	holder.add_child(card)
 	return holder
+
+
+func _change_card_page(offset: int) -> void:
+	var page_count := maxi(1, ceili(float(zombie_card_order.size()) / CARDS_PER_PAGE))
+	current_card_page = posmod(current_card_page + offset, page_count)
+	_refresh_card_page()
+
+
+func _refresh_card_page() -> void:
+	if card_grid == null:
+		return
+	_clear(card_grid)
+	var page_count := maxi(1, ceili(float(zombie_card_order.size()) / CARDS_PER_PAGE))
+	current_card_page = clampi(current_card_page, 0, page_count - 1)
+	var begin := current_card_page * CARDS_PER_PAGE
+	var end := mini(begin + CARDS_PER_PAGE, zombie_card_order.size())
+	for index in range(begin, end):
+		card_grid.add_child(_make_zombie_card(zombie_card_order[index]))
+	if card_page_label != null:
+		card_page_label.text = "%d / %d" % [current_card_page + 1, page_count]
+
+
+func _open_zombie_quantity_dialog(zombie_key: String) -> void:
+	if is_instance_valid(quantity_dialog_layer):
+		quantity_dialog_layer.queue_free()
+	quantity_dialog_layer = Control.new()
+	quantity_dialog_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	quantity_dialog_layer.z_index = 500
+	add_child(quantity_dialog_layer)
+
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0, 0, 0, 0.48)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	quantity_dialog_layer.add_child(shade)
+
+	var dialog := TextureRect.new()
+	dialog.position = Vector2(327, 58)
+	dialog.size = Vector2(412, 483)
+	dialog.texture = DIALOG_BACKGROUND
+	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	dialog.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
+	quantity_dialog_layer.add_child(dialog)
+
+	var title := _paper_label("设置出场数量", Vector2(48, 69), Vector2(316, 44), 27, Color("e7e4d1"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_outline_color", Color("25263b"))
+	title.add_theme_constant_override("outline_size", 4)
+	dialog.add_child(title)
+	var zombie_name := _paper_label(_zombie_name(zombie_key), Vector2(48, 120), Vector2(316, 30), 20, Color("e9d28a"))
+	zombie_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(zombie_name)
+
+	var prefab: Card = zombie_card_prefabs.get(_zombie_type_id(zombie_key))
+	if prefab != null:
+		var card := prefab.duplicate() as Card
+		card.position = Vector2(181, 156)
+		card.is_imitater = false
+		card.set_process(false)
+		var card_button := card.get_node_or_null("Button") as Button
+		if card_button != null:
+			card_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_force_font_recursive(card)
+		dialog.add_child(card)
+
+	var wave: Dictionary = level["waves"][selected_wave]
+	var existing_group := _find_group(wave, zombie_key)
+	var current_quantity := 1 if existing_group.is_empty() else int(existing_group.get("count", 1))
+	var quantity_label := _paper_label("本阶段出场数量", Vector2(86, 245), Vector2(240, 32), 19, Color("e9d28a"))
+	quantity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(quantity_label)
+	var quantity := SpinBox.new()
+	quantity.position = Vector2(126, 286)
+	quantity.size = Vector2(160, 42)
+	quantity.min_value = 0
+	quantity.max_value = 99
+	quantity.step = 1
+	quantity.value = current_quantity
+	quantity.add_theme_font_override("font", WORKSHOP_FONT)
+	quantity.add_theme_font_size_override("font_size", 20)
+	dialog.add_child(quantity)
+	var confirm := _texture_button("确定加入", Vector2(126, 350), Vector2(160, 44), DIALOG_BUTTON, DIALOG_BUTTON, func(): _set_zombie_quantity(zombie_key, int(quantity.value)), 18)
+	dialog.add_child(confirm)
+
+	var close := _texture_button("取消", Vector2(162, 425), Vector2(89, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _close_quantity_dialog, 14)
+	dialog.add_child(close)
+
+
+func _set_zombie_quantity(zombie_key: String, quantity: int) -> void:
+	_close_quantity_dialog()
+	var wave: Dictionary = level["waves"][selected_wave]
+	var group := _find_group(wave, zombie_key)
+	if quantity <= 0:
+		if not group.is_empty():
+			wave["spawnGroups"].erase(group)
+		_changed("已从当前阶段移除%s" % _zombie_name(zombie_key))
+		_refresh_wave()
+		return
+	if group.is_empty():
+		var group_id := Logic.make_unique_id("group", _all_ids())
+		group = Logic.make_group(group_id, str(_zombie_type_id(zombie_key)), quantity, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5))
+		wave["spawnGroups"].append(group)
+	else:
+		group["count"] = quantity
+	_changed("%s在当前阶段设置为 %d 只" % [_zombie_name(zombie_key), quantity])
+	_refresh_wave()
+
+
+func _close_quantity_dialog() -> void:
+	if is_instance_valid(quantity_dialog_layer):
+		quantity_dialog_layer.queue_free()
+	quantity_dialog_layer = null
 
 
 func _refresh_wave() -> void:
@@ -337,130 +464,58 @@ func _refresh_wave() -> void:
 	var wave: Dictionary = level["waves"][selected_wave]
 	var is_flag := str(wave.get("stageType", "flag")) == "flag"
 	var stage_number := _stage_number(selected_wave, str(wave.get("stageType", "flag")))
-	wave_title.text = ("🚩 第 %d 波" if is_flag else "波间隔 %d") % stage_number
+	wave_title.text = ("第 %d 面旗帜" if is_flag else "旗帜间隔 %d") % stage_number
 	stage_heading.text = "旗帜波僵尸" if is_flag else "波间阶段僵尸"
 	road_title.text = (("旗帜第 %d 波" if is_flag else "波间间隔 %d") % stage_number) + " · 道路预览"
 	road_hint.text = "这个阶段还没有僵尸\n请点击左侧卡片"
-	wave_summary.text = "%s｜%.1f–%.1f 秒｜持续 %.1f 秒｜共 %d 只" % [wave["name"], wave["startTime"], float(wave["startTime"]) + float(wave["duration"]), wave["duration"], _wave_total_count(wave)]
-	_refresh_selected_list()
-	_refresh_rule_editor()
+	wave_summary.text = "持续 %.0f 秒　共 %d 只" % [wave["duration"], _wave_total_count(wave)]
 	_refresh_road_zombies()
 	_refresh_timeline()
-
-
-func _refresh_selected_list() -> void:
-	_clear(selected_list)
-	var wave: Dictionary = level["waves"][selected_wave]
-	var has_zombie := false
-	for group in wave.get("spawnGroups", []):
-		var zombie_key := str(group.get("zombieType", ""))
-		if int(group.get("count", 0)) <= 0:
-			continue
-		has_zombie = true
-		var row := HBoxContainer.new()
-		var choose := _button(_zombie_name(zombie_key), func(): _select_zombie(zombie_key))
-		choose.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		choose.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		row.add_child(choose)
-		var count := Label.new()
-		count.text = "× %d" % int(group["count"])
-		count.custom_minimum_size.x = 48
-		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		count.add_theme_color_override("font_color", Color("ffffff"))
-		row.add_child(count)
-		row.add_child(_button("－", func(): _remove_zombie(zombie_key)))
-		row.add_child(_button("＋", func(): _add_zombie(zombie_key)))
-		selected_list.add_child(row)
-	if not has_zombie:
-		var empty := Label.new()
-		empty.text = "尚未选择僵尸"
-		empty.add_theme_color_override("font_color", Color("93a58d"))
-		selected_list.add_child(empty)
-
-
-func _refresh_rule_editor() -> void:
-	_clear(rule_editor)
-	var stage: Dictionary = level["waves"][selected_wave]
-	var stage_duration := _spin("当前阶段持续秒数", 1.0, 300.0, float(stage.get("duration", 20.0)), 1.0)
-	rule_editor.add_child(stage_duration.get_parent())
-	stage_duration.value_changed.connect(func(value):
-		stage["duration"] = value
-		_recalculate_stage_times()
-		_changed("已修改当前阶段时长")
-		_refresh_wave()
-	)
-	if selected_zombie_key.is_empty():
-		var hint := Label.new()
-		hint.text = "点击上方“已选择”中的僵尸名称，可调整它的路线和生成间隔。"
-		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		hint.add_theme_color_override("font_color", Color("9fc58e"))
-		rule_editor.add_child(hint)
-		return
-	var group := _find_group(level["waves"][selected_wave], selected_zombie_key)
-	if group.is_empty():
-		selected_zombie_key = ""
-		_refresh_rule_editor()
-		return
-	var title := Label.new()
-	title.text = "%s的刷怪规则" % _zombie_name(selected_zombie_key)
-	title.add_theme_color_override("font_color", Color("f1d787"))
-	rule_editor.add_child(title)
-	var row := HBoxContainer.new()
-	rule_editor.add_child(row)
-	var quantity := _spin("数量", 1, 99, int(group["count"]), 1)
-	row.add_child(quantity.get_parent())
-	var start_delay := _spin("首次出现秒数", 0.0, maxf(0.0, float(stage.get("duration", 20.0)) - 0.1), float(group.get("startDelay", 0.0)), 0.1)
-	row.add_child(start_delay.get_parent())
-	var interval := _spin("间隔秒数", 0.1, 60, float(group["fixedInterval"]), 0.1)
-	row.add_child(interval.get_parent())
-	var lane_hint := Label.new()
-	lane_hint.text = "出生路线：试玩时为每只僵尸随机选择可用行"
-	lane_hint.add_theme_color_override("font_color", Color("9fc58e"))
-	rule_editor.add_child(lane_hint)
-	quantity.value_changed.connect(func(value): group["count"] = int(value); _changed_and_refresh("已修改数量"))
-	start_delay.value_changed.connect(func(value): group["startDelay"] = value; _changed("已修改首次出现时间"))
-	interval.value_changed.connect(func(value): group["fixedInterval"] = value; group["intervalMode"] = "fixed"; _changed("已修改生成间隔"))
 
 
 func _refresh_road_zombies() -> void:
 	_clear_preview_zombies()
 	var wave: Dictionary = level["waves"][selected_wave]
 	var total := _wave_total_count(wave)
+	road_title.text = "当前阶段 · 马路预览 · 共 %d 只" % total
 	road_hint.visible = total == 0 or total > PREVIEW_MAX_ZOMBIES
 	if total == 0:
 		road_hint.text = "这个阶段还没有僵尸\n请点击左侧卡片"
 		return
 	if total > PREVIEW_MAX_ZOMBIES:
-		road_hint.text = "已选择 %d 只，右侧预览前 %d 只\n完整数量以左侧列表为准" % [total, PREVIEW_MAX_ZOMBIES]
+		road_hint.text = "当前阶段共 %d 只\n马路随机展示前 %d 只" % [total, PREVIEW_MAX_ZOMBIES]
+	var random := RandomNumberGenerator.new()
+	random.seed = int(level.get("randomSeed", 1)) + selected_wave * 7919
 	var index := 0
 	for group in wave.get("spawnGroups", []):
-		var zombie_key := str(group.get("zombieType", ""))
+		var zombie_key := str(group.get("zombieType", "500"))
 		for _instance_index in int(group["count"]):
 			if index >= PREVIEW_MAX_ZOMBIES:
 				break
 			var zombie := _create_show_zombie(zombie_key)
 			if zombie == null:
 				continue
-			# 固定容量网格只用于数量预览，不对应实际草坪行。
-			var x := 27.0 + float(index % PREVIEW_COLUMNS) * 55.0
-			var y := 48.0 + float(int(index / PREVIEW_COLUMNS)) * 83.0
-			zombie.position = Vector2(x, y)
-			zombie.scale = Vector2.ONE * 1.65
-			zombie.z_index = int(y)
+			zombie.position = Vector2(random.randf_range(0.0, preview_root.size.x), random.randf_range(0.0, preview_root.size.y))
 			index += 1
 		if index >= PREVIEW_MAX_ZOMBIES:
 			break
 
 
 func _create_show_zombie(zombie_key: String) -> Node2D:
-	var prefab: Card = zombie_card_prefabs.get(_zombie_type_id(zombie_key))
-	if prefab == null:
+	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
+	if registry == null:
 		return null
-	var static_source := prefab.get_node_or_null("CardBg/CharacterStatic") as Node2D
-	if static_source == null:
+	var zombie_type := _zombie_type_id(zombie_key) as CharacterRegistry.ZombieType
+	var zombie_scene: PackedScene = registry.get_zombie_info(zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieScenes)
+	if zombie_scene == null:
 		return null
-	var preview := static_source.duplicate() as Node2D
-	_hide_preview_shadows(preview)
+	var preview := zombie_scene.instantiate() as Zombie000Base
+	var zombie_init_para: Dictionary = {
+		Zombie000Base.E_ZInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsShow,
+		Zombie000Base.E_ZInitAttr.CurrZombieRowType: CharacterRegistry.ZombieRowType.Land,
+		Zombie000Base.E_ZInitAttr.IsMiniZombie: false,
+	}
+	preview.init_zombie(zombie_init_para)
 	preview_root.add_child(preview)
 	preview_zombies.append(preview)
 	return preview
@@ -482,7 +537,6 @@ func _add_zombie(zombie_key: String) -> void:
 		wave["spawnGroups"].append(group)
 	else:
 		group["count"] = int(group["count"]) + 1
-	selected_zombie_key = zombie_key
 	_changed("已添加%s，当前阶段共 %d 只" % [_zombie_name(zombie_key), _wave_total_count(wave)])
 	_refresh_wave()
 
@@ -499,11 +553,6 @@ func _remove_zombie(zombie_key: String) -> void:
 			selected_zombie_key = ""
 	_changed("已减少%s数量" % _zombie_name(zombie_key))
 	_refresh_wave()
-
-
-func _select_zombie(zombie_key: String) -> void:
-	selected_zombie_key = zombie_key
-	_refresh_rule_editor()
 
 
 func _switch_wave(delta: int) -> void:
@@ -581,14 +630,19 @@ func _spin(label_text: String, min_value: float, max_value: float, value: float,
 	var box := VBoxContainer.new()
 	var label := Label.new()
 	label.text = label_text
-	label.add_theme_color_override("font_color", Color("dbe7d4"))
+	label.add_theme_font_override("font", WORKSHOP_FONT)
+	label.add_theme_font_size_override("font_size", 12)
+	label.add_theme_color_override("font_color", Color("6d310d"))
 	box.add_child(label)
 	var input := SpinBox.new()
+	input.custom_minimum_size = Vector2(84, 24)
 	input.min_value = min_value
 	input.max_value = max_value
 	input.value = value
 	input.step = step
-	input.add_theme_color_override("font_color", Color("17241a"))
+	input.add_theme_font_override("font", WORKSHOP_FONT)
+	input.add_theme_font_size_override("font_size", 12)
+	input.add_theme_color_override("font_color", Color("41210d"))
 	box.add_child(input)
 	return input
 
@@ -597,12 +651,88 @@ func _button(text: String, callback: Callable) -> Button:
 	var button := Button.new()
 	button.text = text
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override("font", WORKSHOP_FONT)
 	button.add_theme_font_size_override("font_size", 14)
-	button.add_theme_stylebox_override("normal", _style(Color("3c5a42"), Color("79906e"), 5, 1))
-	button.add_theme_stylebox_override("hover", _style(Color("567c5c"), Color("b3d29c"), 5, 2))
-	button.add_theme_stylebox_override("pressed", _style(Color("2d4633"), Color("d0de9d"), 5, 2))
+	button.add_theme_stylebox_override("normal", _style(Color("e9bb78"), Color("8a4f20"), 5, 1))
+	button.add_theme_stylebox_override("hover", _style(Color("ffd79b"), Color("6d310d"), 5, 2))
+	button.add_theme_stylebox_override("pressed", _style(Color("c98e4f"), Color("5b2c0b"), 5, 2))
 	button.pressed.connect(callback)
 	return button
+
+
+func _paper_label(text_value: String, pos: Vector2, label_size: Vector2, font_size: int, color: Color) -> Label:
+	var label := Label.new()
+	label.position = pos
+	label.size = label_size
+	label.text = text_value
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_override("font", WORKSHOP_FONT)
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", color)
+	return label
+
+
+func _texture_button(text_value: String, pos: Vector2, button_size: Vector2, normal: Texture2D, hover: Texture2D, callback: Callable, font_size: int) -> TextureButton:
+	var button := TextureButton.new()
+	button.position = pos
+	button.size = button_size
+	button.texture_normal = normal
+	button.texture_hover = hover
+	button.texture_pressed = hover
+	button.ignore_texture_size = true
+	button.stretch_mode = TextureButton.STRETCH_SCALE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var label := _paper_label(text_value, Vector2.ZERO, button_size, font_size, Color("2c1c0b"))
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(label)
+	button.pressed.connect(callback)
+	return button
+
+
+func _flag_stage_button(flag_number: int, selected: bool) -> Button:
+	var button := Button.new()
+	button.size = Vector2(40, 42)
+	button.tooltip_text = "点击编辑第 %d 面旗帜" % flag_number
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
+	var pole_texture := AtlasTexture.new()
+	pole_texture.atlas = FLAG_PARTS
+	pole_texture.region = Rect2(25, 4, 25, 25)
+	var flag_texture := AtlasTexture.new()
+	flag_texture.atlas = FLAG_PARTS
+	flag_texture.region = Rect2(50, 1, 25, 25)
+	var pole := TextureRect.new()
+	pole.position = Vector2(8, 7)
+	pole.size = Vector2(25, 25)
+	pole.texture = pole_texture
+	pole.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(pole)
+	var flag := TextureRect.new()
+	flag.position = Vector2(8, -3 if selected else 7)
+	flag.size = Vector2(25, 25)
+	flag.texture = flag_texture
+	flag.modulate = Color("fff2a1") if selected else Color.WHITE
+	flag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(flag)
+	var number := _paper_label(str(flag_number), Vector2(0, 27), Vector2(40, 15), 11, Color("5b2c0b"))
+	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(number)
+	return button
+
+
+func _force_font_recursive(node: Node) -> void:
+	if node is Label:
+		(node as Label).add_theme_font_override("font", WORKSHOP_FONT)
+	elif node is Button:
+		(node as Button).add_theme_font_override("font", WORKSHOP_FONT)
+	elif node is LineEdit:
+		(node as LineEdit).add_theme_font_override("font", WORKSHOP_FONT)
+	for child in node.get_children():
+		_force_font_recursive(child)
 
 
 func _style(fill: Color, border: Color, radius: int, border_width: int) -> StyleBoxFlat:
@@ -615,6 +745,13 @@ func _style(fill: Color, border: Color, radius: int, border_width: int) -> Style
 	style.content_margin_right = 7
 	style.content_margin_top = 5
 	style.content_margin_bottom = 5
+	return style
+
+
+func _segment_style(fill: Color) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.set_corner_radius_all(4)
 	return style
 
 
@@ -799,10 +936,11 @@ func _playtest() -> void:
 		return
 	var game_para: ResourceLevelData = built["game_para"]
 	game_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "trial_%s" % str(level.get("id", "level")))
-	Global.game_para = game_para
-	Global.developer_level_adjustments_active = true
+	var global := get_node("/root/Global")
+	global.game_para = game_para
+	global.developer_level_adjustments_active = true
 	_clear_preview_zombies()
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[game_para.game_sences])
+	get_tree().change_scene_to_file(global.main_scene_registry.MainScenesMap[game_para.game_sences])
 
 
 func _refresh_draft_picker() -> void:
@@ -829,6 +967,7 @@ func _clear(parent: Node) -> void:
 func _back_to_menu() -> void:
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()
-	Global.developer_level_adjustments_active = false
-	Global.return_to_developer_mode = true
+	var global := get_node("/root/Global")
+	global.developer_level_adjustments_active = false
+	global.return_to_developer_mode = true
 	get_tree().change_scene_to_file("res://scenes/main/01StartMenu.tscn")
