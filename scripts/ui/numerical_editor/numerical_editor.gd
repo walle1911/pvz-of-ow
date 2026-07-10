@@ -19,7 +19,7 @@ const INDEX_BUTTON_HOVER := preload("res://assets/image/Almanac/Almanac_IndexBut
 const CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
 const CLOSE_BUTTON_HOVER := preload("res://assets/image/Almanac/Almanac_CloseButtonHighlight.png")
 const TITLE_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
-const ALMANAC_FONT := preload("res://assets/fonts/SIMSUN.TTC")
+const ALMANAC_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 
 const CARDS_PER_PAGE := 24
 const SKIPPED_PROPERTIES := {
@@ -191,6 +191,9 @@ func _add_character_card(item: Dictionary) -> void:
 	card.signal_card_click.connect(_open_detail.bind(item))
 	wrapper.add_child(card)
 	card_grid.add_child(wrapper)
+	_force_font_recursive(card)
+	if item["kind"] == "zombie":
+		call_deferred("_align_zombie_card_preview", card)
 
 
 func _open_detail(item: Dictionary) -> void:
@@ -235,6 +238,7 @@ func _build_detail_page() -> void:
 	almanac_panel.scale = Vector2(0.96, 0.96)
 	detail_page.add_child(almanac_panel)
 	_populate_almanac_panel(almanac_panel, selected_item)
+	_force_font_recursive(almanac_panel)
 
 	status_label = Label.new()
 	status_label.position = Vector2(190, 543)
@@ -404,6 +408,56 @@ func _style_line_edit(edit: LineEdit) -> void:
 	edit.add_theme_font_override("font", ALMANAC_FONT)
 	edit.add_theme_font_size_override("font_size", 14)
 	edit.add_theme_color_override("font_color", Color("2b1b09"))
+
+
+func _force_font_recursive(node: Node) -> void:
+	if node is Label:
+		(node as Label).add_theme_font_override("font", TITLE_FONT)
+	elif node is LineEdit:
+		(node as LineEdit).add_theme_font_override("font", TITLE_FONT)
+	elif node is CheckBox:
+		(node as CheckBox).add_theme_font_override("font", TITLE_FONT)
+	for child in node.get_children():
+		_force_font_recursive(child)
+
+
+func _align_zombie_card_preview(card: Card) -> void:
+	if not is_instance_valid(card) or not is_instance_valid(card.character_static):
+		return
+	var static_root := card.character_static
+	var scan_root: Node = static_root
+	var found_body := false
+	for child in static_root.get_children():
+		var body := child.get_node_or_null("Body")
+		if body != null:
+			scan_root = body
+			found_body = true
+			break
+	if not found_body:
+		return
+	var bounds := Rect2()
+	var has_bounds := false
+	for node in _all_nodes(scan_root):
+		if not node is Sprite2D:
+			continue
+		var sprite := node as Sprite2D
+		if sprite.texture == null or not sprite.visible:
+			continue
+		var lower_name := str(sprite.name).to_lower()
+		if lower_name.contains("shadow") or lower_name.contains("effect") or lower_name.contains("fx") or lower_name.contains("bullet"):
+			continue
+		var sprite_rect := sprite.get_rect()
+		for corner in [sprite_rect.position, Vector2(sprite_rect.end.x, sprite_rect.position.y), sprite_rect.end, Vector2(sprite_rect.position.x, sprite_rect.end.y)]:
+			var point := static_root.to_local(sprite.to_global(corner))
+			if has_bounds:
+				bounds = bounds.expand(point)
+			else:
+				bounds = Rect2(point, Vector2.ZERO)
+				has_bounds = true
+	if not has_bounds or bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
+		return
+	var current_center := static_root.position + bounds.get_center() * static_root.scale
+	static_root.position += Vector2(25, 31) - current_center
 
 
 func _effective_value(node_path: String, property_name: String, fallback):

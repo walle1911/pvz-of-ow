@@ -23,6 +23,10 @@ func _run() -> void:
 	await process_frame
 	assert((editor.detail_page.get_child(0) as TextureRect).texture.resource_path == "res://assets/image/Almanac/Almanac_PlantBack.jpg")
 	assert(editor.field_box.get_child_count() > 0)
+	for ui_node in editor.call("_all_nodes", editor):
+		if ui_node is Label or ui_node is LineEdit:
+			var ui_font: Font = ui_node.get_theme_font("font")
+			assert(ui_font.resource_path == "res://assets/fonts/方正少儿_GBK.ttf", "Wrong numerical editor font: %s" % ui_node.get_path())
 	var total_tunable_fields := 0
 	for item in editor.catalog:
 		assert(item["display_name"] != "未命名角色", "Missing Chinese character name: %s" % item["name"])

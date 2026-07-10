@@ -22,6 +22,7 @@ const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_m
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
+var developer_button_hover_tweens: Dictionary = {}
 
 @export_group("按钮对齐预览")
 @export var show_both_menus_for_alignment := false:
@@ -58,6 +59,7 @@ var normal_level_workshop_texture: Texture2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	_apply_level_workshop_button_transform()
+	_setup_developer_buttons()
 	normal_level_workshop_texture = LEVEL_WORKSHOP_NORMAL_TEXTURE
 	if Engine.is_editor_hint():
 		_apply_editor_menu_preview()
@@ -94,6 +96,34 @@ func _on_level_workshop_button_mouse_entered() -> void:
 
 func _on_level_workshop_button_mouse_exited() -> void:
 	level_workshop_button.self_modulate = Color.WHITE
+
+
+func _setup_developer_buttons() -> void:
+	for button: TextureButton in [developer_button_1, developer_button_2, developer_button_3, developer_button_4]:
+		_apply_texture_alpha_click_mask(button)
+		button.mouse_entered.connect(_on_developer_button_hover.bind(button, true))
+		button.mouse_exited.connect(_on_developer_button_hover.bind(button, false))
+
+
+func _apply_texture_alpha_click_mask(button: TextureButton) -> void:
+	if button.texture_normal == null:
+		return
+	var image := button.texture_normal.get_image()
+	if image == null or image.is_empty():
+		return
+	var click_mask := BitMap.new()
+	click_mask.create_from_image_alpha(image, 0.12)
+	button.texture_click_mask = click_mask
+
+
+func _on_developer_button_hover(button: TextureButton, is_hovered: bool) -> void:
+	var old_tween: Tween = developer_button_hover_tweens.get(button, null)
+	if is_instance_valid(old_tween):
+		old_tween.kill()
+	var tween := create_tween()
+	developer_button_hover_tweens[button] = tween
+	var target_color := Color(1.2, 1.12, 0.68, 1.0) if is_hovered else Color.WHITE
+	tween.tween_property(button, "self_modulate", target_color, 0.12)
 
 
 func _apply_editor_menu_preview() -> void:
