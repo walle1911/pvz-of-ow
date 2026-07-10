@@ -63,8 +63,14 @@ func init_zombie_wave_manager(game_para:ResourceLevelData):
 		curr_wave = -1
 		max_wave = game_para.max_wave
 
-	flag_progress_bar.init_flag_from_wave(max_wave_one_round)
-	progress_bar_segment_every_wave = 100.0 / (max_wave_one_round - 1)
+	if game_para.custom_spawn_schedule.is_empty():
+		flag_progress_bar.init_flag_from_wave(max_wave_one_round)
+	else:
+		var flag_progresses: Array[float] = []
+		for flag_data in game_para.custom_flag_data:
+			flag_progresses.append(float(flag_data.get("time", 0.0)) / maxf(0.1, game_para.custom_timeline_duration) * 100.0)
+		flag_progress_bar.create_flags_at_progress(flag_progresses)
+	progress_bar_segment_every_wave = 100.0 / maxf(1.0, float(max_wave_one_round - 1))
 
 	zombie_wave_create_manager.init_zombie_wave_create_manager(game_para)
 
@@ -86,6 +92,35 @@ func start_first_wave():
 	every_wave_progress_timer.start()
 	flag_progress_bar.visible = true
 
+
+## 工坊关卡使用绝对时间表：到达时间点才逐只创建僵尸，并同步推进旗帜进度条。
+func start_custom_timeline() -> void:
+	var game_para: ResourceLevelData = zombie_wave_create_manager.zombie_manager.game_para
+	var schedule: Array[Dictionary] = game_para.custom_spawn_schedule
+	var flags: Array[Dictionary] = game_para.custom_flag_data
+	var duration := maxf(0.1, game_para.custom_timeline_duration)
+	var event_index := 0
+	var flag_index := 0
+	var elapsed := 0.0
+	flag_progress_bar.visible = true
+	while true:
+		while flag_index < flags.size() and float(flags[flag_index].get("time", 0.0)) <= elapsed:
+			var flag_data: Dictionary = flags[flag_index]
+			curr_wave = int(flag_data.get("stage_index", curr_wave + 1))
+			flag_progress_bar.set_progress(elapsed / duration * 100.0, flag_index)
+			ui_remind_word.zombie_approach(flag_index == flags.size() - 1)
+			flag_index += 1
+		while event_index < schedule.size() and float(schedule[event_index].get("time", 0.0)) <= elapsed:
+			zombie_wave_create_manager.create_custom_timeline_zombie(schedule[event_index])
+			event_index += 1
+		flag_progress_bar.set_progress(elapsed / duration * 100.0)
+		if elapsed >= duration and event_index >= schedule.size() and flag_index >= flags.size():
+			break
+		await get_tree().process_frame
+		elapsed += get_process_delta_time()
+	flag_progress_bar.set_progress(100.0)
+	signal_wave_refresh.emit(true)
+
 ## 开始刷新下一波,发射刷新下一波信号
 func start_next_wave() -> void:
 	curr_wave += 1
@@ -103,7 +138,8 @@ func start_next_wave() -> void:
 			curr_wave_all_zombies = zombie_wave_create_manager.create_curr_wave_all_zombies(curr_wave, true)
 			set_progress_bar(int(curr_wave%max_wave_one_round/10.0))
 			## 额外生成大波特殊僵尸,珊瑚僵尸,蹦极僵尸
-			zombie_wave_create_manager.spawn_special_zombie_in_big_wave(true)
+			if zombie_wave_create_manager.zombie_manager.game_para.custom_spawn_schedule.is_empty():
+				zombie_wave_create_manager.spawn_special_zombie_in_big_wave(true)
 
 		else:
 			curr_wave_type = E_WaveType.Flag
@@ -111,7 +147,8 @@ func start_next_wave() -> void:
 			curr_wave_all_zombies = zombie_wave_create_manager.create_curr_wave_all_zombies(curr_wave, true)
 			set_progress_bar(int(curr_wave%max_wave_one_round/10.0))
 			## 额外生成大波特殊僵尸,珊瑚僵尸,蹦极僵尸
-			zombie_wave_create_manager.spawn_special_zombie_in_big_wave(false)
+			if zombie_wave_create_manager.zombie_manager.game_para.custom_spawn_schedule.is_empty():
+				zombie_wave_create_manager.spawn_special_zombie_in_big_wave(false)
 
 		## 如果有墓碑
 		if is_have_tombston:

@@ -70,6 +70,7 @@ func _test_lane_rules() -> void:
 func _test_runtime_loader() -> void:
 	var result := Runtime.load_level("res://data/level_editor/example_front_lawn.json")
 	_expect(result["ok"], "游戏侧运行时应能读取示例 JSON")
+	_expect((result["level"]["waves"] as Array).size() == 3 and result["level"]["waves"][1]["stageType"] == "interval", "旧版波次之间的时间空档应迁移为波间阶段")
 	_expect(Runtime.build_spawn_schedule(result["level"]).size() == 14, "运行时应生成完整刷怪计划")
 
 

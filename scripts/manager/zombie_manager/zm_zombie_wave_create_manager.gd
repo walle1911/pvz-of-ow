@@ -95,7 +95,8 @@ func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	zombie_multy = game_para.zombie_multy
 	range_num_bungi = game_para.range_num_bungi
 	zombie_choose_row_system.init_zombie_choose_row_system()
-	update_zombie_refresh_types()
+	if game_para.custom_spawn_schedule.is_empty():
+		update_zombie_refresh_types()
 
 ## 更新可以刷新的僵尸列表
 func update_zombie_refresh_types():
@@ -157,6 +158,12 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 		wave_all_zombies.append(zombie)
 
 	return wave_all_zombies
+
+
+func create_custom_timeline_zombie(event: Dictionary) -> Zombie000Base:
+	var lane := clampi(int(event.get("lane", 0)), 0, zombie_manager.all_zombie_rows.size() - 1)
+	var zombie_type: CharacterRegistry.ZombieType = int(event.get("zombie_type", CharacterRegistry.ZombieType.Z500Norm)) as CharacterRegistry.ZombieType
+	return wave_create_zombie(zombie_type, lane, int(event.get("stage_index", 0)))
 
 
 ## 生成波次僵尸

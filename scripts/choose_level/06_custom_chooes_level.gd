@@ -2,6 +2,8 @@ extends ChooseLevel
 class_name CustomChooseLevel
 
 const CHOOSE_LEVEL_BUTTON_CUSTOMIZE = preload("res://scenes/choose_level/choose_level_button_customize.tscn")
+const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
+const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 
 @onready var panel_help: Panel = $PanelHelp
 @onready var grid_container: GridContainer = $AllPage/GridContainer
@@ -12,6 +14,13 @@ var num_level_button_every_page:=20
 func _ready() -> void:
 	## 获取游戏参数文件
 	var all_game_paras:Array = load_resources_with_get_files("level_game_para")
+	for draft in DraftStore.list_drafts():
+		var loaded := DraftStore.load_draft(draft["path"])
+		if not loaded["ok"]:
+			continue
+		var built := CustomRuntime.build_game_para(loaded["level"])
+		if built["ok"]:
+			all_game_paras.append([built["game_para"], str(draft["id"]), str(draft["name"])])
 	## 初始化页面数据
 	all_pages_array.clear()
 	all_page.remove_child(grid_container)
@@ -28,7 +37,8 @@ func _ready() -> void:
 
 		## 关卡按钮
 		var chooes_level_button:ChooseLevelButtonCustomize = CHOOSE_LEVEL_BUTTON_CUSTOMIZE.instantiate()
-		chooes_level_button.init_choose_level_button_customize(all_game_paras[i][0], all_game_paras[i][1])
+		var display_name := str(all_game_paras[i][2]) if all_game_paras[i].size() > 2 else str(all_game_paras[i][1])
+		chooes_level_button.init_choose_level_button_customize(all_game_paras[i][0], display_name)
 		curr_grid_container.add_child(chooes_level_button)
 
 		chooes_level_button.signal_choose_level_button.connect(_on_choose_level_button)
@@ -85,4 +95,3 @@ func _on_help_pressed() -> void:
 
 func _on_button_ok_pressed() -> void:
 	panel_help.visible = false
-

@@ -59,6 +59,19 @@ func create_flag(flag_num:int):
 	## 删除原始的flag
 	flag.queue_free()
 
+
+## 工坊关卡的旗帜不要求等距，也不要求总阶段数是 10 的倍数。
+func create_flags_at_progress(flag_progresses: Array[float]) -> void:
+	flag_arr.clear()
+	var total_distance = start_flag - end_flag
+	for progress in flag_progresses:
+		var flag_new: FlagProgressBarFlag = flag.duplicate()
+		add_child(flag_new)
+		move_child(flag_new, 1)
+		flag_arr.append(flag_new)
+		flag_new.position.x = start_flag - total_distance * clampf(progress, 0.0, 100.0) * 0.01
+	flag.queue_free()
+
 ## 根据波数生成大波的旗帜
 func init_flag_from_wave(wave_num:int):
 	assert(wave_num % 10 == 0, "当前波数不为10的倍数")

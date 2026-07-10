@@ -1,13 +1,35 @@
+@tool
 extends Control
 class_name StartMenuRoot
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
 @onready var user: User = $User
+@onready var level_workshop_button: TextureButton = $BG_Right/Menu/LevelWorkshopButton
+
+@export_group("关卡工坊入口 Transform")
+@export var level_workshop_button_position := Vector2(20, 318):
+	set(value):
+		level_workshop_button_position = value
+		if is_node_ready():
+			_apply_level_workshop_button_transform()
+@export_range(-180.0, 180.0, 0.1) var level_workshop_button_rotation_degrees := -4.0:
+	set(value):
+		level_workshop_button_rotation_degrees = value
+		if is_node_ready():
+			_apply_level_workshop_button_transform()
+@export var level_workshop_button_scale := Vector2.ONE:
+	set(value):
+		level_workshop_button_scale = value
+		if is_node_ready():
+			_apply_level_workshop_button_transform()
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	_apply_level_workshop_button_transform()
+	if Engine.is_editor_hint():
+		return
 	$Cloud/AnimationPlayer.play("Idle")
 	$BG_Right/Leaf/AnimationPlayer.play("Idle")
 	$AnimationPlayer.play("Idle")
@@ -20,6 +42,25 @@ func _ready() -> void:
 
 	## 确保回到主菜单时鼠标可见（防止从锤子关等模式返回后鼠标残隐）
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func _apply_level_workshop_button_transform() -> void:
+	level_workshop_button.position = level_workshop_button_position
+	level_workshop_button.rotation_degrees = level_workshop_button_rotation_degrees
+	level_workshop_button.scale = level_workshop_button_scale
+	level_workshop_button.pivot_offset = level_workshop_button.size * 0.5
+	if not level_workshop_button.mouse_entered.is_connected(_on_level_workshop_button_mouse_entered):
+		level_workshop_button.mouse_entered.connect(_on_level_workshop_button_mouse_entered)
+	if not level_workshop_button.mouse_exited.is_connected(_on_level_workshop_button_mouse_exited):
+		level_workshop_button.mouse_exited.connect(_on_level_workshop_button_mouse_exited)
+
+
+func _on_level_workshop_button_mouse_entered() -> void:
+	level_workshop_button.self_modulate = Color(1.2, 1.18, 1.08, 1.0)
+
+
+func _on_level_workshop_button_mouse_exited() -> void:
+	level_workshop_button.self_modulate = Color.WHITE
 
 ## 花园需要浇水
 var garden_need_water:=true
@@ -95,4 +136,3 @@ func _on_item_button_3_pressed() -> void:
 ## 点击用户更新时
 func _on_button_update_user_pressed() -> void:
 	user.visible = true
-

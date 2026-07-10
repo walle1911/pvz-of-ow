@@ -78,6 +78,11 @@ func set_choose_level(curr_game_mode: MainSceneRegistry.MainScenes, curr_level_p
 	CharacterRegistry.ZombieType.Z503PoleVaulter, # 撑杆僵尸
 	CharacterRegistry.ZombieType.Z504Bucket, # 铁桶僵尸
 ]
+## 工坊关卡的绝对时间刷怪表；空数组继续使用原有自然刷怪算法。
+var custom_spawn_schedule: Array[Dictionary] = []
+## 旗帜波在时间轴上的位置，用于大波提示和右下角进度条。
+var custom_flag_data: Array[Dictionary] = []
+var custom_timeline_duration := 0.0
 ## 是否有蹦极僵尸
 @export var is_bungi := false
 ## 大波时生成的蹦极僵尸数量范围

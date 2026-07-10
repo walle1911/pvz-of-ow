@@ -86,6 +86,7 @@
 [ext_resource type="Texture2D" uid="uid://ctpsdjku0juuj" path="res://assets/image/ui/ui_start_menu/Present.png" id="83_tf8pn"]
 [ext_resource type="BitMap" uid="uid://d3xxtmghn6vi4" path="res://assets/image/ui/ui_start_menu/Present_mask.png" id="84_mpctx"]
 [ext_resource type="Texture2D" uid="uid://dygmxfnai40iw" path="res://assets/image/ui/ui_start_menu/PresentOpen.png" id="84_x7dp7"]
+[ext_resource type="Texture2D" uid="uid://crftgcei73svo" path="res://assets/image/ui/ui_start_menu/SelectorScreen_LevelWorkshop_button.png" id="85_workshop"]
 
 [sub_resource type="Animation" id="Animation_xll4c"]
 resource_name = "Idle"
@@ -1466,6 +1467,7 @@ grow_vertical = 2
 theme = ExtResource("59_e0j7q")
 script = ExtResource("1_2isde")
 bgm = ExtResource("2_yl4bl")
+level_workshop_button_position = Vector2(586.59, 213.01)
 
 [node name="BG" type="TextureRect" parent="." unique_id=1195158219]
 layout_mode = 1
@@ -1708,6 +1710,42 @@ texture_pressed = ExtResource("14_614ej")
 texture_hover = ExtResource("14_614ej")
 texture_click_mask = ExtResource("15_k7y68")
 script = ExtResource("5_j2mjb")
+
+[node name="LevelWorkshopButton" type="TextureButton" parent="BG_Right/Menu" unique_id=734513688]
+layout_mode = 0
+offset_left = 578.60724
+offset_top = 98.85114
+offset_right = 670.6072
+offset_bottom = 412.9577
+rotation = -0.06981317
+pivot_offset = Vector2(45.99997, 85.99993)
+tooltip_text = "制作、试玩并保存自定义关卡"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("85_workshop")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("5_j2mjb")
+
+[node name="Label" type="Label" parent="BG_Right/Menu/LevelWorkshopButton" unique_id=2018599910]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 19.291199
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.035, 0.025, 0.025, 1)
+theme_override_colors/font_outline_color = Color(0.65, 0.65, 0.62, 0.7)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("54_343qg")
+theme_override_font_sizes/font_size = 24
+text = "关
+卡
+工
+坊"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Flower" type="Control" parent="BG_Right" unique_id=321955551]
 layout_mode = 1
@@ -2132,18 +2170,6 @@ offset_right = 94.0
 offset_bottom = 96.0
 texture = ExtResource("84_x7dp7")
 stretch_mode = 2
-
-[node name="LevelWorkshopButton" type="Button" parent="BG_Right"]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 446.0
-offset_right = 250.0
-offset_bottom = 493.0
-mouse_default_cursor_shape = 2
-theme = ExtResource("59_e0j7q")
-theme_override_font_sizes/font_size = 20
-text = "关卡工坊  ✎"
-tooltip_text = "在游戏里制作关卡并保存为待审核草稿"
 
 [node name="Version" type="Label" parent="BG_Right" unique_id=862557868]
 layout_mode = 0
@@ -3046,6 +3072,7 @@ offset_bottom = -178.0
 [connection signal="pressed" from="BG_Right/Menu/Button2" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="BG_Right/Menu/LevelWorkshopButton" to="." method="_on_level_workshop_button_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton" to="." method="_on_option_button_1_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton2" to="." method="_on_option_button_2_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton3" to="." method="_on_option_button_3_pressed"]
@@ -3055,7 +3082,6 @@ offset_bottom = -178.0
 [connection signal="mouse_entered" from="BG_Right/CustomButton" to="BG_Right/CustomButton" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="BG_Right/CustomButton" to="BG_Right/CustomButton" method="_on_mouse_exited"]
 [connection signal="pressed" from="BG_Right/CustomButton" to="." method="_on_custom_button_pressed"]
-[connection signal="pressed" from="BG_Right/LevelWorkshopButton" to="." method="_on_level_workshop_button_pressed"]
 [connection signal="pressed" from="WoodSign/ButtonUserUpdate" to="." method="_on_button_update_user_pressed"]
 [connection signal="toggled" from="StartMenuOptionDialog/Option/FullScreen/CheckButton" to="." method="_on_full_screen_button_toggled"]
 [connection signal="pressed" from="StartMenuOptionDialog/Return" to="StartMenuOptionDialog" method="return_button_pressed"]

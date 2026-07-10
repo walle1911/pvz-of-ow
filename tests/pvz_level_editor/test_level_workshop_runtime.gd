@@ -20,7 +20,7 @@ func _run() -> void:
 	workshop.level = Logic.example_level()
 	workshop.level["id"] = "runtime_workshop_test"
 	workshop.level["name"] = "运行时工坊测试"
-	workshop.level["waves"] = [Logic.make_wave("wave_test_1", "第 1 波", 0.0, 20.0, [])]
+	workshop.level["waves"] = [Logic.make_wave("wave_test_1", "第 1 波", 0.0, 20.0, [], "flag")]
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
 	workshop.call("_add_zombie", "normal")
@@ -32,26 +32,26 @@ func _run() -> void:
 	var first_wave_count: int = workshop.call("_wave_total_count", workshop.level["waves"][0])
 	workshop.call("_create_next_wave")
 	await process_frame
-	if workshop.selected_wave != 1 or not workshop.preview_zombies.is_empty():
-		_fail("切换到新波次后，没有保存上一波并清空道路")
+	if workshop.selected_wave != 2 or (workshop.level["waves"] as Array).size() != 3 or not workshop.preview_zombies.is_empty():
+		_fail("新增旗帜后，没有同时创建波间阶段并清空道路")
 		return
 	workshop.call("_add_zombie", "conehead")
 	await process_frame
 	if workshop.preview_zombies.size() != 1:
 		_fail("新波次无法独立选择僵尸")
 		return
-	workshop.call("_switch_wave", -1)
+	workshop.call("_select_stage", 0)
 	await process_frame
 	if workshop.preview_zombies.size() != 2 or workshop.call("_wave_total_count", workshop.level["waves"][0]) != first_wave_count:
-		_fail("返回上一波后，已保存的僵尸数量没有恢复")
+		_fail("返回上一旗帜波后，已保存的僵尸数量没有恢复")
 		return
 	var saved := DraftStore.save_draft(workshop.level)
 	if not saved["ok"]:
 		_fail("运行时草稿保存失败：%s" % saved["error"])
 		return
 	var loaded := DraftStore.load_draft(saved["path"])
-	if not loaded["ok"] or (loaded["level"]["waves"] as Array).size() != 2:
-		_fail("包含多个波次的草稿无法重新载入")
+	if not loaded["ok"] or (loaded["level"]["waves"] as Array).size() != 3:
+		_fail("包含旗帜波和波间阶段的草稿无法重新载入")
 		return
 	print("PVZ level workshop runtime test: passed")
 	quit(0)

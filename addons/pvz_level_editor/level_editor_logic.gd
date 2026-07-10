@@ -6,7 +6,12 @@ const SCHEMA_VERSION := 1
 const MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const INTERVAL_MODES := ["fixed", "random"]
 const LANE_RULES := ["fixed", "random", "weighted"]
+const STAGE_TYPES := ["flag", "interval"]
 const DEFAULT_ZOMBIES := ["normal", "conehead", "buckethead", "football", "digger", "gargantuar"]
+const LEGACY_ZOMBIE_TYPE_IDS := {
+	"normal": 500, "conehead": 502, "buckethead": 504,
+	"football": 507, "digger": 517, "gargantuar": 523,
+}
 const DEFAULT_PLANTS := ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb", "lilypad"]
 const DEFAULT_EVENTS := ["all_waves_cleared", "survive_duration", "protect_plants", "zombie_reaches_house", "sun_below_zero"]
 const THREAT_BY_ZOMBIE := {
@@ -28,13 +33,18 @@ static func example_level() -> Dictionary:
 		"playerConfig": {"initialSun": 150},
 		"availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
 		"waves": [
-			make_wave("wave_1", "试探", 0.0, 18.0, [
+			make_wave("interval_1", "第一波前", 0.0, 18.0, [
 				make_group("group_1", "normal", 8, 1.0, "fixed", 1.6, "random", [1, 1, 1, 1, 1]),
-			]),
-			make_wave("wave_2", "压力", 20.0, 22.0, [
-				make_group("group_2", "conehead", 6, 1.0, "random", 1.2, "weighted", [2, 1, 2, 1, 2]),
-				make_group("group_3", "buckethead", 2, 5.0, "fixed", 6.0, "fixed", [1, 0, 0, 0, 0]),
-			]),
+			], "interval"),
+			make_wave("wave_1", "第一大波", 18.0, 10.0, [
+				make_group("group_2", "conehead", 2, 1.0, "fixed", 2.0, "weighted", [2, 1, 2, 1, 2]),
+			], "flag"),
+			make_wave("interval_2", "第二波前", 28.0, 18.0, [
+				make_group("group_3", "conehead", 2, 1.0, "fixed", 3.0, "random", [1, 1, 1, 1, 1]),
+			], "interval"),
+			make_wave("wave_2", "最终大波", 46.0, 10.0, [
+				make_group("group_4", "buckethead", 2, 1.0, "fixed", 3.0, "fixed", [1, 0, 0, 0, 0]),
+			], "flag"),
 		],
 		"winConditions": [{"type": "all_waves_cleared"}],
 		"loseConditions": [{"type": "zombie_reaches_house"}],
@@ -42,10 +52,11 @@ static func example_level() -> Dictionary:
 	}
 
 
-static func make_wave(id: String, wave_name: String, start_time: float, duration: float, groups: Array = []) -> Dictionary:
+static func make_wave(id: String, wave_name: String, start_time: float, duration: float, groups: Array = [], stage_type := "flag") -> Dictionary:
 	return {
 		"id": id,
 		"name": wave_name,
+		"stageType": stage_type,
 		"startTime": start_time,
 		"duration": duration,
 		"spawnGroups": groups,
@@ -94,10 +105,13 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	player["initialSun"] = int(player.get("initialSun", 50))
 	result["playerConfig"] = player
 	var waves: Array = result.get("waves", [])
+	if not waves.is_empty() and not waves.any(func(wave): return (wave as Dictionary).has("stageType")):
+		waves = _migrate_legacy_waves(waves)
 	for wave_index in waves.size():
 		var wave: Dictionary = waves[wave_index]
 		wave["id"] = str(wave.get("id", "wave_%d" % (wave_index + 1)))
 		wave["name"] = str(wave.get("name", "波次 %d" % (wave_index + 1)))
+		wave["stageType"] = str(wave.get("stageType", "flag"))
 		wave["startTime"] = float(wave.get("startTime", 0.0))
 		wave["duration"] = float(wave.get("duration", 15.0))
 		var groups: Array = wave.get("spawnGroups", [])
@@ -106,6 +120,7 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 			var normalized := make_group("group_%d_%d" % [wave_index + 1, group_index + 1])
 			for key in group:
 				normalized[key] = group[key]
+			normalized["zombieType"] = str(LEGACY_ZOMBIE_TYPE_IDS.get(str(normalized.get("zombieType", "500")), normalized.get("zombieType", "500")))
 			normalized["laneWeights"] = fit_lane_weights(normalized.get("laneWeights", []), int(map["rows"]))
 			groups[group_index] = normalized
 		wave["spawnGroups"] = groups
@@ -138,11 +153,15 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 	var waves: Array = level.get("waves", [])
 	if waves.is_empty():
 		issues.append(issue("warning", "没有波次，关卡不会刷怪", "waves"))
+	elif not waves.any(func(wave): return str((wave as Dictionary).get("stageType", "flag")) == "flag"):
+		issues.append(issue("error", "至少需要一个旗帜波", "waves"))
 	var ids := {str(level.get("id", "")): true}
 	for wave_index in waves.size():
 		var wave: Dictionary = waves[wave_index]
 		var wave_path := "waves/%d" % wave_index
 		_validate_unique_id(str(wave.get("id", "")), wave_path + "/id", ids, issues)
+		if not STAGE_TYPES.has(str(wave.get("stageType", ""))):
+			issues.append(issue("error", "阶段类型必须是旗帜波或波间阶段", wave_path + "/stageType"))
 		if float(wave.get("startTime", -1.0)) < 0.0:
 			issues.append(issue("error", "波次开始时间不能为负数", wave_path + "/startTime"))
 		if float(wave.get("duration", 0.0)) <= 0.0:
@@ -154,7 +173,7 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 			var group: Dictionary = groups[group_index]
 			var path := "%s/spawnGroups/%d" % [wave_path, group_index]
 			_validate_unique_id(str(group.get("id", "")), path + "/id", ids, issues)
-			if not DEFAULT_ZOMBIES.has(str(group.get("zombieType", ""))):
+			if not _is_valid_zombie_type(group.get("zombieType", "")):
 				issues.append(issue("error", "僵尸类型不存在", path + "/zombieType"))
 			if int(group.get("count", 0)) <= 0:
 				issues.append(issue("error", "数量必须大于 0", path + "/count"))
@@ -185,7 +204,7 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 			if int(group.get("maxAlive", 0)) < 1:
 				issues.append(issue("error", "同屏上限必须大于 0", path + "/maxAlive"))
 			if _latest_spawn_time(group) > float(wave.get("duration", 0.0)):
-				issues.append(issue("warning", "刷怪组可能超过波次持续时间", path))
+				issues.append(issue("error", "刷怪时间超过当前阶段，请延长阶段或缩短刷怪间隔", path))
 	return issues
 
 
@@ -310,6 +329,33 @@ static func fit_lane_weights(values: Array, rows: int) -> Array:
 		if result[index] == null:
 			result[index] = 1
 	return result
+
+
+static func _migrate_legacy_waves(legacy_waves: Array) -> Array:
+	var migrated: Array = []
+	var previous_end := 0.0
+	for index in legacy_waves.size():
+		var wave: Dictionary = (legacy_waves[index] as Dictionary).duplicate(true)
+		if index > 0:
+			var gap := maxf(1.0, float(wave.get("startTime", previous_end)) - previous_end)
+			migrated.append(make_wave(
+				"interval_before_%s" % str(wave.get("id", index + 1)),
+				"第 %d 波前间隔" % (index + 1),
+				previous_end,
+				gap,
+				[],
+				"interval"
+			))
+			wave["startTime"] = previous_end + gap
+		wave["stageType"] = "flag"
+		migrated.append(wave)
+		previous_end = float(wave.get("startTime", 0.0)) + float(wave.get("duration", 15.0))
+	return migrated
+
+
+static func _is_valid_zombie_type(value) -> bool:
+	var text := str(value)
+	return DEFAULT_ZOMBIES.has(text) or (text.is_valid_int() and int(text) > 0)
 
 
 static func make_unique_id(prefix: String, existing_ids: Array[String]) -> String:

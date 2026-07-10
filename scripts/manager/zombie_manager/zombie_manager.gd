@@ -119,7 +119,10 @@ func start_game():
 		ConstLevelData.E_MonsterMode.Norm:
 			## 10秒后开始刷新僵尸
 			await get_tree().create_timer(10).timeout
-			zombie_wave_manager.start_first_wave()
+			if game_para.custom_spawn_schedule.is_empty():
+				zombie_wave_manager.start_first_wave()
+			else:
+				zombie_wave_manager.start_custom_timeline()
 
 		ConstLevelData.E_MonsterMode.HammerZombie:
 			await get_tree().create_timer(2).timeout
@@ -201,6 +204,8 @@ func wave_refresh(curr_is_end_wave:bool):
 	if is_end_wave:
 		check_zombie_end_wave_timer.start()
 		print("最后一波僵尸检测是否有离开当前视野的僵尸")
+		if curr_zombie_num == 0:
+			EventBus.push_event("create_trophy", [Vector2(900, 300)])
 		## 多轮游戏计时器启动
 		multi_round_end_wave_timer_start()
 
