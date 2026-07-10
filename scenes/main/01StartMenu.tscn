@@ -40,6 +40,7 @@
 [ext_resource type="Script" uid="uid://dcleglawsa2mw" path="res://scripts/start_menu/start_menu_flower_button.gd" id="28_lvy6c"]
 [ext_resource type="Texture2D" uid="uid://ncavqnta7rdx" path="res://assets/image/ui/ui_start_menu/SelectorScreen_ZenGardenHighlight.png" id="29_jjhxv"]
 [ext_resource type="BitMap" uid="uid://c6dx0o3boywqr" path="res://assets/image/ui/ui_start_menu/SelectorScreen_ZenGarden_Mask.png" id="30_3w04d"]
+[ext_resource type="Texture2D" uid="uid://8nakttpw7j5k" path="res://assets/image/ui/ui_start_menu/button_return.png" id="30_5ctuc"]
 [ext_resource type="Texture2D" uid="uid://cl31cxpwg5y84" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Almanac.png" id="31_sxpcx"]
 [ext_resource type="Texture2D" uid="uid://b2fq50reclr1l" path="res://assets/image/ui/ui_start_menu/SelectorScreen_AlmanacHighlight.png" id="32_ortyp"]
 [ext_resource type="BitMap" uid="uid://dmojvwlyh8417" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Almanac_Mask.png" id="33_qniwh"]
@@ -86,7 +87,9 @@
 [ext_resource type="Texture2D" uid="uid://ctpsdjku0juuj" path="res://assets/image/ui/ui_start_menu/Present.png" id="83_tf8pn"]
 [ext_resource type="BitMap" uid="uid://d3xxtmghn6vi4" path="res://assets/image/ui/ui_start_menu/Present_mask.png" id="84_mpctx"]
 [ext_resource type="Texture2D" uid="uid://dygmxfnai40iw" path="res://assets/image/ui/ui_start_menu/PresentOpen.png" id="84_x7dp7"]
-[ext_resource type="Texture2D" uid="uid://crftgcei73svo" path="res://assets/image/ui/ui_start_menu/SelectorScreen_LevelWorkshop_button.png" id="85_workshop"]
+[ext_resource type="Texture2D" uid="uid://qjdpi0lmu06y" path="res://assets/image/ui/ui_start_menu/button_LevelEditor.png" id="86_developer_level"]
+[ext_resource type="Texture2D" uid="uid://bx02cru0xbqy2" path="res://assets/image/ui/ui_start_menu/button_NumericalEditor.png" id="87_developer_numerical"]
+[ext_resource type="Texture2D" uid="uid://dkq5tpx46tfep" path="res://assets/image/ui/ui_start_menu/button_save.png" id="88_developer_save"]
 
 [sub_resource type="Animation" id="Animation_xll4c"]
 resource_name = "Idle"
@@ -1467,7 +1470,8 @@ grow_vertical = 2
 theme = ExtResource("59_e0j7q")
 script = ExtResource("1_2isde")
 bgm = ExtResource("2_yl4bl")
-level_workshop_button_position = Vector2(586.59, 213.01)
+level_workshop_button_position = Vector2(595, 248.89)
+level_workshop_button_rotation_degrees = -1.5
 
 [node name="BG" type="TextureRect" parent="." unique_id=1195158219]
 layout_mode = 1
@@ -1711,17 +1715,88 @@ texture_hover = ExtResource("14_614ej")
 texture_click_mask = ExtResource("15_k7y68")
 script = ExtResource("5_j2mjb")
 
+[node name="DeveloperMenu" type="Control" parent="BG_Right/Menu" unique_id=841361322]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Button1" type="TextureButton" parent="BG_Right/Menu/DeveloperMenu" unique_id=1652217257]
+layout_mode = 0
+offset_left = 341.9
+offset_top = 14.0
+offset_right = 672.9
+offset_bottom = 160.0
+tooltip_text = "选择并游玩已保存的自定义关卡"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_jrmm2")
+texture_pressed = ExtResource("4_qq5l0")
+texture_hover = ExtResource("4_qq5l0")
+texture_click_mask = ExtResource("5_jrmm2")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("5_j2mjb")
+
+[node name="Button2" type="TextureButton" parent="BG_Right/Menu/DeveloperMenu" unique_id=506305426]
+layout_mode = 0
+offset_left = 336.0
+offset_top = 111.0
+offset_right = 656.0
+offset_bottom = 259.0
+tooltip_text = "打开地图工坊"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("86_developer_level")
+texture_pressed = ExtResource("86_developer_level")
+texture_hover = ExtResource("86_developer_level")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("5_j2mjb")
+
+[node name="Button3" type="TextureButton" parent="BG_Right/Menu/DeveloperMenu" unique_id=1190698577]
+layout_mode = 0
+offset_left = 340.0
+offset_top = 207.0
+offset_right = 629.0
+offset_bottom = 337.0
+tooltip_text = "调整植物与僵尸数值"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("87_developer_numerical")
+texture_pressed = ExtResource("87_developer_numerical")
+texture_hover = ExtResource("87_developer_numerical")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("5_j2mjb")
+
+[node name="Button4" type="TextureButton" parent="BG_Right/Menu/DeveloperMenu" unique_id=1602587600]
+layout_mode = 0
+offset_left = 341.0
+offset_top = 279.0
+offset_right = 606.0
+offset_bottom = 408.0
+tooltip_text = "保存与导出（暂未开放）"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("88_developer_save")
+texture_pressed = ExtResource("88_developer_save")
+texture_hover = ExtResource("88_developer_save")
+ignore_texture_size = true
+stretch_mode = 0
+script = ExtResource("5_j2mjb")
+
 [node name="LevelWorkshopButton" type="TextureButton" parent="BG_Right/Menu" unique_id=734513688]
 layout_mode = 0
-offset_left = 578.60724
-offset_top = 98.85114
-offset_right = 670.6072
-offset_bottom = 412.9577
-rotation = -0.06981317
-pivot_offset = Vector2(45.99997, 85.99993)
-tooltip_text = "制作、试玩并保存自定义关卡"
+offset_left = 595.0
+offset_top = 248.89
+offset_right = 716.3391
+offset_bottom = 427.0581
+rotation = -0.02617994
+pivot_offset = Vector2(60.669556, 89.08405)
+tooltip_text = "进入开发者模式"
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("85_workshop")
+texture_normal = ExtResource("30_5ctuc")
 ignore_texture_size = true
 stretch_mode = 5
 script = ExtResource("5_j2mjb")
@@ -1732,7 +1807,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 19.291199
+offset_left = -2.3984032
+offset_top = 12.559011
+offset_right = -2.398407
+offset_bottom = -6.732193
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.035, 0.025, 0.025, 1)
@@ -1740,10 +1818,11 @@ theme_override_colors/font_outline_color = Color(0.65, 0.65, 0.62, 0.7)
 theme_override_constants/outline_size = 1
 theme_override_fonts/font = ExtResource("54_343qg")
 theme_override_font_sizes/font_size = 24
-text = "关
-卡
-工
-坊"
+text = "开
+发
+者
+模
+式"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -3072,6 +3151,10 @@ offset_bottom = -178.0
 [connection signal="pressed" from="BG_Right/Menu/Button2" to="." method="_on_button_2_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/Button3" to="." method="_on_button_3_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="BG_Right/Menu/DeveloperMenu/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="BG_Right/Menu/DeveloperMenu/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="BG_Right/Menu/DeveloperMenu/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="BG_Right/Menu/DeveloperMenu/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/LevelWorkshopButton" to="." method="_on_level_workshop_button_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton" to="." method="_on_option_button_1_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton2" to="." method="_on_option_button_2_pressed"]

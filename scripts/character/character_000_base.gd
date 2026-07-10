@@ -1,6 +1,8 @@
 extends Node2D
 class_name Character000Base
 
+const NumericalStore := preload("res://scripts/resources/numerical_adjustment_store.gd")
+
 #region 子节点
 @onready var body: BodyCharacter = %Body
 ## 角色必备组件(受击盒子组件、血量组件)
@@ -114,6 +116,12 @@ enum E_CharacterInitType{
 #endregion
 
 #endregion
+
+func _enter_tree() -> void:
+	## 在任何组件的 _ready() 之前应用开发者数值，保证血量、计时器和攻击初始化读取到新值。
+	NumericalStore.apply_to_character(self, Global.developer_level_adjustments_active)
+
+
 func _ready() -> void:
 	match character_init_type:
 		E_CharacterInitType.IsNorm:

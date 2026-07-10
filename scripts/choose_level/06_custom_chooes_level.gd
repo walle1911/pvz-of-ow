@@ -95,3 +95,10 @@ func _on_help_pressed() -> void:
 
 func _on_button_ok_pressed() -> void:
 	panel_help.visible = false
+
+
+func back_start_menu() -> void:
+	if Global.developer_level_adjustments_active:
+		Global.return_to_developer_mode = true
+	Global.developer_level_adjustments_active = false
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])

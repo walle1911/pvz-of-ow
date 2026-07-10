@@ -81,6 +81,9 @@ func return_main_menu():
 	TreePauseManager.end_tree_pause_clear_all_pause_factors()
 	Global.time_scale = 1.0
 	Engine.time_scale = Global.time_scale
+	if Global.developer_level_adjustments_active:
+		Global.return_to_developer_mode = true
+	Global.developer_level_adjustments_active = false
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])
 
 ## 功能未实现
@@ -90,4 +93,3 @@ func _unrealized():
 ## 出现控制台
 func _on_button_console_pressed() -> void:
 	canvas_layer_console.appear_canvas_layer_control()
-

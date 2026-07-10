@@ -44,5 +44,10 @@ func reload_session_for_current_user() -> void:
 var main_game:MainGameManager
 var game_para:ResourceLevelData
 
+## 从开发者工具返回主菜单时，主菜单应继续停留在开发者模式。
+var return_to_developer_mode := false
+## 只有从开发者模式进入的自定义关卡或地图工坊试玩才允许应用数值调整。
+var developer_level_adjustments_active := false
+
 ## 游戏倍速
 var time_scale := 1.0

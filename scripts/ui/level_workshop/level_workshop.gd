@@ -122,7 +122,7 @@ func _build_top_bar() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 7)
 	margin.add_child(row)
-	row.add_child(_button("← 主菜单", _back_to_menu))
+	row.add_child(_button("← 返回", _back_to_menu))
 	row.add_child(_button("关卡设置", _open_level_settings))
 	row.add_child(_button("上一段", func(): _switch_wave(-1)))
 	wave_title = Label.new()
@@ -800,6 +800,7 @@ func _playtest() -> void:
 	var game_para: ResourceLevelData = built["game_para"]
 	game_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "trial_%s" % str(level.get("id", "level")))
 	Global.game_para = game_para
+	Global.developer_level_adjustments_active = true
 	_clear_preview_zombies()
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[game_para.game_sences])
 
@@ -828,4 +829,6 @@ func _clear(parent: Node) -> void:
 func _back_to_menu() -> void:
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()
+	Global.developer_level_adjustments_active = false
+	Global.return_to_developer_mode = true
 	get_tree().change_scene_to_file("res://scenes/main/01StartMenu.tscn")

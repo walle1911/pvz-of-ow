@@ -321,10 +321,12 @@ script_list_meta = {
 "res://scripts/manager/zombie_manager/zombie_manager.gd": [-1, -1],
 "res://scripts/resources/crazy_dave_dialog_detail_resource.gd": [-1, -1],
 "res://scripts/resources/crazy_dave_dialog_resource.gd": [-1, -1],
+"res://scripts/resources/level/level_custom_runtime.gd": [-1, -1],
 "res://scripts/resources/level/level_data.gd": [-1, -1],
 "res://scripts/resources/level/level_draft_store.gd": [-1, -1],
 "res://scripts/resources/level/level_json_runtime.gd": [-1, -1],
 "res://scripts/resources/level/pre_plant_in_level.gd": [-1, -1],
+"res://scripts/resources/numerical_adjustment_store.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_000_plant_base.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_012_grave_buster.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_017_lily_pad.gd": [-1, -1],
@@ -378,15 +380,19 @@ script_list_meta = {
 "res://scripts/ui/main_game_ui/ui_flag_progress_bar.gd": [-1, -1],
 "res://scripts/ui/main_game_ui/ui_flag_progress_bar_flag.gd": [-1, -1],
 "res://scripts/ui/main_game_ui/ui_remind_word.gd": [-1, -1],
+"res://scripts/ui/numerical_editor/numerical_editor.gd": [-1, -1],
+"res://scripts/ui/numerical_editor/numerical_editor_localization.gd": [-1, -1],
 "res://scripts/ui/reminder_information.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_option_dialog.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_root.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/canvas_layer_control.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/main_game_menu_option_dialog.gd": [-1, -1],
 "res://scripts/util/image_combiner.gd": [-1, -1],
+"res://tests/pvz_level_editor/test_custom_level_runtime.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_logic.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_panel_smoke.gd": [-1, -1],
-"res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1]
+"res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1],
+"res://tests/test_numerical_editor_runtime.gd": [-1, -1]
 }
 line_number_show = true
 complete_path_show = true

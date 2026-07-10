@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://711bxtjuhtxw"]
+[gd_scene format=3 uid="uid://711bxtjuhtxw"]
 
 [ext_resource type="Theme" uid="uid://cx302yraw066y" path="res://data/ChooesLevel.tres" id="1_6yeev"]
 [ext_resource type="Script" uid="uid://bpitkycmanmap" path="res://scripts/choose_level/06_custom_chooes_level.gd" id="2_dr22h"]
@@ -40,7 +40,7 @@ font = ExtResource("11_0jjwi")
 font_size = 21
 font_color = Color(0, 1, 0, 1)
 
-[node name="CustomChooseLevel" type="Control"]
+[node name="CustomChooseLevel" type="Control" unique_id=1276968299]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,7 +52,7 @@ script = ExtResource("2_dr22h")
 game_mode = 105
 metadata/_edit_vertical_guides_ = [-68.0]
 
-[node name="BG" type="TextureRect" parent="."]
+[node name="BG" type="TextureRect" parent="." unique_id=2064601724]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,7 +61,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_pyfr6")
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=310501608]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -83,7 +83,7 @@ text = "自 定 义 关 卡"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AllPage" type="Control" parent="."]
+[node name="AllPage" type="Control" parent="." unique_id=621545224]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,7 +91,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GridContainer" type="GridContainer" parent="AllPage"]
+[node name="GridContainer" type="GridContainer" parent="AllPage" unique_id=2002241448]
 visible = false
 layout_mode = 1
 anchors_preset = 5
@@ -106,7 +106,7 @@ theme_override_constants/h_separation = 53
 theme_override_constants/v_separation = 3
 columns = 5
 
-[node name="MainMenu" type="TextureButton" parent="."]
+[node name="MainMenu" type="TextureButton" parent="." unique_id=58773360]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -124,7 +124,7 @@ texture_normal = ExtResource("44_006r8")
 texture_pressed = ExtResource("45_nbnce")
 texture_click_mask = ExtResource("46_b3c16")
 
-[node name="Label" type="Label" parent="MainMenu"]
+[node name="Label" type="Label" parent="MainMenu" unique_id=816837783]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -143,7 +143,7 @@ text = "主菜单"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Last" type="TextureButton" parent="."]
+[node name="Last" type="TextureButton" parent="." unique_id=1673476412]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -162,7 +162,7 @@ texture_pressed = ExtResource("48_3ybjw")
 texture_hover = ExtResource("48_3ybjw")
 texture_click_mask = ExtResource("46_b3c16")
 
-[node name="Label" type="Label" parent="Last"]
+[node name="Label" type="Label" parent="Last" unique_id=607707499]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -175,7 +175,7 @@ text = "上一页"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Next" type="TextureButton" parent="."]
+[node name="Next" type="TextureButton" parent="." unique_id=1758098552]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -194,7 +194,7 @@ texture_pressed = ExtResource("48_3ybjw")
 texture_hover = ExtResource("48_3ybjw")
 texture_click_mask = ExtResource("46_b3c16")
 
-[node name="Label" type="Label" parent="Next"]
+[node name="Label" type="Label" parent="Next" unique_id=1394243827]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -207,7 +207,7 @@ text = "下一页"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Help" type="TextureButton" parent="."]
+[node name="Help" type="TextureButton" parent="." unique_id=1956799899]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -228,7 +228,7 @@ texture_click_mask = ExtResource("46_b3c16")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Label" type="Label" parent="Help"]
+[node name="Label" type="Label" parent="Help" unique_id=2077546309]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -241,7 +241,7 @@ text = "帮助"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LabelPage" type="Label" parent="."]
+[node name="LabelPage" type="Label" parent="." unique_id=1416918172]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -256,7 +256,7 @@ text = "当前页数:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PanelHelp" type="Panel" parent="."]
+[node name="PanelHelp" type="Panel" parent="." unique_id=506910378]
 visible = false
 z_index = 4000
 layout_mode = 1
@@ -273,7 +273,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_uy41y")
 
-[node name="TextureRect" type="TextureRect" parent="PanelHelp"]
+[node name="TextureRect" type="TextureRect" parent="PanelHelp" unique_id=1246299075]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -285,7 +285,7 @@ offset_bottom = -26.0
 grow_horizontal = 2
 texture = ExtResource("10_ynbkr")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="PanelHelp"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelHelp" unique_id=1342831133]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -293,18 +293,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PanelHelp/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelHelp/ScrollContainer" unique_id=248886678]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="PanelHelp/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelHelp/ScrollContainer/VBoxContainer" unique_id=1864298522]
 custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 text = "帮助"
 label_settings = SubResource("LabelSettings_vnfsp")
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="PanelHelp/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="PanelHelp/ScrollContainer/VBoxContainer" unique_id=1261308077]
 custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 text = "   该部分关卡使用在游戏根目录下\"level_game_para\"文件夹中的游戏参数文件。
@@ -313,7 +313,7 @@ text = "   该部分关卡使用在游戏根目录下\"level_game_para\"文件�
 label_settings = SubResource("LabelSettings_g62u1")
 autowrap_mode = 1
 
-[node name="ButtonOK" type="TextureButton" parent="PanelHelp"]
+[node name="ButtonOK" type="TextureButton" parent="PanelHelp" unique_id=280712272]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -329,7 +329,7 @@ grow_vertical = 0
 texture_normal = ExtResource("12_kq566")
 script = ExtResource("13_m77a1")
 
-[node name="Label" type="Label" parent="PanelHelp/ButtonOK"]
+[node name="Label" type="Label" parent="PanelHelp/ButtonOK" unique_id=1755951985]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -341,7 +341,7 @@ label_settings = SubResource("LabelSettings_ofia1")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FlowContainer" type="FlowContainer" parent="PanelHelp"]
+[node name="FlowContainer" type="FlowContainer" parent="PanelHelp" unique_id=1910440052]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
