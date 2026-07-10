@@ -1,16 +1,24 @@
-[gd_scene load_steps=14 format=3 uid="uid://dv5fiu4pkryba"]
+[gd_scene format=3 uid="uid://dv5fiu4pkryba"]
 
 [ext_resource type="Script" uid="uid://bm01xxk7oygdx" path="res://scripts/main_game_item/lawn_mover/lawn_mower.gd" id="1_nbmi7"]
 [ext_resource type="Texture2D" uid="uid://de8gk86hm1rty" path="res://assets/reanim/LawnMower_wheelpiece.png" id="1_tkewj"]
 [ext_resource type="Texture2D" uid="uid://btg5xblar4uhd" path="res://assets/reanim/LawnMower_wheel2.png" id="2_0ba1f"]
+[ext_resource type="Texture2D" uid="uid://bgcqxwaqtt5al" path="res://assets/reanim/Cleaners_JunkerQueen_wheel3.png" id="3_0q8qk"]
 [ext_resource type="Texture2D" uid="uid://tf5p1t8o77bt" path="res://assets/reanim/LawnMower_wheelshine.png" id="3_5jk62"]
 [ext_resource type="Texture2D" uid="uid://dldct11tl5aeb" path="res://assets/reanim/LawnMower_body.png" id="4_nbmi7"]
 [ext_resource type="Texture2D" uid="uid://dr2k1cffro6kn" path="res://assets/reanim/LawnMower_pull.png" id="5_om6jw"]
 [ext_resource type="Texture2D" uid="uid://ds6qown7w0p2i" path="res://assets/reanim/LawnMower_engine.png" id="6_0kynh"]
+[ext_resource type="Texture2D" uid="uid://cpof6bt6pnph0" path="res://assets/reanim/Cleaners_JunkerQueen_wheel2.png" id="6_3b3ra"]
 [ext_resource type="Texture2D" uid="uid://mcwwr4qeeqen" path="res://assets/reanim/LawnMower_wheel1.png" id="7_03vgv"]
 [ext_resource type="Texture2D" uid="uid://c8x8a2do7pbn4" path="res://assets/reanim/LawnMower_exhaust.png" id="8_iqjm2"]
+[ext_resource type="Texture2D" uid="uid://bkefy2odxn1f7" path="res://assets/reanim/Cleaners_JunkerQueen_flag.png" id="8_w5rs8"]
 [ext_resource type="Animation" uid="uid://bjws0p5cnsuoc" path="res://animation/item/LawnMover/LawnMower_normal.tres" id="9_5jk62"]
 [ext_resource type="Animation" uid="uid://c6drj4spil3qx" path="res://animation/item/LawnMover/LawnMower_tricked.tres" id="10_nbmi7"]
+[ext_resource type="Texture2D" uid="uid://n6k1pi3wt0da" path="res://assets/reanim/Cleaners_JunkerQueen_log1.png" id="10_w6dii"]
+[ext_resource type="Texture2D" uid="uid://ht1gtoc18xsp" path="res://assets/reanim/Cleaners_JunkerQueen_log.png" id="12_s63cp"]
+[ext_resource type="Texture2D" uid="uid://dkjynillhcutx" path="res://assets/reanim/Cleaners_JunkerQueen_body.png" id="13_3dk75"]
+[ext_resource type="Texture2D" uid="uid://cuj5s21txg6tn" path="res://assets/reanim/Cleaners_JunkerQueen_wheel0.png" id="14_37y7a"]
+[ext_resource type="Texture2D" uid="uid://2gutncbhb0sc" path="res://assets/reanim/Cleaners_JunkerQueen_wheel1.png" id="16_d5n0s"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_wxdc1"]
 _data = {
@@ -21,132 +29,175 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5jk62"]
 size = Vector2(33.5, 48)
 
-[node name="LawnMower" type="Node2D"]
+[node name="LawnMower" type="Node2D" unique_id=1281922165]
 script = ExtResource("1_nbmi7")
 
-[node name="Body" type="Node2D" parent="."]
+[node name="Body" type="Node2D" parent="." unique_id=1674817142]
 position = Vector2(-39, -55)
 scale = Vector2(0.8, 0.8)
 
-[node name="Anim_normal" type="Sprite2D" parent="Body"]
+[node name="Anim_normal" type="Sprite2D" parent="Body" unique_id=1264702679]
 centered = false
 
-[node name="Anim_tricked" type="Sprite2D" parent="Body"]
+[node name="Anim_tricked" type="Sprite2D" parent="Body" unique_id=674239429]
 visible = false
 centered = false
 
-[node name="Lawnmower_backwheelpiece1" type="Sprite2D" parent="Body"]
-position = Vector2(25.8, 26.1)
+[node name="Lawnmower_backwheelpiece1" type="Sprite2D" parent="Body" unique_id=1752617528]
+position = Vector2(25.8, 25.645935)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_tkewj")
 centered = false
 
-[node name="Lawnmower_backwheel1" type="Sprite2D" parent="Body"]
-position = Vector2(25.5, 29)
-scale = Vector2(0.8, 0.8)
+[node name="Sprite2D" type="Sprite2D" parent="Body/Lawnmower_backwheelpiece1" unique_id=1786639417]
+position = Vector2(13.05, 2.59)
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("3_0q8qk")
+
+[node name="Lawnmower_backwheel1" type="Sprite2D" parent="Body" unique_id=1070895881]
+position = Vector2(30.905535, 25.537804)
+rotation = 0.43185988
+scale = Vector2(0.799, 0.799)
 texture = ExtResource("2_0ba1f")
 centered = false
 
-[node name="Lawnmower_backwheelshine1" type="Sprite2D" parent="Body"]
-position = Vector2(25, 28.4)
+[node name="Lawnmower_backwheelshine1" type="Sprite2D" parent="Body" unique_id=544702292]
+position = Vector2(25, 28.06756)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_5jk62")
 centered = false
 
-[node name="Lawnmower_backwheelpiece2" type="Sprite2D" parent="Body"]
-position = Vector2(59, 26.2)
+[node name="Lawnmower_backwheelpiece2" type="Sprite2D" parent="Body" unique_id=5772486]
+position = Vector2(59, 26.310812)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_tkewj")
 centered = false
 
-[node name="Lawnmower_backwheel2" type="Sprite2D" parent="Body"]
-position = Vector2(58.6, 29.2)
-scale = Vector2(0.8, 0.8)
+[node name="Sprite2D" type="Sprite2D" parent="Body/Lawnmower_backwheelpiece2" unique_id=1873013834]
+position = Vector2(20.41, 3.76)
+scale = Vector2(0.49, 0.49)
+texture = ExtResource("6_3b3ra")
+
+[node name="Lawnmower_backwheel2" type="Sprite2D" parent="Body" unique_id=253961499]
+position = Vector2(64.10554, 26.113495)
+rotation = 0.43728456
+scale = Vector2(0.799, 0.799)
 texture = ExtResource("2_0ba1f")
 centered = false
 
-[node name="Lawnmower_backwheelshine2" type="Sprite2D" parent="Body"]
-position = Vector2(58.5, 28.6)
+[node name="Lawnmower_backwheelshine2" type="Sprite2D" parent="Body" unique_id=989209985]
+position = Vector2(58.5, 28.821625)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_5jk62")
 centered = false
 
-[node name="LawnMower_dice" type="Sprite2D" parent="Body"]
+[node name="LawnMower_dice" type="Sprite2D" parent="Body" unique_id=31687385]
 visible = false
 centered = false
 
-[node name="LawnMower_body" type="Sprite2D" parent="Body"]
-position = Vector2(-2.2, 2.6)
+[node name="LawnMower_body" type="Sprite2D" parent="Body" unique_id=235203807]
+position = Vector2(-2.6540656, 3.0432525)
+rotation = -0.007924662
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("4_nbmi7")
 centered = false
 
-[node name="LawnMower_pull" type="Sprite2D" parent="Body"]
-position = Vector2(7.6, 40.5)
+[node name="Sprite2D" type="Sprite2D" parent="Body/LawnMower_body" unique_id=279632140]
+position = Vector2(3.17, 42.37)
+texture = ExtResource("8_w5rs8")
+
+[node name="LawnMower_pull" type="Sprite2D" parent="Body" unique_id=211218796]
+position = Vector2(7.8216267, 39.978374)
+rotation = 0.038681433
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("5_om6jw")
 centered = false
 
-[node name="LawnMower_engine" type="Sprite2D" parent="Body"]
-position = Vector2(38, 26.2)
+[node name="Sprite2D" type="Sprite2D" parent="Body/LawnMower_pull" unique_id=906450734]
+position = Vector2(0, 19.87)
+texture = ExtResource("10_w6dii")
+
+[node name="LawnMower_engine" type="Sprite2D" parent="Body" unique_id=235508317]
+position = Vector2(38, 25.978374)
+rotation = 0.0056134867
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("6_0kynh")
 centered = false
 
-[node name="Lawnmower_frontwheelpiece1" type="Sprite2D" parent="Body"]
-position = Vector2(19.7, 45.6)
+[node name="log" type="Sprite2D" parent="Body/LawnMower_engine" unique_id=577307257]
+position = Vector2(19.03, 27.45)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("12_s63cp")
+
+[node name="body" type="Sprite2D" parent="Body/LawnMower_engine" unique_id=1958411681]
+position = Vector2(20.03, -7.74)
+rotation = -0.09599311
+texture = ExtResource("13_3dk75")
+
+[node name="Lawnmower_frontwheelpiece1" type="Sprite2D" parent="Body" unique_id=241010137]
+position = Vector2(19.7, 45.921627)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_tkewj")
 centered = false
 
-[node name="Lawnmower_frontwheel1" type="Sprite2D" parent="Body"]
-position = Vector2(19.4, 49)
-scale = Vector2(0.8, 0.8)
+[node name="Sprite2D" type="Sprite2D" parent="Body/Lawnmower_frontwheelpiece1" unique_id=703748360]
+position = Vector2(10.84, 1.94)
+scale = Vector2(0.56, 0.56)
+texture = ExtResource("14_37y7a")
+
+[node name="Lawnmower_frontwheel1" type="Sprite2D" parent="Body" unique_id=758320716]
+position = Vector2(24.694723, 46.12431)
+rotation = 0.43185988
+scale = Vector2(0.799, 0.799)
 texture = ExtResource("7_03vgv")
 centered = false
 
-[node name="Lawnmower_wheelshine1" type="Sprite2D" parent="Body"]
-position = Vector2(18.2, 48.8)
+[node name="Lawnmower_wheelshine1" type="Sprite2D" parent="Body" unique_id=1282220311]
+position = Vector2(18.2, 49.021626)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_5jk62")
 centered = false
 
-[node name="Lawnmower_frontwheelpiece2" type="Sprite2D" parent="Body"]
-position = Vector2(54.5, 47)
+[node name="Lawnmower_frontwheelpiece2" type="Sprite2D" parent="Body" unique_id=2090256520]
+position = Vector2(54.5, 46.56756)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("1_tkewj")
 centered = false
 
-[node name="Lawnmower_frontwheel2" type="Sprite2D" parent="Body"]
-position = Vector2(54.1, 49.6)
-scale = Vector2(0.8, 0.8)
+[node name="Sprite2D" type="Sprite2D" parent="Body/Lawnmower_frontwheelpiece2" unique_id=49016932]
+position = Vector2(16.56, 3.66)
+scale = Vector2(0.58, 0.58)
+texture = ExtResource("16_d5n0s")
+
+[node name="Lawnmower_frontwheel2" type="Sprite2D" parent="Body" unique_id=1285712839]
+position = Vector2(59.594723, 46.148617)
+rotation = 0.43535078
+scale = Vector2(0.799, 0.799)
 texture = ExtResource("2_0ba1f")
 centered = false
 
-[node name="Lawnmower_wheelshine2" type="Sprite2D" parent="Body"]
-position = Vector2(53.1, 49.4)
+[node name="Lawnmower_wheelshine2" type="Sprite2D" parent="Body" unique_id=1351040305]
+position = Vector2(53.1, 48.945934)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("3_5jk62")
 centered = false
 
-[node name="Lawnmower_exhaust" type="Sprite2D" parent="Body"]
-position = Vector2(38.7, 46.7)
-scale = Vector2(0.8, 0.8)
+[node name="Lawnmower_exhaust" type="Sprite2D" parent="Body" unique_id=1733745666]
+position = Vector2(38.589184, 46.478374)
+scale = Vector2(0.8321358, 0.8321358)
 texture = ExtResource("8_iqjm2")
 centered = false
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_wxdc1")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1486210947]
+libraries/ = SubResource("AnimationLibrary_wxdc1")
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="Area2D" type="Area2D" parent="." unique_id=735970204]
 position = Vector2(0, -17)
 collision_layer = 0
 collision_mask = 513
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=757958012]
 position = Vector2(-4.75, -10)
 shape = SubResource("RectangleShape2D_5jk62")
 
