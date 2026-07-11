@@ -20,6 +20,8 @@ var plant_condition:int = 22
 
 ## 判断是否可以种植
 func judge_is_can_plant(plant_cell:PlantCell, curr_plant_type:CharacterRegistry.PlantType) -> bool:
+	if _is_chessboard_reward_card(curr_plant_type):
+		return _judge_chessboard_reward_plant(plant_cell, curr_plant_type)
 	## 特殊植物
 	if is_special_plants:
 		return judge_special_plants_condition(plant_cell)
@@ -41,6 +43,22 @@ func judge_is_can_plant(plant_cell:PlantCell, curr_plant_type:CharacterRegistry.
 			return true
 		else:
 			return false
+
+
+func _is_chessboard_reward_card(curr_plant_type: CharacterRegistry.PlantType) -> bool:
+	if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.hand_manager):
+		return false
+	var card: Card = Global.main_game.hand_manager.hm_character.curr_card
+	return is_instance_valid(card) and card.card_plant_type == curr_plant_type and card.is_chessboard_reveal_reward
+
+
+func _judge_chessboard_reward_plant(plant_cell: PlantCell, curr_plant_type: CharacterRegistry.PlantType) -> bool:
+	if not plant_cell.can_common_plant or is_instance_valid(plant_cell.plant_in_cell[place_plant_in_cell]):
+		return false
+	# 两种 OW 香蒲奖励卡可以不依赖睡莲，直接落在水池格。
+	if curr_plant_type in [CharacterRegistry.PlantType.P044CattailJetpackCat, CharacterRegistry.PlantType.P051CattailSierra]:
+		return plant_cell.plant_cell_type == PlantCell.PlantCellType.Pool
+	return bool(plant_condition & plant_cell.curr_condition)
 
 
 ## 判断当前场上是否有紫卡预种植植物,紫卡是否可以种植

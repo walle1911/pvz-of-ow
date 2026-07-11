@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/chessboard_mode/ChessboardFront.tscn" id="1_chessboard"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_chessboard/test/chessboard_front_test.tres" id="2_test"]
+
+[node name="MainGameChessboardFrontTest" instance=ExtResource("1_chessboard")]
+game_para = ExtResource("2_test")

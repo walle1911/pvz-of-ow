@@ -270,6 +270,7 @@ script_list_meta = {
 "res://scripts/main_game_item/back_ground/slope.gd": [-1, -1],
 "res://scripts/main_game_item/brain_body.gd": [-1, -1],
 "res://scripts/main_game_item/brain_on_zombie_mode.gd": [-1, -1],
+"res://scripts/main_game_item/chessboard_mode/chessboard_mode.gd": [-1, -1],
 "res://scripts/main_game_item/fog.gd": [-1, -1],
 "res://scripts/main_game_item/ice_road.gd": [-1, -1],
 "res://scripts/main_game_item/ice_zombie_effect.gd": [-1, -1],

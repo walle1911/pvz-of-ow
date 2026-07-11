@@ -320,8 +320,8 @@ unique_name_in_owner = true
 process_mode = 1
 layout_mode = 3
 anchors_preset = 0
-offset_left = 150.0
-offset_right = 150.0
+offset_left = 0.0
+offset_right = 0.0
 script = ExtResource("35_ee3wa")
 
 [node name="Marker2DSunTargetDefault" type="Marker2D" parent="CanvasLayerCardSlot/CardSlotRoot" unique_id=378169115]

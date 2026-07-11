@@ -102,6 +102,9 @@ func _add_plant_card_page(cards_parent_node:GridContainer):
 		var card := node as Card
 		if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
 			continue
+		# 棋盘格正式模式的开局选卡只提供 500+ 的原版植物。
+		if _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
+			continue
 		ordered_cards.append(card)
 
 	_add_card_page(grid_container_plant, ordered_cards, all_card_candidate_containers_plant)
@@ -151,6 +154,8 @@ func _init_card_slot_candidate_imitater():
 	var curr_num_page_imitater:=-1
 	for idx:int in Global.global_game_state.curr_plant.size():
 		var plant_type = Global.global_game_state.curr_plant[idx]
+		if _is_chessboard_mode() and (int(plant_type) < 500 or int(plant_type) >= 1000):
+			continue
 		if not AllCards.all_plant_card_prefabs.has(plant_type):
 			continue
 		var page_i:int
@@ -179,6 +184,11 @@ func _init_card_slot_candidate_imitater():
 		card_candidate_container.visible = true
 
 	grid_container_plant_imitater.queue_free()
+
+
+func _is_chessboard_mode() -> bool:
+	var scene := get_tree().current_scene
+	return scene != null and scene.get_node_or_null(^"ChessboardMode") != null
 
 
 ## 上一页

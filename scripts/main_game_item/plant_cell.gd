@@ -161,9 +161,13 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 	var plant_condition:ResourcePlantCondition
 	var plant :Plant000Base
 	plant_condition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
+	var chessboard_reward_bypass := false
+	if is_instance_valid(Global.main_game) and is_instance_valid(Global.main_game.hand_manager):
+		var held_card: Card = Global.main_game.hand_manager.hm_character.curr_card
+		chessboard_reward_bypass = is_instance_valid(held_card) and held_card.is_chessboard_reveal_reward and held_card.card_plant_type == plant_type
 
 	## 如果该植物为紫卡
-	if plant_condition.is_purple_card:
+	if plant_condition.is_purple_card and not chessboard_reward_bypass:
 		## 删除紫卡前置植物,创建新植物
 		var pre_plant:Plant000Base = plant_condition.get_preplant_purple(self, plant_type)
 		if pre_plant != null:

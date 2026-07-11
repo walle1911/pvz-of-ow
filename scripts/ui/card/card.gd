@@ -39,6 +39,8 @@ signal signal_card_ready(card:Card)
 var is_hidden_by_squash_doomfist := false
 var is_being_attacked_by_squash_doomfist := false
 var _original_cool_time: float
+## 棋盘格正式模式翻地奖励卡：允许绕过 OW 紫卡前置规则。
+var is_chessboard_reveal_reward := false
 
 func _ready() -> void:
 	super()
@@ -104,7 +106,7 @@ func judge_card_ready():
 	# 阳光充足 且 卡片冷却完成
 	if is_sun_enough and not _is_cooling:
 		## 紫卡并且不能种植
-		if is_purple_card and not plant_condition.judge_purple_card_can_plant(Global.main_game.plant_cell_manager.all_plant_cells, card_plant_type):
+		if is_purple_card and not is_chessboard_reveal_reward and not plant_condition.judge_purple_card_can_plant(Global.main_game.plant_cell_manager.all_plant_cells, card_plant_type):
 			card_not_can_click()
 		else:
 			card_ready()
