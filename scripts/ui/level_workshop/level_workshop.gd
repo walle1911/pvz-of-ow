@@ -36,9 +36,10 @@ const HISTORY_LIMIT := 80
 const PREVIEW_MAX_ZOMBIES := 20
 const DRAWER_WIDTH := 700.0
 const TIMELINE_SCALE := 1.25
-const CARDS_PER_PAGE := 24
-const FLAG_CENTER_LEFT := 18.0
-const FLAG_CENTER_RIGHT := 136.0
+const CARDS_PER_PAGE := 28
+## 原版 FlagMeter 黄色槽的逐像素内边界；旗杆和高亮分段共用这组坐标。
+const FLAG_CENTER_LEFT := 8.0
+const FLAG_CENTER_RIGHT := 150.0
 
 var level: Dictionary = Logic.example_level()
 var selected_wave := 0
@@ -65,6 +66,7 @@ var drawer: Control
 var card_grid: GridContainer
 var card_scroll: ScrollContainer
 var timeline_meter: Control
+var timeline_progress_bar: TextureRect
 var quantity_dialog_layer: Control
 var card_page_label: Label
 var current_card_page := 0
@@ -147,38 +149,37 @@ func _build_drawer() -> void:
 	wave_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	sidebar_content.add_child(wave_summary)
 
-	var instruction := _paper_label("点击卡片，设置本阶段出场数量", Vector2(52, 100), Vector2(610, 25), 16, Color("7e390f"))
-	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sidebar_content.add_child(instruction)
+	status_label = _paper_label("点击卡片，设置本阶段出场数量", Vector2(52, 100), Vector2(610, 25), 16, Color("7e390f"))
+	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sidebar_content.add_child(status_label)
 
 	card_scroll = ScrollContainer.new()
-	card_scroll.position = Vector2(100, 126)
-	card_scroll.size = Vector2(524, 340)
+	card_scroll.position = Vector2(55, 126)
+	card_scroll.size = Vector2(590, 414)
 	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	card_scroll.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	sidebar_content.add_child(card_scroll)
+	var card_grid_holder := Control.new()
+	card_grid_holder.custom_minimum_size = Vector2(590, 420)
+	card_scroll.add_child(card_grid_holder)
 	card_grid = GridContainer.new()
-	card_grid.custom_minimum_size.x = 472
-	card_grid.columns = 6
-	card_grid.add_theme_constant_override("h_separation", 20)
-	card_grid.add_theme_constant_override("v_separation", 8)
-	card_scroll.add_child(card_grid)
+	card_grid.position.x = 22
+	card_grid.custom_minimum_size.x = 546
+	card_grid.columns = 7
+	card_grid.add_theme_constant_override("h_separation", 0)
+	card_grid.add_theme_constant_override("v_separation", 0)
+	card_grid_holder.add_child(card_grid)
 
-	sidebar_content.add_child(_texture_button("上一页", Vector2(174, 476), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(-1), 14))
-	sidebar_content.add_child(_texture_button("下一页", Vector2(439, 476), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(1), 14))
-	card_page_label = _paper_label("", Vector2(292, 476), Vector2(140, 26), 14, Color("6d310d"))
+	sidebar_content.add_child(_texture_button("上一页", Vector2(174, 538), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(-1), 14))
+	sidebar_content.add_child(_texture_button("下一页", Vector2(439, 538), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(1), 14))
+	card_page_label = _paper_label("", Vector2(292, 538), Vector2(140, 26), 14, Color("6d310d"))
 	card_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(card_page_label)
 	_refresh_card_page()
 
 	_build_timeline()
 	_build_drawer_actions()
-
-	status_label = _paper_label("所有修改都会自动保存", Vector2(118, 545), Vector2(530, 20), 13, Color("7e390f"))
-	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sidebar_content.add_child(status_label)
-
 
 func _build_drawer_actions() -> void:
 	var actions := [
@@ -239,6 +240,12 @@ func _build_timeline() -> void:
 	var meter_texture := AtlasTexture.new()
 	meter_texture.atlas = FLAG_METER
 	meter_texture.region = Rect2(0, 0, 158, 27)
+	timeline_progress_bar = TextureRect.new()
+	timeline_progress_bar.position = Vector2(0, 12)
+	timeline_progress_bar.size = Vector2(158, 27)
+	timeline_progress_bar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	timeline_progress_bar.stretch_mode = TextureRect.STRETCH_KEEP
+	timeline_progress_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var meter := TextureRect.new()
 	meter.position = Vector2(0, 12)
 	meter.size = Vector2(158, 27)
@@ -247,6 +254,7 @@ func _build_timeline() -> void:
 	meter.stretch_mode = TextureRect.STRETCH_KEEP
 	meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	timeline_meter.add_child(meter)
+	timeline_meter.add_child(timeline_progress_bar)
 	timeline_stages = Control.new()
 	timeline_stages.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	timeline_meter.add_child(timeline_stages)
@@ -267,30 +275,47 @@ func _refresh_timeline() -> void:
 
 	var flag_number := 0
 	var interval_number := 0
+	var selected_segment_left := FLAG_CENTER_LEFT
+	var selected_segment_right := FLAG_CENTER_RIGHT
 	for stage_index in stages.size():
 		var stage: Dictionary = level["waves"][stage_index]
 		var is_flag := str(stage.get("stageType", "flag")) == "flag"
 		if is_flag:
 			flag_number += 1
 			var flag_button := _flag_stage_button(flag_number, stage_index == selected_wave)
-			flag_button.position = Vector2(flag_positions[flag_number - 1] - 18.0, 0)
+			flag_button.position = Vector2(flag_positions[flag_number - 1] - 8.0, 0)
+			if stage_index == selected_wave:
+				selected_segment_left = flag_positions[flag_number - 1]
+				selected_segment_right = FLAG_CENTER_RIGHT if flag_number == 1 else flag_positions[flag_number - 2]
 			flag_button.pressed.connect(_select_stage.bind(stage_index))
 			timeline_stages.add_child(flag_button)
 		else:
 			interval_number += 1
-			var segment_start := 148.0 if interval_number == 1 else flag_positions[mini(interval_number - 2, flag_positions.size() - 1)]
-			var segment_end := flag_positions[mini(interval_number - 1, flag_positions.size() - 1)] if not flag_positions.is_empty() else 2.0
+			var segment_start := FLAG_CENTER_RIGHT if interval_number == 1 else flag_positions[mini(interval_number - 2, flag_positions.size() - 1)]
+			var segment_end := flag_positions[mini(interval_number - 1, flag_positions.size() - 1)] if not flag_positions.is_empty() else FLAG_CENTER_LEFT
 			var segment_left := minf(segment_start, segment_end) + 2.0
 			var segment_width := maxf(4.0, absf(segment_start - segment_end) - 4.0)
+			if stage_index == selected_wave:
+				selected_segment_left = minf(segment_start, segment_end)
+				selected_segment_right = maxf(segment_start, segment_end)
 			var interval_button := Button.new()
 			interval_button.position = Vector2(segment_left, 20.0)
 			interval_button.size = Vector2(segment_width, 12)
 			interval_button.tooltip_text = "点击编辑第 %d 个波间阶段" % interval_number
-			interval_button.add_theme_stylebox_override("normal", _segment_style(Color("ffd95a") if stage_index == selected_wave else Color(0, 0, 0, 0.03)))
-			interval_button.add_theme_stylebox_override("hover", _segment_style(Color("ffe99a")))
-			interval_button.add_theme_stylebox_override("pressed", _segment_style(Color("d89a31")))
+			interval_button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+			interval_button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+			interval_button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
 			interval_button.pressed.connect(_select_stage.bind(stage_index))
 			timeline_stages.add_child(interval_button)
+	if timeline_progress_bar != null:
+		selected_segment_left = clampf(selected_segment_left, 0.0, 158.0)
+		selected_segment_right = clampf(selected_segment_right, selected_segment_left, 158.0)
+		var selected_progress_texture := AtlasTexture.new()
+		selected_progress_texture.atlas = FLAG_METER
+		selected_progress_texture.region = Rect2(selected_segment_left, 27, selected_segment_right - selected_segment_left, 27)
+		timeline_progress_bar.position.x = selected_segment_left
+		timeline_progress_bar.size.x = selected_segment_right - selected_segment_left
+		timeline_progress_bar.texture = selected_progress_texture
 
 
 func _select_stage(stage_index: int) -> void:
@@ -324,13 +349,13 @@ func _delete_current_stage() -> void:
 
 func _make_zombie_card(zombie_type: int) -> Control:
 	var holder := Control.new()
-	holder.custom_minimum_size = Vector2(62, 78)
+	holder.custom_minimum_size = Vector2(78, 105)
 	var prefab: Card = zombie_card_prefabs.get(zombie_type)
 	if prefab == null:
 		return holder
 	var card := prefab.duplicate() as Card
-	card.position = Vector2.ZERO
-	card.scale = Vector2.ONE * 1.1
+	card.position = Vector2(5, 5)
+	card.scale = Vector2.ONE * 1.35
 	card.is_imitater = false
 	card.tooltip_text = "设置%s的数量" % _zombie_name(str(zombie_type))
 	card.set_process(false)
@@ -705,13 +730,14 @@ func _flag_stage_button(flag_number: int, selected: bool) -> Button:
 	flag_texture.atlas = FLAG_PARTS
 	flag_texture.region = Rect2(50, 1, 25, 25)
 	var pole := TextureRect.new()
-	pole.position = Vector2(8, 7)
+	## Pole 切片的竖杆位于局部 x=4.5；配合按钮 x=边界-8，竖杆中心严格落在边界上。
+	pole.position = Vector2(3.5, 7)
 	pole.size = Vector2(25, 25)
 	pole.texture = pole_texture
 	pole.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(pole)
 	var flag := TextureRect.new()
-	flag.position = Vector2(8, -3 if selected else 7)
+	flag.position = Vector2(3.5, -3 if selected else 7)
 	flag.size = Vector2(25, 25)
 	flag.texture = flag_texture
 	flag.modulate = Color("fff2a1") if selected else Color.WHITE

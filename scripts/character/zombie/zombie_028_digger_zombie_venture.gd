@@ -36,6 +36,12 @@ func ready_norm():
 	_hair_clip_material.shader = shader
 	_hair_default_material = digger_venture_hair.material
 
+
+func ready_show():
+	super()
+	## 展示场景只播放静态预览，不运行依赖正常出战材质的掘地位置检测。
+	set_process(false)
+
 ## 初始化正常出战角色信号连接
 func ready_norm_signal_connect():
 	super()

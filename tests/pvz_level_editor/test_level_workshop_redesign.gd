@@ -17,7 +17,7 @@ func _run() -> void:
 	assert(workshop.drawer != null)
 	assert(is_equal_approx(workshop.drawer.size.x, workshop.DRAWER_WIDTH))
 	assert(workshop.card_grid.get_child_count() == mini(workshop.CARDS_PER_PAGE, AllCards.all_zombie_card_prefabs.size()))
-	assert(workshop.card_grid.columns == 6)
+	assert(workshop.card_grid.columns == 7)
 	assert(workshop.card_page_label != null)
 	for holder in workshop.card_grid.get_children():
 		if holder.get_child_count() > 0:

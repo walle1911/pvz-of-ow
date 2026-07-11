@@ -391,6 +391,7 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_custom_level_runtime.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_logic.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_panel_smoke.gd": [-1, -1],
+"res://tests/pvz_level_editor/test_level_workshop_redesign.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1]
