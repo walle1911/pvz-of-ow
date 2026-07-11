@@ -34,12 +34,18 @@ const ZOMBIE_NAMES := {
 }
 const HISTORY_LIMIT := 80
 const PREVIEW_MAX_ZOMBIES := 20
-const DRAWER_WIDTH := 700.0
+## 按界面实际分界线收窄到约 47%，右侧完整留给马路预览。
+const DRAWER_WIDTH := 500.0
 const TIMELINE_SCALE := 1.25
-const CARDS_PER_PAGE := 28
+const CARDS_PER_PAGE := 24
+const DEFAULT_INTERVAL_DURATION := 20.0
+const DEFAULT_FLAG_DURATION := 10.0
+const MIN_SPLIT_INTERVAL_DURATION := 1.0
 ## 原版 FlagMeter 黄色槽的逐像素内边界；旗杆和高亮分段共用这组坐标。
 const FLAG_CENTER_LEFT := 8.0
 const FLAG_CENTER_RIGHT := 150.0
+
+enum TimelineMode { NORMAL, PLACE_FLAG, SELECT_INTERVAL }
 
 var level: Dictionary = Logic.example_level()
 var selected_wave := 0
@@ -67,12 +73,24 @@ var card_grid: GridContainer
 var card_scroll: ScrollContainer
 var timeline_meter: Control
 var timeline_progress_bar: TextureRect
+var timeline_hover_bar: TextureRect
 var quantity_dialog_layer: Control
 var card_page_label: Label
 var current_card_page := 0
+var timeline_mode := TimelineMode.NORMAL
+var add_flag_button: TextureButton
+var select_interval_button: TextureButton
+var flag_cursor_preview: TextureRect
+
+
+func _layout_control(path: String) -> Control:
+	return get_node_or_null("LayoutMarkers/" + path) as Control
 
 
 func _ready() -> void:
+	var layout_markers := get_node_or_null("LayoutMarkers") as CanvasItem
+	if layout_markers != null:
+		layout_markers.visible = false
 	_apply_font()
 	_refresh_zombie_catalog()
 	_build_scene()
@@ -88,6 +106,15 @@ func _ready() -> void:
 	_refresh_wave()
 
 
+func _process(_delta: float) -> void:
+	if is_instance_valid(flag_cursor_preview) and flag_cursor_preview.visible:
+		flag_cursor_preview.position = get_local_mouse_position() - Vector2(4, 22)
+
+
+func _exit_tree() -> void:
+	_end_timeline_mode()
+
+
 func _apply_font() -> void:
 	var theme := Theme.new()
 	theme.default_font = WORKSHOP_FONT
@@ -99,14 +126,16 @@ func _build_scene() -> void:
 	var background := Sprite2D.new()
 	background.texture = FRONT_LAWN
 	background.centered = false
-	background.position = Vector2(-210, 0)
+	var background_preview := _layout_control("BackgroundPreview")
+	background.position = background_preview.position if background_preview != null else Vector2(-334, 0)
 	background.z_index = -100
 	add_child(background)
 
 	preview_root = Control.new()
 	preview_root.name = "ShowZombiePanel"
-	preview_root.position = Vector2(746, 180)
-	preview_root.size = Vector2(280, 400)
+	var preview_rect := _layout_control("RoadPreviewRect")
+	preview_root.position = preview_rect.position if preview_rect != null else Vector2(746, 180)
+	preview_root.size = preview_rect.size if preview_rect != null else Vector2(280, 400)
 	preview_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview_root.y_sort_enabled = true
 	preview_root.z_index = 50
@@ -118,10 +147,12 @@ func _build_scene() -> void:
 
 
 func _build_drawer() -> void:
+	var drawer_rect := _layout_control("DrawerRect")
+	var drawer_size := drawer_rect.size if drawer_rect != null else Vector2(DRAWER_WIDTH, 600)
 	drawer = Control.new()
 	drawer.name = "AlmanacDrawer"
-	drawer.position = Vector2(-DRAWER_WIDTH, 0)
-	drawer.size = Vector2(DRAWER_WIDTH, 600)
+	drawer.position = Vector2(-drawer_size.x, 0)
+	drawer.size = drawer_size
 	drawer.z_index = 100
 	add_child(drawer)
 
@@ -137,43 +168,47 @@ func _build_drawer() -> void:
 	sidebar_content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	drawer.add_child(sidebar_content)
 
-	stage_heading = _paper_label("旗帜波僵尸", Vector2(150, 18), Vector2(500, 42), 27, Color("e7e4d1"))
+	stage_heading = _paper_label("旗帜波僵尸", Vector2(60, 18), Vector2(380, 42), 27, Color("e7e4d1"))
 	stage_heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stage_heading.add_theme_color_override("font_outline_color", Color("25263b"))
 	stage_heading.add_theme_constant_override("outline_size", 4)
 	sidebar_content.add_child(stage_heading)
 
-	wave_title = _paper_label("", Vector2(52, 74), Vector2(210, 28), 19, Color("6d310d"))
+	wave_title = _paper_label("", Vector2(24, 74), Vector2(180, 28), 19, Color("6d310d"))
 	sidebar_content.add_child(wave_title)
-	wave_summary = _paper_label("", Vector2(290, 74), Vector2(360, 28), 14, Color("6d310d"))
+	wave_summary = _paper_label("", Vector2(220, 74), Vector2(256, 28), 14, Color("6d310d"))
 	wave_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	sidebar_content.add_child(wave_summary)
 
-	status_label = _paper_label("点击卡片，设置本阶段出场数量", Vector2(52, 100), Vector2(610, 25), 16, Color("7e390f"))
+	status_label = _paper_label("点击卡片，设置本阶段出场数量", Vector2(24, 100), Vector2(452, 25), 16, Color("7e390f"))
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(status_label)
 
 	card_scroll = ScrollContainer.new()
-	card_scroll.position = Vector2(55, 126)
-	card_scroll.size = Vector2(590, 414)
+	var card_rect := _layout_control("DrawerRect/CardGridRect")
+	card_scroll.position = card_rect.position if card_rect != null else Vector2(24, 126)
+	card_scroll.size = card_rect.size if card_rect != null else Vector2(452, 397)
 	card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	card_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	card_scroll.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	sidebar_content.add_child(card_scroll)
 	var card_grid_holder := Control.new()
-	card_grid_holder.custom_minimum_size = Vector2(590, 420)
+	card_grid_holder.custom_minimum_size = card_scroll.size
 	card_scroll.add_child(card_grid_holder)
 	card_grid = GridContainer.new()
-	card_grid.position.x = 22
-	card_grid.custom_minimum_size.x = 546
-	card_grid.columns = 7
-	card_grid.add_theme_constant_override("h_separation", 0)
-	card_grid.add_theme_constant_override("v_separation", 0)
+	card_grid.position.x = 25
+	card_grid.custom_minimum_size.x = 402
+	card_grid.columns = 6
+	card_grid.add_theme_constant_override("h_separation", 6)
+	card_grid.add_theme_constant_override("v_separation", 6)
 	card_grid_holder.add_child(card_grid)
 
-	sidebar_content.add_child(_texture_button("上一页", Vector2(174, 538), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(-1), 14))
-	sidebar_content.add_child(_texture_button("下一页", Vector2(439, 538), Vector2(111, 26), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(1), 14))
-	card_page_label = _paper_label("", Vector2(292, 538), Vector2(140, 26), 14, Color("6d310d"))
+	var pagination_rect := _layout_control("DrawerRect/PaginationRect")
+	var pagination_position := pagination_rect.position if pagination_rect != null else Vector2(68, 526)
+	var pagination_size := pagination_rect.size if pagination_rect != null else Vector2(364, 26)
+	sidebar_content.add_child(_texture_button("上一页", pagination_position, Vector2(111, pagination_size.y), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(-1), 14))
+	sidebar_content.add_child(_texture_button("下一页", pagination_position + Vector2(pagination_size.x - 111, 0), Vector2(111, pagination_size.y), PAGE_BUTTON, PAGE_BUTTON_HOVER, _change_card_page.bind(1), 14))
+	card_page_label = _paper_label("", pagination_position + Vector2((pagination_size.x - 140) * 0.5, 0), Vector2(140, pagination_size.y), 14, Color("6d310d"))
 	card_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(card_page_label)
 	_refresh_card_page()
@@ -182,17 +217,19 @@ func _build_drawer() -> void:
 	_build_drawer_actions()
 
 func _build_drawer_actions() -> void:
+	var actions_rect := _layout_control("DrawerRect/BottomActionsRect")
+	var actions_position := actions_rect.position if actions_rect != null else Vector2(18, 558)
+	var actions_size := actions_rect.size if actions_rect != null else Vector2(464, 38)
 	var actions := [
 		{"text": "返回", "call": _back_to_menu},
 		{"text": "设置", "call": _open_level_settings},
-		{"text": "撤销", "call": _undo},
-		{"text": "重做", "call": _redo},
 		{"text": "试玩", "call": _playtest},
 		{"text": "保存", "call": _open_save_dialog},
 	]
 	for index in actions.size():
 		var item: Dictionary = actions[index]
-		var button := _texture_button(str(item["text"]), Vector2(84 + index * 98, 570), Vector2(89, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, item["call"], 14)
+		var button_width := (actions_size.x - 24.0) / 4.0
+		var button := _texture_button(str(item["text"]), actions_position + Vector2(index * (button_width + 8.0), 0), Vector2(button_width, actions_size.y), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, item["call"], 17)
 		sidebar_content.add_child(button)
 
 
@@ -203,9 +240,11 @@ func _animate_drawer_in() -> void:
 
 
 func _build_road_overlay() -> void:
+	var title_rect := _layout_control("RoadTitleRect")
+	var hint_rect := _layout_control("RoadHintRect")
 	road_title = Label.new()
-	road_title.position = Vector2(710, 70)
-	road_title.size = Vector2(345, 42)
+	road_title.position = title_rect.position if title_rect != null else Vector2(710, 70)
+	road_title.size = title_rect.size if title_rect != null else Vector2(345, 42)
 	road_title.text = "当前波次 · 道路预览"
 	road_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	road_title.add_theme_font_override("font", WORKSHOP_FONT)
@@ -215,8 +254,8 @@ func _build_road_overlay() -> void:
 	road_title.add_theme_constant_override("outline_size", 5)
 	add_child(road_title)
 	road_hint = Label.new()
-	road_hint.position = Vector2(720, 112)
-	road_hint.size = Vector2(325, 55)
+	road_hint.position = hint_rect.position if hint_rect != null else Vector2(720, 112)
+	road_hint.size = hint_rect.size if hint_rect != null else Vector2(325, 55)
 	road_hint.text = "这一波还没有僵尸\n请点击左侧卡片"
 	road_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	road_hint.add_theme_font_override("font", WORKSHOP_FONT)
@@ -228,11 +267,29 @@ func _build_road_overlay() -> void:
 
 
 func _build_timeline() -> void:
-	var add_flag := _texture_button("＋旗帜", Vector2(902, 486), Vector2(89, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _create_next_wave, 14)
-	add_flag.z_index = 120
-	add_child(add_flag)
+	var timeline_rect := _layout_control("TimelineRect")
+	var timeline_actions_rect := _layout_control("TimelineActionsRect")
+	var timeline_position := timeline_rect.position if timeline_rect != null else Vector2(830, 520)
+	var action_position := timeline_actions_rect.position if timeline_actions_rect != null else Vector2(690, 482)
+	var action_size := timeline_actions_rect.size if timeline_actions_rect != null else Vector2(312, 32)
+	var action_button_width := (action_size.x - 24.0) / 4.0
+	var timeline_actions := [
+		{"text": "撤销", "call": _undo},
+		{"text": "重做", "call": _redo},
+	]
+	for index in timeline_actions.size():
+		var item: Dictionary = timeline_actions[index]
+		var action_button := _texture_button(str(item["text"]), action_position + Vector2(index * (action_button_width + 8.0), 0), Vector2(action_button_width, action_size.y), DIALOG_BUTTON, DIALOG_BUTTON, item["call"], 14)
+		action_button.z_index = 120
+		add_child(action_button)
+	select_interval_button = _texture_button("选波间", action_position + Vector2(2.0 * (action_button_width + 8.0), 0), Vector2(action_button_width, action_size.y), DIALOG_BUTTON, DIALOG_BUTTON, _toggle_interval_selection, 14)
+	select_interval_button.z_index = 120
+	add_child(select_interval_button)
+	add_flag_button = _texture_button("＋旗帜", action_position + Vector2(3.0 * (action_button_width + 8.0), 0), Vector2(action_button_width, action_size.y), DIALOG_BUTTON, DIALOG_BUTTON, _begin_flag_placement, 14)
+	add_flag_button.z_index = 120
+	add_child(add_flag_button)
 	timeline_meter = Control.new()
-	timeline_meter.position = Vector2(830, 520)
+	timeline_meter.position = timeline_position
 	timeline_meter.size = Vector2(158, 54)
 	timeline_meter.scale = Vector2.ONE * TIMELINE_SCALE
 	timeline_meter.z_index = 120
@@ -246,6 +303,14 @@ func _build_timeline() -> void:
 	timeline_progress_bar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	timeline_progress_bar.stretch_mode = TextureRect.STRETCH_KEEP
 	timeline_progress_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	timeline_hover_bar = TextureRect.new()
+	timeline_hover_bar.position = Vector2(0, 12)
+	timeline_hover_bar.size = Vector2(0, 27)
+	timeline_hover_bar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	timeline_hover_bar.stretch_mode = TextureRect.STRETCH_KEEP
+	timeline_hover_bar.modulate = Color(0.32, 0.28, 0.22, 0.62)
+	timeline_hover_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	timeline_hover_bar.visible = false
 	var meter := TextureRect.new()
 	meter.position = Vector2(0, 12)
 	meter.size = Vector2(158, 27)
@@ -254,6 +319,7 @@ func _build_timeline() -> void:
 	meter.stretch_mode = TextureRect.STRETCH_KEEP
 	meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	timeline_meter.add_child(meter)
+	timeline_meter.add_child(timeline_hover_bar)
 	timeline_meter.add_child(timeline_progress_bar)
 	timeline_stages = Control.new()
 	timeline_stages.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -263,18 +329,15 @@ func _build_timeline() -> void:
 func _refresh_timeline() -> void:
 	_clear(timeline_stages)
 	var stages: Array = level.get("waves", [])
-	var flag_stage_indices: Array[int] = []
-	for stage_index in stages.size():
-		if str((stages[stage_index] as Dictionary).get("stageType", "flag")) == "flag":
-			flag_stage_indices.append(stage_index)
-	var flag_positions: Array[float] = []
-	var flag_count := maxi(1, flag_stage_indices.size())
-	for flag_index in flag_stage_indices.size():
-		var progress_ratio := float(flag_index + 1) / float(flag_count)
-		flag_positions.append(lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, progress_ratio))
+	var total_interval_duration := 0.0
+	for stage in stages:
+		if str((stage as Dictionary).get("stageType", "flag")) == "interval":
+			total_interval_duration += maxf(MIN_SPLIT_INTERVAL_DURATION, float((stage as Dictionary).get("duration", DEFAULT_INTERVAL_DURATION)))
+	total_interval_duration = maxf(MIN_SPLIT_INTERVAL_DURATION, total_interval_duration)
 
 	var flag_number := 0
 	var interval_number := 0
+	var elapsed_interval_duration := 0.0
 	var selected_segment_left := FLAG_CENTER_LEFT
 	var selected_segment_right := FLAG_CENTER_RIGHT
 	for stage_index in stages.size():
@@ -282,34 +345,44 @@ func _refresh_timeline() -> void:
 		var is_flag := str(stage.get("stageType", "flag")) == "flag"
 		if is_flag:
 			flag_number += 1
+			var flag_ratio := elapsed_interval_duration / total_interval_duration
+			var flag_position := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, flag_ratio)
 			var flag_button := _flag_stage_button(flag_number, stage_index == selected_wave)
-			flag_button.position = Vector2(flag_positions[flag_number - 1] - 8.0, 0)
+			flag_button.position = Vector2(flag_position - 8.0, 0)
 			if stage_index == selected_wave:
-				selected_segment_left = flag_positions[flag_number - 1]
-				selected_segment_right = FLAG_CENTER_RIGHT if flag_number == 1 else flag_positions[flag_number - 2]
-			flag_button.pressed.connect(_select_stage.bind(stage_index))
+				selected_segment_left = flag_position
+				selected_segment_right = flag_position
+			flag_button.pressed.connect(_on_flag_pressed.bind(stage_index))
 			timeline_stages.add_child(flag_button)
 		else:
 			interval_number += 1
-			var segment_start := FLAG_CENTER_RIGHT if interval_number == 1 else flag_positions[mini(interval_number - 2, flag_positions.size() - 1)]
-			var segment_end := flag_positions[mini(interval_number - 1, flag_positions.size() - 1)] if not flag_positions.is_empty() else FLAG_CENTER_LEFT
+			var interval_duration := maxf(MIN_SPLIT_INTERVAL_DURATION, float(stage.get("duration", DEFAULT_INTERVAL_DURATION)))
+			var segment_start := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, elapsed_interval_duration / total_interval_duration)
+			elapsed_interval_duration += interval_duration
+			var segment_end := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, elapsed_interval_duration / total_interval_duration)
 			var segment_left := minf(segment_start, segment_end) + 2.0
 			var segment_width := maxf(4.0, absf(segment_start - segment_end) - 4.0)
 			if stage_index == selected_wave:
 				selected_segment_left = minf(segment_start, segment_end)
 				selected_segment_right = maxf(segment_start, segment_end)
 			var interval_button := Button.new()
-			interval_button.position = Vector2(segment_left, 20.0)
-			interval_button.size = Vector2(segment_width, 12)
-			interval_button.tooltip_text = "点击编辑第 %d 个波间阶段" % interval_number
+			interval_button.position = Vector2(segment_left, 12.0)
+			interval_button.size = Vector2(segment_width, 27)
+			interval_button.tooltip_text = "波间 %d：%.0f 秒，点击设置时长" % [interval_number, interval_duration]
+			interval_button.mouse_default_cursor_shape = Control.CURSOR_CROSS if timeline_mode != TimelineMode.NORMAL else Control.CURSOR_POINTING_HAND
 			interval_button.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
 			interval_button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
 			interval_button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
-			interval_button.pressed.connect(_select_stage.bind(stage_index))
+			interval_button.mouse_entered.connect(_show_interval_preview.bind(segment_left, segment_width))
+			interval_button.mouse_exited.connect(_hide_interval_preview)
+			interval_button.pressed.connect(_on_interval_pressed.bind(stage_index, interval_button))
 			timeline_stages.add_child(interval_button)
 	if timeline_progress_bar != null:
 		selected_segment_left = clampf(selected_segment_left, 0.0, 158.0)
 		selected_segment_right = clampf(selected_segment_right, selected_segment_left, 158.0)
+		if is_equal_approx(selected_segment_left, selected_segment_right):
+			timeline_progress_bar.texture = null
+			return
 		var selected_progress_texture := AtlasTexture.new()
 		selected_progress_texture.atlas = FLAG_METER
 		selected_progress_texture.region = Rect2(selected_segment_left, 27, selected_segment_right - selected_segment_left, 27)
@@ -326,6 +399,163 @@ func _select_stage(stage_index: int) -> void:
 	selected_wave = stage_index
 	selected_zombie_key = ""
 	_refresh_wave()
+
+
+func _on_flag_pressed(stage_index: int) -> void:
+	if timeline_mode != TimelineMode.NORMAL:
+		status_label.text = "当前模式只能点击波间段，再点一次模式按钮可取消。"
+		return
+	_select_stage(stage_index)
+
+
+func _show_interval_preview(segment_left: float, segment_width: float) -> void:
+	if timeline_hover_bar == null:
+		return
+	var preview_texture := AtlasTexture.new()
+	preview_texture.atlas = FLAG_METER
+	preview_texture.region = Rect2(segment_left, 27, segment_width, 27)
+	timeline_hover_bar.position.x = segment_left
+	timeline_hover_bar.size.x = segment_width
+	timeline_hover_bar.texture = preview_texture
+	timeline_hover_bar.visible = true
+
+
+func _hide_interval_preview() -> void:
+	if timeline_hover_bar != null:
+		timeline_hover_bar.visible = false
+
+
+func _on_interval_pressed(stage_index: int, interval_button: Button) -> void:
+	if timeline_mode == TimelineMode.PLACE_FLAG:
+		var click_ratio := clampf(interval_button.get_local_mouse_position().x / maxf(1.0, interval_button.size.x), 0.0, 1.0)
+		_insert_flag_in_interval(stage_index, click_ratio)
+		return
+	if timeline_mode == TimelineMode.SELECT_INTERVAL:
+		_end_timeline_mode()
+		_select_stage(stage_index)
+		_open_interval_duration_dialog(stage_index)
+		return
+	if selected_wave != stage_index:
+		_select_stage(stage_index)
+		return
+	_select_stage(stage_index)
+	_open_interval_duration_dialog(stage_index)
+
+
+func _open_interval_duration_dialog(stage_index: int) -> void:
+	if stage_index < 0 or stage_index >= (level.get("waves", []) as Array).size():
+		return
+	var stage: Dictionary = level["waves"][stage_index]
+	if str(stage.get("stageType", "flag")) != "interval":
+		return
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "设置波间持续时间"
+	dialog.ok_button_text = "应用"
+	dialog.cancel_button_text = "取消"
+	dialog.min_size = Vector2i(360, 180)
+	var duration_input := _spin("本次波间持续时间（秒）", 2.0, 300.0, float(stage.get("duration", DEFAULT_INTERVAL_DURATION)), 1.0)
+	var duration_box := duration_input.get_parent() as VBoxContainer
+	duration_box.position = Vector2(24, 24)
+	duration_box.custom_minimum_size = Vector2(300, 80)
+	dialog.add_child(duration_box)
+	dialog.confirmed.connect(func():
+		if stage_index < (level.get("waves", []) as Array).size():
+			level["waves"][stage_index]["duration"] = float(duration_input.value)
+			_recalculate_stage_times()
+			_changed("波间时长已设为 %.0f 秒，进度条已按时长重新排布。" % duration_input.value)
+			_refresh_wave()
+		dialog.queue_free()
+	)
+	add_child(dialog)
+	dialog.popup_centered()
+	duration_input.grab_focus()
+
+
+func _begin_flag_placement() -> void:
+	if _count_stage_type("interval") == 0:
+		_create_next_wave()
+		status_label.text = "已建立默认 %d 秒波间并在末端插入旗帜。" % int(DEFAULT_INTERVAL_DURATION)
+		return
+	if timeline_mode == TimelineMode.PLACE_FLAG:
+		_end_timeline_mode()
+		status_label.text = "已取消插旗。"
+	else:
+		_end_timeline_mode()
+		timeline_mode = TimelineMode.PLACE_FLAG
+		_set_flag_cursor()
+		status_label.text = "插旗模式：请在右下角任意波间段上点击插入，再点“＋旗帜”取消。"
+	_refresh_timeline()
+
+
+func _toggle_interval_selection() -> void:
+	if timeline_mode == TimelineMode.SELECT_INTERVAL:
+		_end_timeline_mode()
+		status_label.text = "已取消选择波间。"
+	else:
+		_end_timeline_mode()
+		timeline_mode = TimelineMode.SELECT_INTERVAL
+		status_label.text = "选波间模式：现在进度条上只能选择波间，再点“选波间”取消。"
+	_refresh_timeline()
+
+
+func _set_flag_cursor() -> void:
+	if not is_instance_valid(flag_cursor_preview):
+		var flag_cursor_texture := AtlasTexture.new()
+		flag_cursor_texture.atlas = FLAG_PARTS
+		flag_cursor_texture.region = Rect2(50, 1, 25, 25)
+		flag_cursor_preview = TextureRect.new()
+		flag_cursor_preview.size = Vector2(25, 25)
+		flag_cursor_preview.texture = flag_cursor_texture
+		flag_cursor_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		flag_cursor_preview.z_index = 1000
+		add_child(flag_cursor_preview)
+	flag_cursor_preview.visible = true
+
+
+func _end_timeline_mode() -> void:
+	timeline_mode = TimelineMode.NORMAL
+	if is_instance_valid(flag_cursor_preview):
+		flag_cursor_preview.visible = false
+	_hide_interval_preview()
+
+
+func _insert_flag_in_interval(stage_index: int, visual_click_ratio: float) -> void:
+	var stages: Array = level.get("waves", [])
+	if stage_index < 0 or stage_index >= stages.size():
+		return
+	var interval: Dictionary = stages[stage_index]
+	if str(interval.get("stageType", "flag")) != "interval":
+		return
+	var total_duration := maxf(2.0 * MIN_SPLIT_INTERVAL_DURATION, float(interval.get("duration", DEFAULT_INTERVAL_DURATION)))
+	## 时间轴从右向左推进，点击越靠右代表越早。
+	var before_ratio := 1.0 - visual_click_ratio
+	var before_duration := clampf(total_duration * before_ratio, MIN_SPLIT_INTERVAL_DURATION, total_duration - MIN_SPLIT_INTERVAL_DURATION)
+	var after_duration := total_duration - before_duration
+	interval["duration"] = before_duration
+
+	var flag_number := _count_stage_type("flag") + 1
+	var flag_id := Logic.make_unique_id("wave", _all_ids())
+	var inserted_flag := Logic.make_wave(flag_id, "第 %d 波" % flag_number, 0.0, DEFAULT_FLAG_DURATION, [], "flag")
+	stages.insert(stage_index + 1, inserted_flag)
+	var interval_id := Logic.make_unique_id("interval", _all_ids())
+	var inserted_interval := Logic.make_wave(interval_id, "新波间", 0.0, after_duration, [], "interval")
+	stages.insert(stage_index + 2, inserted_interval)
+	selected_wave = stage_index + 1
+	selected_zombie_key = ""
+	_recalculate_stage_times()
+	_end_timeline_mode()
+	_snapshot()
+	DraftStore.save_autosave(level)
+	_refresh_wave()
+	status_label.text = "已在 %.0f 秒 / %.0f 秒的位置插入旗帜，前后波间已自动拆分。" % [before_duration, after_duration]
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if timeline_mode != TimelineMode.NORMAL and event.is_action_pressed("ui_cancel"):
+		_end_timeline_mode()
+		_refresh_timeline()
+		status_label.text = "已取消时间轴操作。"
+		get_viewport().set_input_as_handled()
 
 
 func _delete_current_stage() -> void:
@@ -349,13 +579,14 @@ func _delete_current_stage() -> void:
 
 func _make_zombie_card(zombie_type: int) -> Control:
 	var holder := Control.new()
-	holder.custom_minimum_size = Vector2(78, 105)
+	## 原始卡片为 50×70；当前缩放 1.235 是上一版 0.95 的 130%。
+	holder.custom_minimum_size = Vector2(62, 87)
 	var prefab: Card = zombie_card_prefabs.get(zombie_type)
 	if prefab == null:
 		return holder
 	var card := prefab.duplicate() as Card
-	card.position = Vector2(5, 5)
-	card.scale = Vector2.ONE * 1.35
+	card.position = Vector2.ZERO
+	card.scale = Vector2.ONE * 1.235
 	card.is_imitater = false
 	card.tooltip_text = "设置%s的数量" % _zombie_name(str(zombie_type))
 	card.set_process(false)
@@ -603,10 +834,10 @@ func _create_next_wave() -> void:
 		start_time = maxf(start_time, float(wave["startTime"]) + float(wave["duration"]))
 	var interval_id := Logic.make_unique_id("interval", _all_ids())
 	var interval_number := _count_stage_type("interval") + 1
-	waves.append(Logic.make_wave(interval_id, "第 %d 个波间间隔" % interval_number, start_time, 20.0, [], "interval"))
+	waves.append(Logic.make_wave(interval_id, "第 %d 个波间间隔" % interval_number, start_time, DEFAULT_INTERVAL_DURATION, [], "interval"))
 	var wave_id := Logic.make_unique_id("wave", _all_ids())
 	var flag_number := _count_stage_type("flag") + 1
-	waves.append(Logic.make_wave(wave_id, "第 %d 波" % flag_number, start_time + 20.0, 10.0, [], "flag"))
+	waves.append(Logic.make_wave(wave_id, "第 %d 波" % flag_number, start_time + DEFAULT_INTERVAL_DURATION, DEFAULT_FLAG_DURATION, [], "flag"))
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()
 	selected_wave = waves.size() - 1
@@ -743,6 +974,14 @@ func _flag_stage_button(flag_number: int, selected: bool) -> Button:
 	flag.modulate = Color("fff2a1") if selected else Color.WHITE
 	flag.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(flag)
+	button.mouse_entered.connect(func():
+		var tween := button.create_tween()
+		tween.tween_property(flag, "position:y", -3.0, 0.12)
+	)
+	button.mouse_exited.connect(func():
+		var tween := button.create_tween()
+		tween.tween_property(flag, "position:y", -3.0 if selected else 7.0, 0.12)
+	)
 	var number := _paper_label(str(flag_number), Vector2(0, 27), Vector2(40, 15), 11, Color("5b2c0b"))
 	number.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -955,6 +1194,7 @@ func _save_draft() -> void:
 
 
 func _playtest() -> void:
+	_end_timeline_mode()
 	DraftStore.save_autosave(level)
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
@@ -991,6 +1231,7 @@ func _clear(parent: Node) -> void:
 
 
 func _back_to_menu() -> void:
+	_end_timeline_mode()
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()
 	var global := get_node("/root/Global")

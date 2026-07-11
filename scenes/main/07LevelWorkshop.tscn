@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/level_workshop/level_workshop.gd" id="1_workshop"]
+[ext_resource type="Texture2D" path="res://assets/image/background/background1.jpg" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/image/Almanac/Almanac_ZombieBack.jpg" id="3_drawer"]
 
 [node name="LevelWorkshop" type="Control"]
 layout_mode = 3
@@ -10,3 +12,102 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_workshop")
+
+[node name="LayoutMarkers" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackgroundPreview" type="TextureRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = -334.0
+offset_right = 1066.0
+offset_bottom = 600.0
+mouse_filter = 2
+texture = ExtResource("2_background")
+expand_mode = 1
+
+[node name="DrawerRect" type="TextureRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 600.0
+mouse_filter = 2
+texture = ExtResource("3_drawer")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="CardGridRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 126.0
+offset_right = 476.0
+offset_bottom = 523.0
+mouse_filter = 2
+color = Color(0.2, 0.75, 1, 0.18)
+
+[node name="PaginationRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 526.0
+offset_right = 432.0
+offset_bottom = 552.0
+mouse_filter = 2
+color = Color(1, 0.75, 0.15, 0.32)
+
+[node name="BottomActionsRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 558.0
+offset_right = 482.0
+offset_bottom = 596.0
+mouse_filter = 2
+color = Color(0.35, 1, 0.35, 0.3)
+
+[node name="RoadPreviewRect" type="ColorRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = 746.0
+offset_top = 180.0
+offset_right = 1026.0
+offset_bottom = 580.0
+mouse_filter = 2
+color = Color(0.7, 0.25, 1, 0.18)
+
+[node name="RoadTitleRect" type="ColorRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = 710.0
+offset_top = 70.0
+offset_right = 1055.0
+offset_bottom = 112.0
+mouse_filter = 2
+color = Color(1, 0.9, 0.15, 0.25)
+
+[node name="RoadHintRect" type="ColorRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 112.0
+offset_right = 1045.0
+offset_bottom = 167.0
+mouse_filter = 2
+color = Color(1, 0.55, 0.15, 0.25)
+
+[node name="TimelineRect" type="ColorRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = 830.0
+offset_top = 520.0
+offset_right = 988.0
+offset_bottom = 574.0
+mouse_filter = 2
+color = Color(1, 0.2, 0.25, 0.32)
+
+[node name="TimelineActionsRect" type="ColorRect" parent="LayoutMarkers"]
+layout_mode = 0
+offset_left = 690.0
+offset_top = 482.0
+offset_right = 1002.0
+offset_bottom = 514.0
+mouse_filter = 2
+color = Color(0.2, 1, 0.85, 0.3)
