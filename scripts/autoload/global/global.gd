@@ -48,6 +48,8 @@ var game_para:ResourceLevelData
 var return_to_developer_mode := false
 ## 只有从开发者模式进入的自定义关卡或地图工坊试玩才允许应用数值调整。
 var developer_level_adjustments_active := false
+## 地图工坊当前编辑目标：normal / chessboard。
+var level_workshop_edit_mode := "normal"
 
 ## 游戏倍速
 var time_scale := 1.0

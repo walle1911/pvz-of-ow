@@ -46,6 +46,7 @@ const FLAG_CENTER_LEFT := 8.0
 const FLAG_CENTER_RIGHT := 150.0
 
 enum TimelineMode { NORMAL, PLACE_FLAG, SELECT_INTERVAL }
+enum CatalogMode { SPAWN_ZOMBIES, REWARD_CARDS }
 
 var level: Dictionary = Logic.example_level()
 var selected_wave := 0
@@ -81,6 +82,12 @@ var timeline_mode := TimelineMode.NORMAL
 var add_flag_button: TextureButton
 var select_interval_button: TextureButton
 var flag_cursor_preview: TextureRect
+var catalog_mode := CatalogMode.SPAWN_ZOMBIES
+var reward_card_order: Array[Dictionary] = []
+var plant_card_prefabs: Dictionary = {}
+var background_sprite: Sprite2D
+var reward_mode_button: TextureButton
+var background_normal_x := -334.0
 
 
 func _layout_control(path: String) -> Control:
@@ -99,6 +106,9 @@ func _ready() -> void:
 		level = recovered["level"]
 		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
+	level["workshopMode"] = Global.level_workshop_edit_mode
+	if Global.level_workshop_edit_mode == "chessboard":
+		status_label.text = "棋盘格地图工坊：可在关卡设置中调整翻地概率和奖励卡池。"
 	_force_random_lane_rules()
 	_recalculate_stage_times()
 	_snapshot(false)
@@ -123,13 +133,14 @@ func _apply_font() -> void:
 
 
 func _build_scene() -> void:
-	var background := Sprite2D.new()
-	background.texture = FRONT_LAWN
-	background.centered = false
+	background_sprite = Sprite2D.new()
+	background_sprite.texture = FRONT_LAWN
+	background_sprite.centered = false
 	var background_preview := _layout_control("BackgroundPreview")
-	background.position = background_preview.position if background_preview != null else Vector2(-334, 0)
-	background.z_index = -100
-	add_child(background)
+	background_sprite.position = background_preview.position if background_preview != null else Vector2(-334, 0)
+	background_normal_x = background_sprite.position.x
+	background_sprite.z_index = -100
+	add_child(background_sprite)
 
 	preview_root = Control.new()
 	preview_root.name = "ShowZombiePanel"
@@ -183,6 +194,10 @@ func _build_drawer() -> void:
 	status_label = _paper_label("点击卡片，设置本阶段出场数量", Vector2(24, 100), Vector2(452, 25), 16, Color("7e390f"))
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sidebar_content.add_child(status_label)
+	if Global.level_workshop_edit_mode == "chessboard":
+		stage_heading.size.x = 320
+		reward_mode_button = _texture_button("奖励卡槽", Vector2(382, 22), Vector2(92, 32), PAGE_BUTTON, PAGE_BUTTON_HOVER, _toggle_reward_catalog, 13)
+		sidebar_content.add_child(reward_mode_button)
 
 	card_scroll = ScrollContainer.new()
 	var card_rect := _layout_control("DrawerRect/CardGridRect")
@@ -600,8 +615,69 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	return holder
 
 
+func _make_reward_card(entry: Dictionary) -> Control:
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(62, 87)
+	var type_id := int(entry["id"])
+	var is_plant := bool(entry["is_plant"])
+	var prefab: Card = plant_card_prefabs.get(type_id) if is_plant else zombie_card_prefabs.get(type_id)
+	if prefab == null:
+		return holder
+	var card := prefab.duplicate() as Card
+	card.position = Vector2.ZERO
+	card.scale = Vector2.ONE * 1.235
+	card.is_imitater = false
+	card.set_process(false)
+	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
+	var selected_pool: Array = level["chessboardConfig"].get(pool_key, [])
+	var selected := selected_pool.has(type_id)
+	card.modulate = Color.WHITE if selected else Color(0.55, 0.55, 0.55, 0.72)
+	card.tooltip_text = "%s奖励%s" % ["移除" if selected else "加入", "植物卡槽" if is_plant else "友军僵尸卡槽"]
+	_force_font_recursive(card)
+	var button := card.get_node_or_null("Button") as Button
+	if button != null:
+		for connection in button.pressed.get_connections():
+			button.pressed.disconnect(connection.callable)
+		button.pressed.connect(_toggle_reward_card.bind(type_id, is_plant))
+	holder.add_child(card)
+	return holder
+
+
+func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
+	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
+	var pool: Array = level["chessboardConfig"].get(pool_key, [])
+	if pool.has(type_id):
+		pool.erase(type_id)
+	else:
+		pool.append(type_id)
+	level["chessboardConfig"][pool_key] = pool
+	_changed("奖励植物 %d 张，奖励僵尸 %d 张" % [(level["chessboardConfig"]["plantCardPool"] as Array).size(), (level["chessboardConfig"]["zombieCardPool"] as Array).size()])
+	_refresh_card_page()
+
+
+func _toggle_reward_catalog() -> void:
+	catalog_mode = CatalogMode.REWARD_CARDS if catalog_mode == CatalogMode.SPAWN_ZOMBIES else CatalogMode.SPAWN_ZOMBIES
+	current_card_page = 0
+	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
+	stage_heading.text = "奖励植物卡 + 友军僵尸卡" if show_rewards else "旗帜波僵尸"
+	var reward_button_label := reward_mode_button.get_child(0) as Label
+	if reward_button_label != null:
+		reward_button_label.text = "返回刷怪" if show_rewards else "奖励卡槽"
+	wave_title.visible = not show_rewards
+	wave_summary.visible = not show_rewards
+	road_title.visible = not show_rewards
+	road_hint.visible = not show_rewards
+	preview_root.visible = not show_rewards
+	## 奖励池编辑时把草坪主体移入右侧可视区，退出后恢复道路预览视角。
+	var target_x := background_normal_x + 334.0 if show_rewards else background_normal_x
+	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
+	status_label.text = "点击卡牌加入或移出奖励卡槽；亮色为已选择" if show_rewards else "点击卡片，设置本阶段出场数量"
+	_refresh_card_page()
+
+
 func _change_card_page(offset: int) -> void:
-	var page_count := maxi(1, ceili(float(zombie_card_order.size()) / CARDS_PER_PAGE))
+	var item_count := reward_card_order.size() if catalog_mode == CatalogMode.REWARD_CARDS else zombie_card_order.size()
+	var page_count := maxi(1, ceili(float(item_count) / CARDS_PER_PAGE))
 	current_card_page = posmod(current_card_page + offset, page_count)
 	_refresh_card_page()
 
@@ -610,12 +686,16 @@ func _refresh_card_page() -> void:
 	if card_grid == null:
 		return
 	_clear(card_grid)
-	var page_count := maxi(1, ceili(float(zombie_card_order.size()) / CARDS_PER_PAGE))
+	var item_count := reward_card_order.size() if catalog_mode == CatalogMode.REWARD_CARDS else zombie_card_order.size()
+	var page_count := maxi(1, ceili(float(item_count) / CARDS_PER_PAGE))
 	current_card_page = clampi(current_card_page, 0, page_count - 1)
 	var begin := current_card_page * CARDS_PER_PAGE
-	var end := mini(begin + CARDS_PER_PAGE, zombie_card_order.size())
+	var end := mini(begin + CARDS_PER_PAGE, item_count)
 	for index in range(begin, end):
-		card_grid.add_child(_make_zombie_card(zombie_card_order[index]))
+		if catalog_mode == CatalogMode.REWARD_CARDS:
+			card_grid.add_child(_make_reward_card(reward_card_order[index]))
+		else:
+			card_grid.add_child(_make_zombie_card(zombie_card_order[index]))
 	if card_page_label != null:
 		card_page_label.text = "%d / %d" % [current_card_page + 1, page_count]
 
@@ -721,6 +801,10 @@ func _refresh_wave() -> void:
 	var is_flag := str(wave.get("stageType", "flag")) == "flag"
 	var stage_number := _stage_number(selected_wave, str(wave.get("stageType", "flag")))
 	wave_title.text = ("第 %d 面旗帜" if is_flag else "旗帜间隔 %d") % stage_number
+	if catalog_mode == CatalogMode.REWARD_CARDS:
+		stage_heading.text = "奖励植物卡 + 友军僵尸卡"
+		_refresh_timeline()
+		return
 	stage_heading.text = "旗帜波僵尸" if is_flag else "波间阶段僵尸"
 	road_title.text = (("旗帜第 %d 波" if is_flag else "波间间隔 %d") % stage_number) + " · 道路预览"
 	road_hint.text = "这个阶段还没有僵尸\n请点击左侧卡片"
@@ -851,19 +935,58 @@ func _open_level_settings() -> void:
 	var dialog := AcceptDialog.new()
 	dialog.title = "关卡基础设置"
 	dialog.ok_button_text = "保存设置"
-	dialog.min_size = Vector2i(470, 380)
+	dialog.min_size = Vector2i(560, 650 if str(level.get("workshopMode", "normal")) == "chessboard" else 470)
 	var box := VBoxContainer.new()
 	dialog.add_child(box)
 	var name_input := _line_field(box, "关卡名称", str(level["name"]))
 	var id_input := _line_field(box, "草稿编号", str(level["id"]))
 	var sun := _spin("开局阳光", 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
 	box.add_child(sun.get_parent())
+	var sun_speed := _spin("天降阳光速度倍率（1=原速）", 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
+	box.add_child(sun_speed.get_parent())
+	var cooldown := _spin("卡片冷却时长倍率（0.5=冷却减半）", 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
+	box.add_child(cooldown.get_parent())
+	var chessboard: Dictionary = level.get("chessboardConfig", {})
+	var mine_count: SpinBox
+	var plant_probability: SpinBox
+	var zombie_card_probability: SpinBox
+	var enemy_probability: SpinBox
+	if str(level.get("workshopMode", "normal")) == "chessboard":
+		var separator := HSeparator.new()
+		box.add_child(separator)
+		var chess_title := Label.new()
+		chess_title.text = "棋盘格专属设置"
+		box.add_child(chess_title)
+		mine_count = _spin("地雷最多出现数量", 0, 45, int(chessboard.get("mineCount", 8)), 1)
+		box.add_child(mine_count.get_parent())
+		plant_probability = _spin("刷植物卡概率", 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
+		box.add_child(plant_probability.get_parent())
+		zombie_card_probability = _spin("刷友军僵尸卡概率", 0.0, 1.0, float(chessboard.get("zombieCardProbability", 0.20)), 0.01)
+		box.add_child(zombie_card_probability.get_parent())
+		enemy_probability = _spin("刷敌对僵尸概率", 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
+		box.add_child(enemy_probability.get_parent())
+		var pool_hint := Label.new()
+		pool_hint.text = "奖励卡槽请关闭设置后，点击主界面右上角“奖励卡槽”用卡牌选择。"
+		pool_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(pool_hint)
 	var seed := _spin("随机种子", 1, 2147483647, int(level["randomSeed"]), 1)
 	box.add_child(seed.get_parent())
 	dialog.confirmed.connect(func():
 		level["name"] = name_input.text
 		level["id"] = id_input.text.strip_edges()
 		level["playerConfig"]["initialSun"] = int(sun.value)
+		level["playerConfig"]["sunDropSpeed"] = float(sun_speed.value)
+		level["playerConfig"]["cooldownMultiplier"] = float(cooldown.value)
+		if str(level.get("workshopMode", "normal")) == "chessboard":
+			var probability_sum := float(plant_probability.value + zombie_card_probability.value + enemy_probability.value)
+			if probability_sum > 1.0:
+				status_label.text = "设置失败：三项概率总和不能超过 1，剩余概率用于生成地雷"
+				return
+			chessboard["mineCount"] = int(mine_count.value)
+			chessboard["plantCardProbability"] = float(plant_probability.value)
+			chessboard["zombieCardProbability"] = float(zombie_card_probability.value)
+			chessboard["enemyZombieProbability"] = float(enemy_probability.value)
+			level["chessboardConfig"] = chessboard
 		level["randomSeed"] = int(seed.value)
 		_changed("关卡设置已保存")
 		dialog.queue_free()
@@ -1047,14 +1170,31 @@ func _refresh_zombie_catalog() -> void:
 	zombie_card_prefabs.clear()
 	zombie_card_order.clear()
 	zombie_names.clear()
+	reward_card_order.clear()
+	plant_card_prefabs.clear()
 	var all_cards := get_node_or_null("/root/AllCards") as AllCardsClass
 	if all_cards == null:
 		return
 	zombie_card_prefabs = all_cards.all_zombie_card_prefabs
 	for zombie_type in zombie_card_prefabs.keys():
-		zombie_card_order.append(int(zombie_type))
+		var zombie_id := int(zombie_type)
+		if Global.level_workshop_edit_mode != "chessboard" or zombie_id >= 500:
+			zombie_card_order.append(zombie_id)
+		if Global.level_workshop_edit_mode == "chessboard" and zombie_id > 0 and zombie_id < 500:
+			reward_card_order.append({"id": zombie_id, "is_plant": false})
+	plant_card_prefabs = all_cards.all_plant_card_prefabs
+	if Global.level_workshop_edit_mode == "chessboard":
+		for plant_type in plant_card_prefabs.keys():
+			var plant_id := int(plant_type)
+			if plant_id > 0 and plant_id < 500:
+				reward_card_order.append({"id": plant_id, "is_plant": true})
 	zombie_card_order.sort_custom(func(left, right):
 		return int(all_cards.zombie_card_ids.get(left, 999999)) < int(all_cards.zombie_card_ids.get(right, 999999))
+	)
+	reward_card_order.sort_custom(func(left: Dictionary, right: Dictionary):
+		if bool(left["is_plant"]) != bool(right["is_plant"]):
+			return bool(left["is_plant"])
+		return int(left["id"]) < int(right["id"])
 	)
 	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
 	if registry != null:

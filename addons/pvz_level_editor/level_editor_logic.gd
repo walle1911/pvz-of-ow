@@ -30,7 +30,9 @@ static func example_level() -> Dictionary:
 		"id": "example_front_lawn",
 		"name": "前院防线（示例）",
 		"mapConfig": {"type": "front_lawn", "rows": 5, "columns": 9},
-		"playerConfig": {"initialSun": 150},
+		"playerConfig": {"initialSun": 150, "sunDropSpeed": 1.0, "cooldownMultiplier": 1.0},
+		"workshopMode": "normal",
+		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
 		"availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
 		"waves": [
 			make_wave("interval_1", "第一波前", 0.0, 18.0, [
@@ -93,7 +95,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "availablePlants", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -103,7 +105,16 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["mapConfig"] = map
 	var player: Dictionary = result.get("playerConfig", {})
 	player["initialSun"] = int(player.get("initialSun", 50))
+	player["sunDropSpeed"] = float(player.get("sunDropSpeed", 1.0))
+	player["cooldownMultiplier"] = float(player.get("cooldownMultiplier", 1.0))
 	result["playerConfig"] = player
+	result["workshopMode"] = str(result.get("workshopMode", "normal"))
+	var chessboard: Dictionary = result.get("chessboardConfig", {})
+	var chessboard_defaults: Dictionary = defaults["chessboardConfig"]
+	for key in chessboard_defaults:
+		if not chessboard.has(key):
+			chessboard[key] = chessboard_defaults[key].duplicate(true) if chessboard_defaults[key] is Array else chessboard_defaults[key]
+	result["chessboardConfig"] = chessboard
 	var waves: Array = result.get("waves", [])
 	if not waves.is_empty() and not waves.any(func(wave): return (wave as Dictionary).has("stageType")):
 		waves = _migrate_legacy_waves(waves)

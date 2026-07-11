@@ -1,0 +1,161 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/start_menu/adventure_mode_dialog.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://em12la0rqibq" path="res://data/PVZ_theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://parybxg7tb1k" path="res://scripts/ui/PVZ_button_base.gd" id="3_button"]
+[ext_resource type="Texture2D" uid="uid://b48l4yjq0j5mo" path="res://assets/image/ui/ui_main_game_menu/UI_BG/button_BG.png" id="4_button_texture"]
+
+[node name="AdventureModeDialog" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -185.0
+offset_right = 210.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelDialogBG"
+
+[node name="Title" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 55.0
+offset_right = 350.0
+offset_bottom = 100.0
+theme_type_variation = &"Label3"
+theme_override_font_sizes/font_size = 30
+text = "请选择冒险模式"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NormalMode" type="BaseButton" parent="Panel"]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 120.0
+offset_right = 325.0
+offset_bottom = 172.0
+script = ExtResource("3_button")
+
+[node name="Background" type="NinePatchRect" parent="Panel/NormalMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_button_texture")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 20
+
+[node name="Label" type="Label" parent="Panel/NormalMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Label3"
+text = "普通模式"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChessboardMode" type="BaseButton" parent="Panel"]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 195.0
+offset_right = 325.0
+offset_bottom = 247.0
+script = ExtResource("3_button")
+
+[node name="Background" type="NinePatchRect" parent="Panel/ChessboardMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_button_texture")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 20
+
+[node name="Label" type="Label" parent="Panel/ChessboardMode"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Label3"
+text = "棋盘格模式"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cancel" type="BaseButton" parent="Panel"]
+layout_mode = 0
+offset_left = 130.0
+offset_top = 278.0
+offset_right = 290.0
+offset_bottom = 322.0
+script = ExtResource("3_button")
+
+[node name="Background" type="NinePatchRect" parent="Panel/Cancel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_button_texture")
+patch_margin_left = 16
+patch_margin_top = 16
+patch_margin_right = 16
+patch_margin_bottom = 20
+
+[node name="Label" type="Label" parent="Panel/Cancel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"Label3"
+text = "取消"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Panel/NormalMode" to="." method="_on_normal_mode_pressed"]
+[connection signal="pressed" from="Panel/ChessboardMode" to="." method="_on_chessboard_mode_pressed"]
+[connection signal="pressed" from="Panel/Cancel" to="." method="_on_cancel_pressed"]

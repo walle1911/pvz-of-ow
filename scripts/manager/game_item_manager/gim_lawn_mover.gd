@@ -21,7 +21,9 @@ const LawnMoverSecneMap = {
 const AllLawnMoverTypeFromGameScenes = {
 	MainSceneRegistry.MainScenes.MainGameFront:[0,0,0,0,0],
 	MainSceneRegistry.MainScenes.MainGameBack:[0,0,1,1,0,0],
-	MainSceneRegistry.MainScenes.MainGameRoof:[2,2,2,2,2]
+	MainSceneRegistry.MainScenes.MainGameRoof:[2,2,2,2,2],
+	MainSceneRegistry.MainScenes.MainGameChessboardFront:[0,0,0,0,0],
+	MainSceneRegistry.MainScenes.MainGameChessboardPool:[0,0,1,1,0,0]
 }
 
 @onready var lawn_movers: Node2D = %LawnMovers

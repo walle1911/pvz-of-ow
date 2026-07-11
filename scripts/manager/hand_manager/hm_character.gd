@@ -264,7 +264,7 @@ func click_cell(plant_cell:PlantCell):
 				Zombie000Base.E_ZInitAttr.Lane:plant_cell.row_col.x,
 			}
 
-			Global.main_game.zombie_manager.create_norm_zombie(
+			var created_zombie: Zombie000Base = Global.main_game.zombie_manager.create_norm_zombie(
 				curr_card.card_zombie_type,
 				Global.main_game.zombie_manager.all_zombie_rows[plant_cell.row_col.x],
 				zombie_init_para,
@@ -274,6 +274,8 @@ func click_cell(plant_cell:PlantCell):
 				),
 				GlobalUtils.get_special_zombie_callable(curr_card.card_zombie_type, plant_cell)
 			)
+			if curr_card.is_chessboard_hypno_reward and is_instance_valid(created_zombie):
+				created_zombie.be_hypno()
 
 		## 卡片种植完成发射信号
 		curr_card.signal_card_use_end.emit()

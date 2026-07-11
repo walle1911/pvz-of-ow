@@ -55,7 +55,10 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		timeline_duration = maxf(timeline_duration, float(event.get("time", 0.0)))
 
 	var game_para := ResourceLevelData.new()
-	game_para.start_sun = int((level.get("playerConfig", {}) as Dictionary).get("initialSun", 50))
+	var player_config: Dictionary = level.get("playerConfig", {})
+	game_para.start_sun = int(player_config.get("initialSun", 50))
+	game_para.sun_drop_speed_multiplier = float(player_config.get("sunDropSpeed", 1.0))
+	game_para.card_cooldown_multiplier = float(player_config.get("cooldownMultiplier", 1.0))
 	game_para.max_wave = flag_data.size()
 	game_para.look_show_zombie = true
 	game_para.custom_spawn_schedule = schedule
@@ -63,7 +66,24 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.custom_timeline_duration = maxf(0.1, timeline_duration)
 	game_para.zombie_refresh_types = _unique_zombie_types(schedule)
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
+	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
+
+
+static func _apply_chessboard_config(game_para: ResourceLevelData, level: Dictionary) -> void:
+	if str(level.get("workshopMode", "normal")) != "chessboard":
+		return
+	var config: Dictionary = level.get("chessboardConfig", {})
+	game_para.is_chessboard_mode = true
+	game_para.game_sences = MainSceneRegistry.MainScenes.MainGameChessboardPool if game_para.game_BG == ConstLevelData.GameBg.Pool else MainSceneRegistry.MainScenes.MainGameChessboardFront
+	game_para.chessboard_mine_limit = int(config.get("mineCount", 8))
+	game_para.chessboard_plant_card_probability = float(config.get("plantCardProbability", 0.25))
+	game_para.chessboard_hypno_zombie_card_probability = float(config.get("zombieCardProbability", 0.20))
+	game_para.chessboard_enemy_zombie_probability = float(config.get("enemyZombieProbability", 0.30))
+	for value in config.get("plantCardPool", []):
+		game_para.chessboard_plant_card_pool.append(int(value) as CharacterRegistry.PlantType)
+	for value in config.get("zombieCardPool", []):
+		game_para.chessboard_zombie_card_pool.append(int(value) as CharacterRegistry.ZombieType)
 
 
 static func _unique_zombie_types(schedule: Array[Dictionary]) -> Array[CharacterRegistry.ZombieType]:

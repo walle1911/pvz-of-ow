@@ -84,6 +84,7 @@
 [ext_resource type="Script" uid="uid://bubdoydqtlc6d" path="res://scripts/start_menu/panel_create_new_user.gd" id="79_xqlaa"]
 [ext_resource type="Script" uid="uid://b6dhsamdijupk" path="res://scripts/start_menu/panel_rename_user.gd" id="81_dj5t5"]
 [ext_resource type="Script" uid="uid://cwusfudks6mhf" path="res://scripts/ui/dialog_error.gd" id="82_krdmy"]
+[ext_resource type="PackedScene" path="res://scenes/ui/adventure_mode_dialog.tscn" id="89_mode_dialog"]
 [ext_resource type="Texture2D" uid="uid://ctpsdjku0juuj" path="res://assets/image/ui/ui_start_menu/Present.png" id="83_tf8pn"]
 [ext_resource type="BitMap" uid="uid://d3xxtmghn6vi4" path="res://assets/image/ui/ui_start_menu/Present_mask.png" id="84_mpctx"]
 [ext_resource type="Texture2D" uid="uid://dygmxfnai40iw" path="res://assets/image/ui/ui_start_menu/PresentOpen.png" id="84_x7dp7"]
@@ -2605,6 +2606,8 @@ offset_top = 128.0
 offset_right = 174.0
 offset_bottom = 151.0
 text = "没做"
+
+[node name="AdventureModeDialog" parent="." instance=ExtResource("89_mode_dialog")]
 
 [node name="User" type="Control" parent="." unique_id=2121767396]
 visible = false

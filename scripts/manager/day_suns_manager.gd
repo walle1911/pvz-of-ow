@@ -31,7 +31,7 @@ func start_day_sun():
 
 	if production_timer.is_stopped():
 		change_production_interval()
-		production_timer.start(production_interval/100)
+		production_timer.start(production_interval / 100.0 / maxf(0.1, game_para.sun_drop_speed_multiplier))
 
 func pause_day_sun():
 	production_timer.paused = true
@@ -67,4 +67,4 @@ func change_production_interval():
 	else:
 		production_interval = 950 + randf_range(0,274)
 
-	production_timer.start(production_interval/100)
+	production_timer.start(production_interval / 100.0 / maxf(0.1, game_para.sun_drop_speed_multiplier))

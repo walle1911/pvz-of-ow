@@ -41,6 +41,8 @@ var is_being_attacked_by_squash_doomfist := false
 var _original_cool_time: float
 ## 棋盘格正式模式翻地奖励卡：允许绕过 OW 紫卡前置规则。
 var is_chessboard_reveal_reward := false
+## 棋盘格翻地获得的友军僵尸卡，落地后立即走现有魅惑流程。
+var is_chessboard_hypno_reward := false
 
 func _ready() -> void:
 	super()

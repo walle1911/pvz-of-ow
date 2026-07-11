@@ -7,6 +7,8 @@ enum MainScenes{
 	MainGameFront,
 	MainGameBack,
 	MainGameRoof,
+	MainGameChessboardFront,
+	MainGameChessboardPool,
 
 	StartMenu = 100,
 	ChooseLevelAdventure,
@@ -27,6 +29,8 @@ enum MainScenes{
 	MainScenes.MainGameFront: "res://scenes/main/MainGame01Front.tscn",
 	MainScenes.MainGameBack: "res://scenes/main/MainGame02Back.tscn",
 	MainScenes.MainGameRoof: "res://scenes/main/MainGame03Roof.tscn",
+	MainScenes.MainGameChessboardFront: "res://scenes/main/chessboard_mode/ChessboardFront.tscn",
+	MainScenes.MainGameChessboardPool: "res://scenes/main/chessboard_mode/ChessboardPool.tscn",
 
 	MainScenes.StartMenu: "res://scenes/main/01StartMenu.tscn",
 	MainScenes.ChooseLevelAdventure: "res://scenes/main/02AdventureChooesLevel.tscn",
@@ -47,4 +51,6 @@ enum MainScenes{
 	MainScenes.MainGameFront:CharacterRegistry.ZombieRowType.Land,
 	MainScenes.MainGameBack:CharacterRegistry.ZombieRowType.Both,
 	MainScenes.MainGameRoof:CharacterRegistry.ZombieRowType.Land,
+	MainScenes.MainGameChessboardFront:CharacterRegistry.ZombieRowType.Land,
+	MainScenes.MainGameChessboardPool:CharacterRegistry.ZombieRowType.Both,
 }

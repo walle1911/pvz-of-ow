@@ -118,6 +118,10 @@ var custom_timeline_duration := 0.0
 @export_range(1, 15) var max_choosed_card_num: int = 10
 ## 开始阳光数量
 @export var start_sun: int = 50
+## 天降阳光间隔倍率；1 为原速，2 表示掉落速度为两倍。
+@export_range(0.1, 10.0, 0.1) var sun_drop_speed_multiplier := 1.0
+## 所有战斗卡片冷却时长倍率；1 为原冷却，0.5 表示冷却时间减半。
+@export_range(0.0, 10.0, 0.05) var card_cooldown_multiplier := 1.0
 ## 预选卡片列表、预选卡片不能在选卡时取消
 @export var pre_choosed_card_list_plant: Array[CharacterRegistry.PlantType] = []
 @export var pre_choosed_card_list_zombie: Array[CharacterRegistry.ZombieType] = []
@@ -140,6 +144,15 @@ var custom_timeline_duration := 0.0
 @export var is_mode_column := false
 ## 是否有铲子
 @export var is_shovel := true
+
+@export_group("棋盘格模式参数")
+@export var is_chessboard_mode := false
+@export_range(0, 45, 1) var chessboard_mine_limit := 8
+@export_range(0.0, 1.0, 0.01) var chessboard_plant_card_probability := 0.25
+@export_range(0.0, 1.0, 0.01) var chessboard_hypno_zombie_card_probability := 0.20
+@export_range(0.0, 1.0, 0.01) var chessboard_enemy_zombie_probability := 0.30
+@export var chessboard_plant_card_pool: Array[CharacterRegistry.PlantType] = []
+@export var chessboard_zombie_card_pool: Array[CharacterRegistry.ZombieType] = []
 #endregion
 
 #region 罐子参数

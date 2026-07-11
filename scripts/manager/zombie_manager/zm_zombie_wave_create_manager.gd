@@ -15,6 +15,8 @@ var range_num_bungi:Vector2i = Vector2i(3,5)
 
 ## 定义每个僵尸的战力值
 const zombie_power = {
+	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 5,
+	CharacterRegistry.ZombieType.Z013ZomboniShion: 7,
 	CharacterRegistry.ZombieType.Z500Norm: 1,		# 普僵战力
 	CharacterRegistry.ZombieType.Z501Flag: 1,		# 旗帜战力
 	CharacterRegistry.ZombieType.Z502Cone: 2,		# 路障战力
@@ -41,6 +43,7 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z521Ladder: 4,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 5,		# 投篮
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 10,	# 伽刚特尔
+	CharacterRegistry.ZombieType.Z025GargantuarAshe: 10,
 	CharacterRegistry.ZombieType.Z524Imp: 1,			# 小鬼
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 3,	# 豌豆射手僵尸(远程)
 }
@@ -48,6 +51,8 @@ const zombie_power = {
 ## 创建 zombie_weights 字典，存储初始权重,普僵权重会修改，
 var zombie_weights:Dictionary = zombie_weights_ori.duplicate_deep()
 const zombie_weights_ori = {
+	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 1000,
+	CharacterRegistry.ZombieType.Z013ZomboniShion: 2000,
 	CharacterRegistry.ZombieType.Z500Norm: 4000,			# 普僵权重
 	#CharacterRegistry.ZombieType.Z501Flag: 0,			# 旗帜权重
 	CharacterRegistry.ZombieType.Z502Cone: 4000,			# 路障权重
@@ -74,6 +79,7 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 1500,	# 伽刚特尔
+	CharacterRegistry.ZombieType.Z025GargantuarAshe: 1500,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 1500,	# 豌豆射手僵尸
 	#CharacterRegistry.ZombieType.Z524Imp: 0,		# 小鬼
 }

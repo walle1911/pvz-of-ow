@@ -118,6 +118,8 @@ func card_slot_update_main_game():
 			#card_slot_container.add_child(card_slot_battle)
 			card_slot_battle.reparent(card_slot_container)
 			card_slot_battle.main_game_refresh_card()
+			for card: Card in card_slot_battle.curr_cards:
+				card.card_change_cool_time(card.cool_time * maxf(0.0, game_para.card_cooldown_multiplier))
 			## 测试模式卡片没有冷却
 			if Global.main_game.is_test:
 				for card in card_slot_battle.curr_cards:

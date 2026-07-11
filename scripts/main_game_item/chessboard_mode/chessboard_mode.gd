@@ -36,9 +36,16 @@ var reveal_material: ShaderMaterial
 var direct_click_armed: Dictionary[PlantCell, bool] = {}
 var ow_plant_candidates: Array[CharacterRegistry.PlantType] = []
 var ow_zombie_candidates: Array[CharacterRegistry.ZombieType] = []
+var hypno_zombie_card_candidates: Array[CharacterRegistry.ZombieType] = []
+var spawned_mine_count := 0
 
 
 func _ready() -> void:
+	var config := Global.main_game.game_para
+	if config.is_chessboard_mode:
+		plant_card_probability = config.chessboard_plant_card_probability
+		zombie_probability = config.chessboard_enemy_zombie_probability
+		potato_mine_probability = maxf(0.0, 1.0 - plant_card_probability - config.chessboard_hypno_zombie_card_probability - zombie_probability)
 	mask_image = Image.create(MASK_SIZE.x, MASK_SIZE.y, false, Image.FORMAT_L8)
 	mask_image.fill(Color.BLACK)
 	mask_texture = ImageTexture.create_from_image(mask_image)
@@ -69,6 +76,13 @@ func _init_ow_result_candidates() -> void:
 		for zombie_type: CharacterRegistry.ZombieType in Global.global_game_state.curr_zombie:
 			if int(zombie_type) > 0 and int(zombie_type) < 500:
 				ow_zombie_candidates.append(zombie_type)
+	var config := Global.main_game.game_para
+	if not config.chessboard_plant_card_pool.is_empty():
+		ow_plant_candidates.assign(config.chessboard_plant_card_pool)
+	if not config.chessboard_zombie_card_pool.is_empty():
+		hypno_zombie_card_candidates.assign(config.chessboard_zombie_card_pool)
+	else:
+		hypno_zombie_card_candidates.assign(ow_zombie_candidates)
 
 
 func _has_pool_cells() -> bool:
@@ -232,16 +246,35 @@ func _is_lawn_green(color: Color) -> bool:
 
 
 func _create_random_cell_result(cell: PlantCell) -> void:
-	var total := plant_card_probability + zombie_probability + potato_mine_probability
+	var hypno_probability := Global.main_game.game_para.chessboard_hypno_zombie_card_probability
+	var mine_probability := potato_mine_probability if spawned_mine_count < Global.main_game.game_para.chessboard_mine_limit else 0.0
+	var total := plant_card_probability + hypno_probability + zombie_probability + mine_probability
 	if total <= 0.0:
 		return
 	var roll := randf() * total
 	if roll < plant_card_probability:
 		_drop_random_plant_card(cell)
-	elif roll < plant_card_probability + zombie_probability:
+	elif roll < plant_card_probability + hypno_probability:
+		_drop_random_hypno_zombie_card(cell)
+	elif roll < plant_card_probability + hypno_probability + zombie_probability:
 		_spawn_level_zombie(cell)
 	else:
+		spawned_mine_count += 1
 		_spawn_mature_cross_potato_mine(cell)
+
+
+func _drop_random_hypno_zombie_card(cell: PlantCell) -> void:
+	if hypno_zombie_card_candidates.is_empty():
+		return
+	var zombie_type: CharacterRegistry.ZombieType = hypno_zombie_card_candidates.pick_random()
+	var temp_card_para := {
+		CardManager.E_TempCardParaAttr.ZombieType: zombie_type,
+		CardManager.E_TempCardParaAttr.GlobalPos: cell.get_global_rect().get_center(),
+		CardManager.E_TempCardParaAttr.ExistTime: 12.0,
+	}
+	var card := Global.main_game.card_manager.create_temp_card(temp_card_para)
+	if card != null:
+		card.is_chessboard_hypno_reward = true
 
 
 func _on_cell_plant_created(_cell: PlantCell, _plant_type: CharacterRegistry.PlantType, bound_cell: PlantCell) -> void:

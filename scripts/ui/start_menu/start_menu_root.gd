@@ -19,10 +19,12 @@ const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_m
 @onready var developer_button_4: TextureButton = $BG_Right/Menu/DeveloperMenu/Button4
 @onready var level_workshop_button: TextureButton = $BG_Right/Menu/LevelWorkshopButton
 @onready var developer_mode_label: Label = $BG_Right/Menu/LevelWorkshopButton/Label
+@onready var adventure_mode_dialog = $AdventureModeDialog
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
 var developer_button_hover_tweens: Dictionary = {}
+var mode_dialog_context := "adventure"
 
 @export_group("按钮对齐预览")
 @export var show_both_menus_for_alignment := false:
@@ -78,6 +80,8 @@ func _ready() -> void:
 
 	## 确保回到主菜单时鼠标可见（防止从锤子关等模式返回后鼠标残隐）
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	adventure_mode_dialog.normal_mode_selected.connect(_start_normal_adventure)
+	adventure_mode_dialog.chessboard_mode_selected.connect(_start_chessboard_adventure)
 
 func _apply_level_workshop_button_transform() -> void:
 	level_workshop_button.position = level_workshop_button_position
@@ -173,16 +177,40 @@ func _unrealized():
 func _on_button_1_pressed() -> void:
 	Global.game_para = null
 	Global.developer_level_adjustments_active = developer_mode
-	var target_scene := MainSceneRegistry.MainScenes.ChooseLevelCustom if developer_mode else MainSceneRegistry.MainScenes.ChooseLevelAdventure
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[target_scene])
+	if developer_mode:
+		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
+		return
+	mode_dialog_context = "adventure"
+	adventure_mode_dialog.configure("请选择冒险模式", "普通模式", "棋盘格模式")
+	adventure_mode_dialog.appear()
+
+
+func _start_normal_adventure() -> void:
+	if mode_dialog_context == "workshop":
+		Global.level_workshop_edit_mode = "normal"
+		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+		return
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
+
+
+func _start_chessboard_adventure() -> void:
+	if mode_dialog_context == "workshop":
+		Global.level_workshop_edit_mode = "chessboard"
+		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+		return
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.MainGameChessboardFront])
 
 
 ## 迷你游戏
 func _on_button_2_pressed() -> void:
 	Global.game_para = null
 	Global.developer_level_adjustments_active = false
-	var target_scene := MainSceneRegistry.MainScenes.LevelWorkshop if developer_mode else MainSceneRegistry.MainScenes.ChooseLevelMiniGame
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[target_scene])
+	if developer_mode:
+		mode_dialog_context = "workshop"
+		adventure_mode_dialog.configure("请选择地图工坊", "编辑普通模式", "编辑棋盘格模式")
+		adventure_mode_dialog.appear()
+		return
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelMiniGame])
 
 ## 解密模式
 func _on_button_3_pressed() -> void:
