@@ -35,16 +35,16 @@ static func example_level() -> Dictionary:
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
 		"availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
 		"waves": [
-			make_wave("interval_1", "第一波前", 0.0, 18.0, [
+			make_wave("interval_1", "第一波前", 0.0, 28.0, [
 				make_group("group_1", "normal", 8, 1.0, "fixed", 1.6, "random", [1, 1, 1, 1, 1]),
 			], "interval"),
-			make_wave("wave_1", "第一大波", 18.0, 10.0, [
+			make_wave("wave_1", "第一大波", 28.0, 10.0, [
 				make_group("group_2", "conehead", 2, 1.0, "fixed", 2.0, "weighted", [2, 1, 2, 1, 2]),
 			], "flag"),
-			make_wave("interval_2", "第二波前", 28.0, 18.0, [
+			make_wave("interval_2", "第二波前", 38.0, 28.0, [
 				make_group("group_3", "conehead", 2, 1.0, "fixed", 3.0, "random", [1, 1, 1, 1, 1]),
 			], "interval"),
-			make_wave("wave_2", "最终大波", 46.0, 10.0, [
+			make_wave("wave_2", "最终大波", 66.0, 10.0, [
 				make_group("group_4", "buckethead", 2, 1.0, "fixed", 3.0, "fixed", [1, 0, 0, 0, 0]),
 			], "flag"),
 		],
@@ -214,8 +214,7 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 				issues.append(issue("error", "速度倍率必须大于 0", path + "/speedMultiplier"))
 			if int(group.get("maxAlive", 0)) < 1:
 				issues.append(issue("error", "同屏上限必须大于 0", path + "/maxAlive"))
-			if _latest_spawn_time(group) > float(wave.get("duration", 0.0)):
-				issues.append(issue("error", "刷怪时间超过当前阶段，请延长阶段或缩短刷怪间隔", path))
+			## 动态波次会等待本阶段配置的僵尸全部出场，阶段 duration 不再作为推进截止时间。
 	return issues
 
 

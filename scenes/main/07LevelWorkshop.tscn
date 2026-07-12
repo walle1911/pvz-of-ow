@@ -1,10 +1,16 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://bmedxht4vvkwe"]
 
-[ext_resource type="Script" path="res://scripts/ui/level_workshop/level_workshop.gd" id="1_workshop"]
-[ext_resource type="Texture2D" path="res://assets/image/background/background1.jpg" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/image/Almanac/Almanac_ZombieBack.jpg" id="3_drawer"]
+[ext_resource type="Script" uid="uid://c5gjit3r1cysp" path="res://scripts/ui/level_workshop/level_workshop.gd" id="1_workshop"]
+[ext_resource type="Texture2D" uid="uid://uh50cdkqdl67" path="res://assets/image/background/background1.jpg" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://bagfkp2e8yej3" path="res://assets/image/Almanac/Almanac_ZombieBack.jpg" id="3_drawer"]
+[ext_resource type="FontFile" uid="uid://dqb8lum530s2f" path="res://assets/fonts/方正少儿_GBK.ttf" id="4_font"]
+[ext_resource type="Texture2D" uid="uid://om7aubyyu3le" path="res://assets/image/ui/ui_level/SeedChooser_Button2.png" id="5_page"]
+[ext_resource type="Texture2D" uid="uid://cx854vkq3n8gs" path="res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png" id="6_page_hover"]
+[ext_resource type="Texture2D" uid="uid://cqdma5cmebu84" path="res://assets/image/Almanac/Almanac_CloseButton.png" id="7_close"]
+[ext_resource type="Texture2D" uid="uid://gm7pwyw5fmdc" path="res://assets/image/Almanac/Almanac_CloseButtonHighlight.png" id="8_close_hover"]
+[ext_resource type="Texture2D" uid="uid://blge6mwmus5fv" path="res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2.png" id="9_dialog_button"]
 
-[node name="LevelWorkshop" type="Control"]
+[node name="LevelWorkshop" type="Control" unique_id=738736573]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -13,7 +19,323 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_workshop")
 
-[node name="LayoutMarkers" type="Control" parent="."]
+[node name="BackgroundSprite" type="Sprite2D" parent="." unique_id=564380938]
+z_index = -100
+position = Vector2(-334, 0)
+texture = ExtResource("2_background")
+centered = false
+
+[node name="AlmanacDrawer" type="Control" parent="." unique_id=645526292]
+z_index = 100
+anchors_preset = 0
+offset_right = 500.0
+offset_bottom = 600.0
+
+[node name="Paper" type="TextureRect" parent="AlmanacDrawer" unique_id=952177002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_drawer")
+expand_mode = 1
+
+[node name="Content" type="Control" parent="AlmanacDrawer" unique_id=279892969]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StageHeading" type="Label" parent="AlmanacDrawer/Content" unique_id=700600305]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 25.0
+offset_right = 433.0
+offset_bottom = 67.0
+theme_override_colors/font_color = Color(0.905882, 0.894118, 0.819608, 1)
+theme_override_colors/font_outline_color = Color(0.145098, 0.14902, 0.231373, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 27
+text = "旗帜波僵尸"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RewardModeButton" type="TextureButton" parent="AlmanacDrawer/Content" unique_id=1425700168]
+layout_mode = 0
+offset_left = 377.0
+offset_top = 29.0
+offset_right = 469.0
+offset_bottom = 61.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/RewardModeButton" unique_id=258896564]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 13
+text = "奖励卡槽"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WaveTitle" type="Label" parent="AlmanacDrawer/Content" unique_id=1980685793]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 92.0
+offset_right = 204.0
+offset_bottom = 120.0
+theme_override_colors/font_color = Color(0.427451, 0.192157, 0.0509804, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 19
+text = "第 1 面旗帜"
+vertical_alignment = 1
+
+[node name="WaveSummary" type="Label" parent="AlmanacDrawer/Content" unique_id=995911449]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 92.0
+offset_right = 476.0
+offset_bottom = 120.0
+theme_override_colors/font_color = Color(0.427451, 0.192157, 0.0509804, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "动态推进　共 0 只"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="AlmanacDrawer/Content" unique_id=539133056]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 118.0
+offset_right = 476.0
+offset_bottom = 143.0
+theme_override_colors/font_color = Color(0.494118, 0.223529, 0.0588235, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 16
+text = "点击卡片，设置本阶段出场数量"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CardScroll" type="ScrollContainer" parent="AlmanacDrawer/Content" unique_id=1502607733]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 144.0
+offset_right = 476.0
+offset_bottom = 523.0
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
+
+[node name="CardGridHolder" type="Control" parent="AlmanacDrawer/Content/CardScroll" unique_id=535910229]
+custom_minimum_size = Vector2(452, 379)
+layout_mode = 2
+
+[node name="CardGrid" type="GridContainer" parent="AlmanacDrawer/Content/CardScroll/CardGridHolder" unique_id=1189887815]
+custom_minimum_size = Vector2(402, 0)
+layout_mode = 0
+offset_left = 25.0
+offset_right = 427.0
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 6
+
+[node name="Pagination" type="Control" parent="AlmanacDrawer/Content" unique_id=1705426131]
+anchors_preset = 0
+offset_left = 68.0
+offset_top = 526.0
+offset_right = 432.0
+offset_bottom = 552.0
+
+[node name="PreviousButton" type="TextureButton" parent="AlmanacDrawer/Content/Pagination" unique_id=1603795307]
+layout_mode = 0
+offset_right = 111.0
+offset_bottom = 26.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/Pagination/PreviousButton" unique_id=199151351]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "上一页"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PageLabel" type="Label" parent="AlmanacDrawer/Content/Pagination" unique_id=936737541]
+layout_mode = 0
+offset_left = 112.0
+offset_right = 252.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.427451, 0.192157, 0.0509804, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "1 / 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextButton" type="TextureButton" parent="AlmanacDrawer/Content/Pagination" unique_id=39578579]
+layout_mode = 0
+offset_left = 253.0
+offset_right = 364.0
+offset_bottom = 26.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/Pagination/NextButton" unique_id=1139753145]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "下一页"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomActions" type="Control" parent="AlmanacDrawer/Content" unique_id=113245343]
+anchors_preset = 0
+offset_left = 18.0
+offset_top = 558.0
+offset_right = 482.0
+offset_bottom = 596.0
+
+[node name="BackButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=252548313]
+layout_mode = 0
+offset_right = 110.0
+offset_bottom = 38.0
+texture_normal = ExtResource("7_close")
+texture_pressed = ExtResource("8_close_hover")
+texture_hover = ExtResource("8_close_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/BackButton" unique_id=2115900844]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 17
+text = "返回"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SettingsButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=1055685604]
+layout_mode = 0
+offset_left = 118.0
+offset_right = 228.0
+offset_bottom = 38.0
+texture_normal = ExtResource("7_close")
+texture_pressed = ExtResource("8_close_hover")
+texture_hover = ExtResource("8_close_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/SettingsButton" unique_id=1067993827]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 17
+text = "设置"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlaytestButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=338472046]
+layout_mode = 0
+offset_left = 236.0
+offset_right = 346.0
+offset_bottom = 38.0
+texture_normal = ExtResource("7_close")
+texture_pressed = ExtResource("8_close_hover")
+texture_hover = ExtResource("8_close_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/PlaytestButton" unique_id=2107615440]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 17
+text = "试玩"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SaveButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=817281907]
+layout_mode = 0
+offset_left = 354.0
+offset_right = 464.0
+offset_bottom = 38.0
+texture_normal = ExtResource("7_close")
+texture_pressed = ExtResource("8_close_hover")
+texture_hover = ExtResource("8_close_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/SaveButton" unique_id=38936083]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 17
+text = "保存"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ShowZombiePanel" type="Control" parent="." unique_id=1287638348]
+z_index = 50
+y_sort_enabled = true
+anchors_preset = 0
+offset_left = 746.0
+offset_top = 180.0
+offset_right = 1026.0
+offset_bottom = 580.0
+mouse_filter = 2
+
+[node name="RoadOverlay" type="Control" parent="." unique_id=298610743]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,92 +344,192 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BackgroundPreview" type="TextureRect" parent="LayoutMarkers"]
-layout_mode = 0
-offset_left = -334.0
-offset_right = 1066.0
-offset_bottom = 600.0
-mouse_filter = 2
-texture = ExtResource("2_background")
-expand_mode = 1
-
-[node name="DrawerRect" type="TextureRect" parent="LayoutMarkers"]
-layout_mode = 0
-offset_right = 500.0
-offset_bottom = 600.0
-mouse_filter = 2
-texture = ExtResource("3_drawer")
-expand_mode = 1
-stretch_mode = 0
-
-[node name="CardGridRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
-layout_mode = 0
-offset_left = 24.0
-offset_top = 126.0
-offset_right = 476.0
-offset_bottom = 523.0
-mouse_filter = 2
-color = Color(0.2, 0.75, 1, 0.18)
-
-[node name="PaginationRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
-layout_mode = 0
-offset_left = 68.0
-offset_top = 526.0
-offset_right = 432.0
-offset_bottom = 552.0
-mouse_filter = 2
-color = Color(1, 0.75, 0.15, 0.32)
-
-[node name="BottomActionsRect" type="ColorRect" parent="LayoutMarkers/DrawerRect"]
-layout_mode = 0
-offset_left = 18.0
-offset_top = 558.0
-offset_right = 482.0
-offset_bottom = 596.0
-mouse_filter = 2
-color = Color(0.35, 1, 0.35, 0.3)
-
-[node name="RoadPreviewRect" type="ColorRect" parent="LayoutMarkers"]
-layout_mode = 0
-offset_left = 746.0
-offset_top = 180.0
-offset_right = 1026.0
-offset_bottom = 580.0
-mouse_filter = 2
-color = Color(0.7, 0.25, 1, 0.18)
-
-[node name="RoadTitleRect" type="ColorRect" parent="LayoutMarkers"]
+[node name="RoadTitle" type="Label" parent="RoadOverlay" unique_id=1241342910]
 layout_mode = 0
 offset_left = 710.0
 offset_top = 70.0
 offset_right = 1055.0
 offset_bottom = 112.0
-mouse_filter = 2
-color = Color(1, 0.9, 0.15, 0.25)
+theme_override_colors/font_color = Color(1, 0.941176, 0.658824, 1)
+theme_override_colors/font_outline_color = Color(0.14902, 0.203922, 0.12549, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 21
+text = "当前波次 · 道路预览"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="RoadHintRect" type="ColorRect" parent="LayoutMarkers"]
+[node name="RoadHint" type="Label" parent="RoadOverlay" unique_id=1423426929]
 layout_mode = 0
 offset_left = 720.0
 offset_top = 112.0
 offset_right = 1045.0
 offset_bottom = 167.0
-mouse_filter = 2
-color = Color(1, 0.55, 0.15, 0.25)
+theme_override_colors/font_color = Color(0.901961, 0.937255, 0.854902, 1)
+theme_override_colors/font_outline_color = Color(0.14902, 0.203922, 0.12549, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 17
+text = "这一波还没有僵尸
+请点击左侧卡片"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="TimelineRect" type="ColorRect" parent="LayoutMarkers"]
-layout_mode = 0
-offset_left = 830.0
-offset_top = 520.0
-offset_right = 988.0
-offset_bottom = 574.0
-mouse_filter = 2
-color = Color(1, 0.2, 0.25, 0.32)
+[node name="TimelineActions" type="Control" parent="." unique_id=694697979]
+z_index = 120
+anchors_preset = 0
+offset_left = 749.0
+offset_top = 557.0
+offset_right = 1061.0
+offset_bottom = 589.0
 
-[node name="TimelineActionsRect" type="ColorRect" parent="LayoutMarkers"]
+[node name="UndoButton" type="TextureButton" parent="TimelineActions" unique_id=1174994905]
 layout_mode = 0
-offset_left = 690.0
-offset_top = 482.0
-offset_right = 1002.0
-offset_bottom = 514.0
+offset_left = 26.0
+offset_right = 98.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/UndoButton" unique_id=1359629698]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "撤销"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeleteButton2" type="TextureButton" parent="TimelineActions" unique_id=839325897]
+visible = false
+layout_mode = 0
+offset_left = 98.0
+offset_right = 170.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/DeleteButton2" unique_id=470757107]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "删除"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DeleteButton" type="TextureButton" parent="TimelineActions" unique_id=1216140198]
+layout_mode = 0
+offset_left = 170.0
+offset_right = 242.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/DeleteButton" unique_id=1145463684]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "删除"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResetButton2" type="TextureButton" parent="TimelineActions" unique_id=462291858]
+visible = false
+layout_mode = 0
+offset_left = 170.0
+offset_right = 242.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/ResetButton2" unique_id=344959369]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "重置"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResetButton" type="TextureButton" parent="TimelineActions" unique_id=402720337]
+layout_mode = 0
+offset_left = 98.0
+offset_right = 170.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/ResetButton" unique_id=210635463]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "重置"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AddFlagButton" type="TextureButton" parent="TimelineActions" unique_id=1808157331]
+layout_mode = 0
+offset_left = 240.0
+offset_right = 312.0
+offset_bottom = 32.0
+texture_normal = ExtResource("9_dialog_button")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TimelineActions/AddFlagButton" unique_id=1283214088]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 14
+text = "＋旗帜"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LayoutMarkers" type="Control" parent="." unique_id=1810657174]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-color = Color(0.2, 1, 0.85, 0.3)
+
+[node name="TimelineRect" type="Control" parent="LayoutMarkers" unique_id=1859447218]
+anchors_preset = 0
+offset_left = 777.0
+offset_top = 502.5
+offset_right = 1062.0
+offset_bottom = 556.5

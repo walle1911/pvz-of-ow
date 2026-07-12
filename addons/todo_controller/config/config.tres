@@ -384,6 +384,7 @@ script_list_meta = {
 "res://scripts/ui/numerical_editor/numerical_editor.gd": [-1, -1],
 "res://scripts/ui/numerical_editor/numerical_editor_localization.gd": [-1, -1],
 "res://scripts/ui/reminder_information.gd": [-1, -1],
+"res://scripts/ui/start_menu/adventure_mode_dialog.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_option_dialog.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_root.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/canvas_layer_control.gd": [-1, -1],

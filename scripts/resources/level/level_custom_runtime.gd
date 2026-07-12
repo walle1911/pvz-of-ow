@@ -13,7 +13,7 @@ const ZOMBIE_TYPE_IDS := {
 }
 
 
-## 把工坊 JSON 转为主游戏现有的 ResourceLevelData，并保留每只僵尸的绝对出场时间与路线。
+## 把工坊 JSON 转为主游戏现有的 ResourceLevelData，并生成逐阶段的相对刷怪计划。
 static func build_game_para(source: Dictionary) -> Dictionary:
 	var parsed := LevelJsonRuntimeScript.from_dictionary(source)
 	if not parsed["ok"]:
@@ -27,13 +27,23 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	if source_schedule.is_empty():
 		return _failure(level, "关卡中至少需要一只僵尸")
 	var stage_indexes: Dictionary = {}
+	var stage_start_times: Dictionary = {}
+	var stage_schedule: Array[Dictionary] = []
 	var flag_data: Array[Dictionary] = []
 	var timeline_duration := 0.0
 	var flag_count := 0
 	for stage_index in waves.size():
 		var stage: Dictionary = waves[stage_index]
-		stage_indexes[str(stage.get("id", ""))] = stage_index
+		var stage_id := str(stage.get("id", ""))
+		stage_indexes[stage_id] = stage_index
 		var stage_start := float(stage.get("startTime", 0.0))
+		stage_start_times[stage_id] = stage_start
+		stage_schedule.append({
+			"stage_index": stage_index,
+			"stage_type": str(stage.get("stageType", "flag")),
+			"name": str(stage.get("name", "第 %d 阶段" % (stage_index + 1))),
+			"events": [] as Array[Dictionary],
+		})
 		timeline_duration = maxf(timeline_duration, stage_start + float(stage.get("duration", 0.0)))
 		if str(stage.get("stageType", "flag")) == "flag":
 			flag_count += 1
@@ -46,12 +56,18 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		var zombie_type := _zombie_type_id(event.get("zombieType", "500"))
 		if not CharacterRegistry.ZombieInfo.has(zombie_type):
 			return _failure(level, "僵尸类型 %d 未在角色注册表中登记" % zombie_type)
-		schedule.append({
+		var stage_index := int(stage_indexes.get(str(event.get("waveId", "")), 0))
+		var runtime_event := {
 			"time": float(event.get("time", 0.0)),
 			"zombie_type": zombie_type,
 			"lane": maxi(0, int(event.get("lane", 1)) - 1),
-			"stage_index": int(stage_indexes.get(str(event.get("waveId", "")), 0)),
-		})
+			"stage_index": stage_index,
+		}
+		schedule.append(runtime_event)
+		var stage_id := str(event.get("waveId", ""))
+		var relative_event: Dictionary = runtime_event.duplicate()
+		relative_event["time"] = maxf(0.0, float(event.get("time", 0.0)) - float(stage_start_times.get(stage_id, 0.0)))
+		(stage_schedule[stage_index]["events"] as Array).append(relative_event)
 		timeline_duration = maxf(timeline_duration, float(event.get("time", 0.0)))
 
 	var game_para := ResourceLevelData.new()
@@ -62,6 +78,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.max_wave = flag_data.size()
 	game_para.look_show_zombie = true
 	game_para.custom_spawn_schedule = schedule
+	game_para.custom_stage_schedule = stage_schedule
 	game_para.custom_flag_data = flag_data
 	game_para.custom_timeline_duration = maxf(0.1, timeline_duration)
 	game_para.zombie_refresh_types = _unique_zombie_types(schedule)

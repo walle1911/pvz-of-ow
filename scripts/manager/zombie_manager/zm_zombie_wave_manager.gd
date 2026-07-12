@@ -40,6 +40,8 @@ var curr_wave := -1
 var progress_bar_segment_every_wave:float
 ## 每段根据当前波次时间，每秒多长
 var progress_bar_segment_mini_every_sec:float
+var custom_stage_health_totals: Dictionary = {}
+var custom_stage_health_losses: Dictionary = {}
 
 ## 波次刷新信号,给zombie_manager,删除魅惑僵尸，更新是否为最后一波
 signal signal_wave_refresh(is_end_wave:bool)
@@ -68,7 +70,7 @@ func init_zombie_wave_manager(game_para:ResourceLevelData):
 	else:
 		var flag_progresses: Array[float] = []
 		for flag_data in game_para.custom_flag_data:
-			flag_progresses.append(float(flag_data.get("time", 0.0)) / maxf(0.1, game_para.custom_timeline_duration) * 100.0)
+			flag_progresses.append(_custom_stage_progress(game_para.custom_stage_schedule, int(flag_data.get("stage_index", 0)), false) * 100.0)
 		flag_progress_bar.create_flags_at_progress(flag_progresses)
 	progress_bar_segment_every_wave = 100.0 / maxf(1.0, float(max_wave_one_round - 1))
 
@@ -93,33 +95,83 @@ func start_first_wave():
 	flag_progress_bar.visible = true
 
 
-## 工坊关卡使用绝对时间表：到达时间点才逐只创建僵尸，并同步推进旗帜进度条。
+## 工坊关卡逐阶段刷怪，并复用正式关卡的最低等待、血量阈值和自然刷新上限。
 func start_custom_timeline() -> void:
 	var game_para: ResourceLevelData = zombie_wave_create_manager.zombie_manager.game_para
-	var schedule: Array[Dictionary] = game_para.custom_spawn_schedule
+	var stages: Array[Dictionary] = game_para.custom_stage_schedule
 	var flags: Array[Dictionary] = game_para.custom_flag_data
-	var duration := maxf(0.1, game_para.custom_timeline_duration)
-	var event_index := 0
+	if stages.is_empty():
+		signal_wave_refresh.emit(true)
+		return
 	var flag_index := 0
-	var elapsed := 0.0
+	custom_stage_health_totals.clear()
+	custom_stage_health_losses.clear()
 	flag_progress_bar.visible = true
-	while true:
-		while flag_index < flags.size() and float(flags[flag_index].get("time", 0.0)) <= elapsed:
+	for stage_position in stages.size():
+		var stage: Dictionary = stages[stage_position]
+		var stage_index := int(stage.get("stage_index", stage_position))
+		var events: Array = stage.get("events", [])
+		var event_index := 0
+		var elapsed := 0.0
+		var stage_progress_start := _custom_stage_progress(stages, stage_position, false)
+		var stage_progress_end := _custom_stage_progress(stages, stage_position, true)
+		var is_flag_front := stage_position + 1 < stages.size() \
+			and str((stages[stage_position + 1] as Dictionary).get("stage_type", "flag")) == "flag"
+		var natural_time_range := zombie_wave_refresh_manager.norm_refresh_time_range_in_total_refresh \
+			if is_flag_front else zombie_wave_refresh_manager.norm_refresh_time_range_in_half_refresh
+		var natural_refresh_time := randf_range(natural_time_range.x, natural_time_range.y)
+		var remaining_health_ratio := randf_range(
+			zombie_wave_refresh_manager.refresh_threshold_range.x,
+			zombie_wave_refresh_manager.refresh_threshold_range.y
+		)
+		curr_wave = stage_index
+		while flag_index < flags.size() and int(flags[flag_index].get("stage_index", -1)) == stage_index:
 			var flag_data: Dictionary = flags[flag_index]
-			curr_wave = int(flag_data.get("stage_index", curr_wave + 1))
-			flag_progress_bar.set_progress(elapsed / duration * 100.0, flag_index)
+			flag_progress_bar.set_progress(stage_progress_start * 100.0, flag_index)
 			ui_remind_word.zombie_approach(flag_index == flags.size() - 1)
 			flag_index += 1
-		while event_index < schedule.size() and float(schedule[event_index].get("time", 0.0)) <= elapsed:
-			zombie_wave_create_manager.create_custom_timeline_zombie(schedule[event_index])
-			event_index += 1
-		flag_progress_bar.set_progress(elapsed / duration * 100.0)
-		if elapsed >= duration and event_index >= schedule.size() and flag_index >= flags.size():
-			break
-		await get_tree().process_frame
-		elapsed += get_process_delta_time()
+		while true:
+			while event_index < events.size() and float((events[event_index] as Dictionary).get("time", 0.0)) <= elapsed:
+				var zombie := zombie_wave_create_manager.create_custom_timeline_zombie(events[event_index])
+				var zombie_health := int(zombie.hp_component.get_all_hp())
+				custom_stage_health_totals[stage_index] = int(custom_stage_health_totals.get(stage_index, 0)) + zombie_health
+				zombie.signal_zombie_hp_loss.connect(_on_custom_stage_hp_loss)
+				event_index += 1
+			var all_spawned := event_index >= events.size()
+			if stage_position == stages.size() - 1 and all_spawned:
+				signal_wave_refresh.emit(true)
+				return
+			var total_health := int(custom_stage_health_totals.get(stage_index, 0))
+			var loss_health := int(custom_stage_health_losses.get(stage_index, 0))
+			var remaining_health := maxi(0, total_health - loss_health)
+			var minimum_time_reached := elapsed >= zombie_wave_refresh_manager.time_min_wave
+			var health_condition_reached := remaining_health <= 0 if is_flag_front \
+				else total_health <= 0 or remaining_health <= int(float(total_health) * remaining_health_ratio)
+			var natural_time_reached := elapsed >= natural_refresh_time
+			var stage_progress_ratio := clampf(elapsed / maxf(0.1, natural_refresh_time), 0.0, 1.0)
+			flag_progress_bar.set_progress(lerpf(stage_progress_start, stage_progress_end, stage_progress_ratio) * 100.0)
+			if all_spawned and minimum_time_reached and (health_condition_reached or natural_time_reached):
+				break
+			await get_tree().process_frame
+			elapsed += get_process_delta_time()
+		signal_wave_refresh.emit(false)
 	flag_progress_bar.set_progress(100.0)
-	signal_wave_refresh.emit(true)
+
+
+func _on_custom_stage_hp_loss(loss_health: int, stage_index: int) -> void:
+	custom_stage_health_losses[stage_index] = int(custom_stage_health_losses.get(stage_index, 0)) + maxi(0, loss_health)
+
+
+func _custom_stage_progress(stages: Array[Dictionary], stage_position: int, include_current_interval: bool) -> float:
+	var total_intervals := 0
+	var completed_intervals := 0
+	for index in stages.size():
+		var is_interval := str((stages[index] as Dictionary).get("stage_type", "flag")) == "interval"
+		if is_interval:
+			total_intervals += 1
+			if index < stage_position or include_current_interval and index == stage_position:
+				completed_intervals += 1
+	return float(completed_intervals) / float(maxi(1, total_intervals))
 
 ## 开始刷新下一波,发射刷新下一波信号
 func start_next_wave() -> void:
