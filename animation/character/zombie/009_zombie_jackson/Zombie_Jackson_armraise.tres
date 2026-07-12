@@ -1117,10 +1117,10 @@ tracks/92/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/Sprite2
 tracks/92/interp = 1
 tracks/92/loop_wrap = true
 tracks/92/keys = {
-"times": PackedFloat32Array(0.42),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.39, 0.42, 0.52, 0.55, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(22.42094, 8.688)]
+"values": [Vector2(19.701841, 8.688), Vector2(19.038013, 8.688), Vector2(22.42094, 8.688), Vector2(16.133656, 8.688), Vector2(18.738682, 9.126832), Vector2(14.929869, 8.688)]
 }
 tracks/93/type = "value"
 tracks/93/imported = false
@@ -1189,10 +1189,10 @@ tracks/98/path = NodePath("Body/BodyCorrect/Zombie_Jackson_innerleg_foot/Sprite2
 tracks/98/interp = 1
 tracks/98/loop_wrap = true
 tracks/98/keys = {
-"times": PackedFloat32Array(0.59),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0.59, 0.833333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(17.067371, 16.975487)]
+"values": [Vector2(17.067371, 16.975487), Vector2(8.763396, 17.774033)]
 }
 tracks/99/type = "value"
 tracks/99/imported = false
@@ -1201,10 +1201,10 @@ tracks/99/path = NodePath("Body/BodyCorrect/Zombie_Jackson_innerleg_foot/Sprite2
 tracks/99/interp = 1
 tracks/99/loop_wrap = true
 tracks/99/keys = {
-"times": PackedFloat32Array(0.59),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0.59, 0.833333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.0]
+"values": [0.0, 0.0]
 }
 tracks/100/type = "value"
 tracks/100/imported = false
@@ -1213,8 +1213,32 @@ tracks/100/path = NodePath("Body/BodyCorrect/Zombie_Jackson_innerleg_foot/Sprite
 tracks/100/interp = 1
 tracks/100/loop_wrap = true
 tracks/100/keys = {
-"times": PackedFloat32Array(0.59),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0.59, 0.833333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0.7362293, 0.69953775)]
+"values": [Vector2(0.7362293, 0.69953775), Vector2(0.96248543, 0.69953775)]
+}
+tracks/101/type = "value"
+tracks/101/imported = false
+tracks/101/enabled = true
+tracks/101/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/Sprite2D:rotation")
+tracks/101/interp = 1
+tracks/101/loop_wrap = true
+tracks/101/keys = {
+"times": PackedFloat32Array(0, 0.39, 0.52, 0.55, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.0, 0.0, 0.0]
+}
+tracks/102/type = "value"
+tracks/102/imported = false
+tracks/102/enabled = true
+tracks/102/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/Sprite2D:scale")
+tracks/102/interp = 1
+tracks/102/loop_wrap = true
+tracks/102/keys = {
+"times": PackedFloat32Array(0, 0.39, 0.52, 0.55, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1.0364172, 0.7362504), Vector2(0.6056693, 0.7362504), Vector2(0.7037252, 0.7362504), Vector2(0.7161441, 0.7362504), Vector2(0.8334333, 0.7362504)]
 }
