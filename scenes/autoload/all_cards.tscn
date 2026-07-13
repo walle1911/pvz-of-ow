@@ -7767,10 +7767,10 @@ sun_cost = 300
 [node name="CardBg" parent="ZombieCards/Card8" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Zombie025GargantuarAshe" type="Node2D" parent="ZombieCards/Card8/CardBg/CharacterStatic" index="0" unique_id=1090297050]
+[node name="Zombie025GargantuarBob" type="Node2D" parent="ZombieCards/Card8/CardBg/CharacterStatic" index="0" unique_id=1090297050]
 position = Vector2(2, 17)
 
-[node name="Card" type="Sprite2D" parent="ZombieCards/Card8/CardBg/CharacterStatic/Zombie025GargantuarAshe" unique_id=1090297051]
+[node name="Card" type="Sprite2D" parent="ZombieCards/Card8/CardBg/CharacterStatic/Zombie025GargantuarBob" unique_id=1090297051]
 position = Vector2(-2.32, -15.55)
 scale = Vector2(0.32, 0.32)
 texture = ExtResource("413_ysrnk")

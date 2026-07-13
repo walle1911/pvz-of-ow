@@ -231,7 +231,7 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		30: CharacterRegistry.ZombieType.Z009DancingZombieLucio,
 		31: CharacterRegistry.ZombieType.Z010BackupDancerLucio,
 		32: CharacterRegistry.ZombieType.Z013ZomboniShion,
-		33: CharacterRegistry.ZombieType.Z025GargantuarAshe,
+		33: CharacterRegistry.ZombieType.Z025GargantuarBob,
 	}
 	var should_migrate_legacy_ids := save_version != SaveGameVersion
 	if not should_migrate_legacy_ids:

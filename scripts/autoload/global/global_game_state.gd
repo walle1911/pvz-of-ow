@@ -124,7 +124,7 @@ var selected_cards: Array = []
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt,
-	CharacterRegistry.ZombieType.Z025GargantuarAshe,
+	CharacterRegistry.ZombieType.Z025GargantuarBob,
 		CharacterRegistry.ZombieType.Z026PeashooterZombie,
 	CharacterRegistry.ZombieType.Z000NormTalon,
 	CharacterRegistry.ZombieType.Z001FlagTalon,

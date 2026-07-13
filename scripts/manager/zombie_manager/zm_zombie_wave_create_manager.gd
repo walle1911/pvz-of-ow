@@ -43,7 +43,7 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z521Ladder: 4,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 5,		# 投篮
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 10,	# 伽刚特尔
-	CharacterRegistry.ZombieType.Z025GargantuarAshe: 10,
+	CharacterRegistry.ZombieType.Z025GargantuarBob: 10,
 	CharacterRegistry.ZombieType.Z524Imp: 1,			# 小鬼
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 3,	# 豌豆射手僵尸(远程)
 }
@@ -79,7 +79,7 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 1500,	# 伽刚特尔
-	CharacterRegistry.ZombieType.Z025GargantuarAshe: 1500,
+	CharacterRegistry.ZombieType.Z025GargantuarBob: 1500,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 1500,	# 豌豆射手僵尸
 	#CharacterRegistry.ZombieType.Z524Imp: 0,		# 小鬼
 }

@@ -176,7 +176,7 @@ const LEGACY_ZOMBIE_TYPE_MAP := {
 	30: CharacterRegistry.ZombieType.Z009DancingZombieLucio,
 	31: CharacterRegistry.ZombieType.Z010BackupDancerLucio,
 	32: CharacterRegistry.ZombieType.Z013ZomboniShion,
-	33: CharacterRegistry.ZombieType.Z025GargantuarAshe,
+	33: CharacterRegistry.ZombieType.Z025GargantuarBob,
 		34: CharacterRegistry.ZombieType.Z026PeashooterZombie,
 }
 

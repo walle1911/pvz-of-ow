@@ -136,8 +136,10 @@ enum ZombieType {
 	Z018DiggerZombieVenture = 18,
 	Z020ZombieYetiWinston = 20,
 	Z024GargantuarReinhardt = 24,
-	Z025GargantuarAshe = 25,
-		Z026PeashooterZombie = 26,
+	Z025GargantuarBob = 25,
+	Z026PeashooterZombie = 26,
+	Z027ImpTorbjorn = 27,
+	Z028ImpAshe = 28,
 
 	## Talon 僵尸（文件序号保持 000/001/002/004，运行时避开 Null = 0）
 	Z000NormTalon = 100,
@@ -1057,6 +1059,13 @@ const ZombieInfo = {
 		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_024_gargantuar_reinhardt.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
+	ZombieType.Z027ImpTorbjorn:{
+		ZombieInfoAttribute.ZombieName: "Imp_Torbjorn",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 50,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_027_imp_torbjorn.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
 	ZombieType.Z020ZombieYetiWinston:{
 		ZombieInfoAttribute.ZombieName: "ZombieYeti_Winston",
 		ZombieInfoAttribute.CoolTime: 0.0,
@@ -1099,13 +1108,20 @@ const ZombieInfo = {
 		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_013_zamboni_shion.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z025GargantuarAshe:{
-		ZombieInfoAttribute.ZombieName: "Gargantuar_Ashe",
+	ZombieType.Z025GargantuarBob:{
+		ZombieInfoAttribute.ZombieName: "Gargantuar_Bob",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 300,
-		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_025_gargantuar_ashe.tscn"),
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_025_gargantuar_bob.tscn"),
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
-		},
+	},
+	ZombieType.Z028ImpAshe:{
+		ZombieInfoAttribute.ZombieName: "Imp_Ashe",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 50,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_028_imp_ashe.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
+	},
 		ZombieType.Z026PeashooterZombie:{
 			ZombieInfoAttribute.ZombieName: "PeashooterZombie",
 			ZombieInfoAttribute.CoolTime: 0.0,

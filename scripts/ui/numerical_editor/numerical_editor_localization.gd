@@ -45,7 +45,7 @@ const CHARACTER_NAMES := {
 	"Gargantuar_Reinhardt": "伽刚特尔（莱因哈特）", "ZombieYeti_Winston": "僵尸雪人（温斯顿）",
 	"DiggerZombie_Venture": "矿工僵尸（探奇）", "Jackbox_Reaper": "玩偶匣僵尸（死神）",
 	"DancingZombie_Lucio": "舞王僵尸（卢西奥）", "BackupDancer_Lucio": "伴舞僵尸（卢西奥）",
-	"Zomboni_Shion": "雪橇车僵尸（紫苑）", "Gargantuar_Ashe": "伽刚特尔（艾什）",
+	"Zomboni_Shion": "雪橇车僵尸（紫苑）", "Gargantuar_Bob": "伽刚特尔（Bob）",
 	"PeashooterZombie": "豌豆射手僵尸",
 }
 
