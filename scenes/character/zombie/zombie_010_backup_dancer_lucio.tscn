@@ -2,6 +2,27 @@
 
 [ext_resource type="PackedScene" uid="uid://c0i88im6af6ik" path="res://scenes/character/zombie/zombie_009_dancing_zombie_lucio.tscn" id="1_lucio"]
 [ext_resource type="Script" path="res://scripts/character/zombie/zombie_031_backup_dancer_lucio.gd" id="2_dancer"]
+[ext_resource type="Animation" uid="uid://6g1fqjp3dose" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_armraise.tres" id="3_armraise"]
+[ext_resource type="Animation" uid="uid://gkla8b47gdem" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_death.tres" id="4_death"]
+[ext_resource type="Animation" uid="uid://y8atqubmw5kj" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_eat.tres" id="5_eat"]
+[ext_resource type="Animation" uid="uid://bpbk4s8akoin0" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_moonwalk.tres" id="6_moonwalk"]
+[ext_resource type="Animation" uid="uid://ywiyomcxv8ri" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_point.tres" id="7_point"]
+[ext_resource type="Animation" uid="uid://ba2564s28nv1y" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_walk.tres" id="8_walk"]
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lucio_dancer"]
+_data = {
+&"RESET": SubResource("Animation_reset"),
+&"armraise": ExtResource("3_armraise"),
+&"death": ExtResource("4_death"),
+&"eat": ExtResource("5_eat"),
+&"moonwalk": ExtResource("6_moonwalk"),
+&"point": ExtResource("7_point"),
+&"pose_be_call": ExtResource("3_armraise"),
+&"walk": ExtResource("8_walk")
+}
 
 [node name="Zombie509Dancer" instance=ExtResource("1_lucio")]
 script = ExtResource("2_dancer")
@@ -9,6 +30,7 @@ zombie_type = 509
 sfx_enter_name = &""
 
 [node name="AnimationPlayer" parent="." index="11"]
+libraries/ = SubResource("AnimationLibrary_lucio_dancer")
 speed_scale = 1.3
 
 [editable path="Body"]

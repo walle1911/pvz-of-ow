@@ -139,6 +139,12 @@ enum ZombieType {
 	Z025GargantuarAshe = 25,
 		Z026PeashooterZombie = 26,
 
+	## Talon 僵尸（文件序号保持 000/001/002/004，运行时避开 Null = 0）
+	Z000NormTalon = 100,
+	Z001FlagTalon = 101,
+	Z002ConeTalon = 102,
+	Z004BucketTalon = 104,
+
 	## 后移的原版僵尸
 	Z500Norm = 500,
 	Z501Flag,
@@ -839,6 +845,34 @@ func get_plant_info(plant_type:PlantType, info_attribute:PlantInfoAttribute):
 #region 僵尸
 ## 僵尸信息
 const ZombieInfo = {
+	ZombieType.Z000NormTalon:{
+		ZombieInfoAttribute.ZombieName: "ZombieNormTalon",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 50,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_000_norm_talon.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
+	},
+	ZombieType.Z001FlagTalon:{
+		ZombieInfoAttribute.ZombieName: "ZombieFlagTalon",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 50,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_001_flag_talon.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
+	},
+	ZombieType.Z002ConeTalon:{
+		ZombieInfoAttribute.ZombieName: "ZombieConeTalon",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 75,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_002_cone_talon.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
+	},
+	ZombieType.Z004BucketTalon:{
+		ZombieInfoAttribute.ZombieName: "ZombieBucketTalon",
+		ZombieInfoAttribute.CoolTime: 0.0,
+		ZombieInfoAttribute.SunCost: 125,
+		ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_004_bucket_talon.tscn"),
+		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
+	},
 	ZombieType.Z500Norm:{
 		ZombieInfoAttribute.ZombieName: "ZombieNorm",
 		ZombieInfoAttribute.CoolTime: 0.0,

@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=2 format=3 uid="uid://ok5truuxsgm3"]
+[gd_resource type="Animation" format=3 uid="uid://ok5truuxsgm3"]
 
 [ext_resource type="Texture2D" uid="uid://duyqfy4j8isia" path="res://assets/reanim/Zombie_outerarm_hand.png" id="22_fuck"]
 
@@ -813,7 +813,7 @@ tracks/66/keys = {
 tracks/67/type = "value"
 tracks/67/imported = false
 tracks/67/enabled = true
-tracks/67/path = NodePath("Body/BodyCorrect/Anim_tongue/Anim_tongue:visible")
+tracks/67/path = NodePath("Body/BodyCorrect/Zombie_mustache/Zombie_mustache:visible")
 tracks/67/interp = 1
 tracks/67/loop_wrap = true
 tracks/67/keys = {
@@ -825,7 +825,7 @@ tracks/67/keys = {
 tracks/68/type = "value"
 tracks/68/imported = false
 tracks/68/enabled = true
-tracks/68/path = NodePath("Body/BodyCorrect/Zombie_mustache/Zombie_mustache:visible")
+tracks/68/path = NodePath("Body/BodyCorrect/Anim_screendoor/Anim_screendoor:visible")
 tracks/68/interp = 1
 tracks/68/loop_wrap = true
 tracks/68/keys = {
@@ -837,7 +837,7 @@ tracks/68/keys = {
 tracks/69/type = "value"
 tracks/69/imported = false
 tracks/69/enabled = true
-tracks/69/path = NodePath("Body/BodyCorrect/Anim_screendoor/Anim_screendoor:visible")
+tracks/69/path = NodePath("Body/BodyCorrect/Zombie_innerarm_screendoor_hand/Zombie_innerarm_screendoor_hand:visible")
 tracks/69/interp = 1
 tracks/69/loop_wrap = true
 tracks/69/keys = {
@@ -849,7 +849,7 @@ tracks/69/keys = {
 tracks/70/type = "value"
 tracks/70/imported = false
 tracks/70/enabled = true
-tracks/70/path = NodePath("Body/BodyCorrect/Zombie_innerarm_screendoor_hand/Zombie_innerarm_screendoor_hand:visible")
+tracks/70/path = NodePath("Body/BodyCorrect/Zombie_outerarm_screendoor/Zombie_outerarm_screendoor:visible")
 tracks/70/interp = 1
 tracks/70/loop_wrap = true
 tracks/70/keys = {
@@ -861,223 +861,223 @@ tracks/70/keys = {
 tracks/71/type = "value"
 tracks/71/imported = false
 tracks/71/enabled = true
-tracks/71/path = NodePath("Body/BodyCorrect/Zombie_outerarm_screendoor/Zombie_outerarm_screendoor:visible")
+tracks/71/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:visible")
 tracks/71/interp = 1
 tracks/71/loop_wrap = true
 tracks/71/keys = {
 "times": PackedFloat32Array(0, 3.166667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [false, false]
+"values": [true, true]
 }
 tracks/72/type = "value"
 tracks/72/imported = false
 tracks/72/enabled = true
-tracks/72/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:visible")
+tracks/72/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:position")
 tracks/72/interp = 1
 tracks/72/loop_wrap = true
 tracks/72/keys = {
-"times": PackedFloat32Array(0, 3.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [true, true]
+"values": [Vector2(32.9, 83.1), Vector2(30.7, 86.7), Vector2(28.3, 90.4), Vector2(26.1, 94.1), Vector2(23.8, 97.7), Vector2(21.6, 101.3), Vector2(19.4, 105.2), Vector2(18.6, 108.8), Vector2(18, 112.3), Vector2(18, 112.3), Vector2(18, 112.3), Vector2(18.3, 110.5), Vector2(18.6, 108.7), Vector2(19, 107), Vector2(19.4, 105.2), Vector2(19, 104.7), Vector2(18.7, 104.1), Vector2(18.2, 103.6), Vector2(17.4, 102.3), Vector2(16.6, 101.2), Vector2(15.9, 100.1), Vector2(14.8, 100), Vector2(13.6, 99.8), Vector2(12.5, 99.8), Vector2(15.9, 104.8), Vector2(22.3, 109.9), Vector2(31.7, 113.8), Vector2(34.1, 108.2), Vector2(36.8, 101.9), Vector2(30.6, 92.6), Vector2(23.9, 80.6), Vector2(19.7, 100), Vector2(15.3, 117.8), Vector2(11.5, 134), Vector2(15.1, 129.7), Vector2(18.9, 124.9), Vector2(16.5, 128.2), Vector2(13.9, 131.2), Vector2(11.5, 134)]
 }
 tracks/73/type = "value"
 tracks/73/imported = false
 tracks/73/enabled = true
-tracks/73/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:position")
+tracks/73/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:rotation")
 tracks/73/interp = 1
 tracks/73/loop_wrap = true
 tracks/73/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(32.9, 83.1), Vector2(30.7, 86.7), Vector2(28.3, 90.4), Vector2(26.1, 94.1), Vector2(23.8, 97.7), Vector2(21.6, 101.3), Vector2(19.4, 105.2), Vector2(18.6, 108.8), Vector2(18, 112.3), Vector2(18, 112.3), Vector2(18, 112.3), Vector2(18.3, 110.5), Vector2(18.6, 108.7), Vector2(19, 107), Vector2(19.4, 105.2), Vector2(19, 104.7), Vector2(18.7, 104.1), Vector2(18.2, 103.6), Vector2(17.4, 102.3), Vector2(16.6, 101.2), Vector2(15.9, 100.1), Vector2(14.8, 100), Vector2(13.6, 99.8), Vector2(12.5, 99.8), Vector2(15.9, 104.8), Vector2(22.3, 109.9), Vector2(31.7, 113.8), Vector2(34.1, 108.2), Vector2(36.8, 101.9), Vector2(30.6, 92.6), Vector2(23.9, 80.6), Vector2(19.7, 100), Vector2(15.3, 117.8), Vector2(11.5, 134), Vector2(15.1, 129.7), Vector2(18.9, 124.9), Vector2(16.5, 128.2), Vector2(13.9, 131.2), Vector2(11.5, 134)]
+"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 5.934119, 5.827654, 5.827654, 5.827654, 5.881759, 5.934119, 5.986479, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.539675, 5.070181, 4.600688, 4.380776, 4.15912, 3.719297, 3.282964, 3.600614, 3.916519, 4.234169, 4.085816, 3.933972, 4.056145, 4.174827, 4.29351]
 }
 tracks/74/type = "value"
 tracks/74/imported = false
 tracks/74/enabled = true
-tracks/74/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:rotation")
+tracks/74/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:scale")
 tracks/74/interp = 1
 tracks/74/loop_wrap = true
 tracks/74/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 5.934119, 5.827654, 5.827654, 5.827654, 5.881759, 5.934119, 5.986479, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.539675, 5.070181, 4.600688, 4.380776, 4.15912, 3.719297, 3.282964, 3.600614, 3.916519, 4.234169, 4.085816, 3.933972, 4.056145, 4.174827, 4.29351]
+"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.793, 0.793), Vector2(0.793, 0.793), Vector2(0.79, 0.79), Vector2(0.789, 0.789), Vector2(0.788, 0.788), Vector2(0.786, 0.786), Vector2(0.785, 0.785), Vector2(0.783, 0.783), Vector2(0.783, 0.783), Vector2(0.752, 0.776), Vector2(0.721, 0.769), Vector2(0.692, 0.765), Vector2(0.735, 0.771), Vector2(0.78, 0.78), Vector2(0.78, 0.78), Vector2(0.78, 0.78), Vector2(0.781, 0.781)]
 }
 tracks/75/type = "value"
 tracks/75/imported = false
 tracks/75/enabled = true
-tracks/75/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:scale")
+tracks/75/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:skew")
 tracks/75/interp = 1
 tracks/75/loop_wrap = true
 tracks/75/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.793, 0.793), Vector2(0.793, 0.793), Vector2(0.79, 0.79), Vector2(0.789, 0.789), Vector2(0.788, 0.788), Vector2(0.786, 0.786), Vector2(0.785, 0.785), Vector2(0.783, 0.783), Vector2(0.783, 0.783), Vector2(0.752, 0.776), Vector2(0.721, 0.769), Vector2(0.692, 0.765), Vector2(0.735, 0.771), Vector2(0.78, 0.78), Vector2(0.78, 0.78), Vector2(0.78, 0.78), Vector2(0.781, 0.781)]
+"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, 4e-07, 3e-07, 3e-07, 3e-07, 5e-07, 4e-07, 2e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 0.0, 4e-07, -2e-07, 3e-07, -5e-07, -4e-07, 3e-07, 0.0349068, 0.0750489, 0.1117008, 0.0541049, 1e-07, 1e-07, 5e-07, -1e-07]
 }
 tracks/76/type = "value"
 tracks/76/imported = false
 tracks/76/enabled = true
-tracks/76/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:skew")
+tracks/76/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:texture")
 tracks/76/interp = 1
 tracks/76/loop_wrap = true
 tracks/76/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 3.166667),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, 4e-07, 3e-07, 3e-07, 3e-07, 5e-07, 4e-07, 2e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 0.0, 4e-07, -2e-07, 3e-07, -5e-07, -4e-07, 3e-07, 0.0349068, 0.0750489, 0.1117008, 0.0541049, 1e-07, 1e-07, 5e-07, -1e-07]
+"values": [ExtResource("22_fuck"), ExtResource("22_fuck")]
 }
 tracks/77/type = "value"
 tracks/77/imported = false
 tracks/77/enabled = true
-tracks/77/path = NodePath("Body/BodyCorrect/Zombie_outerarm_hand/Zombie_outerarm_hand:texture")
+tracks/77/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:visible")
 tracks/77/interp = 1
 tracks/77/loop_wrap = true
 tracks/77/keys = {
 "times": PackedFloat32Array(0, 3.166667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [ExtResource("22_fuck"), ExtResource("22_fuck")]
+"values": [true, true]
 }
 tracks/78/type = "value"
 tracks/78/imported = false
 tracks/78/enabled = true
-tracks/78/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:visible")
+tracks/78/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:position")
 tracks/78/interp = 1
 tracks/78/loop_wrap = true
 tracks/78/keys = {
-"times": PackedFloat32Array(0, 3.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [true, true]
+"values": [Vector2(42.7, 42.5), Vector2(39.1, 46), Vector2(35.5, 49.4), Vector2(32, 52.9), Vector2(28.4, 56.5), Vector2(24.9, 60), Vector2(21.3, 63.5), Vector2(21.4, 64.8), Vector2(21.5, 66.2), Vector2(21.6, 66.1), Vector2(21.5, 66.2), Vector2(21.5, 65.4), Vector2(21.4, 64.9), Vector2(21.3, 64.2), Vector2(21.3, 63.5), Vector2(20.9, 63), Vector2(20.5, 62.5), Vector2(20, 61.9), Vector2(19.2, 60.8), Vector2(18.3, 59.8), Vector2(17.4, 58.8), Vector2(16.1, 58.8), Vector2(14.8, 58.7), Vector2(13.4, 58.5), Vector2(8.7, 63.9), Vector2(4.3, 69.6), Vector2(0.1, 75.3), Vector2(-4.1, 78), Vector2(-7.8, 80.7), Vector2(-15.6, 91.5), Vector2(-20.8, 101.3), Vector2(-25.2, 105.1), Vector2(-28.1, 108.2), Vector2(-29.7, 110.9), Vector2(-28.9, 110.5), Vector2(-28.2, 110), Vector2(-28.7, 109.1), Vector2(-29.2, 108.1), Vector2(-29.7, 107.2)]
 }
 tracks/79/type = "value"
 tracks/79/imported = false
 tracks/79/enabled = true
-tracks/79/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:position")
+tracks/79/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:rotation")
 tracks/79/interp = 1
 tracks/79/loop_wrap = true
 tracks/79/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(42.7, 42.5), Vector2(39.1, 46), Vector2(35.5, 49.4), Vector2(32, 52.9), Vector2(28.4, 56.5), Vector2(24.9, 60), Vector2(21.3, 63.5), Vector2(21.4, 64.8), Vector2(21.5, 66.2), Vector2(21.6, 66.1), Vector2(21.5, 66.2), Vector2(21.5, 65.4), Vector2(21.4, 64.9), Vector2(21.3, 64.2), Vector2(21.3, 63.5), Vector2(20.9, 63), Vector2(20.5, 62.5), Vector2(20, 61.9), Vector2(19.2, 60.8), Vector2(18.3, 59.8), Vector2(17.4, 58.8), Vector2(16.1, 58.8), Vector2(14.8, 58.7), Vector2(13.4, 58.5), Vector2(8.7, 63.9), Vector2(4.3, 69.6), Vector2(0.1, 75.3), Vector2(-4.1, 78), Vector2(-7.8, 80.7), Vector2(-15.6, 91.5), Vector2(-20.8, 101.3), Vector2(-25.2, 105.1), Vector2(-28.1, 108.2), Vector2(-29.7, 110.9), Vector2(-28.9, 110.5), Vector2(-28.2, 110), Vector2(-28.7, 109.1), Vector2(-29.2, 108.1), Vector2(-29.7, 107.2)]
+"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 6.047566, 6.052802, 6.054547, 6.052802, 6.051056, 6.047566, 6.04233, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.85907, 5.705481, 5.553638, 5.333726, 5.112069, 4.675737, 4.235914, 4.597197, 4.953244, 5.314527, 5.201081, 5.08938, 5.14174, 5.1941, 5.24646]
 }
 tracks/80/type = "value"
 tracks/80/imported = false
 tracks/80/enabled = true
-tracks/80/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:rotation")
+tracks/80/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:scale")
 tracks/80/interp = 1
 tracks/80/loop_wrap = true
 tracks/80/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 6.047566, 6.052802, 6.054547, 6.052802, 6.051056, 6.047566, 6.04233, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.85907, 5.705481, 5.553638, 5.333726, 5.112069, 4.675737, 4.235914, 4.597197, 4.953244, 5.314527, 5.201081, 5.08938, 5.14174, 5.1941, 5.24646]
+"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.792, 0.796), Vector2(0.787, 0.796), Vector2(0.783, 0.796), Vector2(0.774, 0.795), Vector2(0.765, 0.794), Vector2(0.757, 0.795), Vector2(0.744, 0.794), Vector2(0.731, 0.793), Vector2(0.718, 0.793), Vector2(0.691, 0.791), Vector2(0.664, 0.79), Vector2(0.638, 0.79), Vector2(0.636, 0.788), Vector2(0.636, 0.787), Vector2(0.635, 0.786), Vector2(0.634, 0.785), Vector2(0.612, 0.775), Vector2(0.59, 0.766), Vector2(0.569, 0.757), Vector2(0.6, 0.769), Vector2(0.632, 0.783), Vector2(0.632, 0.782), Vector2(0.632, 0.782), Vector2(0.633, 0.784)]
 }
 tracks/81/type = "value"
 tracks/81/imported = false
 tracks/81/enabled = true
-tracks/81/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:scale")
+tracks/81/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:skew")
 tracks/81/interp = 1
 tracks/81/loop_wrap = true
 tracks/81/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.792, 0.796), Vector2(0.787, 0.796), Vector2(0.783, 0.796), Vector2(0.774, 0.795), Vector2(0.765, 0.794), Vector2(0.757, 0.795), Vector2(0.744, 0.794), Vector2(0.731, 0.793), Vector2(0.718, 0.793), Vector2(0.691, 0.791), Vector2(0.664, 0.79), Vector2(0.638, 0.79), Vector2(0.636, 0.788), Vector2(0.636, 0.787), Vector2(0.635, 0.786), Vector2(0.634, 0.785), Vector2(0.612, 0.775), Vector2(0.59, 0.766), Vector2(0.569, 0.757), Vector2(0.6, 0.769), Vector2(0.632, 0.783), Vector2(0.632, 0.782), Vector2(0.632, 0.782), Vector2(0.633, 0.784)]
+"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, -2e-07, -3e-07, 1e-07, -3e-07, 4e-07, -2e-07, -2e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 2e-07, 2e-07, -4e-07, 1e-07, 3e-07, 0.0017453, 0.0, -0.0436331, -0.0872661, -0.1308992, -0.0645771, 0.0, -1e-07, -2e-07, -4e-07]
 }
 tracks/82/type = "value"
 tracks/82/imported = false
 tracks/82/enabled = true
-tracks/82/path = NodePath("Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper:skew")
+tracks/82/path = NodePath("Body/BodyCorrect/Zombie_whitewater2/Zombie_whitewater2:visible")
 tracks/82/interp = 1
 tracks/82/loop_wrap = true
 tracks/82/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 3.166667),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, -2e-07, -3e-07, 1e-07, -3e-07, 4e-07, -2e-07, -2e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 2e-07, 2e-07, -4e-07, 1e-07, 3e-07, 0.0017453, 0.0, -0.0436331, -0.0872661, -0.1308992, -0.0645771, 0.0, -1e-07, -2e-07, -4e-07]
+"values": [false, false]
 }
 tracks/83/type = "value"
 tracks/83/imported = false
 tracks/83/enabled = true
-tracks/83/path = NodePath("Body/BodyCorrect/Zombie_whitewater2/Zombie_whitewater2:visible")
+tracks/83/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:visible")
 tracks/83/interp = 1
 tracks/83/loop_wrap = true
 tracks/83/keys = {
 "times": PackedFloat32Array(0, 3.166667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [false, false]
+"values": [true, true]
 }
 tracks/84/type = "value"
 tracks/84/imported = false
 tracks/84/enabled = true
-tracks/84/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:visible")
+tracks/84/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:position")
 tracks/84/interp = 1
 tracks/84/loop_wrap = true
 tracks/84/keys = {
-"times": PackedFloat32Array(0, 3.166667),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [true, true]
+"values": [Vector2(36.3, 66), Vector2(33.4, 69.6), Vector2(30.7, 73.3), Vector2(27.8, 76.9), Vector2(25, 80.5), Vector2(22.3, 84.2), Vector2(19.4, 87.8), Vector2(19.5, 89.5), Vector2(19.5, 91.3), Vector2(19.5, 91.3), Vector2(19.5, 91.3), Vector2(19.5, 90.5), Vector2(19.5, 89.6), Vector2(19.4, 88.7), Vector2(19.4, 87.8), Vector2(19, 87.2), Vector2(18.7, 86.6), Vector2(18.2, 86.1), Vector2(17.4, 85), Vector2(16.5, 83.8), Vector2(15.7, 82.6), Vector2(14.5, 82.5), Vector2(13.2, 82.3), Vector2(11.9, 82.3), Vector2(10.7, 88.3), Vector2(10.7, 94.8), Vector2(12, 101.2), Vector2(12.5, 100.2), Vector2(13.6, 99), Vector2(9.8, 99), Vector2(6.8, 96.6), Vector2(0, 108.7), Vector2(-6, 119.4), Vector2(-10.9, 128.9), Vector2(-7.7, 128.7), Vector2(-4, 128.4), Vector2(-6.4, 128.4), Vector2(-8.9, 128.3), Vector2(-10.9, 128.1)]
 }
 tracks/85/type = "value"
 tracks/85/imported = false
 tracks/85/enabled = true
-tracks/85/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:position")
+tracks/85/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:rotation")
 tracks/85/interp = 1
 tracks/85/loop_wrap = true
 tracks/85/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(36.3, 66), Vector2(33.4, 69.6), Vector2(30.7, 73.3), Vector2(27.8, 76.9), Vector2(25, 80.5), Vector2(22.3, 84.2), Vector2(19.4, 87.8), Vector2(19.5, 89.5), Vector2(19.5, 91.3), Vector2(19.5, 91.3), Vector2(19.5, 91.3), Vector2(19.5, 90.5), Vector2(19.5, 89.6), Vector2(19.4, 88.7), Vector2(19.4, 87.8), Vector2(19, 87.2), Vector2(18.7, 86.6), Vector2(18.2, 86.1), Vector2(17.4, 85), Vector2(16.5, 83.8), Vector2(15.7, 82.6), Vector2(14.5, 82.5), Vector2(13.2, 82.3), Vector2(11.9, 82.3), Vector2(10.7, 88.3), Vector2(10.7, 94.8), Vector2(12, 101.2), Vector2(12.5, 100.2), Vector2(13.6, 99), Vector2(9.8, 99), Vector2(6.8, 96.6), Vector2(0, 108.7), Vector2(-6, 119.4), Vector2(-10.9, 128.9), Vector2(-7.7, 128.7), Vector2(-4, 128.4), Vector2(-6.4, 128.4), Vector2(-8.9, 128.3), Vector2(-10.9, 128.1)]
+"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.705481, 5.400049, 5.094616, 4.874705, 4.653048, 4.21497, 3.776892, 4.117232, 4.459316, 4.799655, 4.616396, 4.4279, 4.550073, 4.668756, 4.787438]
 }
 tracks/86/type = "value"
 tracks/86/imported = false
 tracks/86/enabled = true
-tracks/86/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:rotation")
+tracks/86/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:scale")
 tracks/86/interp = 1
 tracks/86/loop_wrap = true
 tracks/86/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [6.230825, 6.199409, 6.167993, 6.134832, 6.103416, 6.072, 6.037094, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.038839, 6.037094, 6.038839, 6.037094, 6.033603, 6.033603, 6.030112, 6.024876, 6.021386, 6.01615, 6.009169, 5.705481, 5.400049, 5.094616, 4.874705, 4.653048, 4.21497, 3.776892, 4.117232, 4.459316, 4.799655, 4.616396, 4.4279, 4.550073, 4.668756, 4.787438]
+"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.793, 0.793), Vector2(0.793, 0.793), Vector2(0.791, 0.791), Vector2(0.789, 0.789), Vector2(0.789, 0.789), Vector2(0.787, 0.787), Vector2(0.786, 0.786), Vector2(0.784, 0.784), Vector2(0.784, 0.784), Vector2(0.746, 0.782), Vector2(0.71, 0.782), Vector2(0.675, 0.782), Vector2(0.728, 0.782), Vector2(0.782, 0.782), Vector2(0.782, 0.782), Vector2(0.782, 0.782), Vector2(0.783, 0.783)]
 }
 tracks/87/type = "value"
 tracks/87/imported = false
 tracks/87/enabled = true
-tracks/87/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:scale")
+tracks/87/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:skew")
 tracks/87/interp = 1
 tracks/87/loop_wrap = true
 tracks/87/keys = {
 "times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.8, 0.8), Vector2(0.799, 0.799), Vector2(0.799, 0.799), Vector2(0.798, 0.798), Vector2(0.798, 0.798), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.797, 0.797), Vector2(0.797, 0.797), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.796, 0.796), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.795, 0.795), Vector2(0.794, 0.794), Vector2(0.793, 0.793), Vector2(0.793, 0.793), Vector2(0.791, 0.791), Vector2(0.789, 0.789), Vector2(0.789, 0.789), Vector2(0.787, 0.787), Vector2(0.786, 0.786), Vector2(0.784, 0.784), Vector2(0.784, 0.784), Vector2(0.746, 0.782), Vector2(0.71, 0.782), Vector2(0.675, 0.782), Vector2(0.728, 0.782), Vector2(0.782, 0.782), Vector2(0.782, 0.782), Vector2(0.782, 0.782), Vector2(0.783, 0.783)]
+"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 2e-07, -4e-07, 0.0, -5e-07, -3e-07, 1e-07, 4e-07, -0.008727, -0.0139625, -0.0226889, -0.0139628, 2e-07, 3e-07, -3e-07, 1e-07]
 }
 tracks/88/type = "value"
 tracks/88/imported = false
 tracks/88/enabled = true
-tracks/88/path = NodePath("Body/BodyCorrect/Zombie_outerarm_lower/Zombie_outerarm_lower:skew")
+tracks/88/path = NodePath("Body/BodyCorrect/Anim_hair/Anim_hair:visible")
 tracks/88/interp = 1
 tracks/88/loop_wrap = true
 tracks/88/keys = {
-"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333, 0.666667, 0.75, 0.833333, 0.916667, 1, 1.083333, 1.166667, 1.25, 1.333333, 1.416667, 1.5, 1.583333, 1.666667, 1.75, 1.833333, 1.916667, 2, 2.083333, 2.166667, 2.25, 2.333333, 2.416667, 2.5, 2.583333, 2.666667, 2.75, 2.833333, 2.916667, 3, 3.083333, 3.166667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 3.166667),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [3e-07, 4e-07, 5e-07, 2e-07, 3e-07, 4e-07, -2e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, 1e-07, -2e-07, 1e-07, -2e-07, 1e-07, 1e-07, 5e-07, 5e-07, -2e-07, -2e-07, -5e-07, 2e-07, -4e-07, 0.0, -5e-07, -3e-07, 1e-07, 4e-07, -0.008727, -0.0139625, -0.0226889, -0.0139628, 2e-07, 3e-07, -3e-07, 1e-07]
+"values": [false, false]
 }
 tracks/89/type = "value"
 tracks/89/imported = false
 tracks/89/enabled = true
-tracks/89/path = NodePath("Body/BodyCorrect/Anim_hair/Anim_hair:visible")
+tracks/89/path = NodePath("Body/BodyCorrect/Anim_cone/Anim_cone:visible")
 tracks/89/interp = 1
 tracks/89/loop_wrap = true
 tracks/89/keys = {
@@ -1089,7 +1089,7 @@ tracks/89/keys = {
 tracks/90/type = "value"
 tracks/90/imported = false
 tracks/90/enabled = true
-tracks/90/path = NodePath("Body/BodyCorrect/Anim_cone/Anim_cone:visible")
+tracks/90/path = NodePath("Body/BodyCorrect/Anim_bucket/Anim_bucket:visible")
 tracks/90/interp = 1
 tracks/90/loop_wrap = true
 tracks/90/keys = {
@@ -1098,25 +1098,13 @@ tracks/90/keys = {
 "update": 0,
 "values": [false, false]
 }
-tracks/91/type = "value"
+tracks/91/type = "method"
 tracks/91/imported = false
 tracks/91/enabled = true
-tracks/91/path = NodePath("Body/BodyCorrect/Anim_bucket/Anim_bucket:visible")
+tracks/91/path = NodePath(".")
 tracks/91/interp = 1
 tracks/91/loop_wrap = true
 tracks/91/keys = {
-"times": PackedFloat32Array(0, 3.166667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [false, false]
-}
-tracks/92/type = "method"
-tracks/92/imported = false
-tracks/92/enabled = true
-tracks/92/path = NodePath(".")
-tracks/92/interp = 1
-tracks/92/loop_wrap = true
-tracks/92/keys = {
 "times": PackedFloat32Array(0, 3.16667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
@@ -1127,49 +1115,49 @@ tracks/92/keys = {
 "method": &"_fade_and_remove"
 }]
 }
+tracks/92/type = "value"
+tracks/92/imported = false
+tracks/92/enabled = true
+tracks/92/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flagpole:position")
+tracks/92/interp = 1
+tracks/92/loop_wrap = true
+tracks/92/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.916667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(4.61707, -5.86455), Vector2(-36.553, 11.1202), Vector2(-93.0784, 61.5075)]
+}
 tracks/93/type = "value"
 tracks/93/imported = false
 tracks/93/enabled = true
-tracks/93/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flagpole:position")
+tracks/93/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flag:position")
 tracks/93/interp = 1
 tracks/93/loop_wrap = true
 tracks/93/keys = {
 "times": PackedFloat32Array(0, 0.5, 0.916667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(4.61707, -5.86455), Vector2(-36.553, 11.1202), Vector2(-93.0784, 61.5075)]
+"values": [Vector2(6.61707, -5.86455), Vector2(-34.553, 11.1202), Vector2(-91.0784, 61.5075)]
 }
 tracks/94/type = "value"
 tracks/94/imported = false
 tracks/94/enabled = true
-tracks/94/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flag:position")
+tracks/94/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flagpole:rotation")
 tracks/94/interp = 1
 tracks/94/loop_wrap = true
 tracks/94/keys = {
 "times": PackedFloat32Array(0, 0.5, 0.916667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(6.61707, -5.86455), Vector2(-34.553, 11.1202), Vector2(-91.0784, 61.5075)]
+"values": [-0.589533, -0.80466, -1.44608]
 }
 tracks/95/type = "value"
 tracks/95/imported = false
 tracks/95/enabled = true
-tracks/95/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flagpole:rotation")
+tracks/95/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flag:rotation")
 tracks/95/interp = 1
 tracks/95/loop_wrap = true
 tracks/95/keys = {
-"times": PackedFloat32Array(0, 0.5, 0.916667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [-0.589533, -0.80466, -1.44608]
-}
-tracks/96/type = "value"
-tracks/96/imported = false
-tracks/96/enabled = true
-tracks/96/path = NodePath("Body/BodyCorrect/Zombie_flag/Zombie_flag:rotation")
-tracks/96/interp = 1
-tracks/96/loop_wrap = true
-tracks/96/keys = {
 "times": PackedFloat32Array(0, 0.5, 0.916667),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
