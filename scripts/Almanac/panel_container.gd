@@ -33,8 +33,8 @@ var show_character:Character000Base
 
 ## 更新图鉴植物信息
 func almanac_update_plant_panel(curr_plant_type:CharacterRegistry.PlantType):
-	var curr_plant_name = Global.character_registry.get_plant_info(curr_plant_type, CharacterRegistry.PlantInfoAttribute.PlantName)
-	almanac_update_character_panel_common(Global.global_read_data.data_almanac["Plant"][curr_plant_name])
+	var curr_plant_name: String = Global.character_registry.get_plant_info(curr_plant_type, CharacterRegistry.PlantInfoAttribute.PlantName)
+	almanac_update_character_panel_common(get_almanac_character_data("Plant", curr_plant_name))
 
 	## 花费
 	cost.get_node("Value").text = str(Global.character_registry.get_plant_info(curr_plant_type,  CharacterRegistry.PlantInfoAttribute.SunCost))
@@ -68,9 +68,22 @@ func special_plant_update_pos(new_show_plant:Plant000Base):
 
 ## 更新图鉴僵尸信息
 func almanac_update_zombie_panel(curr_zombie_type:CharacterRegistry.ZombieType):
-	var curr_zombie_name = Global.character_registry.get_zombie_info(curr_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieName)
-	almanac_update_character_panel_common(Global.global_read_data.data_almanac["Zombie"][curr_zombie_name])
+	var curr_zombie_name: String = Global.character_registry.get_zombie_info(curr_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieName)
+	almanac_update_character_panel_common(get_almanac_character_data("Zombie", curr_zombie_name))
 	create_zombie(curr_zombie_type)
+
+## 未补写文案的 OW 角色仍可正常打开和展示，不再因 JSON 缺键中断整个图鉴。
+func get_almanac_character_data(group_name: String, character_registry_name: String) -> Dictionary:
+	var data_group: Dictionary = Global.global_read_data.data_almanac.get(group_name, {})
+	if data_group.has(character_registry_name):
+		return data_group[character_registry_name]
+	return {
+		"背景": "Day",
+		"名字": character_registry_name,
+		"描述": "OW 改版角色",
+		"参数": {},
+		"简介": "该角色的图鉴文案尚未补充。",
+	}
 
 func create_zombie(curr_zombie_type:CharacterRegistry.ZombieType):
 	var zombie_scene = Global.character_registry.get_zombie_info(curr_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieScenes)
