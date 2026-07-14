@@ -25,7 +25,9 @@ enum E_JacksonStatus{
 ## 初始化状态机，舞王根节点调用
 func init_state(init_status:E_JacksonStatus):
 	curr_jackson_status = init_status
-	animation_player.set_blend_time('armraise', 'walk', 0.2)
+	# 运行时按动画编辑器预览的离散姿势切换，避免上一状态未被下一状态
+	# 覆盖的附加贴图轨道通过混合残留到新状态。
+	animation_player.set_blend_time(&"armraise", &"walk", 0.0)
 	if init_status == E_JacksonStatus.Enter:
 		## 非攻击状态下，攻击力为0
 		attack_component.update_attack_value(0, AttackComponentZombieNorm.E_AttackValueFactor.JacksonEnter)
@@ -40,8 +42,7 @@ func init_state(init_status:E_JacksonStatus):
 		for i in range(zombie_009_jackson.num_moon_walk):
 			## 入场状态（还未死亡）
 			if curr_jackson_status == E_JacksonStatus.Enter:
-				animation_player.play("moonwalk")
-				animation_player.seek(0)
+				play_visual_animation_exact(&"moonwalk")
 				await animation_player.animation_finished
 
 		## 召唤僵尸动画
@@ -49,8 +50,21 @@ func init_state(init_status:E_JacksonStatus):
 		jackson_manager.start_anim()
 	else:
 		if init_status == E_JacksonStatus.Enter:
-			animation_player.play("pose_be_call")		## 方向
-		zombie_009_jackson.update_direction_x_body(1)
+			play_visual_animation_exact(&"pose_be_call")		## 方向
+			zombie_009_jackson.update_direction_x_body(1)
+
+## 动画编辑器在预览不同动画时会先应用 RESET；运行时也必须走同一路径，
+## 否则目标动画里没有覆盖的附加 Sprite2D 会保留上一动画的局部位置。
+func play_visual_animation_exact(anim_name:StringName, start_time:float = 0.0, speed:float = 1.0, play_as_section:bool = false):
+	if animation_player.has_animation(&"RESET"):
+		animation_player.play(&"RESET", 0.0)
+		animation_player.seek(0.0, true)
+
+	if play_as_section:
+		animation_player.play_section(anim_name, start_time, -1.0, 0.0, speed)
+	else:
+		animation_player.play(anim_name, 0.0, speed)
+	animation_player.seek(start_time, true)
 
 ## 舞王动画状态改变
 func change_jackson_anim_status(ori_value:E_JacksonStatus, new_value:E_JacksonStatus):
@@ -79,7 +93,7 @@ func enter_status(new_value:E_JacksonStatus):
 		E_JacksonStatus.Point:
 			curr_jackson_status = new_value
 			## 召唤僵尸动画
-			animation_player.play("point")
+			play_visual_animation_exact(&"point")
 			## 控制舞王方向
 			#zombie_009_jackson.body.scale = Vector2(1,1)
 			zombie_009_jackson.body.scale = Vector2(
@@ -95,14 +109,14 @@ func enter_status(new_value:E_JacksonStatus):
 		E_JacksonStatus.Attack:
 			## 修改攻击力为原始值
 			attack_component.update_attack_value(1, AttackComponentZombieNorm.E_AttackValueFactor.JacksonEnter)
-			animation_player.play(&"eat", -1, 2)
+			play_visual_animation_exact(&"eat", 0.0, 2.0)
 			#zombie_009_jackson.body.scale = Vector2(1,1)
 			zombie_009_jackson.body.scale = Vector2(
 				abs(zombie_009_jackson.body.scale.x) * sign(1),
 				abs(zombie_009_jackson.body.scale.y) * sign(1)
 			)
 		E_JacksonStatus.Death:
-			animation_player.play(&"death", 0.2)
+			play_visual_animation_exact(&"death")
 
 ## 判断当前状态(召唤僵尸动画、入场结束后调用)
 func judge_curr_status() -> JacksonStateMachine.E_JacksonStatus:
@@ -132,10 +146,9 @@ func anim_play(anim_name, curr_scale, start_time, _speed, is_follow:=false):
 			anim_name = "armraise"
 
 		if is_follow:
-			animation_player.play_section(anim_name, start_time, -1, 0.2)
+			play_visual_animation_exact(anim_name, start_time, 1.0, true)
 		else:
-			animation_player.play(anim_name)
-			animation_player.seek(0)
+			play_visual_animation_exact(anim_name)
 
 		## 控制舞王方向
 		zombie_009_jackson.update_direction_x_body(curr_scale.x)
@@ -146,4 +159,3 @@ func anim_play(anim_name, curr_scale, start_time, _speed, is_follow:=false):
 			await get_tree().process_frame
 			await get_tree().process_frame
 			move_component._walking_start()
-

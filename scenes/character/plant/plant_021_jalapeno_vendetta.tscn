@@ -6,15 +6,17 @@
 [ext_resource type="Texture2D" uid="uid://hqee4ag4ittk" path="res://assets/reanim/Jalapeno_body.png" id="3_6qgup"]
 [ext_resource type="Texture2D" uid="uid://bln0hxmmktyex" path="res://assets/reanim/Jalapeno_mouth.png" id="4_7jj3l"]
 [ext_resource type="Texture2D" uid="uid://dg0urs411rllm" path="res://assets/reanim/Jalapeno_eye1.png" id="5_wobmd"]
+[ext_resource type="Texture2D" uid="uid://csfyius885u4t" path="res://assets/reanim/Jalapeno_Vendetta_Sword.png" id="6_4sbvv"]
 [ext_resource type="Texture2D" uid="uid://oi3otxyuk3li" path="res://assets/reanim/Jalapeno_eye2.png" id="6_citj3"]
 [ext_resource type="Texture2D" uid="uid://b4t56wxmfhp6u" path="res://assets/reanim/Jalapeno_cheek.png" id="7_yip6k"]
 [ext_resource type="Texture2D" uid="uid://crbckbw317krk" path="res://assets/reanim/Jalapeno_eyebrow1.png" id="8_6ompq"]
 [ext_resource type="Texture2D" uid="uid://4p7jqmj2ot5i" path="res://assets/reanim/Jalapeno_eyebrow2.png" id="9_60eid"]
 [ext_resource type="Animation" uid="uid://bx17w74rvafw3" path="res://animation/character/plant/021_jalapeno/Jalapeno_explode.tres" id="10_cvvd8"]
-[ext_resource type="Texture2D" uid="uid://csfyius885u4t" path="res://assets/reanim/Jalapeno_Vendetta_Sword.png" id="11_gv813"]
+[ext_resource type="Texture2D" uid="uid://oovii3ciismf" path="res://assets/reanim/Jalapeno_Vendetta_Sword_Standalone.png" id="11_gv813"]
 [ext_resource type="Animation" uid="uid://dbgfoesxm6gq6" path="res://animation/character/plant/021_jalapeno/Jalapeno_idle.tres" id="11_te1fo"]
 [ext_resource type="Texture2D" uid="uid://dmw1obwcei4rr" path="res://assets/reanim/Jalapeno_Vendetta_Hair.png" id="12_na6po"]
 [ext_resource type="Script" uid="uid://lxlakp664pau" path="res://scripts/character/components/bomb_component/component_bomb_jalapeno.gd" id="12_wobmd"]
+[ext_resource type="Animation" uid="uid://cuih3p27nyaji" path="res://animation/character/plant/059_jalapeno_vendetta/Jalapeno_vendetta_charge.tres" id="13_vendetta_charge"]
 
 [sub_resource type="Animation" id="Animation_gv813"]
 length = 0.001
@@ -66,6 +68,51 @@ nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_qsyk2")
 nodes/TimeScale/position = Vector2(180, 120)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"]
 
+[sub_resource type="Animation" id="Animation_vendetta_charge_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Body:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Body:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vendetta_charge"]
+_data = {
+&"RESET": SubResource("Animation_vendetta_charge_reset"),
+&"Vendetta_charge": ExtResource("13_vendetta_charge")
+}
+
 [node name="Plant021JalapenoVendetta" unique_id=2087937088 node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("1_14btg")]
 script = ExtResource("2_citj3")
 plant_type = 21
@@ -86,64 +133,74 @@ visible = false
 centered = false
 
 [node name="Jalapeno_stem" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1193992770]
-position = Vector2(33.273026, 2.6744614)
-rotation = 0.025992027
-scale = Vector2(0.7940431, 0.798759)
-skew = -0.0038988537
+position = Vector2(33.331455, 2.6903968)
+rotation = 0.031554494
+scale = Vector2(0.7927683, 0.7984934)
+skew = -0.004733234
 texture = ExtResource("2_2sesa")
 centered = false
 
 [node name="Jalapeno_body" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=191763898]
-position = Vector2(17.05036, 10.548923)
-scale = Vector2(0.8032267, 0.7965251)
+position = Vector2(17.039736, 10.580793)
+scale = Vector2(0.8039172, 0.7957815)
 texture = ExtResource("3_6qgup")
 centered = false
 
-[node name="sword" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body" index="0" unique_id=1592551326]
-position = Vector2(32.24, 38.48)
-scale = Vector2(0.67, 0.67)
+[node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body" index="0" unique_id=1125841563]
+position = Vector2(31.467, 37.193996)
+scale = Vector2(0.63000005, 0.63)
+texture = ExtResource("6_4sbvv")
+
+[node name="SwordPivot" type="Node2D" parent="Body/BodyCorrect/Jalapeno_body" index="1" unique_id=1280808316]
+position = Vector2(10, 70)
+
+[node name="sword" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body/SwordPivot" index="0" unique_id=1592551326]
+z_index = -1
+z_as_relative = false
+position = Vector2(24.330906, -29.317245)
+scale = Vector2(0.8125962, 0.80479366)
 texture = ExtResource("11_gv813")
 
-[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body" index="1" unique_id=154082055]
+[node name="hair" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body" index="2" unique_id=154082055]
 position = Vector2(31.21, 17.02)
 scale = Vector2(0.93, 0.93)
 texture = ExtResource("12_na6po")
 
 [node name="Jalapeno_mouth" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=2141927524]
-position = Vector2(26.902155, 34.14964)
-scale = Vector2(0.8163815, 0.78858256)
+position = Vector2(26.838413, 34.160263)
+scale = Vector2(0.8198873, 0.7861392)
 texture = ExtResource("4_7jj3l")
 centered = false
 
 [node name="Jalapeno_eye1" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1728139534]
-position = Vector2(21.3, 19.324102)
-scale = Vector2(0.8, 0.78858256)
+position = Vector2(21.3, 19.350662)
+scale = Vector2(0.8, 0.7861392)
 texture = ExtResource("5_wobmd")
 centered = false
 
 [node name="Jalapeno_eye2" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1317574856]
-position = Vector2(41, 25.148924)
-scale = Vector2(0.8, 0.7744349)
+position = Vector2(41, 25.180794)
+scale = Vector2(0.8, 0.7689638)
 texture = ExtResource("6_citj3")
 centered = false
 
 [node name="Jalapeno_cheek" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=474664020]
-position = Vector2(42.000717, 29.05036)
-scale = Vector2(0.64762974, 0.789079)
+position = Vector2(41.97947, 29.039736)
+scale = Vector2(0.6511886, 0.7867418)
 texture = ExtResource("7_yip6k")
 centered = false
 
 [node name="Jalapeno_eyebrow1" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=661203269]
-position = Vector2(22.523384, 15.849641)
-rotation = 0.021659857
-scale = Vector2(0.8091836, 0.7985108)
-skew = -0.00086628506
+position = Vector2(22.57119, 15.860265)
+rotation = 0.026295211
+scale = Vector2(0.81114894, 0.7981921)
+skew = -0.0010516759
 texture = ExtResource("8_6ompq")
 centered = false
 
 [node name="Jalapeno_eyebrow2" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=224493666]
-position = Vector2(39.92482, 21.448923)
-scale = Vector2(0.81017643, 0.7937949)
+position = Vector2(39.930134, 21.480793)
+scale = Vector2(0.81235427, 0.79246694)
 texture = ExtResource("9_60eid")
 centered = false
 
@@ -166,3 +223,7 @@ script = ExtResource("12_wobmd")
 can_attack_plant_status = 7
 can_attack_zombie_status = 31
 bomb_sfx = &"Jalapeno"
+
+[node name="VendettaChargeAnimationPlayer" type="AnimationPlayer" parent="." index="11" unique_id=272406855]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_vendetta_charge")

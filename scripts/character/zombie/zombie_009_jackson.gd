@@ -10,6 +10,8 @@ var jackson_manager: JacksonManager
 var animation_origin_speed:float
 ## 舞王入场滑步次数
 @export var num_moon_walk := 2
+## 该舞王召唤的伴舞类型，变体场景可单独覆盖。
+@export var backup_dancer_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z509Dancer
 ## 伴舞僵尸编号,舞王为-1
 var dancer_id:int= -1
 #region 重写父类的方法
@@ -31,7 +33,7 @@ func _init_show_jackon():
 	if anim:
 		# 设置循环模式
 		anim.loop_mode = Animation.LOOP_LINEAR
-	animation_player.play("moonwalk")
+	state_machine.play_visual_animation_exact(&"moonwalk")
 	move_component.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
 
 ## 舞王出场动画，伴舞继承重写
@@ -115,7 +117,7 @@ func update_move(curr_is_move):
 ## 动画结束处判断是否死亡，循环动画不发射动画结束信号，在动画轨道调用该函数
 func anim_judge_death():
 	if is_death:
-		animation_player.play("death")
+		state_machine.play_visual_animation_exact(&"death")
 #endregion
 
 ## 角色死亡

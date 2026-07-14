@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=22 format=3 uid="uid://blafwt8jwkl6s"]
+[gd_resource type="Animation" format=3 uid="uid://blafwt8jwkl6s"]
 
 [ext_resource type="Texture2D" uid="uid://qekixo4vwyav" path="res://assets/reanim/Zombie_dancer_innerarm_upper.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://brbbklqtpm0o3" path="res://assets/reanim/Zombie_dancer_innerarm_lower.png" id="1_fuck"]
@@ -292,7 +292,7 @@ tracks/21/keys = {
 }
 tracks/22/type = "value"
 tracks/22/imported = false
-tracks/22/enabled = true
+tracks/22/enabled = false
 tracks/22/path = NodePath("Body/BodyCorrect/Zombie_Jackson_innerarm_hand:self_modulate")
 tracks/22/interp = 1
 tracks/22/loop_wrap = true

@@ -2,6 +2,11 @@ extends Node
 ## 手持管理器，角色（植物僵尸）
 class_name HM_Character
 
+const VENDETTA_PLANT_TYPE := CharacterRegistry.PlantType.P021JalapenoVendetta
+const VENDETTA_CHARGE_TIME := 1.0
+const VENDETTA_FOLLOW_OFFSET := Vector2(24.0, 48.0)
+const VENDETTA_SLASH_EFFECT = preload("res://scripts/fx/plant_effect/plant_effect_vendetta_jalapeno_slash.gd")
+
 @onready var hand_manager: HandManager = %HandManager
 
 ## 角色临时挂载节点
@@ -34,11 +39,41 @@ var last_non_imitater_plant_type: CharacterRegistry.PlantType = CharacterRegistr
 ## 缓存：游戏场景中的 BodyCorrect 位置，按植物类型索引
 var _game_body_correct_cache: Dictionary = {}
 
+## 斩仇火爆辣椒空中技能状态
+var _vendetta_charge_player:AnimationPlayer
+var _vendetta_is_charging := false
+var _vendetta_charge_elapsed := 0.0
+var _vendetta_target_lane := -1
+var _vendetta_float_time := 0.0
+var _vendetta_has_released := false
+var _vendetta_release_on_next_frame := false
+var _vendetta_latched_lane := -1
+
 func init_hm_character():
 	self.is_mode_column = hand_manager.game_para.is_mode_column
 
-func character_process() -> void:
+func character_process(delta:float) -> void:
 	if not is_instance_valid(characte_static):
+		return
+	if _is_vendetta_selected():
+		_vendetta_float_time += delta
+		var charge_progress := clampf(_vendetta_charge_elapsed / VENDETTA_CHARGE_TIME, 0.0, 1.0)
+		var float_offset := Vector2(0.0, sin(_vendetta_float_time * 5.0) * 3.0 - charge_progress * 10.0)
+		characte_static.global_position = temporary_character.get_global_mouse_position() + VENDETTA_FOLLOW_OFFSET + float_offset
+		_update_vendetta_indicator_position()
+		if _vendetta_is_charging:
+			# 满蓄完成态保留一个绘制帧，让第二格白芯与三排阴影真正可见；
+			# 下一帧仍是自动释放，手感上保持“蓄满即炸”。
+			if _vendetta_release_on_next_frame:
+				_vendetta_target_lane = _vendetta_latched_lane
+				_release_vendetta(true, true)
+				return
+			_vendetta_charge_elapsed = minf(_vendetta_charge_elapsed + delta, VENDETTA_CHARGE_TIME)
+			charge_progress = clampf(_vendetta_charge_elapsed / VENDETTA_CHARGE_TIME, 0.0, 1.0)
+			_update_vendetta_charge_preview(charge_progress)
+			if charge_progress >= 1.0 and _vendetta_target_lane >= 0:
+				_vendetta_latched_lane = _vendetta_target_lane
+				_vendetta_release_on_next_frame = true
 		return
 	## CanvasItem方法获取位置
 	characte_static.global_position = temporary_character.get_global_mouse_position()
@@ -60,6 +95,10 @@ func click_card(card:Card) -> bool:
 		CharacterRegistry.CharacterType.Null:
 			push_warning("手持卡失败，卡牌没有植物或僵尸类型")
 			return false
+
+	if character_type == CharacterRegistry.CharacterType.Plant\
+		and card.card_plant_type == VENDETTA_PLANT_TYPE:
+		return _click_vendetta_card(card)
 
 	var character_static_copy := card.character_static.duplicate() as Node2D
 	if not is_instance_valid(character_static_copy) or character_static_copy.get_child_count() == 0:
@@ -129,6 +168,270 @@ func click_card(card:Card) -> bool:
 
 	return true
 
+
+## 斩仇版火爆辣椒不是“种下去”的植物，而是鼠标旁悬空释放的整排技能。
+func _click_vendetta_card(card:Card) -> bool:
+	var plant_scene:PackedScene = Global.character_registry.get_plant_info(
+		VENDETTA_PLANT_TYPE,
+		CharacterRegistry.PlantInfoAttribute.PlantScenes
+	)
+	if not is_instance_valid(plant_scene):
+		push_warning("手持斩仇火爆辣椒失败，角色场景未注册")
+		return false
+
+	var preview_plant := plant_scene.instantiate() as Plant000Base
+	if not is_instance_valid(preview_plant):
+		push_warning("手持斩仇火爆辣椒失败，角色场景不是植物")
+		return false
+
+	if curr_card != null:
+		_clear_curr_data()
+
+	curr_card = card
+	EventBus.push_event("hm_character_hand_card", [curr_card])
+	plant_condition = Global.character_registry.get_plant_info(
+		VENDETTA_PLANT_TYPE,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	if not curr_card.is_imitater:
+		last_non_imitater_plant_type = VENDETTA_PLANT_TYPE
+
+	preview_plant.init_plant({
+		Plant000Base.E_PInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsShow,
+		Plant000Base.E_PInitAttr.IsImitaterMaterial: curr_card.is_imitater,
+	})
+	characte_static = preview_plant
+	temporary_character.add_child(preview_plant)
+	preview_plant.z_as_relative = false
+	preview_plant.z_index = 302
+
+	var preview_shadow := preview_plant.get_node_or_null(^"Shadow") as CanvasItem
+	if is_instance_valid(preview_shadow):
+		preview_shadow.visible = false
+	var preview_hp := preview_plant.get_node_or_null(^"HpComponent/HpControl") as CanvasItem
+	if is_instance_valid(preview_hp):
+		preview_hp.visible = false
+	var preview_bomb := preview_plant.get_node_or_null(^"BombComponent") as ComponentNormBase
+	if is_instance_valid(preview_bomb):
+		preview_bomb.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
+
+	_vendetta_charge_player = preview_plant.get_node_or_null(^"VendettaChargeAnimationPlayer") as AnimationPlayer
+	var targeting_effect := VENDETTA_SLASH_EFFECT.new() as Node2D
+	if not is_instance_valid(targeting_effect):
+		_clear_curr_data()
+		push_warning("手持斩仇火爆辣椒失败，范围特效无法创建")
+		return false
+	characte_static_shadow = targeting_effect
+	temporary_character.add_child(targeting_effect)
+	targeting_effect.position = Vector2.ZERO
+	targeting_effect.z_as_relative = false
+	targeting_effect.z_index = 301
+
+	_vendetta_is_charging = false
+	_vendetta_charge_elapsed = 0.0
+	_vendetta_target_lane = -1
+	_vendetta_float_time = 0.0
+	_vendetta_has_released = false
+	_vendetta_release_on_next_frame = false
+	_vendetta_latched_lane = -1
+	return true
+
+
+func _is_vendetta_selected() -> bool:
+	return is_instance_valid(curr_card)\
+		and curr_card.card_plant_type == VENDETTA_PLANT_TYPE
+
+
+func is_vendetta_charging() -> bool:
+	return _is_vendetta_selected() and _vendetta_is_charging
+
+
+## 在格子上按下左键后开始空中蓄力；提前松开斩一排，蓄满自动斩三排。
+func handle_mouse_button(event:InputEventMouseButton) -> bool:
+	if not _is_vendetta_selected() or event.button_index != MOUSE_BUTTON_LEFT:
+		return false
+
+	if event.pressed:
+		if not is_instance_valid(hand_manager.curr_plant_cell):
+			return false
+		_start_vendetta_charge(hand_manager.curr_plant_cell)
+		return true
+
+	if not _vendetta_is_charging:
+		return false
+	if _vendetta_release_on_next_frame and _vendetta_latched_lane >= 0:
+		_vendetta_target_lane = _vendetta_latched_lane
+	elif is_instance_valid(hand_manager.curr_plant_cell):
+		_vendetta_target_lane = hand_manager.curr_plant_cell.row_col.x
+	if _vendetta_target_lane >= 0:
+		_release_vendetta(_vendetta_charge_elapsed >= VENDETTA_CHARGE_TIME, true)
+	else:
+		_cancel_vendetta_charge()
+	return true
+
+
+func _start_vendetta_charge(plant_cell:PlantCell) -> void:
+	if _vendetta_has_released:
+		return
+	_vendetta_is_charging = true
+	_vendetta_charge_elapsed = 0.0
+	_vendetta_release_on_next_frame = false
+	_vendetta_latched_lane = -1
+	_show_vendetta_target(plant_cell)
+	_update_vendetta_charge_preview(0.0)
+	if is_instance_valid(_vendetta_charge_player):
+		_vendetta_charge_player.stop()
+		_vendetta_charge_player.play(&"Vendetta_charge")
+
+
+func _cancel_vendetta_charge() -> void:
+	_vendetta_is_charging = false
+	_vendetta_charge_elapsed = 0.0
+	_vendetta_release_on_next_frame = false
+	_vendetta_latched_lane = -1
+	_update_vendetta_charge_preview(0.0)
+	if is_instance_valid(_vendetta_charge_player):
+		_vendetta_charge_player.stop()
+		_vendetta_charge_player.play(&"RESET")
+		_vendetta_charge_player.advance(0.0)
+	if not is_instance_valid(hand_manager.curr_plant_cell):
+		if is_instance_valid(characte_static_shadow):
+			characte_static_shadow.call(&"hide_target")
+		is_shadow_in_cell = false
+		_vendetta_target_lane = -1
+
+
+func _show_vendetta_target(plant_cell:PlantCell) -> void:
+	if not is_instance_valid(characte_static_shadow):
+		return
+	# 满蓄完成帧已经把范围锁定；忽略这一帧内的跨排输入，保证玩家
+	# 看到的三排阴影与下一帧实际释放的排完全一致。
+	if _vendetta_release_on_next_frame:
+		return
+	_vendetta_target_lane = plant_cell.row_col.x
+	is_shadow_in_cell = true
+	characte_static_shadow.call(
+		&"show_target",
+		_vendetta_target_lane,
+		_get_vendetta_lane_polygons(characte_static_shadow)
+	)
+	if _vendetta_is_charging:
+		_update_vendetta_charge_preview(
+			clampf(_vendetta_charge_elapsed / VENDETTA_CHARGE_TIME, 0.0, 1.0)
+		)
+
+
+func _update_vendetta_charge_preview(progress:float) -> void:
+	if is_instance_valid(characte_static_shadow):
+		characte_static_shadow.call(&"set_charge_progress", clampf(progress, 0.0, 1.0))
+
+
+## 将空中角色的画布位置转换到范围特效局部坐标，供蓄力档位标志跟随。
+func _update_vendetta_indicator_position() -> void:
+	if not is_instance_valid(characte_static) or not is_instance_valid(characte_static_shadow):
+		return
+	var effect_inverse := characte_static_shadow.get_global_transform_with_canvas().affine_inverse()
+	var indicator_position:Vector2 = effect_inverse * characte_static.get_global_transform_with_canvas().origin
+	characte_static_shadow.call(&"set_indicator_position", indicator_position)
+
+
+## 用真实格子的四角生成范围，屋顶斜面也不会被近似成错误的水平矩形。
+func _get_vendetta_lane_polygons(effect_root:CanvasItem) -> Array:
+	var result:Array = []
+	if not is_instance_valid(effect_root)\
+		or not is_instance_valid(Global.main_game)\
+		or not is_instance_valid(Global.main_game.plant_cell_manager):
+		return result
+
+	var effect_inverse := effect_root.get_global_transform_with_canvas().affine_inverse()
+	for lane_cells:Array in Global.main_game.plant_cell_manager.all_plant_cells:
+		var lane_polygons:Array = []
+		for cell_value in lane_cells:
+			var plant_cell := cell_value as PlantCell
+			if not is_instance_valid(plant_cell):
+				continue
+			var cell_transform := effect_inverse * plant_cell.get_global_transform_with_canvas()
+			var cell_size := plant_cell.size
+			lane_polygons.append(PackedVector2Array([
+				cell_transform * Vector2.ZERO,
+				cell_transform * Vector2(cell_size.x, 0.0),
+				cell_transform * cell_size,
+				cell_transform * Vector2(0.0, cell_size.y),
+			]))
+		result.append(lane_polygons)
+	return result
+
+
+func _release_vendetta(is_charged:bool, suppress_following_cell_click:bool) -> void:
+	if _vendetta_has_released or not _is_vendetta_selected() or _vendetta_target_lane < 0:
+		return
+	if not is_instance_valid(Global.main_game)\
+		or not is_instance_valid(Global.main_game.plant_cell_manager):
+		return
+
+	var all_lane_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
+	if _vendetta_target_lane >= all_lane_cells.size():
+		return
+
+	_vendetta_has_released = true
+	_vendetta_is_charging = false
+	_vendetta_release_on_next_frame = false
+	_vendetta_latched_lane = -1
+	if suppress_following_cell_click:
+		hand_manager.suppress_vendetta_cell_click_after_release()
+	if is_instance_valid(_vendetta_charge_player):
+		if is_charged:
+			## HandManager 比临时角色更早处理帧，先落到最后一帧再释放。
+			_vendetta_charge_player.seek(VENDETTA_CHARGE_TIME, true)
+		## 释放后只让独立的 SwordPivot 挥砍；辣椒膨胀停在当前蓄力姿态，
+		## 避免瞬发后还在刀落过程中继续播放 explode。
+		_vendetta_charge_player.pause()
+
+	var release_effect := VENDETTA_SLASH_EFFECT.new() as Node2D
+	var airborne_actor := characte_static
+	if is_instance_valid(release_effect):
+		temporary_character.add_child(release_effect)
+		release_effect.position = Vector2.ZERO
+		release_effect.z_as_relative = false
+		## 剑气覆盖草地，空中火爆辣椒和挥刀本体保持在其上。
+		release_effect.z_index = 301
+		var release_origin := release_effect.to_local(airborne_actor.global_position)\
+			if is_instance_valid(airborne_actor) else Vector2.ZERO
+		release_effect.call(
+			&"start_release",
+			_vendetta_target_lane,
+			is_charged,
+			_get_vendetta_lane_polygons(release_effect),
+			release_origin,
+			airborne_actor
+		)
+	else:
+		push_warning("斩仇火爆辣椒释放特效无法创建")
+		if is_instance_valid(airborne_actor):
+			airborne_actor.queue_free()
+
+	## 释放特效已接管空中角色，清理手持状态时不再删掉它。
+	characte_static = null
+	_vendetta_charge_player = null
+
+	SoundManager.play_other_SFX(&"swing")
+	SoundManager.play_character_SFX(&"Jalapeno")
+	var first_lane := _vendetta_target_lane
+	var end_lane := _vendetta_target_lane + 1
+	if is_charged:
+		first_lane = maxi(0, _vendetta_target_lane - 1)
+		end_lane = mini(all_lane_cells.size(), _vendetta_target_lane + 2)
+	for lane_index in range(first_lane, end_lane):
+		EventBus.push_event("jalapeno_bomb_effect", [lane_index])
+		EventBus.push_event("jalapeno_bomb_lane_zombie", [lane_index])
+		EventBus.push_event("jalapeno_bomb_item_lane", [lane_index])
+
+	var used_card := curr_card
+	if is_instance_valid(used_card):
+		used_card.signal_card_use_end.emit()
+	hand_manager.curr_hm_status = HandManager.E_HandManagerStatus.Null
+
+
 ## 紫卡预种植植物身体明暗发光开始
 func start_preplant_purple_light(curr_plant_condition:ResourcePlantCondition, plant_type:CharacterRegistry.PlantType):
 	curr_all_preplant_purple = curr_plant_condition.get_all_preplant_purple(Global.main_game.plant_cell_manager.all_plant_cells, plant_type)
@@ -147,6 +450,14 @@ func _clear_curr_data():
 	if plant_condition != null and plant_condition.is_purple_card:
 		end_preplant_purple_light()
 
+	_vendetta_is_charging = false
+	_vendetta_charge_elapsed = 0.0
+	_vendetta_target_lane = -1
+	_vendetta_float_time = 0.0
+	_vendetta_has_released = false
+	_vendetta_release_on_next_frame = false
+	_vendetta_latched_lane = -1
+	_vendetta_charge_player = null
 	is_shadow_in_cell = false
 	## 若当前存在卡片,事件总线推清除当前卡片数据,种子雨卡槽接受判断
 	if is_instance_valid(curr_card):
@@ -167,6 +478,9 @@ func _clear_curr_data():
 ## 鼠标进入cell
 func mouse_enter(plant_cell:PlantCell):
 	if not is_instance_valid(curr_card) or not is_instance_valid(characte_static_shadow):
+		return
+	if _is_vendetta_selected():
+		_show_vendetta_target(plant_cell)
 		return
 	is_shadow_in_cell = _update_cell_shadow(plant_cell, characte_static_shadow)
 	if is_shadow_in_cell and is_mode_column:
@@ -236,6 +550,15 @@ func get_zombie_static_shadow_global_position(plant_cell)->Vector2:
 
 ## 鼠标移出cell
 func mouse_exit(_plant_cell:PlantCell):
+	if _is_vendetta_selected():
+		## 蓄力时保留最后一个有效排，避免格子缝隙让满蓄静默取消。
+		if _vendetta_is_charging:
+			return
+		if is_instance_valid(characte_static_shadow):
+			characte_static_shadow.call(&"hide_target")
+		is_shadow_in_cell = false
+		_vendetta_target_lane = -1
+		return
 	if is_instance_valid(characte_static_shadow):
 		characte_static_shadow.modulate.a = 0
 	if is_mode_column:
@@ -244,6 +567,16 @@ func mouse_exit(_plant_cell:PlantCell):
 ## 点击种植植物\僵尸
 func click_cell(plant_cell:PlantCell):
 	if not is_instance_valid(curr_card):
+		return
+	if _is_vendetta_selected():
+		if _vendetta_release_on_next_frame and _vendetta_latched_lane >= 0:
+			_vendetta_target_lane = _vendetta_latched_lane
+		else:
+			_vendetta_target_lane = plant_cell.row_col.x
+		_release_vendetta(
+			_vendetta_is_charging and _vendetta_charge_elapsed >= VENDETTA_CHARGE_TIME,
+			false
+		)
 		return
 	if is_shadow_in_cell:
 		if curr_card.card_plant_type != 0:

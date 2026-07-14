@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" uid="uid://dqaqlnax0o5fp" path="res://scenes/bullet/bullet_1002_bowling_bomb.tscn" id="1_parent"]
+[ext_resource type="Script" uid="uid://cmalcvf6w0g2o" path="res://scripts/bullet/bullet_053_cherry_bomb_junkrat_tire.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://bnhsxiio045hw" path="res://assets/reanim/CherryBomb_Junkrat_tire.png" id="3_tire"]
+[ext_resource type="Texture2D" uid="uid://hhr7g2qoh2qp" path="res://assets/image/particles/CherryBomb_Junkrat_Boom.png" id="4_boom"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mini_bomb"]
+size = Vector2(190, 140)
+
+[node name="Bullet053CherryBombJunkratTire" instance=ExtResource("1_parent")]
+script = ExtResource("2_script")
+speed = 188.0
+
+[node name="Body" parent="." index="1"]
+modulate = Color(1, 1, 1, 1)
+
+[node name="_ground" parent="Body/BodyCorrect" index="0"]
+visible = false
+
+[node name="Anim_idle" parent="Body/BodyCorrect" index="1"]
+visible = false
+
+[node name="Anim_face" parent="Body/BodyCorrect" index="2"]
+visible = false
+
+[node name="Anim_blink_twitch" parent="Body/BodyCorrect" index="3"]
+visible = false
+
+[node name="Anim_blink_twice" parent="Body/BodyCorrect" index="4"]
+visible = false
+
+[node name="CherryBombJunkratTire" type="Sprite2D" parent="Body/BodyCorrect" index="5"]
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("3_tire")
+
+[node name="CollisionShape2D" parent="BombComponent/Area2DBomb" index="0"]
+shape = SubResource("RectangleShape2D_mini_bomb")
+
+[node name="BombEffect" parent="BombComponent" index="1"]
+scale = Vector2(0.65, 0.65)
+
+[node name="ExplosiveFont" parent="BombComponent/BombEffect" index="2"]
+modulate = Color(1, 1, 1, 0.83)
+texture = ExtResource("4_boom")

@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://hhr7g2qoh2qp" path="res://assets/image/particles/CherryBomb_Junkrat_Boom.png" id="24_2gy5r"]
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="24_ql0xv"]
 [ext_resource type="Shader" uid="uid://cikju0ectkkms" path="res://shaders/Mypartical.gdshader" id="25_qq8mq"]
+[ext_resource type="PackedScene" path="res://scenes/bullet/bullet_053_cherry_bomb_junkrat_tire.tscn" id="26_tire"]
 
 [sub_resource type="Animation" id="Animation_hqw77"]
 length = 0.001
@@ -329,6 +330,7 @@ shader_parameter/random_direction_from_spread = Vector3(0, 0, 0)
 [node name="Plant003CherryBombJunkrat" unique_id=157169406 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_mdj76")]
 script = ExtResource("2_dniyj")
 plant_type = 3
+tire_bullet_scene = ExtResource("26_tire")
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("BombComponent/Area2DBomb")]
 

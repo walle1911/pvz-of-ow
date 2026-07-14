@@ -356,7 +356,7 @@ tracks/28/keys = {
 }
 tracks/29/type = "value"
 tracks/29/imported = false
-tracks/29/enabled = true
+tracks/29/enabled = false
 tracks/29/path = NodePath("Body/BodyCorrect/Zombie_Jackson_innerleg_foot:self_modulate")
 tracks/29/interp = 1
 tracks/29/loop_wrap = true
@@ -596,7 +596,7 @@ tracks/48/keys = {
 }
 tracks/49/type = "value"
 tracks/49/imported = false
-tracks/49/enabled = true
+tracks/49/enabled = false
 tracks/49/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot:self_modulate")
 tracks/49/interp = 1
 tracks/49/loop_wrap = true

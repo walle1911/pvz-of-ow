@@ -175,7 +175,7 @@ func call_zombie_dancer():
 					Zombie000Base.E_ZInitAttr.Lane:new_zombie_dancer_lane_and_pos["lane"],
 				}
 				var _new_zombie_dancer:Zombie010Dancer = Global.main_game.zombie_manager.create_norm_zombie(
-					CharacterRegistry.ZombieType.Z509Dancer,
+					zombie_dancers[-1].backup_dancer_type,
 					Global.main_game.zombie_manager.all_zombie_rows[new_zombie_dancer_lane_and_pos["lane"]],
 					zombie_init_para,
 					new_zombie_dancer_lane_and_pos["pos"],

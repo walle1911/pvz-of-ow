@@ -39,6 +39,7 @@
 [ext_resource type="Texture2D" uid="uid://cyclr63newxnu" path="res://assets/reanim/Zombie_charred_head.png" id="26_fumvv"]
 [ext_resource type="Animation" uid="uid://6g1fqjp3dose" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_armraise.tres" id="26_i0ng1"]
 [ext_resource type="Texture2D" uid="uid://bhc7c46sg7r17" path="res://assets/reanim/DancingZombie_DJ_bag.png" id="26_j5klf"]
+[ext_resource type="Texture2D" uid="uid://caxhb0l0372ma" path="res://assets/reanim/forg_strap1.png" id="27_728id"]
 [ext_resource type="Animation" uid="uid://gkla8b47gdem" path="res://animation/character/zombie/009_zombie_jackson/Zombie_Jackson_death.tres" id="27_al4tk"]
 [ext_resource type="Texture2D" uid="uid://btcmk221m1aan" path="res://assets/reanim/Zombie_hair.png" id="27_n0ygd"]
 [ext_resource type="Texture2D" uid="uid://byfgmljhbkjo7" path="res://assets/reanim/Zombie_charred2.png" id="28_5vu3m"]
@@ -1301,6 +1302,7 @@ _data = {
 [node name="Zombie508Jackson" unique_id=2124402437 instance=ExtResource("1_y18o3")]
 script = ExtResource("2_fumvv")
 num_moon_walk = 2
+backup_dancer_type = 10
 zombie_type = 508
 sfx_enter_name = &"Dancer"
 metadata/_edit_pinned_properties_ = [&"zombie_type"]
@@ -1380,6 +1382,7 @@ scale = Vector2(1.0972041, 1.4326259)
 texture = ExtResource("13_v3nvn")
 
 [node name="Zombie_Jackson_innerleg_foot" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1030484505]
+self_modulate = Color(1, 1, 1, 0)
 position = Vector2(55.9, 108.2)
 rotation = 0.003491
 scale = Vector2(0.752, 0.798)
@@ -1404,6 +1407,7 @@ scale = Vector2(1.0112914, 1.882545)
 texture = ExtResource("17_r331j")
 
 [node name="Zombie_Jackson_outerleg_foot" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=1335754946]
+self_modulate = Color(1, 1, 1, 0)
 position = Vector2(35.9, 115.8)
 rotation = 6.2029
 scale = Vector2(0.697, 0.8)
@@ -1457,6 +1461,11 @@ centered = false
 position = Vector2(49.77, 25.91)
 scale = Vector2(0.77, 0.77)
 texture = ExtResource("26_j5klf")
+
+[node name="strap" type="Sprite2D" parent="Body/BodyCorrect/Zombie_Jackson_body1" index="1" unique_id=283708604]
+position = Vector2(37.14, 31.2)
+scale = Vector2(0.64, 0.64)
+texture = ExtResource("27_728id")
 
 [node name="Anim_head1" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=30675816]
 position = Vector2(53.5, -2.8)
@@ -1531,8 +1540,8 @@ texture = ExtResource("22_cfajw")
 centered = false
 
 [node name="Sprite2D" type="Sprite2D" parent="Body/BodyCorrect/Zombie_outerarm_hand" index="0" unique_id=2007078491]
-position = Vector2(13.1676655, 13.93)
-scale = Vector2(1.0108223, 1)
+position = Vector2(13.3151655, 13.965)
+scale = Vector2(1.0206556, 0.99740744)
 texture = ExtResource("39_qg5x8")
 
 [node name="Node2D_Hand_Drop" type="Node2D" parent="Body/NodeDrop" index="0" unique_id=665275126]
