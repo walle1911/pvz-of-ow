@@ -157,7 +157,7 @@ func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_star
 ##[is_plant_start_effect:bool] 是否有种植特效
 ##[is_imitater_material:bool] 是否为模仿者材质
 ##[is_zombie_mode:bool] 是否为我是僵尸模式
-func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho) -> Plant000Base:
+func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho, pre_ready_data:Dictionary = {}) -> Plant000Base:
 	var plant_condition:ResourcePlantCondition
 	var plant :Plant000Base
 	plant_condition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
@@ -193,6 +193,10 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 			plant.imitater_plant_type = plant_type
 	else:
 		plant = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
+
+	## 少数由玩法生成的植物需要在进入场景树、执行 _ready() 之前设置初始状态。
+	if not pre_ready_data.is_empty() and plant.has_method("apply_pre_ready_data"):
+		plant.apply_pre_ready_data(pre_ready_data)
 
 	var plant_init_para = {
 		Plant000Base.E_PInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsNorm,
@@ -237,6 +241,62 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 	signal_plant_create.emit(self, plant.plant_type)
 
 	return plant
+
+
+## D.Va 毁灭菇爆炸后，检测后方三列、当前行及相邻行组成的九格区域。
+## 后方没有合法空位时，无视刚生成的坑洞，回到爆炸原格落地。
+func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:float, baby_scale:float, launch_duration:float, launch_height:float):
+	await get_tree().process_frame
+
+	var target_cell:PlantCell = null
+	var candidate_cells:Array[PlantCell] = []
+	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
+		CharacterRegistry.PlantType.P016DoomShroomDVA,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	if is_instance_valid(Global.main_game) and is_instance_valid(Global.main_game.plant_cell_manager):
+		var all_plant_cells:Array[Array] = Global.main_game.plant_cell_manager.all_plant_cells
+		for row_offset in range(-1, 2):
+			var target_row := row_col.x + row_offset
+			if target_row < 0 or target_row >= all_plant_cells.size():
+				continue
+			for col_offset in range(1, 4):
+				var target_col := row_col.y - col_offset
+				if target_col < 0:
+					break
+				var candidate:PlantCell = all_plant_cells[target_row][target_col]
+				if plant_condition.judge_is_can_plant(candidate, CharacterRegistry.PlantType.P016DoomShroomDVA):
+					candidate_cells.append(candidate)
+	if not candidate_cells.is_empty():
+		target_cell = candidate_cells.pick_random()
+
+	## 原格的旧毁灭菇已在上一帧离场；坑洞不阻止这次专属生成。
+	var is_fallback_to_source := not is_instance_valid(target_cell)
+	if not is_instance_valid(target_cell):
+		target_cell = self
+	if is_instance_valid(target_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]):
+		return
+
+	var baby := target_cell.create_plant(
+		CharacterRegistry.PlantType.P016DoomShroomDVA,
+		false,
+		false,
+		false,
+		false,
+		CharacterRegistry.PlantType.P053ImitaterEcho,
+		{
+			"is_baby_growing": true,
+			"can_launch_baby": false,
+			"wait_for_launch": true,
+			"baby_grow_time_left": baby_grow_time,
+			"baby_scale": baby_scale,
+		}
+	) as Plant062DoomShroomDVA
+	if is_instance_valid(baby):
+		## 弹坑是运行时最后加入的 CanvasItem；原地落点需要显式盖在弹坑上方。
+		if is_fallback_to_source:
+			baby.z_index = maxi(baby.z_index, 1)
+		baby.start_baby_launch(source_global_position, launch_duration, launch_height)
 
 ## 咖啡豆唤醒在睡眠中的植物
 func coffee_bean_awake_up():
@@ -392,6 +452,9 @@ func tombstone_death_update_plant_cell_data():
 #region 坑洞相关
 ## 创建坑洞
 func create_crater():
+	## 小毁灭菇可能落回刚爆炸的原格；该格已有坑洞时不要重复叠加。
+	if is_instance_valid(crater):
+		return
 	self.crater = SceneRegistry.DOOM_SHROOM_CRATER.instantiate()
 	add_child(crater)
 	crater.init_crater(1, self)
@@ -628,7 +691,15 @@ func clear_data_plant_cell():
 ## 读档时创建植物
 func _load_game_data_create_plant(game_data_plant):
 	var plant:Plant000Base
-	plant = create_plant(game_data_plant["plant_type"], false, false, game_data_plant["is_imitater_material"])
+	plant = create_plant(
+		game_data_plant["plant_type"],
+		false,
+		false,
+		game_data_plant["is_imitater_material"],
+		false,
+		CharacterRegistry.PlantType.P053ImitaterEcho,
+		game_data_plant
+	)
 	if plant != null:
 		plant.load_game_data_plant(game_data_plant)
 #endregion

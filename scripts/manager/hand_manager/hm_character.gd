@@ -41,6 +41,7 @@ var _game_body_correct_cache: Dictionary = {}
 
 ## 斩仇火爆辣椒空中技能状态
 var _vendetta_charge_player:AnimationPlayer
+var _vendetta_animation_tree:AnimationTree
 var _vendetta_is_charging := false
 var _vendetta_charge_elapsed := 0.0
 var _vendetta_target_lane := -1
@@ -216,6 +217,7 @@ func _click_vendetta_card(card:Card) -> bool:
 		preview_bomb.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
 
 	_vendetta_charge_player = preview_plant.get_node_or_null(^"VendettaChargeAnimationPlayer") as AnimationPlayer
+	_vendetta_animation_tree = preview_plant.get_node_or_null(^"AnimationTree") as AnimationTree
 	var targeting_effect := VENDETTA_SLASH_EFFECT.new() as Node2D
 	if not is_instance_valid(targeting_effect):
 		_clear_curr_data()
@@ -279,9 +281,14 @@ func _start_vendetta_charge(plant_cell:PlantCell) -> void:
 	_vendetta_latched_lane = -1
 	_show_vendetta_target(plant_cell)
 	_update_vendetta_charge_preview(0.0)
+	## 角色原本的 AnimationTree 会持续把 idle 轨道写回同一批身体节点，
+	## 使独立的 explode 蓄力动画只剩下不冲突的整体效果。
+	if is_instance_valid(_vendetta_animation_tree):
+		_vendetta_animation_tree.active = false
 	if is_instance_valid(_vendetta_charge_player):
 		_vendetta_charge_player.stop()
 		_vendetta_charge_player.play(&"Vendetta_charge")
+		_vendetta_charge_player.advance(0.0)
 
 
 func _cancel_vendetta_charge() -> void:
@@ -294,6 +301,8 @@ func _cancel_vendetta_charge() -> void:
 		_vendetta_charge_player.stop()
 		_vendetta_charge_player.play(&"RESET")
 		_vendetta_charge_player.advance(0.0)
+	if is_instance_valid(_vendetta_animation_tree):
+		_vendetta_animation_tree.active = true
 	if not is_instance_valid(hand_manager.curr_plant_cell):
 		if is_instance_valid(characte_static_shadow):
 			characte_static_shadow.call(&"hide_target")
@@ -458,6 +467,7 @@ func _clear_curr_data():
 	_vendetta_release_on_next_frame = false
 	_vendetta_latched_lane = -1
 	_vendetta_charge_player = null
+	_vendetta_animation_tree = null
 	is_shadow_in_cell = false
 	## 若当前存在卡片,事件总线推清除当前卡片数据,种子雨卡槽接受判断
 	if is_instance_valid(curr_card):

@@ -5,9 +5,7 @@
 [ext_resource type="Script" uid="uid://cm3ke4d3y0d4j" path="res://scripts/character/plant/plant_062_doom_shroom_dva.gd" id="2_tjrwq"]
 [ext_resource type="Texture2D" uid="uid://bpjmr3sk4my7i" path="res://assets/reanim/DoomShroom_head1.png" id="3_oiu6n"]
 [ext_resource type="Animation" uid="uid://ddwy4t6dlipi2" path="res://animation/character/plant/016_doom_shroom/DoomShroom_explode.tres" id="4_m56k1"]
-[ext_resource type="Texture2D" uid="uid://cwpi5oo583dgq" path="res://assets/reanim/DoomShroom_head2.png" id="4_soejn"]
 [ext_resource type="Animation" uid="uid://bdiplwnh2kbon" path="res://animation/character/plant/016_doom_shroom/DoomShroom_idle.tres" id="5_enwho"]
-[ext_resource type="Texture2D" uid="uid://b5yvt3d0m74sp" path="res://assets/reanim/DoomShroom_head3.png" id="5_f5eh2"]
 [ext_resource type="Texture2D" uid="uid://dmyml8fm0ewet" path="res://assets/reanim/DoomShroom_Dva_Earphone.png" id="5_oobft"]
 [ext_resource type="Animation" uid="uid://d36brwlaso680" path="res://animation/character/plant/016_doom_shroom/DoomShroom_sleep.tres" id="6_kpsvp"]
 [ext_resource type="Script" uid="uid://l0umdgng0y2m" path="res://scripts/character/components/bomb_component/component_bomb_norm.gd" id="7_enwho"]
@@ -1624,6 +1622,10 @@ _data = {
 
 [node name="Plant016DoomShroomDVA" unique_id=652917354 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_uubea")]
 script = ExtResource("2_tjrwq")
+baby_grow_time = 20.0
+baby_scale = 0.55
+baby_launch_duration = 0.8
+baby_launch_height = 120.0
 plant_type = 16
 is_sleep_in_day = true
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
@@ -1633,22 +1635,17 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-39, -72)
 
 [node name="DoomShroom_body" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=144157614]
-position = Vector2(17.1, 40)
-scale = Vector2(0.8, 0.8)
+position = Vector2(16.383274, 42.058544)
+scale = Vector2(0.82783633, 0.7589128)
 texture = ExtResource("2_55ivw")
 centered = false
 
 [node name="DoomShroom_head2" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1117954294]
 visible = false
-position = Vector2(-8, -10.4)
-scale = Vector2(0.834, 0.895)
-texture = ExtResource("4_soejn")
 centered = false
 
 [node name="DoomShroom_head3" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1677511979]
-position = Vector2(-20.8, -25.1)
-scale = Vector2(0.978, 0.978)
-texture = ExtResource("5_f5eh2")
+visible = false
 centered = false
 
 [node name="DoomShroom_sleepinghead" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=598644526]
@@ -1656,9 +1653,8 @@ visible = false
 centered = false
 
 [node name="DoomShroom_head1" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1996289445]
-self_modulate = Color(1, 1, 1, 0)
-position = Vector2(-5.5, -5.7)
-scale = Vector2(0.911, 0.955)
+position = Vector2(-1.0250895, 6.9836316)
+scale = Vector2(0.82166904, 0.7681637)
 texture = ExtResource("3_oiu6n")
 centered = false
 
@@ -1669,6 +1665,7 @@ scale = Vector2(1.1, 1.1)
 texture = ExtResource("5_oobft")
 
 [node name="DoomShroom_Dva_Warning" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1348084295]
+visible = false
 self_modulate = Color(1, 1, 1, 0.5)
 position = Vector2(39.15, 30.78)
 scale = Vector2(0.8415556, 0.7016)
