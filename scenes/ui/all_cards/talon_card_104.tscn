@@ -1,0 +1,437 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://data/PVZ_theme.tres" id="1_mjwl0"]
+[ext_resource type="Script" path="res://scripts/ui/card/card.gd" id="2_rgx8y"]
+[ext_resource type="Texture2D" path="res://assets/image/ui/ui_card/SeedPacket_Larger.png" id="3_lt6li"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Ground.png" id="4_76vos"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerarm_hand.png" id="5_qx81q"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerarm_lower.png" id="6_bfe0f"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerarm_upper.png" id="7_axn6x"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_flaghand.png" id="8_eubvd"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_flagpole.png" id="9_5tm14"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_flag1.png" id="10_ql6l0"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerarm_screendoor.png" id="11_u6ie0"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_neck.png" id="12_onc6k"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_head.png" id="13_5prcu"]
+[ext_resource type="Texture2D" path="res://assets/image/particles/Zombie_seaweed.png" id="14_tbbvh"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerleg_upper.png" id="15_chsfu"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerleg_lower.png" id="16_0lxj3"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerleg_foot.png" id="17_ro7g8"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerleg_upper.png" id="18_5ikqd"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerleg_foot.png" id="19_48spu"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerleg_lower.png" id="20_3uqkw"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_body.png" id="21_5rr7s"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_duckytube.png" id="22_2q2kx"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_tie.png" id="23_vjow5"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_jaw.png" id="24_2q5cb"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_tongue.png" id="25_iembw"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_mustache1.png" id="26_epw08"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_screendoor1.png" id="27_sk5tm"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_innerarm_screendoor_hand.png" id="28_4ap2m"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerarm_screendoor.png" id="29_m4a6g"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerarm_hand.png" id="30_pkqum"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerarm_upper.png" id="31_2s86d"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_outerarm_lower.png" id="32_aovie"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_hair.png" id="33_dpewv"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_cone1.png" id="34_nboaw"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_bucket1.png" id="35_7763g"]
+[ext_resource type="Script" path="res://scripts/character/components/drop_body/ZombieArm1Drop.gd" id="36_8sfcy"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Zombie_bucket3.png" id="37_xttvb"]
+[ext_resource type="FontFile" path="res://assets/fonts/SIMSUN.TTC" id="38_cbvhr"]
+
+[sub_resource type="SystemFont" id="SystemFont_fpdtd"]
+font_names = PackedStringArray("Sans-Serif")
+font_weight = 500
+hinting = 2
+subpixel_positioning = 0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5c0lc"]
+bg_color = Color(0, 0, 0, 0.470588)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dao7o"]
+bg_color = Color(0, 0, 0, 0.235294)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltj6w"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ltj6w"]
+font = ExtResource("38_cbvhr")
+font_size = 19
+font_color = Color(0, 1, 0, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(0, 1)
+
+[node name="Card" type="Control" unique_id=1460239877]
+custom_minimum_size = Vector2(50, 70)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 50.0
+offset_bottom = 70.0
+mouse_filter = 2
+theme = ExtResource("1_mjwl0")
+script = ExtResource("2_rgx8y")
+card_id = 12
+card_zombie_type = 104
+cool_time = 0.0
+sun_cost = 125
+
+[node name="CardBg" type="TextureRect" parent="." unique_id=1289688817]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_lt6li")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="Cost" type="Label" parent="CardBg" unique_id=1317661508]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.78
+anchor_right = 0.65
+anchor_bottom = 0.95
+grow_horizontal = 2
+theme_override_fonts/font = SubResource("SystemFont_fpdtd")
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0)
+text = "100"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CharacterStatic" type="Node2D" parent="CardBg" unique_id=3132026]
+position = Vector2(24, 30)
+
+[node name="Zombie504Bucket" type="Node2D" parent="CardBg/CharacterStatic" unique_id=604898642]
+position = Vector2(2, 17)
+scale = Vector2(0.3, 0.3)
+
+[node name="Body" type="Node2D" parent="CardBg/CharacterStatic/Zombie504Bucket" unique_id=235086620]
+
+[node name="BodyCorrect" type="Node2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body" unique_id=656725599]
+position = Vector2(-46, -121)
+rotation = 0.0601815
+
+[node name="_ground" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1828334206]
+visible = false
+position = Vector2(-9.8, 40)
+texture = ExtResource("4_76vos")
+centered = false
+
+[node name="Anim_innerarm3" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1596902971]
+position = Vector2(24.4, 81.2)
+rotation = 6.18196
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("5_qx81q")
+centered = false
+
+[node name="Anim_innerarm2" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1923522417]
+position = Vector2(23.8, 67.1)
+rotation = 6.18196
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("6_bfe0f")
+centered = false
+
+[node name="Anim_innerarm1" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1744885400]
+position = Vector2(23.9, 47.1)
+rotation = 6.18196
+texture = ExtResource("7_axn6x")
+centered = false
+
+[node name="Zombie_flaghand" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=526395642]
+visible = false
+position = Vector2(-9.2, 50.1)
+rotation = 5.72468
+scale = Vector2(0.799, 0.799)
+texture = ExtResource("8_eubvd")
+centered = false
+
+[node name="Zombie_flagpole" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=978997135]
+visible = false
+position = Vector2(10.2616, -1.45902)
+rotation = -0.523598
+texture = ExtResource("9_5tm14")
+
+[node name="Zombie_flag" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=557179333]
+visible = false
+position = Vector2(12.2615, -1.45902)
+rotation = -0.523598
+texture = ExtResource("10_ql6l0")
+
+[node name="Zombie_innerarm_screendoor" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1274770435]
+visible = false
+position = Vector2(1, 48.4)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("11_u6ie0")
+centered = false
+
+[node name="Zombie_neck" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1628946198]
+position = Vector2(29.4, 34)
+rotation = 0.001745
+scale = Vector2(0.838, 0.798)
+texture = ExtResource("12_onc6k")
+centered = false
+
+[node name="Anim_head1" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=374953680]
+position = Vector2(6.7, 8.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("13_5prcu")
+centered = false
+
+[node name="ZombieSeaweed3" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect/Anim_head1" unique_id=1880146699]
+visible = false
+position = Vector2(18.9536, 17.683)
+rotation = 0.365859
+scale = Vector2(0.91108, 0.703698)
+skew = 0.258848
+texture = ExtResource("14_tbbvh")
+hframes = 4
+
+[node name="Zombie_innerleg_upper" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=2065368690]
+position = Vector2(44.1, 76.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("15_chsfu")
+centered = false
+
+[node name="Zombie_innerleg_lower" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1296122910]
+position = Vector2(31.6, 90.3)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("16_0lxj3")
+centered = false
+
+[node name="Zombie_innerleg_foot" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1373456865]
+position = Vector2(35.3, 105.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("17_ro7g8")
+centered = false
+
+[node name="Zombie_outerleg_upper" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=381771909]
+position = Vector2(54.8, 67.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("18_5ikqd")
+centered = false
+
+[node name="Zombie_outerleg_foot" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=680695235]
+position = Vector2(44.6, 109.3)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("19_48spu")
+centered = false
+
+[node name="Zombie_outerleg_lower" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=625133352]
+position = Vector2(60.4, 93.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("20_3uqkw")
+centered = false
+
+[node name="Zombie_body" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=113441439]
+position = Vector2(28.9, 33.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("21_5rr7s")
+centered = false
+
+[node name="Zombie_duckytube" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1566425906]
+visible = false
+position = Vector2(-0.1, 45.8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("22_2q2kx")
+centered = false
+
+[node name="ZombieSeaweed" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect/Zombie_duckytube" unique_id=1269588698]
+visible = false
+position = Vector2(78.2833, 30.9555)
+rotation = -0.0735175
+scale = Vector2(0.913, 0.631)
+texture = ExtResource("14_tbbvh")
+hframes = 4
+
+[node name="ZombieSeaweed2" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect/Zombie_duckytube" unique_id=287029673]
+visible = false
+position = Vector2(35.2998, 39.1556)
+rotation = -0.0735175
+scale = Vector2(0.913, 0.631)
+texture = ExtResource("14_tbbvh")
+hframes = 4
+frame = 3
+
+[node name="Zombie_whitewater" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=472491515]
+centered = false
+
+[node name="Zombie_tie" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1474013775]
+position = Vector2(23.8, 50.9)
+rotation = 6.13483
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("23_vjow5")
+centered = false
+
+[node name="Anim_head2" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1978768432]
+position = Vector2(13.5, 40.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("24_2q5cb")
+centered = false
+
+[node name="Anim_tongue" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1935536384]
+position = Vector2(20.4, 43)
+rotation = 6.20814
+scale = Vector2(0.799, 0.673)
+texture = ExtResource("25_iembw")
+centered = false
+
+[node name="Zombie_mustache" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1208290127]
+visible = false
+position = Vector2(4.6, 31)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("26_epw08")
+centered = false
+
+[node name="Anim_screendoor" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=446732311]
+visible = false
+position = Vector2(-2.2, 32.2)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("27_sk5tm")
+centered = false
+
+[node name="Zombie_innerarm_screendoor_hand" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=442096489]
+visible = false
+position = Vector2(-2.7, 48.6)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("28_4ap2m")
+centered = false
+
+[node name="Zombie_outerarm_screendoor" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1188751516]
+visible = false
+position = Vector2(33, 44)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("29_m4a6g")
+centered = false
+
+[node name="Zombie_outerarm_hand" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1477581814]
+position = Vector2(32.9, 83.1)
+rotation = 6.23083
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("30_pkqum")
+centered = false
+
+[node name="Zombie_outerarm_upper" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1871501845]
+position = Vector2(42.7, 42.5)
+rotation = 6.23083
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("31_2s86d")
+centered = false
+
+[node name="ZombieSeaweed4" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect/Zombie_outerarm_upper" unique_id=1833379058]
+visible = false
+position = Vector2(5.29361, 12.3143)
+rotation = -0.971483
+scale = Vector2(0.495, 0.703)
+skew = 0.258848
+texture = ExtResource("14_tbbvh")
+hframes = 4
+frame = 1
+
+[node name="Zombie_whitewater2" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1793930355]
+visible = false
+centered = false
+
+[node name="Zombie_outerarm_lower" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=248192749]
+position = Vector2(36.3, 66)
+rotation = 6.23083
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("32_aovie")
+centered = false
+
+[node name="Anim_hair" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=1310965689]
+position = Vector2(2.6, 6.2)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("33_dpewv")
+centered = false
+
+[node name="Anim_cone" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=487692921]
+visible = false
+position = Vector2(13.1, -18.7)
+rotation = 0.087266
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("34_nboaw")
+centered = false
+
+[node name="Anim_bucket" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/BodyCorrect" unique_id=52139267]
+position = Vector2(1.5, -8)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("35_7763g")
+centered = false
+
+[node name="NodeDrop" type="Node2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body" unique_id=768048589]
+
+[node name="Node2D_Arm1_Drop" type="Node2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/NodeDrop" unique_id=2111288419]
+visible = false
+script = ExtResource("36_8sfcy")
+bounce_damping = 0.2
+
+[node name="Node2D" type="Node2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/NodeDrop/Node2D_Arm1_Drop" unique_id=805302909]
+position = Vector2(-25, -101)
+
+[node name="Anim_bucket" type="Sprite2D" parent="CardBg/CharacterStatic/Zombie504Bucket/Body/NodeDrop/Node2D_Arm1_Drop/Node2D" unique_id=1691143466]
+position = Vector2(-21, -29)
+rotation = 0.121765
+scale = Vector2(0.794647, 0.794647)
+texture = ExtResource("37_xttvb")
+centered = false
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=686164829]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_5c0lc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_dao7o")
+max_value = 7.5
+value = 3.39
+fill_mode = 2
+show_percentage = false
+
+[node name="Button" type="Button" parent="." unique_id=2052816530]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_ltj6w")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ltj6w")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+
+[node name="ShortCut" type="Label" parent="." unique_id=26286902]
+visible = false
+layout_mode = 0
+offset_top = 50.0
+offset_right = 17.0
+offset_bottom = 70.0
+text = "0"
+label_settings = SubResource("LabelSettings_ltj6w")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

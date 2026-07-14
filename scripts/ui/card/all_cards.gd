@@ -40,8 +40,6 @@ func _ready() -> void:
 	if not is_instance_valid(character_registry):
 		return
 
-	_create_talon_zombie_cards()
-
 	var plant_cards_by_type: Dictionary[CharacterRegistry.PlantType, Card] = {}
 	var plant_card_order: Array[CharacterRegistry.PlantType] = []
 	all_plant_card_prefabs.clear()
@@ -71,31 +69,6 @@ func _ready() -> void:
 			zombie_cards_by_type[card.card_zombie_type] = card
 			zombie_card_order.append(card.card_zombie_type)
 	_register_ordered_zombie_cards(zombie_cards_by_type, global_game_state.curr_zombie, zombie_card_order)
-
-## Talon 复制角色复用对应原版卡片的完整静态预览。
-## 复制发生在扫描注册表之前，因此后续选卡、卡牌 ID 和 prefab 映射仍走统一流程。
-func _create_talon_zombie_cards() -> void:
-	var talon_card_sources: Dictionary[CharacterRegistry.ZombieType, CharacterRegistry.ZombieType] = {
-		CharacterRegistry.ZombieType.Z000NormTalon: CharacterRegistry.ZombieType.Z500Norm,
-		CharacterRegistry.ZombieType.Z001FlagTalon: CharacterRegistry.ZombieType.Z501Flag,
-		CharacterRegistry.ZombieType.Z002ConeTalon: CharacterRegistry.ZombieType.Z502Cone,
-		CharacterRegistry.ZombieType.Z004BucketTalon: CharacterRegistry.ZombieType.Z504Bucket,
-	}
-	var source_cards: Dictionary[CharacterRegistry.ZombieType, Card] = {}
-	for zombie_cards_parent_node in all_zombie_cards_parent_node_root:
-		for child in zombie_cards_parent_node.get_children():
-			var card := child as Card
-			if card != null:
-				source_cards[card.card_zombie_type] = card
-	for talon_type: CharacterRegistry.ZombieType in talon_card_sources:
-		var source_type: CharacterRegistry.ZombieType = talon_card_sources[talon_type]
-		if not source_cards.has(source_type):
-			push_warning("缺少 Talon 僵尸源卡牌: %s" % source_type)
-			continue
-		var talon_card := source_cards[source_type].duplicate() as Card
-		talon_card.name = "TalonCard%s" % int(talon_type)
-		talon_card.card_zombie_type = talon_type
-		%ZombieCards.add_child(talon_card)
 
 func _register_ordered_plant_cards(
 		cards_by_type: Dictionary[CharacterRegistry.PlantType, Card],

@@ -15,23 +15,33 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q3iw5"]
 
 [node name="AlmanacZombieCard" type="Control"]
-custom_minimum_size = Vector2(75, 75)
+custom_minimum_size = Vector2(76, 76)
 layout_mode = 3
 anchors_preset = 0
+offset_right = 76.0
+offset_bottom = 76.0
 script = ExtResource("1_y3dyy")
 
-[node name="AlmanacZombieCardBg" type="TextureRect" parent="."]
+[node name="AlmanacZombieCardBg" type="NinePatchRect" parent="."]
 clip_children = 2
 layout_mode = 0
 offset_right = 76.0
 offset_bottom = 76.0
 texture = ExtResource("1_0hgaq")
+patch_margin_left = 7
+patch_margin_top = 7
+patch_margin_right = 7
+patch_margin_bottom = 7
 
-[node name="AlmanacZombieCardFront" type="TextureRect" parent="."]
+[node name="AlmanacZombieCardFront" type="NinePatchRect" parent="."]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 76.0
+offset_bottom = 76.0
 texture = ExtResource("34_20rvx")
+patch_margin_left = 7
+patch_margin_top = 7
+patch_margin_right = 7
+patch_margin_bottom = 7
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

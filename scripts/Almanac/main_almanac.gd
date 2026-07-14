@@ -31,16 +31,17 @@ func _on_plant_button_pressed() -> void:
 	start_page.visible = false
 	plant_page.visible = true
 	zombie_page.visible = false
+	plant_page.show_first_page()
 
 ## 查看僵尸图鉴
 func _on_zombie_button_pressed() -> void:
 	start_page.visible = false
 	plant_page.visible = false
 	zombie_page.visible = true
+	zombie_page.show_first_page()
 
 ## 返回图鉴索引
 func _on_return_button_pressed() -> void:
 	start_page.visible = true
 	plant_page.visible = false
 	zombie_page.visible = false
-

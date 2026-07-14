@@ -32,20 +32,37 @@ var curr_belt_index := -1
 
 func ready_norm():
 	super()
-	## 只有被舞王召唤出来的四个伴舞开启迪斯科换色。
-	if is_call:
+	## 只有被舞王召唤出来、且舞王仍存活时才开启迪斯科换色。
+	if is_call and _has_living_dancing_zombie():
 		start_disco_cycle()
 
 
 func start_disco_cycle():
 	is_disco_cycle_active = true
-	signal_character_death.connect(stop_disco_cycle)
+	if not signal_character_death.is_connected(stop_disco_cycle):
+		signal_character_death.connect(stop_disco_cycle)
 	_update_disco_on_animation_beat()
 
 
 func _process(_delta: float):
+	if not is_call or is_death:
+		return
+
+	var has_living_dancing_zombie := _has_living_dancing_zombie()
+	if has_living_dancing_zombie and not is_disco_cycle_active:
+		start_disco_cycle()
+	elif not has_living_dancing_zombie and is_disco_cycle_active:
+		pause_disco_cycle()
+
 	if is_disco_cycle_active:
 		_update_disco_on_animation_beat()
+
+
+func _has_living_dancing_zombie() -> bool:
+	if not is_instance_valid(jackson_manager):
+		return false
+	var dancing_zombie = jackson_manager.zombie_dancers.get(-1)
+	return is_instance_valid(dancing_zombie) and not dancing_zombie.is_death
 
 
 func _update_disco_on_animation_beat():
@@ -81,6 +98,11 @@ func stop_disco_cycle():
 	is_disco_cycle_active = false
 	_show_only_index(disco_head_sprites, -1)
 	_show_only_index(disco_belt_sprites, -1)
+
+
+## 舞王死亡时只停止换色，保留死亡瞬间正在显示的颜色。
+func pause_disco_cycle():
+	is_disco_cycle_active = false
 
 
 func _get_weighted_random_different_index(array_size: int, current_index: int) -> int:

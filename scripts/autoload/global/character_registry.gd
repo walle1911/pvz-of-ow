@@ -47,8 +47,6 @@ enum PlantType {
 	P043GloomShroomMoira = 43,
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
-	P049PeaShooterDoubleReverse = 49,
-
 	P051CattailSierra = 51,
 	P052BonkChoyRamattra = 52,
 	P053ImitaterEcho = 53,
@@ -103,6 +101,7 @@ enum PlantType {
 	P546SpikeRock,
 	P547CobCannon,
 	P548Imitater,
+	P549PeaShooterDoubleReverse,
 
 	## 发芽
 	P1000Sprout = 1000,
@@ -564,12 +563,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_547_cob_cannon.tscn")
 		},
 
-	PlantType.P049PeaShooterDoubleReverse: {
+	PlantType.P549PeaShooterDoubleReverse: {
 		PlantInfoAttribute.PlantName: "PeaShooterDoubleReverse",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_049_pea_shooter_double_reverse.tscn")
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_549_pea_shooter_double_reverse.tscn")
 		},
 	PlantType.P001PeaShooterSoldier76: {
 		PlantInfoAttribute.PlantName: "PeaShooterSoldier76",

@@ -20,7 +20,7 @@ class_name Plant052SunflowerMercy
 	CharacterRegistry.PlantType.P518ThreePeater,
 	CharacterRegistry.PlantType.P528SplitPea,
 	CharacterRegistry.PlantType.P540GatlingPea,
-	CharacterRegistry.PlantType.P049PeaShooterDoubleReverse,
+	CharacterRegistry.PlantType.P549PeaShooterDoubleReverse,
 	CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
 	CharacterRegistry.PlantType.P041GatlingPeaBastion,
