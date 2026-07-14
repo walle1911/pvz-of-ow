@@ -51,6 +51,7 @@ script_list_meta = {
 "res://scripts/bullet/component/movement/bullet_movement_track.gd": [-1, -1],
 "res://scripts/bullet/component/spatter_component.gd": [-1, -1],
 "res://scripts/bullet/component/spatter_component_winter_melon.gd": [-1, -1],
+"res://scripts/bullet/lord_hammond_rider.gd": [-1, -1],
 "res://scripts/camera/main_game_camera.gd": [-1, -1],
 "res://scripts/character/character_000_base.gd": [-1, -1],
 "res://scripts/character/components/009_jackson/zombie_jackson_manager.gd": [-1, -1],

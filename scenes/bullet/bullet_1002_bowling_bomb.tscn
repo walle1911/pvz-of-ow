@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://dqaqlnax0o5fp"]
+[gd_scene load_steps=37 format=3 uid="uid://dqaqlnax0o5fp"]
 
 [ext_resource type="PackedScene" uid="uid://cit8bsc5op7f0" path="res://scenes/bullet/bullet_000_linear_base.tscn" id="1_3qq1e"]
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="2_1legp"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="9_meu2b"]
 [ext_resource type="Texture2D" uid="uid://ysajcyiwrdnk" path="res://assets/image/particles/ExplosionPowie.png" id="10_2j0lu"]
 [ext_resource type="Shader" uid="uid://cikju0ectkkms" path="res://shaders/Mypartical.gdshader" id="10_syn66"]
+[ext_resource type="PackedScene" path="res://scenes/bullet/lord_hammond_rider.tscn" id="11_hammond"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vwbp0"]
 radius = 30.0
@@ -238,6 +239,9 @@ position = Vector2(-15.7894, -22.3159)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("4_uyat5")
 centered = false
+
+[node name="LordHammondRider" parent="." index="5" instance=ExtResource("11_hammond")]
+position = Vector2(0, -54)
 
 [node name="BulletEffect" parent="." index="2"]
 is_bullet_effect = false

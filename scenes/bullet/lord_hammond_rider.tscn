@@ -1,0 +1,133 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/bullet/lord_hammond_rider.gd" id="1_rider"]
+[ext_resource type="Texture2D" path="res://assets/reanim/LordHammond_jump_01.png" id="1_f8h1m"]
+[ext_resource type="Texture2D" path="res://assets/reanim/LordHammond_jump_02.png" id="2_f8h2m"]
+[ext_resource type="Texture2D" path="res://assets/reanim/LordHammond_jump_03.png" id="3_f8h3m"]
+[ext_resource type="Texture2D" path="res://assets/reanim/LordHammond_jump_04.png" id="4_f8h4m"]
+[ext_resource type="Texture2D" path="res://assets/reanim/LordHammond_jump_05.png" id="5_f8h5m"]
+
+[sub_resource type="Animation" id="Animation_bounce"]
+resource_name = "bounce"
+length = 1.92
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HamsterSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.31, 0.42, 0.52, 0.62, 0.73, 0.82, 0.89, 0.98, 1.09, 1.23, 1.33, 1.46, 1.58, 1.7, 1.82, 1.92),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("4_f8h4m"), ExtResource("1_f8h1m"), ExtResource("2_f8h2m"), ExtResource("2_f8h2m"), ExtResource("3_f8h3m"), ExtResource("5_f8h5m"), ExtResource("4_f8h4m"), ExtResource("1_f8h1m"), ExtResource("2_f8h2m"), ExtResource("3_f8h3m"), ExtResource("5_f8h5m"), ExtResource("4_f8h4m"), ExtResource("1_f8h1m"), ExtResource("2_f8h2m"), ExtResource("2_f8h2m"), ExtResource("3_f8h3m"), ExtResource("5_f8h5m"), ExtResource("4_f8h4m"), ExtResource("4_f8h4m")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HamsterSprite:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.31, 0.42, 0.52, 0.62, 0.73, 0.82, 0.89, 0.98, 1.09, 1.23, 1.33, 1.46, 1.58, 1.7, 1.82, 1.92),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(2, -18), Vector2(2, -22), Vector2(2, -34), Vector2(2, -35), Vector2(2, -27), Vector2(2, -20), Vector2(2, -18), Vector2(2, -22), Vector2(2, -29), Vector2(2, -24), Vector2(2, -19), Vector2(2, -18), Vector2(2, -23), Vector2(2, -36), Vector2(2, -35), Vector2(2, -28), Vector2(2, -20), Vector2(2, -18), Vector2(2, -18)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HamsterSprite:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.31, 0.42, 0.52, 0.62, 0.73, 0.82, 0.89, 0.98, 1.09, 1.23, 1.33, 1.46, 1.58, 1.7, 1.82, 1.92),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-0.035, -0.08, 0.045, 0.035, -0.02, -0.07, 0.02, -0.04, 0.04, -0.015, -0.06, 0.025, -0.05, 0.055, 0.04, -0.02, -0.065, 0.02, -0.035]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HamsterSprite:scale")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.31, 0.42, 0.52, 0.62, 0.73, 0.82, 0.89, 0.98, 1.09, 1.23, 1.33, 1.46, 1.58, 1.7, 1.82, 1.92),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1.08, 0.93), Vector2(0.99, 1.01), Vector2(0.95, 1.06), Vector2(0.95, 1.06), Vector2(0.98, 1.02), Vector2(1.08, 0.92), Vector2(1.02, 0.98), Vector2(0.99, 1.01), Vector2(0.96, 1.04), Vector2(0.99, 1.01), Vector2(1.07, 0.93), Vector2(1.02, 0.98), Vector2(0.98, 1.02), Vector2(0.94, 1.07), Vector2(0.94, 1.07), Vector2(0.98, 1.02), Vector2(1.08, 0.92), Vector2(1.02, 0.98), Vector2(1.08, 0.93)]
+}
+
+[sub_resource type="Animation" id="Animation_bounce_extra"]
+resource_name = "bounce_extra"
+length = 1.34
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HamsterSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.18, 0.31, 0.43, 0.53, 0.64, 0.77, 0.88, 1, 1.11, 1.22, 1.34),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("4_f8h4m"), ExtResource("1_f8h1m"), ExtResource("2_f8h2m"), ExtResource("2_f8h2m"), ExtResource("3_f8h3m"), ExtResource("5_f8h5m"), ExtResource("4_f8h4m"), ExtResource("1_f8h1m"), ExtResource("2_f8h2m"), ExtResource("3_f8h3m"), ExtResource("5_f8h5m"), ExtResource("4_f8h4m"), ExtResource("4_f8h4m")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HamsterSprite:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.18, 0.31, 0.43, 0.53, 0.64, 0.77, 0.88, 1, 1.11, 1.22, 1.34),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(2, -18), Vector2(2, -22), Vector2(2, -31), Vector2(2, -32), Vector2(2, -25), Vector2(2, -19), Vector2(2, -18), Vector2(2, -21), Vector2(2, -28), Vector2(2, -23), Vector2(2, -19), Vector2(2, -18), Vector2(2, -18)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HamsterSprite:rotation")
+tracks/2/interp = 2
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.18, 0.31, 0.43, 0.53, 0.64, 0.77, 0.88, 1, 1.11, 1.22, 1.34),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [-0.035, -0.07, 0.045, 0.035, -0.02, -0.07, 0.02, -0.04, 0.04, -0.015, -0.06, 0.025, -0.035]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HamsterSprite:scale")
+tracks/3/interp = 2
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.09, 0.18, 0.31, 0.43, 0.53, 0.64, 0.77, 0.88, 1, 1.11, 1.22, 1.34),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(1.08, 0.93), Vector2(0.99, 1.01), Vector2(0.95, 1.06), Vector2(0.95, 1.06), Vector2(0.98, 1.02), Vector2(1.08, 0.92), Vector2(1.02, 0.98), Vector2(0.99, 1.01), Vector2(0.96, 1.04), Vector2(0.99, 1.01), Vector2(1.07, 0.93), Vector2(1.02, 0.98), Vector2(1.08, 0.93)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bounce"]
+_data = {
+&"bounce": SubResource("Animation_bounce"),
+&"bounce_extra": SubResource("Animation_bounce_extra")
+}
+
+[node name="LordHammondRider" type="Node2D"]
+z_index = 1
+script = ExtResource("1_rider")
+
+[node name="HamsterSprite" type="Sprite2D" parent="."]
+position = Vector2(2, -20)
+texture = ExtResource("1_f8h1m")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_bounce")
+}
