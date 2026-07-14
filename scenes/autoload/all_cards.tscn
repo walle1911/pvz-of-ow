@@ -529,7 +529,7 @@
 [ext_resource type="Texture2D" uid="uid://dnkk3vyykr511" path="res://assets/reanim/CobCannon_husk2.png" id="374_cnu4l"]
 [ext_resource type="Texture2D" uid="uid://7rp63r7hf0ll" path="res://assets/reanim/Zombie_dolphinrider_innerarm_upper.png" id="374_te8ao"]
 [ext_resource type="Texture2D" uid="uid://dahparam7w4qx" path="res://assets/reanim/Zombie_dolphinrider_innerleg_foot.png" id="375_msri8"]
-[ext_resource type="Texture2D" uid="uid://dg8oaxgqbdu2g" path="res://assets/reanim/CobCannon_husk1.png" id="375_vxcot"]
+[ext_resource type="Texture2D" uid="uid://dirftb646rvfs" path="res://assets/reanim/CobCannon_husk1.png" id="375_vxcot"]
 [ext_resource type="Texture2D" uid="uid://bjfgnxqtsjeal" path="res://assets/reanim/CobCannon_blink1.png" id="376_3fnx5"]
 [ext_resource type="Texture2D" uid="uid://dso0w5x240ovg" path="res://assets/reanim/Zombie_dolphinrider_innerleg_lower.png" id="376_7lapw"]
 [ext_resource type="Script" uid="uid://dx752kig120mj" path="res://scripts/character/components/body_character.gd" id="377_b70e6"]
@@ -2077,6 +2077,7 @@ scale = Vector2(0.7, 0.7)
 texture = ExtResource("72_fw713")
 
 [node name="Card31" parent="PlantCards" unique_id=1257254692 instance=ExtResource("2_5pqky")]
+visible = false
 layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5

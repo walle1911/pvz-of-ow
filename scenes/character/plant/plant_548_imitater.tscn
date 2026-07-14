@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bq2ef6etyqxxt"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_hjvtv"]
-[ext_resource type="Script" uid="uid://bbvpjixpt0wmh" path="res://scripts/character/plant/plant_999_imitater.gd" id="2_4e7mo"]
+[ext_resource type="Script" uid="uid://bbvpjixpt0wmh" path="res://scripts/character/plant/original/plant_999_imitater.gd" id="2_4e7mo"]
 [ext_resource type="Texture2D" uid="uid://c63tf7upqqxus" path="res://assets/reanim/Imitater_root2.png" id="2_a0vy4"]
 [ext_resource type="Texture2D" uid="uid://bqw13oc1ficg7" path="res://assets/reanim/Imitater_root3.png" id="3_6sn0i"]
 [ext_resource type="Texture2D" uid="uid://wox6kcig3h35" path="res://assets/reanim/Imitater_body.png" id="4_wlwkf"]
@@ -9,8 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://d3etuf1sy65a1" path="res://assets/reanim/Imitater_blink1.png" id="6_f2fc4"]
 [ext_resource type="Texture2D" uid="uid://bnccv7wjkdsph" path="res://assets/reanim/Imitater_hat.png" id="7_uj3h0"]
 [ext_resource type="Texture2D" uid="uid://c583jsodj755w" path="res://assets/reanim/Imitater_spin1.png" id="8_xhl1m"]
-[ext_resource type="Animation" uid="uid://bq1crd2bn6vvo" path="res://animation/character/plant/999_imitater/Imitater_explode.tres" id="9_g4siw"]
-[ext_resource type="Animation" uid="uid://djru61kilamtm" path="res://animation/character/plant/999_imitater/Imitater_idle.tres" id="10_xksgs"]
+[ext_resource type="Animation" uid="uid://bq1crd2bn6vvo" path="res://animation/character/plant/original/999_imitater/Imitater_explode.tres" id="9_g4siw"]
+[ext_resource type="Animation" uid="uid://djru61kilamtm" path="res://animation/character/plant/original/999_imitater/Imitater_idle.tres" id="10_xksgs"]
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="12_3rp6v"]
 [ext_resource type="Shader" uid="uid://cikju0ectkkms" path="res://shaders/Mypartical.gdshader" id="13_xia5t"]
 

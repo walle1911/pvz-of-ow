@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_4psf1"]
 [ext_resource type="Texture2D" uid="uid://bw4au5i7yaikd" path="res://assets/reanim/Plantern_stem.png" id="2_71jlg"]
-[ext_resource type="Script" uid="uid://icveihd58rpf" path="res://scripts/character/plant/plant_026_plantern.gd" id="2_v0wv6"]
+[ext_resource type="Script" uid="uid://icveihd58rpf" path="res://scripts/character/plant/original/plant_026_plantern.gd" id="2_v0wv6"]
 [ext_resource type="Texture2D" uid="uid://kemv1vtih6bs" path="res://assets/reanim/Plantern_body.png" id="3_4prwg"]
 [ext_resource type="Texture2D" uid="uid://be4k6kjrq1d6f" path="res://assets/reanim/Plantern_eyes.png" id="4_r1rn4"]
 [ext_resource type="Texture2D" uid="uid://cutu58yhle0nd" path="res://assets/reanim/Plantern_leaf1.png" id="5_v0wv6"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://ce0hv7lvk6bt" path="res://assets/reanim/Plantern_leaf4.png" id="8_r4efy"]
 [ext_resource type="Texture2D" uid="uid://b5257ld8kse14" path="res://assets/reanim/Plantern_leaf5.png" id="9_e4jmj"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="10_4prwg"]
-[ext_resource type="Animation" uid="uid://b5imo3kk8bwce" path="res://animation/character/plant/026_plantern/Plantern_idle.tres" id="10_ubtr6"]
+[ext_resource type="Animation" uid="uid://b5imo3kk8bwce" path="res://animation/character/plant/original/026_plantern/Plantern_idle.tres" id="10_ubtr6"]
 [ext_resource type="Texture2D" uid="uid://ded2glkm7c1wm" path="res://assets/reanim/Plantern_eyes2.png" id="11_r1rn4"]
 [ext_resource type="Script" uid="uid://dlojdy8cdbdqn" path="res://scripts/character/components/component_fog_clearer.gd" id="13_r1rn4"]
 

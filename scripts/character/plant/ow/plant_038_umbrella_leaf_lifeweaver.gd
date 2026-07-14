@@ -1,0 +1,2 @@
+extends Plant038UmbrellaLeaf
+class_name Plant038UmbrellaLeafLifeweaver

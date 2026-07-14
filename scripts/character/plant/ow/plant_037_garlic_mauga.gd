@@ -1,0 +1,2 @@
+extends Plant037Garlic
+class_name Plant037GarlicMauga

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dhnn2kea4vbhd"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_1i1ru"]
-[ext_resource type="Script" uid="uid://is6nausnoy0t" path="res://scripts/character/plant/plant_035_corn_pult.gd" id="2_btqik"]
+[ext_resource type="Script" uid="uid://is6nausnoy0t" path="res://scripts/character/plant/original/plant_035_corn_pult.gd" id="2_btqik"]
 [ext_resource type="Texture2D" uid="uid://b5mr8ey3k5b38" path="res://assets/reanim/Cornpult_husk5.png" id="2_px547"]
 [ext_resource type="Texture2D" uid="uid://dhiff2v81wape" path="res://assets/reanim/Cornpult_husk6.png" id="3_j3uml"]
 [ext_resource type="Texture2D" uid="uid://c34rhce01kmx3" path="res://assets/reanim/Cornpult_body.png" id="4_t3okm"]
@@ -22,8 +22,8 @@
 [ext_resource type="Texture2D" uid="uid://c0jiwde0862hq" path="res://assets/reanim/Cornpult_stalk4.png" id="19_c84qq"]
 [ext_resource type="Texture2D" uid="uid://rlj4anlr1koh" path="res://assets/reanim/Cornpult_stalk3.png" id="20_50x1q"]
 [ext_resource type="Texture2D" uid="uid://diyoj22drctsu" path="res://assets/reanim/Cornpult_eyebrow.png" id="21_8sqss"]
-[ext_resource type="Animation" uid="uid://bsio1cqmdn56g" path="res://animation/character/plant/035_corn_pult/Cornpult_idle.tres" id="22_lnxox"]
-[ext_resource type="Animation" uid="uid://dd6u5i6ynqwe3" path="res://animation/character/plant/035_corn_pult/Cornpult_shooting.tres" id="23_yokan"]
+[ext_resource type="Animation" uid="uid://bsio1cqmdn56g" path="res://animation/character/plant/original/035_corn_pult/Cornpult_idle.tres" id="22_lnxox"]
+[ext_resource type="Animation" uid="uid://dd6u5i6ynqwe3" path="res://animation/character/plant/original/035_corn_pult/Cornpult_shooting.tres" id="23_yokan"]
 [ext_resource type="Script" uid="uid://df0eavyfmbrdw" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_corn.gd" id="24_t3okm"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="25_btqik"]
 

@@ -198,20 +198,14 @@ enum ZombieInfoAttribute{
 
 ## 紫卡植物种植前置植物（一个紫卡可对应多个可叠加的前置植物）
 @export var AllPrePlantPurple:Dictionary[PlantType, Array]= {
-	PlantType.P041GatlingPeaBastion:[PlantType.P507PeaShooterDouble],
-	PlantType.P042TwinSunFlowerIllari:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
 	PlantType.P540GatlingPea:[PlantType.P507PeaShooterDouble],
 	PlantType.P541TwinSunFlower:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
-	PlantType.P043GloomShroomMoira:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
 	PlantType.P542GloomShroom:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
-	PlantType.P044CattailJetpackCat:[PlantType.P516LilyPad],
-	PlantType.P051CattailSierra:[PlantType.P516LilyPad],
 	PlantType.P543Cattail:[PlantType.P516LilyPad],
 	PlantType.P544WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P539MelonPult],
 	PlantType.P545GoldMagnet:[PlantType.P032MagnetShroomSombra, PlantType.P531MagnetShroom],
 	PlantType.P546SpikeRock:[PlantType.P022CaltropHazard, PlantType.P521Caltrop],
 	PlantType.P547CobCannon:[PlantType.P534CornPult],
-	PlantType.P048CobCannonEmre:[PlantType.P534CornPult],
 }
 
 const PlantInfo = {
@@ -610,14 +604,14 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantName: "GatlingPea_Bastion",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 250,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_041_gatling_pea_bastion.tscn")
 		},
 	PlantType.P042TwinSunFlowerIllari: {
 		PlantInfoAttribute.PlantName: "TwinSunFlower_Illari",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 150,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_042_twin_sun_flower_illari.tscn")
 		},
 	PlantType.P024TallNutSigma: {
@@ -631,7 +625,7 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantName: "Cattail_JetpackCat",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 225,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_044_cattail_jetpack_cat.tscn")
 		},
 	PlantType.P021JalapenoVendetta: {
@@ -667,7 +661,7 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantName: "GloomShroom_Moira",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 150,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn")
 		},
 	PlantType.P025SeaShroomWuyang: {
@@ -779,14 +773,14 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantName: "CobCannon_Emre",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 500,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/048_cob_cannon.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_048_cob_cannon_emre.tscn")
 		},
 	PlantType.P051CattailSierra: {
 		PlantInfoAttribute.PlantName: "Cattail_Sierra",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 225,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_purple.tres"),
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_051_cattail_sierra.tscn")
 		},
 	## 模仿者

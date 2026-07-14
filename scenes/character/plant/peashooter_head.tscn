@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://scripts/character/plant/peashooter_head.gd" id="1_head"]
+[ext_resource type="Script" path="res://scripts/character/plant/common/peashooter_head.gd" id="1_head"]
 [ext_resource type="Texture2D" uid="uid://b00drwni3ja82" path="res://assets/reanim/PeaShooter_Head.png" id="2_face"]
 [ext_resource type="Texture2D" uid="uid://txlm4fwvygkx" path="res://assets/reanim/PeaShooter_mouth.png" id="3_mouth"]
 [ext_resource type="Texture2D" uid="uid://cyyk1hmvx7u05" path="res://assets/reanim/anim_sprout.png" id="4_sprout"]
 [ext_resource type="Texture2D" uid="uid://dp8034ogayq0f" path="res://assets/reanim/PeaShooter_blink1.png" id="5_blink"]
-[ext_resource type="AnimationLibrary" path="res://animation/character/zombie/026_peashooter_zombie/peashooter_head_animations.tres" id="6_animlib"]
+[ext_resource type="AnimationLibrary" path="res://animation/character/zombie/ow/026_peashooter_zombie/peashooter_head_animations.tres" id="6_animlib"]
 
 [node name="PeashooterHead" type="Node2D"]
 script = ExtResource("1_head")

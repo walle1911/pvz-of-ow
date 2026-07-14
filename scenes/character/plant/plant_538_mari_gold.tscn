@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_rdg00"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="2_43sbo"]
-[ext_resource type="Script" uid="uid://cdmi72wg2u0se" path="res://scripts/character/plant/plant_039_mari_gold.gd" id="2_n70fy"]
+[ext_resource type="Script" uid="uid://cdmi72wg2u0se" path="res://scripts/character/plant/original/plant_039_mari_gold.gd" id="2_n70fy"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="3_n70fy"]
 [ext_resource type="Texture2D" uid="uid://i7fngqj5l36a" path="res://assets/reanim/PeaShooter_backleaf_righttip.png" id="4_k746y"]
 [ext_resource type="Texture2D" uid="uid://yxv2bpco6d57" path="res://assets/reanim/PeaShooter_stalk_bottom.png" id="5_5omrt"]
@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://c5q88higwtl1t" path="res://assets/reanim/Marigold_eyebrow1.png" id="13_lluj0"]
 [ext_resource type="Texture2D" uid="uid://bx1t0xmgl4b56" path="res://assets/reanim/Marigold_eyebrow2.png" id="14_sy65w"]
 [ext_resource type="Texture2D" uid="uid://oj7moq1a8prk" path="res://assets/reanim/Marigold_blink1.png" id="15_kn14o"]
-[ext_resource type="Animation" uid="uid://bi0jd48nga8q3" path="res://animation/character/plant/039_mari_gold/MariGold_idle.tres" id="16_j316d"]
+[ext_resource type="Animation" uid="uid://bi0jd48nga8q3" path="res://animation/character/plant/original/039_mari_gold/MariGold_idle.tres" id="16_j316d"]
 [ext_resource type="Script" uid="uid://s7pu52cf54v3" path="res://scripts/character/components/component_create_coin.gd" id="17_43sbo"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6m1dl"]

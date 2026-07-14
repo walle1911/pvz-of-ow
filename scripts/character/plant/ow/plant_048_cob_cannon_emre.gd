@@ -1,0 +1,2 @@
+extends Plant048CobCannon
+class_name Plant048CobCannonEmre

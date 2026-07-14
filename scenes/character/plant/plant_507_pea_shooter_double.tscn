@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bb3ca0a5g0fr0"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ug5a7"]
-[ext_resource type="Script" uid="uid://cl8b42d0noa8u" path="res://scripts/character/plant/plant_008_pea_shooter_double.gd" id="2_8obf8"]
+[ext_resource type="Script" uid="uid://cl8b42d0noa8u" path="res://scripts/character/plant/original/plant_008_pea_shooter_double.gd" id="2_8obf8"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="2_p0ksa"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="3_j10gx"]
 [ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="3_q37ln"]
@@ -24,10 +24,10 @@
 [ext_resource type="Texture2D" uid="uid://b2h6wuvxt68vx" path="res://assets/reanim/PeaShooter_blink2.png" id="21_8obf8"]
 [ext_resource type="Texture2D" uid="uid://dgigsil3n5prk" path="res://assets/reanim/PeaShooter_eyebrow.png" id="21_imtt6"]
 [ext_resource type="Texture2D" uid="uid://dp8034ogayq0f" path="res://assets/reanim/PeaShooter_blink1.png" id="22_3fhyu"]
-[ext_resource type="Animation" uid="uid://cyk4n1jx3ibdw" path="res://animation/character/plant/008_pea_shooter_double/PeaShooter_shooting2.tres" id="27_fs8xa"]
-[ext_resource type="Animation" uid="uid://ccdjwck04xfqg" path="res://animation/character/plant/008_pea_shooter_double/PeaShooter_head_idle.tres" id="29_40fym"]
-[ext_resource type="Animation" uid="uid://dlwxuusomi876" path="res://animation/character/plant/008_pea_shooter_double/PeaShooter_idle.tres" id="30_2jho7"]
-[ext_resource type="Animation" uid="uid://jbax5rrmjl35" path="res://animation/character/plant/008_pea_shooter_double/PeaShooter_shooting.tres" id="31_n6f4a"]
+[ext_resource type="Animation" uid="uid://cyk4n1jx3ibdw" path="res://animation/character/plant/original/008_pea_shooter_double/PeaShooter_shooting2.tres" id="27_fs8xa"]
+[ext_resource type="Animation" uid="uid://ccdjwck04xfqg" path="res://animation/character/plant/original/008_pea_shooter_double/PeaShooter_head_idle.tres" id="29_40fym"]
+[ext_resource type="Animation" uid="uid://dlwxuusomi876" path="res://animation/character/plant/original/008_pea_shooter_double/PeaShooter_idle.tres" id="30_2jho7"]
+[ext_resource type="Animation" uid="uid://jbax5rrmjl35" path="res://animation/character/plant/original/008_pea_shooter_double/PeaShooter_shooting.tres" id="31_n6f4a"]
 
 [sub_resource type="Resource" id="Resource_cft3e"]
 script = ExtResource("20_x08dq")

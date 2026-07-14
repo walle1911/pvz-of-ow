@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dem0v2rrlor4p"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_aj77m"]
-[ext_resource type="Script" uid="uid://dfmsywqp6uy3v" path="res://scripts/character/plant/plant_1001_wall_nut_bowling.gd" id="2_41x36"]
+[ext_resource type="Script" uid="uid://dfmsywqp6uy3v" path="res://scripts/character/plant/original/plant_1001_wall_nut_bowling.gd" id="2_41x36"]
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="2_futah"]
 [ext_resource type="PackedScene" uid="uid://bbgh3cu4qdrb5" path="res://scenes/bullet/bullet_1003_bowling_big.tscn" id="3_31glj"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="3_41x36"]

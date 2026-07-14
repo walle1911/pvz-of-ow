@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://0gwoathhcraf"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_gk1fj"]
-[ext_resource type="Script" uid="uid://ccsk1fv8nukl6" path="res://scripts/character/plant/plant_046_gold_magnet.gd" id="2_er5xs"]
+[ext_resource type="Script" uid="uid://ccsk1fv8nukl6" path="res://scripts/character/plant/original/plant_046_gold_magnet.gd" id="2_er5xs"]
 [ext_resource type="Texture2D" uid="uid://ce7fkg5hv8s6l" path="res://assets/reanim/GoldMagnet_stem.png" id="2_k6o72"]
 [ext_resource type="Texture2D" uid="uid://b68nx5vy75ff1" path="res://assets/reanim/GoldMagnet_leaf5.png" id="3_er5xs"]
 [ext_resource type="Texture2D" uid="uid://mq76seqkalyk" path="res://assets/reanim/GoldMagnet_leaf1.png" id="4_d1osr"]
@@ -12,8 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://x8844lkm77fv" path="res://assets/reanim/GoldMagnet_leaf3.png" id="9_71ma0"]
 [ext_resource type="Texture2D" uid="uid://cfoe638mubffa" path="res://assets/reanim/GoldMagnet_blink1.png" id="10_5kop1"]
 [ext_resource type="Texture2D" uid="uid://cvjgt37odcqvd" path="res://assets/reanim/GoldMagnet_smallspark3.png" id="11_7h3ca"]
-[ext_resource type="Animation" uid="uid://dj2vqb6wmvdi3" path="res://animation/character/plant/046_gold_magnet/GoldMagnet_attract.tres" id="12_luj8m"]
-[ext_resource type="Animation" uid="uid://2a71dohma3ij" path="res://animation/character/plant/046_gold_magnet/GoldMagnet_idle.tres" id="13_ueypb"]
+[ext_resource type="Animation" uid="uid://dj2vqb6wmvdi3" path="res://animation/character/plant/original/046_gold_magnet/GoldMagnet_attract.tres" id="12_luj8m"]
+[ext_resource type="Animation" uid="uid://2a71dohma3ij" path="res://animation/character/plant/original/046_gold_magnet/GoldMagnet_idle.tres" id="13_ueypb"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t6jq4"]
 _data = {

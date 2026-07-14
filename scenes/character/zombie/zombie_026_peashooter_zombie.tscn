@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://2k4x6utibmjv"]
 
 [ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_500_norm.tscn" id="1_norm"]
-[ext_resource type="Script" uid="uid://co3sadolv3b8e" path="res://scripts/character/zombie/zombie_026_peashooter_zombie.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://co3sadolv3b8e" path="res://scripts/character/zombie/ow/zombie_026_peashooter_zombie.gd" id="2_script"]
 [ext_resource type="PackedScene" path="res://scenes/character/plant/peashooter_head.tscn" id="3_head"]
 [ext_resource type="Texture2D" uid="uid://bi3wlspcngpul" path="res://assets/reanim/soj_arm_innerlower.png" id="3_thb27"]
 [ext_resource type="Texture2D" uid="uid://bvu85g6qmeq13" path="res://assets/reanim/soj_arm_innerupper1.png" id="4_8u4ci"]

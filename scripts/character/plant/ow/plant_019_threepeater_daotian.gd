@@ -1,0 +1,2 @@
+extends Plant019ThreePeater
+class_name Plant019ThreePeaterDaotian

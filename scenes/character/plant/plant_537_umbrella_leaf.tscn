@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bgl0byfju0ywy"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_kuurk"]
-[ext_resource type="Script" uid="uid://ct2atsslxclte" path="res://scripts/character/plant/plant_038_umbrella_leaf.gd" id="2_7nhj0"]
+[ext_resource type="Script" uid="uid://ct2atsslxclte" path="res://scripts/character/plant/original/plant_038_umbrella_leaf.gd" id="2_7nhj0"]
 [ext_resource type="Texture2D" uid="uid://dkyp1upt321re" path="res://assets/reanim/Umbrellaleaf_body.png" id="2_kjldc"]
 [ext_resource type="Texture2D" uid="uid://dlrvn6rpf5r15" path="res://assets/reanim/Umbrellaleaf_blink1.png" id="3_7nhj0"]
 [ext_resource type="Texture2D" uid="uid://dm7kvxxhm4uel" path="res://assets/reanim/Umbrellaleaf_leaf5.png" id="4_f4cmm"]
@@ -11,8 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://bhf6nf1hac1uj" path="res://assets/reanim/Umbrellaleaf_leaf7.png" id="8_2w244"]
 [ext_resource type="Texture2D" uid="uid://dmao52cen7wl3" path="res://assets/reanim/Umbrellaleaf_leaf2.png" id="9_gsw7f"]
 [ext_resource type="Texture2D" uid="uid://elsoyk2l1qy" path="res://assets/reanim/Umbrellaleaf_leaf1.png" id="10_dwrju"]
-[ext_resource type="Animation" uid="uid://bujkw8rjwdgve" path="res://animation/character/plant/038_umbrella_leaf/Umbrellaleaf_block.tres" id="11_vgk28"]
-[ext_resource type="Animation" uid="uid://cja5a5h7l26gr" path="res://animation/character/plant/038_umbrella_leaf/Umbrellaleaf_idle.tres" id="12_qy8mi"]
+[ext_resource type="Animation" uid="uid://bujkw8rjwdgve" path="res://animation/character/plant/original/038_umbrella_leaf/Umbrellaleaf_block.tres" id="11_vgk28"]
+[ext_resource type="Animation" uid="uid://cja5a5h7l26gr" path="res://animation/character/plant/original/038_umbrella_leaf/Umbrellaleaf_idle.tres" id="12_qy8mi"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rg7sp"]
 _data = {

@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://c5cke4cm02um7"]
 
 [ext_resource type="PackedScene" uid="uid://bkx25sp71flk5" path="res://scenes/character/character_000_base.tscn" id="1_e772o"]
-[ext_resource type="Script" uid="uid://bawv4f7mswb7k" path="res://scripts/character/plant/plant_000_base.gd" id="2_4jr4d"]
+[ext_resource type="Script" uid="uid://bawv4f7mswb7k" path="res://scripts/character/plant/common/plant_000_base.gd" id="2_4jr4d"]
 [ext_resource type="FontFile" uid="uid://cchqc1dtcle23" path="res://assets/fonts/Bake_Soda.otf" id="2_bie68"]
 [ext_resource type="Script" uid="uid://c3nylhst3lmnp" path="res://scripts/character/components/component_sleep.gd" id="5_813jy"]
 [ext_resource type="Script" uid="uid://c2r327riinrkk" path="res://scripts/character/components/component_blink.gd" id="6_813jy"]

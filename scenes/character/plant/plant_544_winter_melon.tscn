@@ -11,8 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://5orh8ivtbhi7" path="res://assets/reanim/WinterMelon_blink1.png" id="9_26gh6"]
 [ext_resource type="Texture2D" uid="uid://cff3s0svy7rsa" path="res://assets/reanim/WinterMelon_eyebrow.png" id="10_s04lx"]
 [ext_resource type="Texture2D" uid="uid://300aew7liup" path="res://assets/reanim/PeaShooter_frontleaf.png" id="11_t884t"]
-[ext_resource type="Animation" uid="uid://4gch5vm7yr55" path="res://animation/character/plant/045_winter_melon/WinterMelon_idle.tres" id="12_vvf6f"]
-[ext_resource type="Animation" uid="uid://cqrhbn2od5y46" path="res://animation/character/plant/045_winter_melon/WinterMelon_shooting.tres" id="13_8ufpx"]
+[ext_resource type="Animation" uid="uid://4gch5vm7yr55" path="res://animation/character/plant/original/045_winter_melon/WinterMelon_idle.tres" id="12_vvf6f"]
+[ext_resource type="Animation" uid="uid://cqrhbn2od5y46" path="res://animation/character/plant/original/045_winter_melon/WinterMelon_shooting.tres" id="13_8ufpx"]
 [ext_resource type="Script" uid="uid://b5t3ejxgko6nc" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_pult_base.gd" id="14_4tk23"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="15_uc7vn"]
 

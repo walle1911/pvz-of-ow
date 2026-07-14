@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cpgxmqns3kreh"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_34mm5"]
-[ext_resource type="Script" uid="uid://bpoiu58r2rpiu" path="res://scripts/character/plant/plant_037_garlic.gd" id="2_5vkpm"]
+[ext_resource type="Script" path="res://scripts/character/plant/ow/plant_037_garlic_mauga.gd" id="2_5vkpm"]
 [ext_resource type="Texture2D" uid="uid://c4tr5pxpgn1st" path="res://assets/reanim/Garlic_stem1.png" id="2_7chwr"]
 [ext_resource type="Texture2D" uid="uid://d1abmgqa60ngk" path="res://assets/reanim/Garlic_stem2.png" id="3_5vkpm"]
 [ext_resource type="Texture2D" uid="uid://njrw363r8de5" path="res://assets/reanim/Garlic_stem3.png" id="4_ce242"]
@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bjcutyeg4vtre" path="res://assets/reanim/Garlic_body1.png" id="5_ljkad"]
 [ext_resource type="Texture2D" uid="uid://fnrsqlk53wwh" path="res://assets/reanim/Garlic_Mauga_Stem1.png" id="6_ls011"]
 [ext_resource type="Texture2D" uid="uid://k4aatmbcppnb" path="res://assets/reanim/Garlic_blink1.png" id="6_oxluj"]
-[ext_resource type="Animation" uid="uid://bn3iqo6t7b63r" path="res://animation/character/plant/037_garlic/Garlic_idle.tres" id="7_u12re"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_037_garlic_mauga/037_garlic/Garlic_idle.tres" id="7_u12re"]
 [ext_resource type="Texture2D" uid="uid://dv0dpgd821joq" path="res://assets/reanim/Garlic_Mauga_Stem2.png" id="8_u3foe"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="10_fgxvd"]
 [ext_resource type="Texture2D" uid="uid://u1hnt840w5f0" path="res://assets/reanim/Garlic_Mauga_Stem3.png" id="10_qkpav"]

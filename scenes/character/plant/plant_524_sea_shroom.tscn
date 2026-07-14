@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_trumw"]
 [ext_resource type="Texture2D" uid="uid://eyoj2etiyi4k" path="res://assets/reanim/SeaShroom_tentacles.png" id="2_cq6r6"]
-[ext_resource type="Script" uid="uid://d1irf0shejy1e" path="res://scripts/character/plant/plant_025_sea_shroom.gd" id="2_y3aiw"]
+[ext_resource type="Script" uid="uid://d1irf0shejy1e" path="res://scripts/character/plant/original/plant_025_sea_shroom.gd" id="2_y3aiw"]
 [ext_resource type="Texture2D" uid="uid://vm2queyyke4v" path="res://assets/reanim/SeaShroom_body.png" id="3_x4qhn"]
 [ext_resource type="Texture2D" uid="uid://dsuh2ioxrdues" path="res://assets/reanim/SeaShroom_blink1.png" id="4_ai3ac"]
 [ext_resource type="Texture2D" uid="uid://cxc288x17u2g8" path="res://assets/reanim/SeaShroom_foam.png" id="5_y3aiw"]
@@ -11,10 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://dvdfe128qav7a" path="res://assets/reanim/SeaShroom_lips.png" id="8_l3s8s"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="9_x4qhn"]
 [ext_resource type="Texture2D" uid="uid://cimkc6fdbr418" path="res://assets/reanim/SeaShroom_blink2.png" id="10_ai3ac"]
-[ext_resource type="Animation" uid="uid://bw23yx50ks70a" path="res://animation/character/plant/025_sea_shroom/SeaShroom_idle.tres" id="10_t78d7"]
-[ext_resource type="Animation" uid="uid://0cpns1l7s0vn" path="res://animation/character/plant/025_sea_shroom/SeaShroom_idle_aquarium.tres" id="11_py3v7"]
-[ext_resource type="Animation" uid="uid://brmghere7n3h1" path="res://animation/character/plant/025_sea_shroom/SeaShroom_shooting.tres" id="12_sjvba"]
-[ext_resource type="Animation" uid="uid://cyu6nc3ivas2q" path="res://animation/character/plant/025_sea_shroom/SeaShroom_sleep.tres" id="13_56fd0"]
+[ext_resource type="Animation" uid="uid://bw23yx50ks70a" path="res://animation/character/plant/original/025_sea_shroom/SeaShroom_idle.tres" id="10_t78d7"]
+[ext_resource type="Animation" uid="uid://0cpns1l7s0vn" path="res://animation/character/plant/original/025_sea_shroom/SeaShroom_idle_aquarium.tres" id="11_py3v7"]
+[ext_resource type="Animation" uid="uid://brmghere7n3h1" path="res://animation/character/plant/original/025_sea_shroom/SeaShroom_shooting.tres" id="12_sjvba"]
+[ext_resource type="Animation" uid="uid://cyu6nc3ivas2q" path="res://animation/character/plant/original/025_sea_shroom/SeaShroom_sleep.tres" id="13_56fd0"]
 [ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="14_x4qhn"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="15_ai3ac"]
 

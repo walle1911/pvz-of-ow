@@ -2,11 +2,16 @@ extends PanelContainer
 ## 出战卡槽
 class_name CardSlotBattle
 
+## 顶部卡槽在当前 16:9 UI 中能完整显示的上限。
+@export_range(1, 15) var max_visible_card_num := 13
+
 @onready var curr_sun_value: Label = $SunLabelControl/CurrSunValue
 @onready var card_placeholder_ori: TextureRect = $CardUiList/CardPlaceholder_ori
 @onready var card_ui_list: HBoxContainer = $CardUiList
 @onready var marker_2d_sun_target: Marker2D = %Marker2DSunTarget
 
+## 永远不挂载卡片子节点的空卡槽模板。
+var card_placeholder_template: TextureRect
 ## 出战卡槽占位节点
 var cards_placeholder:Array = []
 ## 出战卡片
@@ -42,8 +47,9 @@ func _process(delta: float) -> void:
 ## 初始化出战卡槽，管理器调用
 func init_card_slot_battle(max_choosed_card_num:int, sun:int):
 	self.sun_value = sun
-	for i in range(max_choosed_card_num):
-		var cloned_card_placeholder = card_placeholder_ori.duplicate()
+	card_placeholder_template = card_placeholder_ori.duplicate()
+	for i in range(mini(max_choosed_card_num, max_visible_card_num)):
+		var cloned_card_placeholder = card_placeholder_template.duplicate()
 		card_ui_list.add_child(cloned_card_placeholder)
 
 	card_placeholder_ori.free()		## 立即删除掉该节点，下面获取卡槽占位节点
@@ -56,15 +62,18 @@ func init_card_slot_battle(max_choosed_card_num:int, sun:int):
 
 ## 动态添加一个卡槽占位节点（超过初始上限时自动扩展）
 func add_card_placeholder() -> Control:
-	if cards_placeholder.is_empty():
+	if cards_placeholder.size() >= max_visible_card_num:
 		return null
-	var template: Control = cards_placeholder[0]
-	if not is_instance_valid(template):
+	if not is_instance_valid(card_placeholder_template):
 		return null
-	var cloned_card_placeholder = template.duplicate()
+	var cloned_card_placeholder = card_placeholder_template.duplicate()
 	card_ui_list.add_child(cloned_card_placeholder)
 	cards_placeholder.append(cloned_card_placeholder)
 	return cloned_card_placeholder
+
+func _exit_tree() -> void:
+	if is_instance_valid(card_placeholder_template):
+		card_placeholder_template.free()
 
 ## 主游戏刷新卡片
 func main_game_refresh_card():

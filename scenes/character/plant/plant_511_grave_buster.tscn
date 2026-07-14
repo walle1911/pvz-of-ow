@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://da6kt5eabg28i"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_kxqnt"]
-[ext_resource type="Script" uid="uid://vp45raoysyy" path="res://scripts/character/plant/plant_012_grave_buster.gd" id="2_2a3ft"]
+[ext_resource type="Script" uid="uid://vp45raoysyy" path="res://scripts/character/plant/original/plant_012_grave_buster.gd" id="2_2a3ft"]
 [ext_resource type="Texture2D" uid="uid://bseho2qheiaf8" path="res://assets/reanim/Gravebuster_tooth1.png" id="2_xhurg"]
 [ext_resource type="Texture2D" uid="uid://byhmiftp3dmop" path="res://assets/reanim/Gravebuster_tooth2.png" id="3_2a3ft"]
 [ext_resource type="Texture2D" uid="uid://qinarboxtts" path="res://assets/reanim/Gravebuster_tooth3.png" id="4_27we4"]
@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b57mg4i7plnyl" path="res://assets/reanim/Gravebuster_leaf1.png" id="11_fdwy4"]
 [ext_resource type="Texture2D" uid="uid://hq6ny8dbufej" path="res://assets/reanim/Gravebuster_leaf2.png" id="12_sd0vj"]
 [ext_resource type="Texture2D" uid="uid://igrk4hwpobli" path="res://assets/image/particles/dirtbig.png" id="13_e5ukr"]
-[ext_resource type="Animation" uid="uid://27xv57h73g43" path="res://animation/character/plant/012_Grave_buster/Gravebuster_idle.tres" id="15_be7da"]
+[ext_resource type="Animation" uid="uid://27xv57h73g43" path="res://animation/character/plant/original/012_Grave_buster/Gravebuster_idle.tres" id="15_be7da"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_i8y7p"]
 particles_animation = true

@@ -1,0 +1,2 @@
+extends Zombie016Jackbox
+class_name Zombie016JackboxReaper

@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://bo2laq3egm6ic"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_nndnm"]
-[ext_resource type="Script" uid="uid://ufhh4gtgm5my" path="res://scripts/character/plant/plant_030_star_fruit.gd" id="2_ds8om"]
+[ext_resource type="Script" uid="uid://ufhh4gtgm5my" path="res://scripts/character/plant/original/plant_030_star_fruit.gd" id="2_ds8om"]
 [ext_resource type="Texture2D" uid="uid://h5yqjc7mrtnq" path="res://assets/reanim/Starfruit_body.png" id="2_j1qv8"]
 [ext_resource type="Texture2D" uid="uid://k8arpkjanpdw" path="res://assets/reanim/Starfruit_mouth.png" id="3_ds8om"]
 [ext_resource type="Texture2D" uid="uid://h7nxedbfin5i" path="res://assets/reanim/Starfruit_smile.png" id="3_us3df"]
 [ext_resource type="Texture2D" uid="uid://wf2x5qqmfvn4" path="res://assets/reanim/Starfruit_leaf.png" id="4_ds8om"]
 [ext_resource type="Texture2D" uid="uid://c0vuf4cwcahb" path="res://assets/reanim/Starfruit_stem.png" id="5_uefxc"]
 [ext_resource type="Texture2D" uid="uid://uv0xujpwswfl" path="res://assets/reanim/Starfruit_eyes1.png" id="6_0ews2"]
-[ext_resource type="Animation" uid="uid://cnyy74xwbja8u" path="res://animation/character/plant/030_star_fruit/StarFruit_idle.tres" id="8_ryetw"]
-[ext_resource type="Animation" uid="uid://xbwv3dnuagpi" path="res://animation/character/plant/030_star_fruit/StarFruit_shoot.tres" id="9_2bi5b"]
+[ext_resource type="Animation" uid="uid://cnyy74xwbja8u" path="res://animation/character/plant/original/030_star_fruit/StarFruit_idle.tres" id="8_ryetw"]
+[ext_resource type="Animation" uid="uid://xbwv3dnuagpi" path="res://animation/character/plant/original/030_star_fruit/StarFruit_shoot.tres" id="9_2bi5b"]
 [ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="9_j1qv8"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="10_us3df"]
 

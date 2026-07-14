@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://g6ybgmhkx6rj"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ntbhs"]
-[ext_resource type="Script" uid="uid://dg022118rnan8" path="res://scripts/character/plant/plant_033_cabbage_pult.gd" id="2_01mcx"]
+[ext_resource type="Script" uid="uid://dg022118rnan8" path="res://scripts/character/plant/original/plant_033_cabbage_pult.gd" id="2_01mcx"]
 [ext_resource type="Texture2D" uid="uid://dit0i5evvco14" path="res://assets/reanim/PeaShooter_frontleaf_lefttip.png" id="2_4s2r4"]
 [ext_resource type="Texture2D" uid="uid://nj6m28m6k5p1" path="res://assets/reanim/PeaShooter_frontleaf_righttip.png" id="3_lsi5g"]
 [ext_resource type="Texture2D" uid="uid://b7uqfdos6ocy7" path="res://assets/reanim/Cabbagepult_basket.png" id="4_01mcx"]
@@ -16,8 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://2kjeq2b7olbb" path="res://assets/reanim/Cabbagepult_blink1.png" id="13_woeqa"]
 [ext_resource type="Texture2D" uid="uid://b2utpcye3xuco" path="res://assets/reanim/Cabbagepult_eyebrow.png" id="14_16d14"]
 [ext_resource type="Texture2D" uid="uid://300aew7liup" path="res://assets/reanim/PeaShooter_frontleaf.png" id="15_nuffr"]
-[ext_resource type="Animation" uid="uid://bpu4ferhquhcm" path="res://animation/character/plant/033_cabbage_pult/Cabbagepult_idle.tres" id="16_dwpqx"]
-[ext_resource type="Animation" uid="uid://bl7vb1swhnjem" path="res://animation/character/plant/033_cabbage_pult/Cabbagepult_shooting.tres" id="17_a4hjs"]
+[ext_resource type="Animation" uid="uid://bpu4ferhquhcm" path="res://animation/character/plant/original/033_cabbage_pult/Cabbagepult_idle.tres" id="16_dwpqx"]
+[ext_resource type="Animation" uid="uid://bl7vb1swhnjem" path="res://animation/character/plant/original/033_cabbage_pult/Cabbagepult_shooting.tres" id="17_a4hjs"]
 [ext_resource type="Script" uid="uid://b5t3ejxgko6nc" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_pult_base.gd" id="18_lsi5g"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="19_01mcx"]
 

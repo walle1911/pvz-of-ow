@@ -1,0 +1,2 @@
+extends Plant027Cactus
+class_name Plant027CactusCassidy

@@ -2,13 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_giqvm"]
 [ext_resource type="Texture2D" uid="uid://cbgu3a2jxkthd" path="res://assets/reanim/HypnoShroom_body.png" id="2_amy8e"]
-[ext_resource type="Script" uid="uid://xxw15f2l0opq" path="res://scripts/character/plant/plant_069_hypno_shroom_juno.gd" id="2_sgftx"]
+[ext_resource type="Script" uid="uid://xxw15f2l0opq" path="res://scripts/character/plant/ow/plant_069_hypno_shroom_juno.gd" id="2_sgftx"]
 [ext_resource type="Texture2D" uid="uid://dmch2r8l3fn1c" path="res://assets/reanim/HypnoShroom_eye1.png" id="3_sgftx"]
 [ext_resource type="Texture2D" uid="uid://c3tp56xwnaj8k" path="res://assets/reanim/HypnoShroom_head.png" id="4_dxhke"]
 [ext_resource type="Texture2D" uid="uid://b2dm08oiehrfg" path="res://assets/reanim/HypnoShroom_Juno_Body.png" id="4_xinll"]
 [ext_resource type="Texture2D" uid="uid://bm4iskcgxt1lx" path="res://assets/reanim/HypnoShroom_eye2.png" id="5_nimi2"]
-[ext_resource type="Animation" uid="uid://dty7dbaeyuw0t" path="res://animation/character/plant/013_hypno_shroom/HypnoShroom_idle.tres" id="6_a00dj"]
-[ext_resource type="Animation" uid="uid://30e20p4vcyww" path="res://animation/character/plant/013_hypno_shroom/HypnoShroom_sleep.tres" id="7_4w1dc"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_013_hypno_shroom_juno/013_hypno_shroom/HypnoShroom_idle.tres" id="6_a00dj"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_013_hypno_shroom_juno/013_hypno_shroom/HypnoShroom_sleep.tres" id="7_4w1dc"]
 [ext_resource type="Texture2D" uid="uid://ce52nmcmwhhpl" path="res://assets/reanim/HypnoShroom_HeadJuno.png" id="7_yjf26"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ih1jw"]

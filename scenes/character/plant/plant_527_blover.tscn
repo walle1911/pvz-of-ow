@@ -2,15 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ccuq8"]
 [ext_resource type="Texture2D" uid="uid://cphyi585kac3c" path="res://assets/reanim/Blover_dirt_back.png" id="2_biq5y"]
-[ext_resource type="Script" uid="uid://dm4gepc2o8ocl" path="res://scripts/character/plant/plant_028_blover.gd" id="2_rbyii"]
+[ext_resource type="Script" uid="uid://dm4gepc2o8ocl" path="res://scripts/character/plant/original/plant_028_blover.gd" id="2_rbyii"]
 [ext_resource type="Texture2D" uid="uid://du4g4ioiybxm5" path="res://assets/reanim/Blover_stem2.png" id="3_rbyii"]
 [ext_resource type="Texture2D" uid="uid://s4quydbbcbox" path="res://assets/reanim/Blover_stem1.png" id="4_m75g0"]
 [ext_resource type="Texture2D" uid="uid://p0gjyfmwmgbi" path="res://assets/reanim/Blover_dirt_front.png" id="5_j52xg"]
 [ext_resource type="Texture2D" uid="uid://cqprf536gm6xf" path="res://assets/reanim/Blover_petal.png" id="6_ie5i6"]
 [ext_resource type="Texture2D" uid="uid://npovq3jcwj6m" path="res://assets/reanim/Blover_head2.png" id="8_biq5y"]
-[ext_resource type="Animation" uid="uid://dfbime8s6x1lg" path="res://animation/character/plant/028_blover/Blover_blow.tres" id="8_gm5g7"]
-[ext_resource type="Animation" uid="uid://xfhk6bi0nn0g" path="res://animation/character/plant/028_blover/Blover_idle.tres" id="9_l7i8f"]
-[ext_resource type="Animation" uid="uid://c1ljxjgesp5ko" path="res://animation/character/plant/028_blover/Blover_loop.tres" id="10_k40p8"]
+[ext_resource type="Animation" uid="uid://dfbime8s6x1lg" path="res://animation/character/plant/original/028_blover/Blover_blow.tres" id="8_gm5g7"]
+[ext_resource type="Animation" uid="uid://xfhk6bi0nn0g" path="res://animation/character/plant/original/028_blover/Blover_idle.tres" id="9_l7i8f"]
+[ext_resource type="Animation" uid="uid://c1ljxjgesp5ko" path="res://animation/character/plant/original/028_blover/Blover_loop.tres" id="10_k40p8"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sb6j3"]
 _data = {

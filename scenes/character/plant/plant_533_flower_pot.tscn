@@ -7,8 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://clwvntcysv04j" path="res://assets/reanim/Pot_leaf1.png" id="5_t43al"]
 [ext_resource type="Texture2D" uid="uid://bdfonjr6km5kt" path="res://assets/reanim/Pot_leaf2.png" id="6_jl7nk"]
 [ext_resource type="Texture2D" uid="uid://bjmbxk07m4w1b" path="res://assets/reanim/Pot_top.png" id="7_pff5m"]
-[ext_resource type="Animation" uid="uid://gm80836k87vo" path="res://animation/character/plant/034_flower_pot/Pot_idle.tres" id="8_hutbc"]
-[ext_resource type="Animation" uid="uid://bxl4tn5ge1opm" path="res://animation/character/plant/034_flower_pot/Pot_waterplants.tres" id="9_hul03"]
+[ext_resource type="Animation" uid="uid://gm80836k87vo" path="res://animation/character/plant/original/034_flower_pot/Pot_idle.tres" id="8_hutbc"]
+[ext_resource type="Animation" uid="uid://bxl4tn5ge1opm" path="res://animation/character/plant/original/034_flower_pot/Pot_waterplants.tres" id="9_hul03"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_e78dw"]
 _data = {

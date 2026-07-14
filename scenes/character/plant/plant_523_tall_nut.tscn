@@ -2,9 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_qbo1e"]
 [ext_resource type="Texture2D" uid="uid://bx76a21ng1hd1" path="res://assets/reanim/Tallnut_body.png" id="2_814ck"]
-[ext_resource type="Script" uid="uid://bvl3i7eqr4htw" path="res://scripts/character/plant/plant_024_tall_nut.gd" id="2_lgypc"]
+[ext_resource type="Script" uid="uid://bvl3i7eqr4htw" path="res://scripts/character/plant/original/plant_024_tall_nut.gd" id="2_lgypc"]
 [ext_resource type="Texture2D" uid="uid://df5yxhm82xo61" path="res://assets/reanim/Tallnut_blink1.png" id="3_se5o2"]
-[ext_resource type="Animation" uid="uid://vv3qtbm6a1td" path="res://animation/character/plant/024_tall_nut/Tallnut_idle.tres" id="4_6hwhb"]
+[ext_resource type="Animation" uid="uid://vv3qtbm6a1td" path="res://animation/character/plant/original/024_tall_nut/Tallnut_idle.tres" id="4_6hwhb"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="5_ecgny"]
 [ext_resource type="Texture2D" uid="uid://dx41doer20tqv" path="res://assets/reanim/Tallnut_blink2.png" id="6_ecgny"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="6_lgypc"]

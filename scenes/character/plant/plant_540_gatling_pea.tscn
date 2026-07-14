@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://4yh4v02w2bnn"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_p53rq"]
-[ext_resource type="Script" uid="uid://pidpval30h0q" path="res://scripts/character/plant/plant_041_gatling_pea.gd" id="2_xuoid"]
+[ext_resource type="Script" uid="uid://pidpval30h0q" path="res://scripts/character/plant/original/plant_041_gatling_pea.gd" id="2_xuoid"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="2_y3oii"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="3_b4oky"]
 [ext_resource type="Texture2D" uid="uid://i7fngqj5l36a" path="res://assets/reanim/PeaShooter_backleaf_righttip.png" id="4_mmqa3"]
@@ -17,9 +17,9 @@
 [ext_resource type="Texture2D" uid="uid://dgigsil3n5prk" path="res://assets/reanim/PeaShooter_eyebrow.png" id="15_v8kqk"]
 [ext_resource type="Texture2D" uid="uid://bilalnayg1vtf" path="res://assets/reanim/GatlingPea_helmet.png" id="16_epx1u"]
 [ext_resource type="Texture2D" uid="uid://cvjtg07tpqo7p" path="res://assets/reanim/GatlingPea_blink1.png" id="16_k2f5v"]
-[ext_resource type="Animation" uid="uid://bec43cvxog3qs" path="res://animation/character/plant/041_gatling_pea/GatlingPea_head_idle.tres" id="17_2pq8q"]
-[ext_resource type="Animation" uid="uid://c253162wiggt0" path="res://animation/character/plant/041_gatling_pea/GatlingPea_idle.tres" id="18_3s4kp"]
-[ext_resource type="Animation" uid="uid://bcryy17cyc5ki" path="res://animation/character/plant/041_gatling_pea/GatlingPea_shooting.tres" id="19_5dfgl"]
+[ext_resource type="Animation" uid="uid://bec43cvxog3qs" path="res://animation/character/plant/original/041_gatling_pea/GatlingPea_head_idle.tres" id="17_2pq8q"]
+[ext_resource type="Animation" uid="uid://c253162wiggt0" path="res://animation/character/plant/original/041_gatling_pea/GatlingPea_idle.tres" id="18_3s4kp"]
+[ext_resource type="Animation" uid="uid://bcryy17cyc5ki" path="res://animation/character/plant/original/041_gatling_pea/GatlingPea_shooting.tres" id="19_5dfgl"]
 [ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="21_k2f5v"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="22_uh7kt"]
 

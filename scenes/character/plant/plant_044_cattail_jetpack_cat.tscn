@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://sp3wkfsyxctt"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_5hnsj"]
-[ext_resource type="Script" uid="uid://brpddpuqk6usu" path="res://scripts/character/plant/plant_044_cattail.gd" id="2_7npfu"]
+[ext_resource type="Script" path="res://scripts/character/plant/ow/plant_058_cattail_jetpack_cat.gd" id="2_7npfu"]
 [ext_resource type="Texture2D" uid="uid://dk1nraow67nfq" path="res://assets/reanim/Cattail_paw2.png" id="2_kbe0y"]
 [ext_resource type="Texture2D" uid="uid://yeq0wkhh7ocq" path="res://assets/reanim/Cattail_paw3.png" id="3_2hp7h"]
 [ext_resource type="Texture2D" uid="uid://imy0eqi3xw8o" path="res://assets/reanim/Cattail_tail.png" id="4_eckv1"]
@@ -16,8 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://j427peyuyp0f" path="res://assets/reanim/Cattail_eyebrow1.png" id="12_nsrdc"]
 [ext_resource type="Texture2D" uid="uid://b7tqijvfnkyr6" path="res://assets/reanim/Cattail_JetpackCat_Hat.png" id="13_dfhbk"]
 [ext_resource type="Texture2D" uid="uid://del4hhtgqb4fr" path="res://assets/reanim/Cattail_eyebrow2.png" id="13_s7ymc"]
-[ext_resource type="Animation" uid="uid://cu5g771k54tb7" path="res://animation/character/plant/044_cattail/Cattail_idle.tres" id="14_8r44m"]
-[ext_resource type="Animation" uid="uid://brrvac8kn6vqi" path="res://animation/character/plant/044_cattail/Cattail_shooting.tres" id="15_p11vv"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_044_cattail_jetpack_cat/044_cattail/Cattail_idle.tres" id="14_8r44m"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_044_cattail_jetpack_cat/044_cattail/Cattail_shooting.tres" id="15_p11vv"]
 [ext_resource type="Script" uid="uid://gxh0w2813np7" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="16_2hp7h"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="17_eckv1"]
 

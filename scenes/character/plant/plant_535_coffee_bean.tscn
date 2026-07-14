@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ccail"]
 [ext_resource type="Texture2D" uid="uid://c20q8cl6mp08h" path="res://assets/reanim/Coffeebean_leaf.png" id="2_i7rq2"]
-[ext_resource type="Script" uid="uid://us75i4ho0aus" path="res://scripts/character/plant/plant_036_coffee_bean.gd" id="2_wi000"]
+[ext_resource type="Script" uid="uid://us75i4ho0aus" path="res://scripts/character/plant/original/plant_036_coffee_bean.gd" id="2_wi000"]
 [ext_resource type="Texture2D" uid="uid://dul4xr2apgok2" path="res://assets/reanim/Coffeebean_head1.png" id="3_wi000"]
-[ext_resource type="Animation" uid="uid://cem17q7yw0xp2" path="res://animation/character/plant/036_coffee_bean/Coffeebean_crumble.tres" id="4_r8u3f"]
-[ext_resource type="Animation" uid="uid://1bb2v7pbcxli" path="res://animation/character/plant/036_coffee_bean/Coffeebean_idle.tres" id="5_rb7r5"]
+[ext_resource type="Animation" uid="uid://cem17q7yw0xp2" path="res://animation/character/plant/original/036_coffee_bean/Coffeebean_crumble.tres" id="4_r8u3f"]
+[ext_resource type="Animation" uid="uid://1bb2v7pbcxli" path="res://animation/character/plant/original/036_coffee_bean/Coffeebean_idle.tres" id="5_rb7r5"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lhahu"]
 _data = {

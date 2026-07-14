@@ -21,7 +21,7 @@ rg --files | rg "关键词"
 复制原型脚本，新脚本直接 `extends` 原型类：
 
 ```gdscript
-# scripts/character/plant/plant_XXX_variant.gd
+# scripts/character/plant/ow/plant_XXX_variant.gd
 extends Plant042TwinSunFlower   # 原型类
 class_name PlantXXXVariant
 ```
@@ -36,7 +36,7 @@ cp scenes/character/plant/原型.tscn scenes/character/plant/plant_Number_varian
 
 **必须修改**：
 - 开头的 `[gd_scene format=3]` **不写 uid**（避免冲突）
-- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/plant/新脚本.gd" id="..."]`
+- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/plant/ow/新脚本.gd" id="..."]`
 - 其他 ext_resource 引用和节点树保持不变
 
 Number 用 `PlantType` 枚举值（如 MelonPultAshe 枚举 =40，场景用 `plant_040_...`）。
@@ -145,7 +145,7 @@ HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --qui
 复制原型脚本，新脚本直接 `extends` 原型类：
 
 ```gdscript
-# scripts/character/zombie/zombie_XXX_variant.gd
+# scripts/character/zombie/ow/zombie_XXX_variant.gd
 extends Zombie013Zamboni   # 原型类
 class_name ZombieXXXVariant
 ```
@@ -160,7 +160,7 @@ cp scenes/character/zombie/原型.tscn scenes/character/zombie/zombie_Number_var
 
 **必须修改**：
 - 开头的 `[gd_scene format=3]` **不写 uid**（避免冲突）
-- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/zombie/新脚本.gd" id="..."]`
+- 脚本引用改为 **纯 path** 格式（无 uid）：`[ext_resource type="Script" path="res://scripts/character/zombie/ow/新脚本.gd" id="..."]`
 - 其他 ext_resource 引用和节点树保持不变
 
 Number 用原始僵尸的场景文件编号（如 Zamboni 是 013，Gargantuar 多变体时用下一个空闲号）。

@@ -1,0 +1,2 @@
+extends Zombie025Imp
+class_name Zombie028ImpAshe

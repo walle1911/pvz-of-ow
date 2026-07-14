@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ax4bb"]
 [ext_resource type="Texture2D" uid="uid://bilk171gldfxp" path="res://assets/reanim/PotatoMine_rock3.png" id="2_3ugka"]
-[ext_resource type="Script" uid="uid://s3ps13uaqahb" path="res://scripts/character/plant/plant_1000_sprout.gd" id="2_6ggwp"]
+[ext_resource type="Script" uid="uid://s3ps13uaqahb" path="res://scripts/character/plant/original/plant_1000_sprout.gd" id="2_6ggwp"]
 [ext_resource type="Texture2D" uid="uid://bjkgc0td8i23h" path="res://assets/reanim/sprout_body.png" id="3_6ggwp"]
 [ext_resource type="Texture2D" uid="uid://ck7klwgfbu35w" path="res://assets/reanim/sprout_body1.png" id="4_ji5j3"]
 [ext_resource type="Texture2D" uid="uid://kigsuqanr648" path="res://assets/reanim/sprout_body2.png" id="5_ku2tf"]

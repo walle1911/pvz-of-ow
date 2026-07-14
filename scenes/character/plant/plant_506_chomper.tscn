@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_lv0cd"]
 [ext_resource type="Texture2D" uid="uid://bxi5txsx8yu3x" path="res://assets/reanim/Chomper_groundleaf4.png" id="2_b40dc"]
-[ext_resource type="Script" uid="uid://ndby176l8utj" path="res://scripts/character/plant/plant_007_chomper.gd" id="2_kp108"]
+[ext_resource type="Script" uid="uid://ndby176l8utj" path="res://scripts/character/plant/original/plant_007_chomper.gd" id="2_kp108"]
 [ext_resource type="Texture2D" uid="uid://x1iiuc81dxov" path="res://assets/reanim/Chomper_groundleaf3.png" id="3_kp108"]
 [ext_resource type="Texture2D" uid="uid://dpldve0cdg4md" path="res://assets/reanim/Chomper_stem3.png" id="4_tovg4"]
 [ext_resource type="Texture2D" uid="uid://cwve7jn8g2ab0" path="res://assets/reanim/Chomper_stem2.png" id="5_wt05k"]
@@ -22,10 +22,10 @@
 [ext_resource type="Texture2D" uid="uid://dnracm7r1oeef" path="res://assets/reanim/Chomper_spike.png" id="19_en88k"]
 [ext_resource type="Texture2D" uid="uid://bdxru0taei1fn" path="res://assets/reanim/Chomper_topjaw.png" id="20_d2j2x"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="21_08u4b"]
-[ext_resource type="Animation" uid="uid://kesquo6q8o1g" path="res://animation/character/plant/007_chomper/Chomper_bite.tres" id="24_pcljh"]
-[ext_resource type="Animation" uid="uid://cflbeqrn7kyjr" path="res://animation/character/plant/007_chomper/Chomper_chew.tres" id="25_s8c0p"]
-[ext_resource type="Animation" uid="uid://dpnljdqkvf18k" path="res://animation/character/plant/007_chomper/Chomper_idle.tres" id="26_y67wm"]
-[ext_resource type="Animation" uid="uid://dfffuw3ycaia7" path="res://animation/character/plant/007_chomper/Chomper_swallow.tres" id="27_4yyv1"]
+[ext_resource type="Animation" uid="uid://kesquo6q8o1g" path="res://animation/character/plant/original/007_chomper/Chomper_bite.tres" id="24_pcljh"]
+[ext_resource type="Animation" uid="uid://cflbeqrn7kyjr" path="res://animation/character/plant/original/007_chomper/Chomper_chew.tres" id="25_s8c0p"]
+[ext_resource type="Animation" uid="uid://dpnljdqkvf18k" path="res://animation/character/plant/original/007_chomper/Chomper_idle.tres" id="26_y67wm"]
+[ext_resource type="Animation" uid="uid://dfffuw3ycaia7" path="res://animation/character/plant/original/007_chomper/Chomper_swallow.tres" id="27_4yyv1"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4r8se"]
 _data = {

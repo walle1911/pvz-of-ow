@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dfhgawhex8gx1"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_vafe8"]
-[ext_resource type="Script" uid="uid://bqb77ptbahle3" path="res://scripts/character/plant/plant_001_pea_shooter_single.gd" id="2_0gdir"]
+[ext_resource type="Script" uid="uid://bqb77ptbahle3" path="res://scripts/character/plant/original/plant_001_pea_shooter_single.gd" id="2_0gdir"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="3_yoyhn"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="4_65kcy"]
 [ext_resource type="Texture2D" uid="uid://i7fngqj5l36a" path="res://assets/reanim/PeaShooter_backleaf_righttip.png" id="5_wfkjs"]

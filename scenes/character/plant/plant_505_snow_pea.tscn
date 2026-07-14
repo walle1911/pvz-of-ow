@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://sj81m0cg30o8"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_ntefj"]
-[ext_resource type="Script" uid="uid://nmyv8senyky1" path="res://scripts/character/plant/plant_006_snow_pea.gd" id="2_6otjv"]
+[ext_resource type="Script" uid="uid://nmyv8senyky1" path="res://scripts/character/plant/original/plant_006_snow_pea.gd" id="2_6otjv"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="2_8jetj"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="2_askx4"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="3_6otjv"]
@@ -20,9 +20,9 @@
 [ext_resource type="Texture2D" uid="uid://deyg0fepgpbq6" path="res://assets/reanim/SnowPea_blink1.png" id="15_t08fn"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="16_askx4"]
 [ext_resource type="Texture2D" uid="uid://0tlhci0f4sea" path="res://assets/reanim/SnowPea_blink2.png" id="17_6otjv"]
-[ext_resource type="Animation" uid="uid://b46fv0d5ot0mh" path="res://animation/character/plant/006_snow_pea/SnowPea_head_idle.tres" id="20_d5rqr"]
-[ext_resource type="Animation" uid="uid://dedyosdodpdq1" path="res://animation/character/plant/006_snow_pea/SnowPea_idle.tres" id="21_632lt"]
-[ext_resource type="Animation" uid="uid://n4mysk55gq2q" path="res://animation/character/plant/006_snow_pea/SnowPea_shooting.tres" id="22_hkffs"]
+[ext_resource type="Animation" uid="uid://b46fv0d5ot0mh" path="res://animation/character/plant/original/006_snow_pea/SnowPea_head_idle.tres" id="20_d5rqr"]
+[ext_resource type="Animation" uid="uid://dedyosdodpdq1" path="res://animation/character/plant/original/006_snow_pea/SnowPea_idle.tres" id="21_632lt"]
+[ext_resource type="Animation" uid="uid://n4mysk55gq2q" path="res://animation/character/plant/original/006_snow_pea/SnowPea_shooting.tres" id="22_hkffs"]
 
 [sub_resource type="Resource" id="Resource_a5mo6"]
 script = ExtResource("16_askx4")

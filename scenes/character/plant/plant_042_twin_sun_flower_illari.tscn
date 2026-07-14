@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dstvk5j5u7sl4"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_xhjrs"]
-[ext_resource type="Script" uid="uid://coc6jlmxujio4" path="res://scripts/character/plant/plant_070_twin_sun_flower_illari.gd" id="2_6jujh"]
+[ext_resource type="Script" uid="uid://coc6jlmxujio4" path="res://scripts/character/plant/ow/plant_070_twin_sun_flower_illari.gd" id="2_6jujh"]
 [ext_resource type="Texture2D" uid="uid://cy3xu8ug3gd2" path="res://assets/reanim/PeaShooter_backleaf.png" id="2_vu5k0"]
 [ext_resource type="Texture2D" uid="uid://cyknr5ymersct" path="res://assets/reanim/PeaShooter_backleaf_lefttip.png" id="3_6jvl8"]
 [ext_resource type="Texture2D" uid="uid://i7fngqj5l36a" path="res://assets/reanim/PeaShooter_backleaf_righttip.png" id="4_6jujh"]
@@ -15,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://bes1j4xm667cw" path="res://assets/reanim/SunFlower_double_petals.png" id="11_o1ic1"]
 [ext_resource type="Texture2D" uid="uid://cu06igj1jmdy" path="res://assets/reanim/SunFlower_head.png" id="12_pvtdc"]
 [ext_resource type="Texture2D" uid="uid://6sig2vr6hn5j" path="res://assets/reanim/SunFlower_blink2.png" id="13_xctyx"]
-[ext_resource type="Animation" uid="uid://c1qu0xk64o0kd" path="res://animation/character/plant/042_twin_sun_flower/TwinSunFlower_idle.tres" id="14_88yxs"]
+[ext_resource type="Animation" path="res://animation/character/plant/ow/plant_042_twin_sun_flower_illari/042_twin_sun_flower/TwinSunFlower_idle.tres" id="14_88yxs"]
 [ext_resource type="Script" uid="uid://0hywxqemaott" path="res://scripts/character/components/component_create_sun.gd" id="15_6jvl8"]
 [ext_resource type="Texture2D" uid="uid://b00drwni3ja82" path="res://assets/reanim/PeaShooter_Head.png" id="16_3mfrx"]
 [ext_resource type="Texture2D" uid="uid://txlm4fwvygkx" path="res://assets/reanim/PeaShooter_mouth.png" id="17_8bayr"]

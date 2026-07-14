@@ -1,7 +1,7 @@
 [gd_scene load_steps=19 format=3 uid="uid://cktksmdbn2nmn"]
 
 [ext_resource type="PackedScene" uid="uid://bkx25sp71flk5" path="res://scenes/character/character_000_base.tscn" id="1_q5all"]
-[ext_resource type="Script" uid="uid://dqppqdw4n40ts" path="res://scripts/character/zombie/zombie_000_base.gd" id="2_72xfp"]
+[ext_resource type="Script" uid="uid://dqppqdw4n40ts" path="res://scripts/character/zombie/common/zombie_000_base.gd" id="2_72xfp"]
 [ext_resource type="FontFile" uid="uid://cchqc1dtcle23" path="res://assets/fonts/Bake_Soda.otf" id="2_p5arj"]
 [ext_resource type="Script" uid="uid://d0w7rpih1wyo6" path="res://scripts/character/components/hp_component/component_hp_zombie.gd" id="3_rdbr5"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="6_in461"]

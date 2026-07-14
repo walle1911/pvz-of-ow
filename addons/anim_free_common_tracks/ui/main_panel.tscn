@@ -57,7 +57,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 6.0
-tooltip_text = "res://animation/character/plant/025_sea_shroom/"
+tooltip_text = "res://animation/character/plant/original/025_sea_shroom/"
 clip_text = true
 
 [node name="anim_select_button" type="Button" parent="HBoxContainer/PluginIntroductionPanel2/ScrollContainer/VBoxContainer/PanelContainer/VBoxContainer/anim_path_box"]

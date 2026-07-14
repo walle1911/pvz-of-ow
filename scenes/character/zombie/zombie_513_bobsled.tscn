@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b8d5t24ffmpix"]
 
 [ext_resource type="PackedScene" uid="uid://cktksmdbn2nmn" path="res://scenes/character/zombie/zombie_000_base.tscn" id="1_lm26a"]
-[ext_resource type="Script" uid="uid://d8stg7p2wiw4" path="res://scripts/character/zombie/zombie_014_bobsled.gd" id="2_2l04k"]
+[ext_resource type="Script" uid="uid://d8stg7p2wiw4" path="res://scripts/character/zombie/original/zombie_014_bobsled.gd" id="2_2l04k"]
 [ext_resource type="Texture2D" uid="uid://c6e7inu4hdwtl" path="res://assets/reanim/Zombie_bobsled_innerarm_lower.png" id="2_g1ygt"]
 [ext_resource type="Script" uid="uid://dx752kig120mj" path="res://scripts/character/components/body_character.gd" id="2_yqynq"]
 [ext_resource type="Texture2D" uid="uid://bo21tgjclapyd" path="res://assets/reanim/Zombie_bobsled_innerarm_hand.png" id="3_fggwm"]

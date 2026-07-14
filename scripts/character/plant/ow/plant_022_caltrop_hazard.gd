@@ -1,0 +1,2 @@
+extends Plant022Caltrop
+class_name Plant022CaltropHazard

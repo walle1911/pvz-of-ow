@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_14btg"]
 [ext_resource type="Texture2D" uid="uid://cktibggsi1jj" path="res://assets/reanim/Jalapeno_stem.png" id="2_2sesa"]
-[ext_resource type="Script" uid="uid://ioiiaewsgcvc" path="res://scripts/character/plant/plant_021_jalapeno.gd" id="2_citj3"]
+[ext_resource type="Script" uid="uid://ioiiaewsgcvc" path="res://scripts/character/plant/original/plant_021_jalapeno.gd" id="2_citj3"]
 [ext_resource type="Texture2D" uid="uid://hqee4ag4ittk" path="res://assets/reanim/Jalapeno_body.png" id="3_6qgup"]
 [ext_resource type="Texture2D" uid="uid://bln0hxmmktyex" path="res://assets/reanim/Jalapeno_mouth.png" id="4_7jj3l"]
 [ext_resource type="Texture2D" uid="uid://dg0urs411rllm" path="res://assets/reanim/Jalapeno_eye1.png" id="5_wobmd"]
@@ -10,8 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://b4t56wxmfhp6u" path="res://assets/reanim/Jalapeno_cheek.png" id="7_yip6k"]
 [ext_resource type="Texture2D" uid="uid://crbckbw317krk" path="res://assets/reanim/Jalapeno_eyebrow1.png" id="8_6ompq"]
 [ext_resource type="Texture2D" uid="uid://4p7jqmj2ot5i" path="res://assets/reanim/Jalapeno_eyebrow2.png" id="9_60eid"]
-[ext_resource type="Animation" uid="uid://bx17w74rvafw3" path="res://animation/character/plant/021_jalapeno/Jalapeno_explode.tres" id="10_cvvd8"]
-[ext_resource type="Animation" uid="uid://dbgfoesxm6gq6" path="res://animation/character/plant/021_jalapeno/Jalapeno_idle.tres" id="11_te1fo"]
+[ext_resource type="Animation" uid="uid://bx17w74rvafw3" path="res://animation/character/plant/original/021_jalapeno/Jalapeno_explode.tres" id="10_cvvd8"]
+[ext_resource type="Animation" uid="uid://dbgfoesxm6gq6" path="res://animation/character/plant/original/021_jalapeno/Jalapeno_idle.tres" id="11_te1fo"]
 [ext_resource type="Script" uid="uid://lxlakp664pau" path="res://scripts/character/components/bomb_component/component_bomb_jalapeno.gd" id="12_wobmd"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3dqyt"]

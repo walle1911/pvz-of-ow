@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://w2cplfosy68e"]
 
 [ext_resource type="PackedScene" uid="uid://n2y27ai1nm5f" path="res://scenes/character/plant/plant_000_down_base.tscn" id="1_fjhlc"]
-[ext_resource type="Script" uid="uid://crduuvgrpopay" path="res://scripts/character/plant/plant_017_lily_pad.gd" id="2_13n6p"]
+[ext_resource type="Script" uid="uid://crduuvgrpopay" path="res://scripts/character/plant/original/plant_017_lily_pad.gd" id="2_13n6p"]
 [ext_resource type="Texture2D" uid="uid://d0hpo2yp78fwc" path="res://assets/image/plant/plantshadow.png" id="2_b2353"]
 [ext_resource type="Texture2D" uid="uid://cbhaawnc37cwe" path="res://assets/reanim/LilyPad_body.png" id="3_13n6p"]
 [ext_resource type="Texture2D" uid="uid://dmmcjbsd028oj" path="res://assets/reanim/LilyPad_blink1.png" id="4_pknwq"]
-[ext_resource type="Animation" uid="uid://bt0dx7u5axpxp" path="res://animation/character/plant/017_lily_pad/LilyPad_idle.tres" id="5_taohl"]
+[ext_resource type="Animation" uid="uid://bt0dx7u5axpxp" path="res://animation/character/plant/original/017_lily_pad/LilyPad_idle.tres" id="5_taohl"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="6_taohl"]
 [ext_resource type="Texture2D" uid="uid://blj21d64csfsk" path="res://assets/reanim/LilyPad_blink2.png" id="7_iaqk1"]
 

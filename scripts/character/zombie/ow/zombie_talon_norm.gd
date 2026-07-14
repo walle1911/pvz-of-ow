@@ -1,0 +1,2 @@
+extends Zombie001Norm
+class_name ZombieTalonNorm

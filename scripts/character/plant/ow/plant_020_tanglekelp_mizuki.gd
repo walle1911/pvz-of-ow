@@ -1,0 +1,2 @@
+extends Plant020Tanglekelp
+class_name Plant020TanglekelpMizuki

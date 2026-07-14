@@ -88,6 +88,9 @@ func _on_texture_button_pressed() -> void:
 ## 从AllCards中复制一张新卡,隐藏card_slot_candidate的卡片
 func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], card_type_list_zombie:Array[CharacterRegistry.ZombieType]):
 	for i in card_type_list.size():
+		if card_slot_battle.curr_cards.size() >= card_slot_battle.max_visible_card_num:
+			push_warning("预选卡超过顶部卡槽显示上限，已跳过后续卡片")
+			break
 		var card:Card
 		var plant_type:CharacterRegistry.PlantType = card_type_list[i]
 		var zombie_type:CharacterRegistry.ZombieType = card_type_list_zombie[i]
@@ -114,7 +117,9 @@ func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], ca
 
 		# 如果卡槽已满，动态扩展
 		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
-			card_slot_battle.add_card_placeholder()
+			var new_placeholder := card_slot_battle.add_card_placeholder()
+			if not is_instance_valid(new_placeholder):
+				break
 		card_slot_battle.curr_cards.append(card)
 		pre_choosed_card(card, card_slot_battle.cards_placeholder[len(card_slot_battle.curr_cards)-1])
 	## 预选卡断开鼠标点击信号
@@ -223,12 +228,21 @@ func move_card_to(card:Card, target_parent):
 		return
 	card.button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.reparent(temporary_card)
+	## 新增占位槽需要等待容器完成布局，否则读到的仍是第一格附近的旧坐标。
+	await get_tree().process_frame
+	if not _is_valid_card(card) or not is_instance_valid(target_parent):
+		if _is_valid_card(card):
+			card.button.mouse_filter = Control.MOUSE_FILTER_PASS
+		return
 
 	var tween = create_tween()
 	tween.tween_property(card, "global_position", target_parent.global_position, 0.2) # 时间可以改短点
 
 	await tween.finished
-	card.reparent(target_parent)
+	if not _is_valid_card(card) or not is_instance_valid(target_parent):
+		return
+	card.reparent(target_parent, false)
+	card.position = Vector2.ZERO
 
 	card.button.mouse_filter = Control.MOUSE_FILTER_PASS
 

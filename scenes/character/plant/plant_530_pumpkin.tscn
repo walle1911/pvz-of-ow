@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://ble8u0ri6sy6"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_dvvog"]
-[ext_resource type="Script" uid="uid://br2u6pu5d68b8" path="res://scripts/character/plant/plant_031_pumpkin.gd" id="2_scv1d"]
+[ext_resource type="Script" uid="uid://br2u6pu5d68b8" path="res://scripts/character/plant/original/plant_031_pumpkin.gd" id="2_scv1d"]
 [ext_resource type="Texture2D" uid="uid://r82fyw3sptg" path="res://assets/reanim/Pumpkin_back.png" id="2_ua2hr"]
 [ext_resource type="Texture2D" uid="uid://cpvkl0j1s5bbe" path="res://assets/reanim/Pumpkin_front.png" id="3_ep6lu"]
-[ext_resource type="Animation" uid="uid://crpcy55uglh0q" path="res://animation/character/plant/031_pumpkin/ALL_ANIMS.res" id="4_4j68l"]
+[ext_resource type="Animation" uid="uid://crpcy55uglh0q" path="res://animation/character/plant/original/031_pumpkin/ALL_ANIMS.res" id="4_4j68l"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="5_ep6lu"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="6_4j68l"]
 [ext_resource type="Texture2D" uid="uid://pk1kj7t44va0" path="res://assets/reanim/pumpkin_damage1.png" id="7_btwas"]
