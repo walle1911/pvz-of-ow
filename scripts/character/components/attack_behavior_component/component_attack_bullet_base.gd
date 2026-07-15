@@ -33,6 +33,9 @@ signal signal_shoot_bullet
 
 ## 主游戏场景子弹父节点
 var bullets: Node2D
+## 仅影响射击间隔的攻速倍率来源。多个来源取最高值，避免重复强化指数叠加。
+var attack_speed_multiplier_sources:Dictionary[int, float] = {}
+var owner_speed_product := 1.0
 func _ready() -> void:
 	super()
 	bullet_attack_cd_timer.wait_time = attack_cd
@@ -48,15 +51,51 @@ func _ready() -> void:
 
 ## 角色速度修改
 func owner_update_speed(speed_product:float):
+	var old_effective_speed := owner_speed_product * get_attack_speed_multiplier()
+	owner_speed_product = speed_product
+	_apply_effective_attack_speed(old_effective_speed)
+
+
+## 增加一个仅影响射击间隔的攻速倍率来源。
+func add_attack_speed_multiplier(source:Object, multiplier:float):
+	if not is_instance_valid(source):
+		return
+	var old_effective_speed := owner_speed_product * get_attack_speed_multiplier()
+	attack_speed_multiplier_sources[source.get_instance_id()] = maxf(multiplier, 0.0)
+	_apply_effective_attack_speed(old_effective_speed)
+
+
+## 移除一个攻速倍率来源。
+func remove_attack_speed_multiplier(source:Object):
+	if not is_instance_valid(source):
+		return
+	var old_effective_speed := owner_speed_product * get_attack_speed_multiplier()
+	attack_speed_multiplier_sources.erase(source.get_instance_id())
+	_apply_effective_attack_speed(old_effective_speed)
+
+
+## 获取当前额外攻速倍率，多个来源取最高值。
+func get_attack_speed_multiplier() -> float:
+	var result := 1.0
+	for multiplier:float in attack_speed_multiplier_sources.values():
+		result = maxf(result, multiplier)
+	return result
+
+
+func _apply_effective_attack_speed(old_effective_speed:float):
+	var new_effective_speed := owner_speed_product * get_attack_speed_multiplier()
 	if not bullet_attack_cd_timer.is_stopped():
-		if speed_product == 0:
+		if is_zero_approx(new_effective_speed):
 			bullet_attack_cd_timer.paused = true
 		else:
 			bullet_attack_cd_timer.paused = false
+			if not is_zero_approx(old_effective_speed):
+				bullet_attack_cd_timer.start(
+					bullet_attack_cd_timer.time_left * old_effective_speed / new_effective_speed
+				)
 
-			bullet_attack_cd_timer.start(bullet_attack_cd_timer.time_left / speed_product)
-
-	bullet_attack_cd_timer.wait_time = attack_cd / speed_product
+	if not is_zero_approx(new_effective_speed):
+		bullet_attack_cd_timer.wait_time = attack_cd / new_effective_speed
 
 ## 开始攻击
 func attack_start():

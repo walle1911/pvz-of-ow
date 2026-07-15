@@ -63,6 +63,22 @@ const TARGET_ANCHOR_PATHS:Array[NodePath] = [
 const BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 
 
+## 安娜咖啡豆等需要与天使保持相同的默认射手范围时调用。
+static func is_default_damage_boost_target_type(target_plant_type:CharacterRegistry.PlantType) -> bool:
+	return target_plant_type in [
+		CharacterRegistry.PlantType.P500PeaShooterSingle,
+		CharacterRegistry.PlantType.P505SnowPea,
+		CharacterRegistry.PlantType.P507PeaShooterDouble,
+		CharacterRegistry.PlantType.P518ThreePeater,
+		CharacterRegistry.PlantType.P528SplitPea,
+		CharacterRegistry.PlantType.P540GatlingPea,
+		CharacterRegistry.PlantType.P549PeaShooterDoubleReverse,
+		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
+		CharacterRegistry.PlantType.P006SnowPeaMei,
+		CharacterRegistry.PlantType.P041GatlingPeaBastion,
+	]
+
+
 func ready_norm() -> void:
 	super()
 	if is_zombie_mode:

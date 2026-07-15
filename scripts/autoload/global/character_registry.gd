@@ -689,7 +689,7 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantName: "CoffeeBean_Ana",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 75,
-		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/036_coffee_bean.tres"),
+		PlantInfoAttribute.PlantConditionResource :  preload("res://resources/character_resource/plant_condition/036_coffee_bean_ana.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_036_coffee_bean_ana.tscn")
 		},
 	PlantType.P014ScaredyShroomWidowmaker: {
