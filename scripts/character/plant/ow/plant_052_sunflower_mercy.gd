@@ -20,10 +20,19 @@ class_name Plant052SunflowerMercy
 	CharacterRegistry.PlantType.P518ThreePeater,
 	CharacterRegistry.PlantType.P528SplitPea,
 	CharacterRegistry.PlantType.P540GatlingPea,
-	CharacterRegistry.PlantType.P549PeaShooterDoubleReverse,
+	49,
 	CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
 	CharacterRegistry.PlantType.P041GatlingPeaBastion,
+	CharacterRegistry.PlantType.P027CactusCassidy,
+	CharacterRegistry.PlantType.P040MelonPultAshe,
+	CharacterRegistry.PlantType.P044CattailJetpackCat,
+	CharacterRegistry.PlantType.P043GloomShroomMoira,
+	CharacterRegistry.PlantType.P025SeaShroomWuyang,
+	CharacterRegistry.PlantType.P011FumeShroomRoadhog,
+	CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,
+	CharacterRegistry.PlantType.P019ThreepeaterDaotian,
+	CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 ]
 
 @export_subgroup("蓝线增伤 | 自定义目标配置")
@@ -63,8 +72,9 @@ const TARGET_ANCHOR_PATHS:Array[NodePath] = [
 const BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 
 
-## 安娜咖啡豆等需要与天使保持相同的默认射手范围时调用。
-static func is_default_damage_boost_target_type(target_plant_type:CharacterRegistry.PlantType) -> bool:
+## 安娜咖啡豆等需要覆盖天使场景“蓝线增伤 | 目标植物类型”时调用。
+## 本列表与 plant_002_sunflower_mercy.tscn 根节点序列化的目标数组保持一致。
+static func is_blue_line_damage_boost_target_type(target_plant_type:CharacterRegistry.PlantType) -> bool:
 	return target_plant_type in [
 		CharacterRegistry.PlantType.P500PeaShooterSingle,
 		CharacterRegistry.PlantType.P505SnowPea,
@@ -72,10 +82,19 @@ static func is_default_damage_boost_target_type(target_plant_type:CharacterRegis
 		CharacterRegistry.PlantType.P518ThreePeater,
 		CharacterRegistry.PlantType.P528SplitPea,
 		CharacterRegistry.PlantType.P540GatlingPea,
-		CharacterRegistry.PlantType.P549PeaShooterDoubleReverse,
+		49,
 		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 		CharacterRegistry.PlantType.P006SnowPeaMei,
 		CharacterRegistry.PlantType.P041GatlingPeaBastion,
+		CharacterRegistry.PlantType.P027CactusCassidy,
+		CharacterRegistry.PlantType.P040MelonPultAshe,
+		CharacterRegistry.PlantType.P044CattailJetpackCat,
+		CharacterRegistry.PlantType.P043GloomShroomMoira,
+		CharacterRegistry.PlantType.P025SeaShroomWuyang,
+		CharacterRegistry.PlantType.P011FumeShroomRoadhog,
+		CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,
+		CharacterRegistry.PlantType.P019ThreepeaterDaotian,
+		CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 	]
 
 

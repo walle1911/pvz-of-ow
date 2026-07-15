@@ -5,6 +5,7 @@ class_name Plant057TallNutSigma
 
 @export_group("西格玛下砸")
 @export_range(1, 9, 1) var slam_front_cell_count:int = 2
+@export_range(0.0, 30.0, 1.0, "suffix:px") var slam_range_edge_tolerance:float = 8.0
 @export_range(1.0, 150.0, 1.0, "suffix:px") var slam_lift_height:float = 91.0
 @export_range(1.0, 2.0, 0.01) var slam_air_body_scale:float = 1.25
 @export_range(0.1, 1.0, 0.05) var slam_air_shadow_scale:float = 0.4
@@ -140,33 +141,22 @@ func _on_hp_stage_change(curr_hp_stage:int) -> void:
 func _slam_zombies_in_front_cells() -> void:
 	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
 		return
-	var all_plant_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
 	var all_zombies_2d:Array = Global.main_game.zombie_manager.all_zombies_2d
-	var first_front_col:int = row_col.y + 1
 	var first_lane:int = maxi(0, row_col.x - 1)
-	var last_lane_exclusive:int = mini(all_plant_cells.size(), row_col.x + 2)
+	var last_lane_exclusive:int = mini(all_zombies_2d.size(), row_col.x + 2)
+	var area_left:float = global_position.x - slam_range_edge_tolerance
+	var area_right:float = (
+		global_position.x
+		+ plant_cell.size.x * slam_front_cell_count
+		+ slam_range_edge_tolerance
+	)
 
 	for target_lane:int in range(first_lane, last_lane_exclusive):
-		if target_lane >= all_zombies_2d.size():
-			continue
-		var lane_cells:Array = all_plant_cells[target_lane]
-		if first_front_col >= lane_cells.size():
-			continue
-		var last_front_col_exclusive:int = mini(
-			lane_cells.size(),
-			first_front_col + slam_front_cell_count
-		)
-		var first_cell:PlantCell = lane_cells[first_front_col]
-		var last_cell:PlantCell = lane_cells[last_front_col_exclusive - 1]
-		var area_left:float = minf(first_cell.global_position.x, last_cell.global_position.x)
-		var area_right:float = maxf(
-			first_cell.global_position.x + first_cell.size.x,
-			last_cell.global_position.x + last_cell.size.x
-		)
 		for zombie:Zombie000Base in all_zombies_2d[target_lane].duplicate():
 			if not is_instance_valid(zombie) or zombie.is_death:
 				continue
-			if zombie.global_position.x < area_left or zombie.global_position.x > area_right:
+			var zombie_ground_x:float = zombie.shadow.global_position.x
+			if zombie_ground_x < area_left or zombie_ground_x > area_right:
 				continue
 			_start_zombie_slam(zombie)
 

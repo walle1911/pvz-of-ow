@@ -119,6 +119,9 @@ node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"
 [node name="Plant036CoffeeBeanAna" unique_id=743807569 instance=ExtResource("1_ccail")]
 z_index = 2
 script = ExtResource("2_wi000")
+attack_speed_multiplier = 2.0
+damage_multiplier = 2.0
+boost_duration = 15.0
 plant_type = 36
 init_be_attack_status = 2
 

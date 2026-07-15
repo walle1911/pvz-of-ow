@@ -42,12 +42,15 @@ func _process(delta:float) -> void:
 
 
 func finish_boost() -> void:
+	set_process(false)
 	_remove_gameplay_boost()
+	_clear_full_body_glow()
 	queue_free()
 
 
 func _exit_tree() -> void:
 	_remove_gameplay_boost()
+	_clear_full_body_glow()
 
 
 func _remove_gameplay_boost() -> void:
@@ -63,6 +66,7 @@ func _remove_gameplay_boost() -> void:
 func _create_full_body_glow() -> void:
 	if not is_instance_valid(target_plant) or not is_instance_valid(target_plant.body):
 		return
+	_clear_stale_full_body_glow(target_plant.body)
 	var body_sprites:Array[Sprite2D] = []
 	_collect_body_sprites(target_plant.body, body_sprites)
 	for source_sprite:Sprite2D in body_sprites:
@@ -78,9 +82,27 @@ func _create_full_body_glow() -> void:
 
 func _collect_body_sprites(node:Node, result:Array[Sprite2D]) -> void:
 	for child:Node in node.get_children():
+		if child.name == &"AnaNanoBoostOverlay":
+			continue
 		if child is Sprite2D and is_instance_valid((child as Sprite2D).texture):
 			result.append(child as Sprite2D)
 		_collect_body_sprites(child, result)
+
+
+func _clear_full_body_glow() -> void:
+	for pair:Dictionary in glow_pairs:
+		var overlay := pair.get("overlay") as Sprite2D
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	glow_pairs.clear()
+
+
+func _clear_stale_full_body_glow(node:Node) -> void:
+	for child:Node in node.get_children():
+		if child.name == &"AnaNanoBoostOverlay":
+			child.queue_free()
+			continue
+		_clear_stale_full_body_glow(child)
 
 
 func _sync_full_body_glow() -> void:

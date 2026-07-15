@@ -34,14 +34,18 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z513Bobsled: 3,		# 滑雪四兄弟
 	CharacterRegistry.ZombieType.Z514Dolphinrider: 3,# 海豚僵尸
 
+	CharacterRegistry.ZombieType.Z515Jackbox: 3,		# 原版小丑
 	CharacterRegistry.ZombieType.Z016JackboxReaper: 3,		# 小丑
 	CharacterRegistry.ZombieType.Z516Balloon: 2,		# 气球
+	CharacterRegistry.ZombieType.Z517Digger: 4,		# 原版矿工
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: 4,		# 矿工
 	CharacterRegistry.ZombieType.Z518Pogo: 4,			# 跳跳
+	CharacterRegistry.ZombieType.Z519Yeti: 4,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 4,			# 雪人
 
 	CharacterRegistry.ZombieType.Z521Ladder: 4,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 5,		# 投篮
+	CharacterRegistry.ZombieType.Z523Gargantuar: 10,	# 原版伽刚特尔
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 10,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 10,
 	CharacterRegistry.ZombieType.Z524Imp: 1,			# 小鬼
@@ -70,14 +74,18 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z513Bobsled: 2000,		# 滑雪四兄弟
 	CharacterRegistry.ZombieType.Z514Dolphinrider: 1500,	# 海豚僵尸
 
+	CharacterRegistry.ZombieType.Z515Jackbox: 1000,		# 原版小丑
 	CharacterRegistry.ZombieType.Z016JackboxReaper: 1000,		# 小丑
 	CharacterRegistry.ZombieType.Z516Balloon: 2000,		# 气球
+	CharacterRegistry.ZombieType.Z517Digger: 1000,		# 原版矿工
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: 1000,		# 矿工
 	CharacterRegistry.ZombieType.Z518Pogo: 1000,			# 跳跳
+	CharacterRegistry.ZombieType.Z519Yeti: 1,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 1,			# 雪人
 
 	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
+	CharacterRegistry.ZombieType.Z523Gargantuar: 1500,	# 原版伽刚特尔
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 1500,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 1500,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 1500,	# 豌豆射手僵尸
