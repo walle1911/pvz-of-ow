@@ -7,6 +7,9 @@ class_name AttackComponentZombieGargantuar
 	攻击植物时,该植物格子所有植物被压扁
 	攻击僵尸时,该僵尸受穿透伤害1800
 """
+## 巨人攻击被魅惑僵尸时使用的穿透伤害；攻击植物仍保留原版整格压扁机制。
+@export var smash_attack_value:int = 1800
+
 ## 攻击动画开始时检测敌人
 var enemy:Character000Base
 ## 攻击罐子
@@ -37,7 +40,7 @@ func attack_once():
 		if enemy is Plant000Base:
 			enemy.plant_cell.be_gargantuar_attack(owner)
 		elif enemy is Zombie000Base:
-			enemy.be_attacked_bullet(1800,BulletRegistry.AttackMode.Penetration, true, true)
+			enemy.be_attacked_bullet(smash_attack_value,BulletRegistry.AttackMode.Penetration, true, true)
 
 		SoundManager.play_character_SFX("gargantuar_thump")
 

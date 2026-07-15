@@ -39,6 +39,29 @@ const SKIPPED_PROPERTIES := {
 	"is_garden_aquarium": true,
 }
 
+## 这些字段无论实际归属于角色根节点、血量组件还是攻击组件，
+## 都统一提到角色详情最上方的“基础参数”中。
+const BASIC_PARAMETER_PROPERTIES := {
+	"max_hp": 0,
+	"max_hp_armor1": 1,
+	"max_hp_armor2": 2,
+	"attack_value_bullet": 10,
+	"init_attack_value_per_min": 11,
+	"attack_value": 12,
+	"bomb_value": 13,
+	"eat_attack": 14,
+	"squash_attack_value": 15,
+	"cannon_attack_value": 16,
+	"smash_attack_value": 17,
+	"plant_food_attack_value": 18,
+	"bullet_attack_values": 19,
+	"uppercut_attack_multiplier": 20,
+	"slam_current_hp_ratio": 21,
+	"bullet_damage_multiplier": 22,
+	"damage_multiplier": 23,
+	"damage_boost_multiplier": 24,
+}
+
 var catalog: Array[Dictionary] = []
 var selected_kind := "plant"
 var selected_scene_path := ""
@@ -291,14 +314,29 @@ func _build_character_fields(scene_path: String) -> void:
 		return
 	var instance := packed.instantiate()
 	var field_count := 0
+	var basic_fields: Array[Dictionary] = []
+	var normal_fields: Array[Dictionary] = []
 	for node in _all_nodes(instance):
 		var properties := _tunable_properties(node)
-		if properties.is_empty():
-			continue
-		field_count += properties.size()
-		_add_node_header(instance, node)
 		for property_info in properties:
-			_add_property_editor(instance, node, property_info)
+			var field := {"node": node, "property_info": property_info}
+			if BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
+				basic_fields.append(field)
+			else:
+				normal_fields.append(field)
+	field_count = basic_fields.size() + normal_fields.size()
+	if not basic_fields.is_empty():
+		basic_fields.sort_custom(_sort_basic_fields)
+		_add_section_header("◆ 基础参数")
+		for field in basic_fields:
+			_add_property_editor(instance, field["node"], field["property_info"])
+	var last_node: Node
+	for field in normal_fields:
+		var node: Node = field["node"]
+		if node != last_node:
+			_add_node_header(instance, node)
+			last_node = node
+		_add_property_editor(instance, node, field["property_info"])
 	instance.free()
 	if field_count == 0:
 		_add_empty_field("这个角色还没有开放可调数值。")
@@ -344,21 +382,32 @@ func _is_numeric_array(value) -> bool:
 	return true
 
 
-func _add_node_header(root: Node, node: Node) -> void:
+func _sort_basic_fields(a: Dictionary, b: Dictionary) -> bool:
+	var a_name := str(a["property_info"]["name"])
+	var b_name := str(b["property_info"]["name"])
+	return int(BASIC_PARAMETER_PROPERTIES[a_name]) < int(BASIC_PARAMETER_PROPERTIES[b_name])
+
+
+func _add_section_header(text_value: String) -> void:
 	var header := Label.new()
 	header.custom_minimum_size = Vector2(570, 26)
-	header.text = "◆ 角色本体" if node == root else "◆ " + L10n.component_name(str(node.name))
+	header.text = text_value
 	header.add_theme_font_override("font", ALMANAC_FONT)
 	header.add_theme_font_size_override("font_size", 17)
 	header.add_theme_color_override("font_color", Color("7e390f"))
 	field_box.add_child(header)
 
 
+func _add_node_header(root: Node, node: Node) -> void:
+	_add_section_header("◆ 角色本体" if node == root else "◆ " + L10n.component_name(str(node.name)))
+
+
 func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> void:
 	var property_name := str(property_info["name"])
 	var node_path := "." if node == root else str(root.get_path_to(node))
-	var original_value = node.get(property_name)
+	var original_value = _editor_original_value(node, property_name, node.get(property_name))
 	var current_value = _effective_value(node_path, property_name, original_value)
+	current_value = _editor_original_value(node, property_name, current_value)
 	var row := HBoxContainer.new()
 	row.custom_minimum_size = Vector2(570, 34)
 	row.add_theme_constant_override("separation", 8)
@@ -400,6 +449,38 @@ func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> 
 			edit.focus_exited.connect(func(): _commit_array_edit(edit, node_path, property_name, original_value))
 			row.add_child(edit)
 	field_box.add_child(row)
+
+
+## 普通射击组件使用 -1 表示沿用子弹场景伤害。面板中改为显示真实默认值，
+## 用户保存后仍写回原 AttackComponent 字段，不改变运行时的数据应用路径。
+func _editor_original_value(node: Node, property_name: String, original_value):
+	if property_name == "attack_value_bullet" and int(original_value) <= 0:
+		return _default_bullet_damage(node)
+	if property_name == "bullet_attack_values" and original_value is Array:
+		var resolved: Array = original_value.duplicate()
+		var default_damage := _default_bullet_damage(node)
+		for index in resolved.size():
+			if int(resolved[index]) <= 0:
+				resolved[index] = default_damage
+		return resolved
+	return original_value
+
+
+func _default_bullet_damage(node: Node) -> int:
+	if not node is AttackComponentBulletBase:
+		return 0
+	var attack_component := node as AttackComponentBulletBase
+	if attack_component.attack_value_bullet > 0:
+		return attack_component.attack_value_bullet
+	var bullet_scene: PackedScene = Global.bullet_registry.get_bullet_scenes(attack_component.attack_bullet_type)
+	if bullet_scene == null:
+		return 0
+	var bullet := bullet_scene.instantiate()
+	var damage:int = 0
+	if bullet is Bullet000NormBase:
+		damage = (bullet as Bullet000NormBase).attack_value
+	bullet.free()
+	return damage
 
 
 func _style_line_edit(edit: LineEdit) -> void:

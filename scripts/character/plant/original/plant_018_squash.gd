@@ -4,6 +4,9 @@ class_name Plant018Squash
 @onready var area_2d_squash_attack: Area2D = $Area2DSquashAttack
 @onready var detect_component: DetectComponentSquash = $DetectComponent
 
+## 倭瓜压击伤害。
+@export var squash_attack_value:int = 1800
+
 ## 可以攻击的敌人状态
 @export_flags("1 正常", "2 悬浮", "4 地刺", "8 低矮") var can_attack_plant_status:int = 13
 @export_flags("1 正常", "2 跳跃", "4 水下", "8 空中", "16 地下") var can_attack_zombie_status:int = 1
@@ -47,7 +50,7 @@ func squash_all_area_zombie():
 		## 如果为同一行僵尸
 		if zombie.lane == row_col.x:
 			if zombie.curr_be_attack_status & can_attack_zombie_status:
-				zombie.be_squash()
+				zombie.be_squash(squash_attack_value)
 
 ## 跳入水中判断
 func judge_jump_pool():

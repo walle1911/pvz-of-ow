@@ -16,6 +16,8 @@ var plant_cell_next:PlantCell
 ## 目标位置
 var attack_target_global_pos:Vector2
 
+## 炮弹落地后的爆炸伤害。
+@export var cannon_attack_value:int = 1800
 ## 充能cd
 @export var charge_cd:float = 35
 var charge_cd_timer:Timer
@@ -87,7 +89,7 @@ func shoot_bullet():
 	is_attack = false
 
 	var bullet_cob_cannon :Bullet016CobCannon =  Global.bullet_registry.get_bullet_scenes(BulletRegistry.BulletType.Bullet016CobCannon).instantiate()
-	bullet_cob_cannon.init_cannon(attack_target_global_pos)
+	bullet_cob_cannon.init_cannon(attack_target_global_pos, cannon_attack_value)
 	Global.main_game.bullets.add_child(bullet_cob_cannon)
 	bullet_cob_cannon.global_position = marker_2d_bullet.global_position
 

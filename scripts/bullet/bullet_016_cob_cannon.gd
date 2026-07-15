@@ -5,8 +5,11 @@ var target_global_pos :Vector2
 @onready var bomb_component: BombComponentNorm = %BombComponent
 @onready var area_2d_bomb: Area2D = $BombComponent/Area2DBomb
 
-func init_cannon(curr_target_global_pos:Vector2):
+func init_cannon(curr_target_global_pos:Vector2, attack_value:int = 1800):
 	self.target_global_pos = curr_target_global_pos
+	## init_cannon 在子弹加入场景树前调用，此时 @onready 尚未赋值。
+	var init_bomb_component := get_node(^"BombComponent") as BombComponentNorm
+	init_bomb_component.bomb_value = attack_value
 	z_index = 4000
 
 
