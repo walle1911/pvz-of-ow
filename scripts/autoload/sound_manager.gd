@@ -249,7 +249,7 @@ const SFXCarzyDaveMap := {
 ## 音效对象池实现
 var sfx_bullet_pool = []
 
-func play_sfx_with_pool(sfx_resource: AudioStream) -> AudioStreamPlayer:
+func play_sfx_with_pool(sfx_resource: AudioStream, volume_db:float = 0.0) -> AudioStreamPlayer:
 	if sfx_resource in curr_frame_sfx:
 		return
 	curr_frame_sfx.append(sfx_resource)
@@ -271,6 +271,7 @@ func play_sfx_with_pool(sfx_resource: AudioStream) -> AudioStreamPlayer:
 
 	## 配置播放器
 	player.stream = sfx_resource
+	player.volume_db = volume_db
 	player.play()
 	return player
 
@@ -296,13 +297,13 @@ func play_bullet_attack_SFX(type_bullet_sfx:TypeBulletSFX):
 	play_sfx_with_pool(sfx_selected)
 
 ## 播放植物\僵尸相关音效
-func play_character_SFX(option:StringName):
+func play_character_SFX(option:StringName, volume_db:float = 0.0):
 	var sfx_resource:AudioStream
 	if SFXCharacterMap[option] is Array:
 		sfx_resource = SFXCharacterMap[option].pick_random()
 	else:
 		sfx_resource = SFXCharacterMap[option]
-	var player: AudioStreamPlayer = play_sfx_with_pool(sfx_resource)
+	var player: AudioStreamPlayer = play_sfx_with_pool(sfx_resource, volume_db)
 	return player
 
 

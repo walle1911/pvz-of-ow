@@ -138,6 +138,9 @@ position = Vector2(53, 1.07288e-06)
 scale = Vector2(0.774038, 0.608428)
 texture = ExtResource("3_se5o2")
 
+[node name="HpComponent" parent="." index="3"]
+max_hp = 8000
+
 [node name="BlinkComponent" parent="." index="5"]
 all_blink_body_change = Array[ExtResource("6_lgypc")]([SubResource("Resource_6hwhb")])
 

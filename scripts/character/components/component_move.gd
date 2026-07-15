@@ -74,6 +74,7 @@ enum E_MoveFactor{
 	IsAnimGap,				## 动画过度间隙
 	IsBlover,				## 被三叶草吹走
 	IsDeath,				## 停止移动的死亡时
+	IsTallNutSigmaSlam,	## 高坚果西格玛抬升下砸期间锁定位置
 }
 
 signal signal_move_body_y(move_y_value:float)

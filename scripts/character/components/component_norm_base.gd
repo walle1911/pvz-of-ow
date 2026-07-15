@@ -30,6 +30,7 @@ enum E_IsEnableFactor{
 	DownGround,	## 矿工在地下禁用攻击组件
 	Garlic,		## 大蒜禁用攻击组件
 	GameMode,	## 游戏模式，我是僵尸禁用生产组件
+	TallNutSigmaSlam,	## 高坚果西格玛抬升期间禁用僵尸攻击
 }
 
 var is_enable_factors:Dictionary[E_IsEnableFactor, bool] = {}
