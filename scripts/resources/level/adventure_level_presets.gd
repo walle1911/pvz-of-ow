@@ -1,19 +1,21 @@
 extends RefCounted
 class_name AdventureLevelPresets
 
+const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
+
 ## 白天 1-1 至 1-10 的首次冒险波数。保龄球、传送带等特殊玩法不放进这两条主线，
 ## 但保留原关卡的波数、僵尸解锁节点、每波点数公式和大波规则。
 const WAVE_COUNTS := [4, 6, 8, 10, 8, 10, 20, 10, 20, 20]
 const LEVEL_NAMES := [
-	"1-1 初见草坪", "1-2 三路防线", "1-3 路障僵尸", "1-4 完整草坪", "1-5 坚果防线",
+	"1-1 初见草坪", "1-2 草坪防线", "1-3 路障僵尸", "1-4 新的攻势", "1-5 坚果防线",
 	"1-6 撑杆突袭", "1-7 冰冻战线", "1-8 铁桶僵尸", "1-9 最后准备", "1-10 白天决战",
 ]
 const ACTIVE_ROWS := [
-	[2], [1, 2, 3], [1, 2, 3], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4],
+	[0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4],
 	[0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4],
 ]
-const SOD_LAYOUT_ROWS := [1, 3, 3, 5, 5, 5, 5, 5, 5, 5]
-const SOD_ROLLOUT_ROWS := [1, 3, 0, 5, 0, 0, 0, 0, 0, 0]
+const SOD_LAYOUT_ROWS := [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+const SOD_ROLLOUT_ROWS := [5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 const ORIGINAL_PLANT_UNLOCKS := [
 	[500],
@@ -78,6 +80,11 @@ static func list_presets(workshop_mode := "normal") -> Array[Dictionary]:
 
 
 static func build_level(preset_id: String) -> Dictionary:
+	var stored := FormalLevelStore.load_formal_level(preset_id)
+	if stored["ok"]:
+		return stored["level"]
+	if stored["exists"]:
+		push_error("正式关卡覆盖数据无法载入：%s" % str(stored["error"]))
 	var workshop_mode := "chessboard" if preset_id.begins_with("chess_") else "normal"
 	var level_number := _level_number_from_id(preset_id)
 	if level_number < 1 or level_number > 10:
@@ -110,7 +117,7 @@ static func build_level(preset_id: String) -> Dictionary:
 		"chessboardConfig": chessboard_config,
 		"availablePlants": available_plants,
 		"activeLawnRows": active_rows,
-		## 棋盘格的昼夜翻地材质必须使用完整草坪；普通线才播放原版铺草皮演出。
+		## 两条主线都使用完整五行草坪；普通线第一关额外播放一次完整铺草皮演出。
 		"sodLayoutRows": 5 if workshop_mode == "chessboard" else int(SOD_LAYOUT_ROWS[level_index]),
 		"sodRolloutRows": 0 if workshop_mode == "chessboard" else int(SOD_ROLLOUT_ROWS[level_index]),
 		"strictOriginalTiming": true,

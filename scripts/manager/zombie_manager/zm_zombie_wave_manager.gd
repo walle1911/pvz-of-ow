@@ -144,6 +144,7 @@ func start_custom_timeline() -> void:
 				event_index += 1
 			var all_spawned := event_index >= events.size()
 			if stage_position == stages.size() - 1 and all_spawned:
+				flag_progress_bar.set_progress(100.0)
 				signal_wave_refresh.emit(true)
 				return
 			var total_health := int(custom_stage_health_totals.get(stage_index, 0))

@@ -24,11 +24,13 @@ const SOD_THREE_ROWS := preload("res://assets/image/background/sod3row.jpg")
 const SOD_ROLL_BODY := preload("res://assets/reanim/SodRoll.png")
 const SOD_ROLL_CAP := preload("res://assets/reanim/SodRollCap.png")
 const SOD_REANIM_PATH := "res://assets/reanim/SodRoll.reanim"
+const SOD_ALPHA_SHADER := preload("res://shaders/sod_black_to_alpha.gdshader")
 
 var sod_reveal_sprite: Sprite2D
 var sod_reveal_source_x := 0.0
 var sod_reveal_width := 0.0
 var sod_reveal_height := 0.0
+var sod_roll_origin_x := 0.0
 var sod_roll_instances: Array[Dictionary] = []
 var sod_roll_frames: Dictionary = {}
 
@@ -65,13 +67,13 @@ func _init_sod_layout() -> void:
 		5:
 			if game_para.sod_rollout_rows == 5:
 				background.texture = FRONT_DAY_UNSODDED
-				_create_static_sod(SOD_THREE_ROWS, Vector2(235, 149))
 				_create_sod_reveal(FRONT_DAY, Vector2(232, 0), 232.0, 773.0, 600.0, false)
 
 
 func _create_static_sod(texture: Texture2D, local_position: Vector2) -> void:
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
+	_apply_sod_alpha_material(sprite, texture)
 	sprite.position = local_position
 	sprite.centered = false
 	sprite.z_index = 1
@@ -81,6 +83,7 @@ func _create_static_sod(texture: Texture2D, local_position: Vector2) -> void:
 func _create_sod_reveal(texture: Texture2D, local_position: Vector2, source_x: float, width: float, height: float, revealed: bool) -> void:
 	sod_reveal_sprite = Sprite2D.new()
 	sod_reveal_sprite.texture = texture
+	_apply_sod_alpha_material(sod_reveal_sprite, texture)
 	sod_reveal_sprite.position = local_position
 	sod_reveal_sprite.centered = false
 	sod_reveal_sprite.region_enabled = true
@@ -89,6 +92,7 @@ func _create_sod_reveal(texture: Texture2D, local_position: Vector2, source_x: f
 	sod_reveal_source_x = source_x
 	sod_reveal_width = width
 	sod_reveal_height = height
+	sod_roll_origin_x = local_position.x
 	background.add_child(sod_reveal_sprite)
 	_set_sod_reveal_width(width if revealed else 0.0)
 
@@ -108,11 +112,11 @@ func play_sod_rollout_if_needed() -> void:
 		3:
 			row_offsets = [-102.0, 111.0]
 		5:
-			row_offsets = [-198.0, 203.0]
+			row_offsets = [-198.0, -102.0, 0.0, 111.0, 203.0]
 		_:
 			row_offsets = []
 	for row_offset in row_offsets:
-		_create_sod_roll_instance(row_offset, -3.0 if game_para.sod_rollout_rows == 5 else 0.0)
+		_create_sod_roll_instance(row_offset)
 	var sod_sound: AudioStreamPlayer = SoundManager.play_character_SFX("digger_zombie")
 	var tween := create_tween()
 	tween.tween_method(_apply_sod_roll_progress, 0.0, 1.0, 2.0)
@@ -120,14 +124,16 @@ func play_sod_rollout_if_needed() -> void:
 	if is_instance_valid(sod_sound):
 		sod_sound.stop()
 	_apply_sod_roll_progress(1.0)
+	_set_sod_reveal_width(sod_reveal_width)
 	for instance in sod_roll_instances:
 		(instance["root"] as Node2D).queue_free()
 	sod_roll_instances.clear()
 
 
-func _create_sod_roll_instance(row_offset: float, x_offset: float) -> void:
+func _create_sod_roll_instance(row_offset: float) -> void:
 	var root := Node2D.new()
-	root.position = Vector2(x_offset, row_offset)
+	## reanim 的 x 坐标以草皮贴图左边缘为原点；必须补上草皮在背景中的本地 x。
+	root.position = Vector2(sod_roll_origin_x, row_offset)
 	root.z_index = 20
 	background.add_child(root)
 	var body := Sprite2D.new()
@@ -143,7 +149,6 @@ func _create_sod_roll_instance(row_offset: float, x_offset: float) -> void:
 
 
 func _apply_sod_roll_progress(progress: float) -> void:
-	_set_sod_reveal_width(sod_reveal_width * clampf(progress, 0.0, 1.0))
 	var body_frames: Array = sod_roll_frames.get("SodRoll", [])
 	var cap_frames: Array = sod_roll_frames.get("SodRollCap", [])
 	if body_frames.is_empty() or cap_frames.is_empty():
@@ -151,6 +156,8 @@ func _apply_sod_roll_progress(progress: float) -> void:
 	var frame_index := mini(body_frames.size() - 1, floori(clampf(progress, 0.0, 1.0) * float(body_frames.size() - 1)))
 	var body_frame: Dictionary = body_frames[frame_index]
 	var cap_frame: Dictionary = cap_frames[mini(frame_index, cap_frames.size() - 1)]
+	## 直接使用卷起草皮本体的逐帧 x 作为展开边界，避免 Tween 线性宽度与原动画错位。
+	_set_sod_reveal_width(float(body_frame.get("x", 0.0)))
 	for instance in sod_roll_instances:
 		_apply_sod_frame(instance["body"] as Sprite2D, body_frame)
 		_apply_sod_frame(instance["cap"] as Sprite2D, cap_frame)
@@ -165,6 +172,14 @@ func _apply_sod_frame(sprite: Sprite2D, frame: Dictionary) -> void:
 func _set_sod_reveal_width(width: float) -> void:
 	if is_instance_valid(sod_reveal_sprite):
 		sod_reveal_sprite.region_rect = Rect2(sod_reveal_source_x, 0.0, clampf(width, 0.0, sod_reveal_width), sod_reveal_height)
+
+
+func _apply_sod_alpha_material(sprite: Sprite2D, texture: Texture2D) -> void:
+	if texture != SOD_ONE_ROW and texture != SOD_THREE_ROWS:
+		return
+	var material := ShaderMaterial.new()
+	material.shader = SOD_ALPHA_SHADER
+	sprite.material = material
 
 
 func _load_sod_roll_frames() -> Dictionary:

@@ -5,6 +5,7 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
+const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
 const ALMANAC_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
 const ALMANAC_CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
@@ -95,6 +96,7 @@ var plant_card_prefabs: Dictionary = {}
 var background_sprite: Sprite2D
 var reward_mode_button: TextureButton
 var background_normal_x := -334.0
+var formal_preset_id := ""
 
 
 func _layout_control(path: String) -> Control:
@@ -110,9 +112,11 @@ func _ready() -> void:
 	var default_level := AdventurePresets.build_level(default_preset_id)
 	if not default_level.is_empty():
 		level = default_level
+		formal_preset_id = default_preset_id
 	var recovered := DraftStore.load_autosave()
 	if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
 		level = recovered["level"]
+		formal_preset_id = str(level.get("formalPresetId", ""))
 		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
 	level["workshopMode"] = active_mode
@@ -174,14 +178,16 @@ func _build_drawer() -> void:
 
 func _build_drawer_actions() -> void:
 	var actions := sidebar_content.get_node("BottomActions")
-	## 五个入口等宽排布；“成品关卡”直接把内置主线载入当前工坊继续编辑。
+	## 六个入口等宽排布；成品关卡可载入编辑，也可把当前修改写回项目内正式关卡 JSON。
 	var action_names := ["BackButton", "SettingsButton", "PlaytestButton", "SaveButton"]
 	for action_index in action_names.size():
 		var action_button := actions.get_node(action_names[action_index]) as TextureButton
-		action_button.position.x = action_index * 94.0
-		action_button.size.x = 88.0
-	var preset_button := _texture_button("成品关卡", Vector2(376, 0), Vector2(88, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_preset_picker, 14)
+		action_button.position.x = action_index * 78.0
+		action_button.size.x = 74.0
+	var preset_button := _texture_button("成品关卡", Vector2(312, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_preset_picker, 13)
 	actions.add_child(preset_button)
+	var apply_formal_button := _texture_button("应用正式", Vector2(390, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_apply_formal_dialog, 13)
+	actions.add_child(apply_formal_button)
 	(actions.get_node("BackButton") as TextureButton).pressed.connect(_back_to_menu)
 	(actions.get_node("SettingsButton") as TextureButton).pressed.connect(_open_level_settings)
 	(actions.get_node("PlaytestButton") as TextureButton).pressed.connect(_playtest)
@@ -198,7 +204,7 @@ func _open_preset_picker() -> void:
 	box.add_theme_constant_override("separation", 10)
 	dialog.add_child(box)
 	var hint := Label.new()
-	hint.text = "载入后会成为可编辑副本；原成品关卡不会被覆盖。"
+	hint.text = "载入后可编辑；点底部“应用正式”才会覆盖项目内对应成品关卡。"
 	box.add_child(hint)
 	var picker := OptionButton.new()
 	var presets := AdventurePresets.list_presets("normal")
@@ -223,9 +229,10 @@ func _load_preset_for_edit(preset_id: String) -> void:
 		status_label.text = "成品关卡不存在：%s" % preset_id
 		return
 	level = Logic.normalize_level(preset)
-	## 保存时写入 user:// 草稿副本，避免覆盖项目内置成品。
+	formal_preset_id = preset_id
+	level["formalPresetId"] = preset_id
+	## 普通“保存”仍写入 user:// 草稿；只有“应用正式”才写回项目数据。
 	level["id"] = "%s_edit" % preset_id
-	level["name"] = "%s（编辑副本）" % str(level["name"])
 	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
 	reward_mode_button.visible = Global.level_workshop_edit_mode == "chessboard"
 	catalog_mode = CatalogMode.SPAWN_ZOMBIES
@@ -244,6 +251,35 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	DraftStore.save_autosave(level)
 	_refresh_wave()
 	status_label.text = "已载入“%s”，可直接修改波次、数量和出怪间隔。" % str(level["name"])
+
+
+func _open_apply_formal_dialog() -> void:
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		status_label.text = "请先点“成品关卡”，载入要修改的正式关卡。"
+		return
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "应用到正式关卡"
+	dialog.ok_button_text = "确认覆盖"
+	dialog.cancel_button_text = "取消"
+	dialog.min_size = Vector2i(480, 200)
+	var hint := Label.new()
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.text = "当前波次和僵尸数量将写入 %s。之后从“开始冒险吧”进入 %s 时会直接使用这份数据。" % [FormalLevelStore.formal_level_path(formal_preset_id), formal_preset_id]
+	dialog.add_child(hint)
+	dialog.confirmed.connect(func():
+		_recalculate_stage_times()
+		level["formalPresetId"] = formal_preset_id
+		var result := FormalLevelStore.save_formal_level(level, formal_preset_id)
+		if result["ok"]:
+			DraftStore.save_autosave(level)
+			status_label.text = "已应用到正式关卡 %s；正式选关会读取当前工坊配置。" % formal_preset_id
+		else:
+			status_label.text = "应用正式关卡失败：%s" % str(result["error"])
+		dialog.queue_free()
+	)
+	add_child(dialog)
+	_force_font_recursive(dialog)
+	dialog.popup_centered()
 
 
 func _animate_drawer_in() -> void:
