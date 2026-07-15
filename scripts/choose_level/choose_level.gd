@@ -1,8 +1,13 @@
 extends Control
 class_name ChooseLevel
 
+const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
+const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const CHOOSE_LEVEL_BUTTON := preload("res://scenes/choose_level/choose_level_button.tscn")
+
 ## 用于生成关卡 ID 的计数
 var next_level_number: int = 1
+var configured_level_count := 0
 
 @onready var all_page: Control = $AllPage
 @onready var label_page: Label = get_node_or_null("LabelPage")
@@ -18,6 +23,8 @@ var all_pages_array : Array[GridContainer]
 var bgm_choose_card: AudioStream = preload("res://assets/audio/BGM/choose_card.mp3")
 
 func _ready() -> void:
+	if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
+		_build_adventure_preset_buttons()
 	## 如果没有开放所有关卡
 	if not Global.config_service.open_all_level:
 		if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
@@ -37,9 +44,10 @@ func _ready() -> void:
 		for node in page.get_children():
 			## 如果是选关按钮
 			if node is ChooseLevelButton:
-				var level_id:String = generate_level_id()
+				var level_id: String = node.preset_level_id if not node.preset_level_id.is_empty() else generate_level_id()
 				if node.curr_level_data_game_para == null:
 					continue
+				configured_level_count += 1
 				node.signal_choose_level_button.connect(_on_choose_level_button)
 				## 初始化游戏数据的选关数据
 				node.curr_level_data_game_para.set_choose_level(game_mode, page_i, level_id)
@@ -47,7 +55,7 @@ func _ready() -> void:
 				node.update_curr_level_button_state(curr_level_state_data)
 				update_lock_level(node, curr_level_state_data)
 
-	print("当前模式关卡数量:", next_level_number - 1)
+	print("当前模式关卡数量:", configured_level_count)
 
 	_ready_update_page()
 
@@ -92,8 +100,46 @@ func generate_level_id() -> String:
 	return id_str
 
 func _on_choose_level_button(choose_level_button:ChooseLevelButton):
+	if not choose_level_button.preset_level_id.is_empty():
+		var source := AdventurePresets.build_level(choose_level_button.preset_level_id)
+		var built := CustomRuntime.build_game_para(source)
+		if not built["ok"]:
+			push_error("成品冒险关卡无法载入：%s" % str(built["error"]))
+			return
+		var preset_para: ResourceLevelData = built["game_para"]
+		preset_para.set_choose_level(game_mode, curr_page, choose_level_button.preset_level_id)
+		choose_level_button.curr_level_data_game_para = preset_para
 	Global.game_para = choose_level_button.curr_level_data_game_para
 	choose_level_start_game(choose_level_button.curr_level_data_game_para.game_sences)
+
+
+func _build_adventure_preset_buttons() -> void:
+	var page := all_page.get_child(0) as GridContainer
+	var mainline_mode := str(Global.adventure_mainline_mode)
+	var title := get_node_or_null("Label") as Label
+	if title != null:
+		title.text = "棋 盘 格 主 线" if mainline_mode == "chessboard" else "冒 险 模 式"
+	var existing_buttons: Array[ChooseLevelButton] = []
+	for child in page.get_children():
+		if child is ChooseLevelButton:
+			existing_buttons.append(child as ChooseLevelButton)
+	var presets: Array[Dictionary] = AdventurePresets.list_presets(mainline_mode)
+	for preset_index in presets.size():
+		var preset: Dictionary = presets[preset_index]
+		var button: ChooseLevelButton
+		if preset_index < existing_buttons.size():
+			button = existing_buttons[preset_index]
+		else:
+			button = CHOOSE_LEVEL_BUTTON.instantiate() as ChooseLevelButton
+			page.add_child(button)
+		button.visible = true
+		button.preset_level_id = str(preset["id"])
+		var built := CustomRuntime.build_game_para(AdventurePresets.build_level(button.preset_level_id))
+		if built["ok"]:
+			button.curr_level_data_game_para = built["game_para"]
+		(button.get_node("TextureButton/Label") as Label).text = str(preset["name"])
+	for button_index in range(presets.size(), existing_buttons.size()):
+		existing_buttons[button_index].visible = false
 
 ## 进入游戏关卡
 func choose_level_start_game(game_scense:MainSceneRegistry.MainScenes):

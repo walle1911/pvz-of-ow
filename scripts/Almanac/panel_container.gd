@@ -15,7 +15,7 @@ const PLANT_NAME_TEXTURE_MAP = {
 	CharacterRegistry.PlantType.P001PeaShooterSoldier76: preload("res://assets/image/Almanac/name_id/豌豆射手士兵76.png"),
 	CharacterRegistry.PlantType.P002SunflowerMercy: preload("res://assets/image/Almanac/name_id/向日葵天使.png"),
 	CharacterRegistry.PlantType.P003CherryBombJunkrat: preload("res://assets/image/Almanac/name_id/樱桃炸弹狂鼠.png"),
-	CharacterRegistry.PlantType.P004WallNut: preload("res://assets/image/Almanac/name_id/坚果墙布丽吉塔.png"),
+	CharacterRegistry.PlantType.P004WallNutBrigitte: preload("res://assets/image/Almanac/name_id/坚果墙布丽吉塔.png"),
 	CharacterRegistry.PlantType.P006SnowPeaMei: preload("res://assets/image/Almanac/name_id/寒冰射手小美.png"),
 	CharacterRegistry.PlantType.P011FumeShroomRoadhog: preload("res://assets/image/Almanac/name_id/大喷菇路霸.png"),
 	CharacterRegistry.PlantType.P013HypnoShroomJuno: preload("res://assets/image/Almanac/name_id/魅惑菇朱诺.png"),

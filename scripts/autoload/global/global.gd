@@ -50,6 +50,8 @@ var return_to_developer_mode := false
 var developer_level_adjustments_active := false
 ## 地图工坊当前编辑目标：normal / chessboard。
 var level_workshop_edit_mode := "normal"
+## “开始冒险吧”的两条平行主线：normal / chessboard。
+var adventure_mainline_mode := "normal"
 
 ## 游戏倍速
 var time_scale := 1.0

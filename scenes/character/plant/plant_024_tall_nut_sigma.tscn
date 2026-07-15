@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_qbo1e"]
 [ext_resource type="Script" uid="uid://lihog3c1dlyq" path="res://scripts/character/plant/ow/plant_057_tall_nut_sigma.gd" id="2_lgypc"]
-[ext_resource type="Texture2D" uid="uid://b467djhrxyfa0" path="res://assets/reanim/TallNut_Sigma_Card.png" id="3_i7n2a"]
+[ext_resource type="Texture2D" uid="uid://bwmr47mulc2xd" path="res://assets/image/ui/Character_Card/TallNut_Sigma_Card.png" id="3_i7n2a"]
 [ext_resource type="Texture2D" uid="uid://df5yxhm82xo61" path="res://assets/reanim/Tallnut_blink1.png" id="3_se5o2"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_024_tall_nut_sigma/024_tall_nut/Tallnut_idle.tres" id="4_6hwhb"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="5_ecgny"]
@@ -104,9 +104,27 @@ size = Vector2(50, 50)
 
 [node name="Plant024TallNutSigma" unique_id=487282947 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_qbo1e")]
 script = ExtResource("2_lgypc")
+slam_front_cell_count = 2
+slam_range_edge_tolerance = 8.0
+slam_lift_height = 65.0
+slam_air_body_scale = 1.25
+slam_air_shadow_scale = 0.4
+slam_air_shadow_alpha = 0.25
+slam_lift_time = 0.67
+slam_hold_time = 1.25
+slam_fall_time = 0.33
+slam_impact_squash_scale = Vector2(1.12, 0.82)
+slam_impact_recover_time = 0.12
+slam_current_hp_ratio = 0.5
+slam_impact_sound_volume_db = 0.0
 plant_type = 24
 is_can_ladder = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("Area2DStopJump")]
+metadata/_edit_vertical_guides_ = [-228.0]
+metadata/_edit_horizontal_guides_ = [-107.0]
+
+[node name="Body" parent="." index="1"]
+position = Vector2(28.7, 0)
 
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-67.13, -72.05)

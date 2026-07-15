@@ -4,6 +4,7 @@ class_name LevelWorkshop
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
 const ALMANAC_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
 const ALMANAC_CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
@@ -104,13 +105,18 @@ func _ready() -> void:
 	_apply_font()
 	_refresh_zombie_catalog()
 	_build_scene()
+	var active_mode := str(Global.level_workshop_edit_mode)
+	var default_preset_id := "chess_1_1" if active_mode == "chessboard" else "adventure_1_1"
+	var default_level := AdventurePresets.build_level(default_preset_id)
+	if not default_level.is_empty():
+		level = default_level
 	var recovered := DraftStore.load_autosave()
-	if recovered["ok"]:
+	if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
 		level = recovered["level"]
 		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
-	level["workshopMode"] = Global.level_workshop_edit_mode
-	if Global.level_workshop_edit_mode == "chessboard":
+	level["workshopMode"] = active_mode
+	if active_mode == "chessboard":
 		status_label.text = "棋盘格地图工坊：可在关卡设置中调整翻地概率和奖励卡池。"
 	_force_random_lane_rules()
 	_recalculate_stage_times()
@@ -168,10 +174,76 @@ func _build_drawer() -> void:
 
 func _build_drawer_actions() -> void:
 	var actions := sidebar_content.get_node("BottomActions")
+	## 五个入口等宽排布；“成品关卡”直接把内置主线载入当前工坊继续编辑。
+	var action_names := ["BackButton", "SettingsButton", "PlaytestButton", "SaveButton"]
+	for action_index in action_names.size():
+		var action_button := actions.get_node(action_names[action_index]) as TextureButton
+		action_button.position.x = action_index * 94.0
+		action_button.size.x = 88.0
+	var preset_button := _texture_button("成品关卡", Vector2(376, 0), Vector2(88, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_preset_picker, 14)
+	actions.add_child(preset_button)
 	(actions.get_node("BackButton") as TextureButton).pressed.connect(_back_to_menu)
 	(actions.get_node("SettingsButton") as TextureButton).pressed.connect(_open_level_settings)
 	(actions.get_node("PlaytestButton") as TextureButton).pressed.connect(_playtest)
 	(actions.get_node("SaveButton") as TextureButton).pressed.connect(_open_save_dialog)
+
+
+func _open_preset_picker() -> void:
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "选择要编辑的成品关卡"
+	dialog.ok_button_text = "载入编辑"
+	dialog.cancel_button_text = "取消"
+	dialog.min_size = Vector2i(460, 210)
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 10)
+	dialog.add_child(box)
+	var hint := Label.new()
+	hint.text = "载入后会成为可编辑副本；原成品关卡不会被覆盖。"
+	box.add_child(hint)
+	var picker := OptionButton.new()
+	var presets := AdventurePresets.list_presets("normal")
+	presets.append_array(AdventurePresets.list_presets("chessboard"))
+	for preset: Dictionary in presets:
+		picker.add_item(str(preset["name"]))
+	box.add_child(picker)
+	dialog.confirmed.connect(func():
+		if picker.selected < 0 or picker.selected >= presets.size():
+			return
+		_load_preset_for_edit(str(presets[picker.selected]["id"]))
+		dialog.queue_free()
+	)
+	add_child(dialog)
+	_force_font_recursive(dialog)
+	dialog.popup_centered()
+
+
+func _load_preset_for_edit(preset_id: String) -> void:
+	var preset := AdventurePresets.build_level(preset_id)
+	if preset.is_empty():
+		status_label.text = "成品关卡不存在：%s" % preset_id
+		return
+	level = Logic.normalize_level(preset)
+	## 保存时写入 user:// 草稿副本，避免覆盖项目内置成品。
+	level["id"] = "%s_edit" % preset_id
+	level["name"] = "%s（编辑副本）" % str(level["name"])
+	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
+	reward_mode_button.visible = Global.level_workshop_edit_mode == "chessboard"
+	catalog_mode = CatalogMode.SPAWN_ZOMBIES
+	background_sprite.position.x = background_normal_x
+	var reward_button_label := reward_mode_button.get_child(0) as Label
+	if reward_button_label != null:
+		reward_button_label.text = "奖励卡槽"
+	_refresh_zombie_catalog()
+	_force_random_lane_rules()
+	selected_wave = 0
+	selected_zombie_key = ""
+	history.clear()
+	future.clear()
+	_recalculate_stage_times()
+	_snapshot(false)
+	DraftStore.save_autosave(level)
+	_refresh_wave()
+	status_label.text = "已载入“%s”，可直接修改波次、数量和出怪间隔。" % str(level["name"])
 
 
 func _animate_drawer_in() -> void:
@@ -693,7 +765,7 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	else:
 		pool.append(type_id)
 	level["chessboardConfig"][pool_key] = pool
-	_changed("奖励植物 %d 张，奖励僵尸 %d 张" % [(level["chessboardConfig"]["plantCardPool"] as Array).size(), (level["chessboardConfig"]["zombieCardPool"] as Array).size()])
+	_changed("奖励植物 %d 张" % (level["chessboardConfig"]["plantCardPool"] as Array).size())
 	_refresh_card_page()
 
 
@@ -701,7 +773,7 @@ func _toggle_reward_catalog() -> void:
 	catalog_mode = CatalogMode.REWARD_CARDS if catalog_mode == CatalogMode.SPAWN_ZOMBIES else CatalogMode.SPAWN_ZOMBIES
 	current_card_page = 0
 	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
-	stage_heading.text = "奖励植物卡 + 友军僵尸卡" if show_rewards else "旗帜波僵尸"
+	stage_heading.text = "奖励原版植物卡" if show_rewards else "旗帜波僵尸"
 	var reward_button_label := reward_mode_button.get_child(0) as Label
 	if reward_button_label != null:
 		reward_button_label.text = "返回刷怪" if show_rewards else "奖励卡槽"
@@ -713,7 +785,7 @@ func _toggle_reward_catalog() -> void:
 	## 奖励池编辑时把草坪主体移入右侧可视区，退出后恢复道路预览视角。
 	var target_x := background_normal_x + 334.0 if show_rewards else background_normal_x
 	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
-	status_label.text = "点击卡牌加入或移出奖励卡槽；亮色为已选择" if show_rewards else "点击卡片，设置本阶段出场数量"
+	status_label.text = "点击原版植物卡加入或移出奖励卡槽；亮色为已选择" if show_rewards else "点击卡片，设置本阶段出场数量"
 	_refresh_card_page()
 
 
@@ -844,7 +916,7 @@ func _refresh_wave() -> void:
 	var stage_number := _stage_number(selected_wave, str(wave.get("stageType", "flag")))
 	wave_title.text = ("第 %d 面旗帜" if is_flag else "旗帜间隔 %d") % stage_number
 	if catalog_mode == CatalogMode.REWARD_CARDS:
-		stage_heading.text = "奖励植物卡 + 友军僵尸卡"
+		stage_heading.text = "奖励原版植物卡"
 		_refresh_timeline()
 		return
 	stage_heading.text = "旗帜波僵尸" if is_flag else "波间阶段僵尸"
@@ -1064,8 +1136,7 @@ func _open_level_settings() -> void:
 		dialog.add_child(chess_title)
 		mine_count = _settings_spin(dialog, "地雷数量上限", Vector2(76, 360), 0, 45, int(chessboard.get("mineCount", 8)), 1)
 		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
-		zombie_card_probability = _settings_spin(dialog, "友军僵尸卡概率", Vector2(76, 430), 0.0, 1.0, float(chessboard.get("zombieCardProbability", 0.20)), 0.01)
-		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 430), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
+		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
 	var save_callback := func():
 		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
 	dialog.add_child(_texture_button("保存设置", Vector2(205, 487), Vector2(210, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 18))
@@ -1074,13 +1145,13 @@ func _open_level_settings() -> void:
 
 func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
 	if str(level.get("workshopMode", "normal")) == "chessboard":
-		var probability_sum := float(plant_probability.value + zombie_card_probability.value + enemy_probability.value)
+		var probability_sum := float(plant_probability.value + enemy_probability.value)
 		if probability_sum > 1.0:
-			status_label.text = "设置失败：三项概率总和不能超过 1，剩余概率用于生成地雷"
+			status_label.text = "设置失败：两项概率总和不能超过 1，剩余概率用于生成地雷"
 			return
 		chessboard["mineCount"] = int(mine_count.value)
 		chessboard["plantCardProbability"] = float(plant_probability.value)
-		chessboard["zombieCardProbability"] = float(zombie_card_probability.value)
+		chessboard["zombieCardProbability"] = 0.0
 		chessboard["enemyZombieProbability"] = float(enemy_probability.value)
 		level["chessboardConfig"] = chessboard
 	level["name"] = name_input.text
@@ -1310,15 +1381,15 @@ func _refresh_zombie_catalog() -> void:
 	zombie_card_prefabs = all_cards.all_zombie_card_prefabs
 	for zombie_type in zombie_card_prefabs.keys():
 		var zombie_id := int(zombie_type)
-		if Global.level_workshop_edit_mode != "chessboard" or zombie_id >= 500:
+		if Global.level_workshop_edit_mode == "normal" and zombie_id > 0 and zombie_id < 500:
 			zombie_card_order.append(zombie_id)
-		if Global.level_workshop_edit_mode == "chessboard" and zombie_id > 0 and zombie_id < 500:
-			reward_card_order.append({"id": zombie_id, "is_plant": false})
+		elif Global.level_workshop_edit_mode == "chessboard" and zombie_id >= 500 and zombie_id < 1000:
+			zombie_card_order.append(zombie_id)
 	plant_card_prefabs = all_cards.all_plant_card_prefabs
 	if Global.level_workshop_edit_mode == "chessboard":
 		for plant_type in plant_card_prefabs.keys():
 			var plant_id := int(plant_type)
-			if plant_id > 0 and plant_id < 500:
+			if plant_id >= 500 and plant_id < 1000:
 				reward_card_order.append({"id": plant_id, "is_plant": true})
 	zombie_card_order.sort_custom(func(left, right):
 		return int(all_cards.zombie_card_ids.get(left, 999999)) < int(all_cards.zombie_card_ids.get(right, 999999))

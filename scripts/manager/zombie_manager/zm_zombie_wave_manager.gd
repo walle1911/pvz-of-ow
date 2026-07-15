@@ -117,18 +117,23 @@ func start_custom_timeline() -> void:
 		var stage_progress_end := _custom_stage_progress(stages, stage_position, true)
 		var is_flag_front := stage_position + 1 < stages.size() \
 			and str((stages[stage_position + 1] as Dictionary).get("stage_type", "flag")) == "flag"
-		var natural_time_range := zombie_wave_refresh_manager.norm_refresh_time_range_in_total_refresh \
+		var natural_time_range := game_para.custom_wave_interval_range if game_para.custom_original_timing else (
+			zombie_wave_refresh_manager.norm_refresh_time_range_in_total_refresh \
 			if is_flag_front else zombie_wave_refresh_manager.norm_refresh_time_range_in_half_refresh
-		var natural_refresh_time := randf_range(natural_time_range.x, natural_time_range.y)
-		var remaining_health_ratio := randf_range(
-			zombie_wave_refresh_manager.refresh_threshold_range.x,
-			zombie_wave_refresh_manager.refresh_threshold_range.y
 		)
+		var natural_refresh_time := randf_range(natural_time_range.x, natural_time_range.y)
+		var health_range := game_para.custom_health_threshold_range if game_para.custom_original_timing else zombie_wave_refresh_manager.refresh_threshold_range
+		var remaining_health_ratio := randf_range(health_range.x, health_range.y)
+		var minimum_wave_time := game_para.custom_minimum_wave_time if game_para.custom_original_timing else zombie_wave_refresh_manager.time_min_wave
+		var early_refresh_remaining := -1.0
 		curr_wave = stage_index
 		while flag_index < flags.size() and int(flags[flag_index].get("stage_index", -1)) == stage_index:
 			var flag_data: Dictionary = flags[flag_index]
 			flag_progress_bar.set_progress(stage_progress_start * 100.0, flag_index)
-			ui_remind_word.zombie_approach(flag_index == flags.size() - 1)
+			if game_para.custom_original_timing:
+				await ui_remind_word.zombie_approach(flag_index == flags.size() - 1, game_para.custom_huge_wave_warning_delay)
+			else:
+				await ui_remind_word.zombie_approach(flag_index == flags.size() - 1)
 			flag_index += 1
 		while true:
 			while event_index < events.size() and float((events[event_index] as Dictionary).get("time", 0.0)) <= elapsed:
@@ -144,16 +149,20 @@ func start_custom_timeline() -> void:
 			var total_health := int(custom_stage_health_totals.get(stage_index, 0))
 			var loss_health := int(custom_stage_health_losses.get(stage_index, 0))
 			var remaining_health := maxi(0, total_health - loss_health)
-			var minimum_time_reached := elapsed >= zombie_wave_refresh_manager.time_min_wave
-			var health_condition_reached := remaining_health <= 0 if is_flag_front \
-				else total_health <= 0 or remaining_health <= int(float(total_health) * remaining_health_ratio)
+			var minimum_time_reached := elapsed >= minimum_wave_time
+			var health_condition_reached := total_health <= 0 or remaining_health <= int(float(total_health) * remaining_health_ratio)
 			var natural_time_reached := elapsed >= natural_refresh_time
 			var stage_progress_ratio := clampf(elapsed / maxf(0.1, natural_refresh_time), 0.0, 1.0)
 			flag_progress_bar.set_progress(lerpf(stage_progress_start, stage_progress_end, stage_progress_ratio) * 100.0)
-			if all_spawned and minimum_time_reached and (health_condition_reached or natural_time_reached):
+			if all_spawned and minimum_time_reached and health_condition_reached and early_refresh_remaining < 0.0:
+				early_refresh_remaining = game_para.custom_early_refresh_delay if game_para.custom_original_timing else 0.0
+			if all_spawned and minimum_time_reached and (natural_time_reached or early_refresh_remaining == 0.0):
 				break
 			await get_tree().process_frame
-			elapsed += get_process_delta_time()
+			var delta := get_process_delta_time()
+			elapsed += delta
+			if early_refresh_remaining > 0.0:
+				early_refresh_remaining = maxf(0.0, early_refresh_remaining - delta)
 		signal_wave_refresh.emit(false)
 	flag_progress_bar.set_progress(100.0)
 

@@ -1635,8 +1635,8 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 position = Vector2(-39, -72)
 
 [node name="DoomShroom_body" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=144157614]
-position = Vector2(16.383274, 42.058544)
-scale = Vector2(0.82783633, 0.7589128)
+position = Vector2(16.333721, 42.231976)
+scale = Vector2(0.8303139, 0.7556919)
 texture = ExtResource("2_55ivw")
 centered = false
 
@@ -1653,8 +1653,8 @@ visible = false
 centered = false
 
 [node name="DoomShroom_head1" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1996289445]
-position = Vector2(-1.0250895, 6.9836316)
-scale = Vector2(0.82166904, 0.7681637)
+position = Vector2(-1.0994178, 7.231393)
+scale = Vector2(0.82365113, 0.7656861)
 texture = ExtResource("3_oiu6n")
 centered = false
 
@@ -1673,9 +1673,6 @@ texture = ExtResource("12_warn")
 
 [node name="BlinkComponent" parent="." index="5"]
 is_enable_default = false
-
-[node name="HurtBoxComponent" parent="." index="7"]
-visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=1219495401]
 libraries/ = SubResource("AnimationLibrary_rjiww")

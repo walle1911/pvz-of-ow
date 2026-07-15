@@ -58,7 +58,9 @@ func create_all_lawn_movers(is_has_all_lawn_mover:Array=[]):
 		var global_pos_lawn_mover:Vector2 = Vector2(GlobalXLawnMover, zombie_row.zombie_create_position.global_position.y)
 		all_lawn_movers_global_pos.append(global_pos_lawn_mover)
 		var new_lawn_mover:LawnMover
-		if is_has_all_lawn_mover.is_empty() or is_has_all_lawn_mover[lane] == true:
+		if not _is_active_lawn_row(lane):
+			new_lawn_mover = null
+		elif is_has_all_lawn_mover.is_empty() or is_has_all_lawn_mover[lane] == true:
 			new_lawn_mover = create_lawn_mover(lane, all_lawn_movers_type[lane], all_lawn_movers_global_pos[lane])
 		else:
 			new_lawn_mover = null
@@ -70,11 +72,18 @@ func replenish_lawn_mover():
 		create_all_lawn_movers()
 	else:
 		for i in range(all_lawn_movers.size()):
+			if not _is_active_lawn_row(i):
+				continue
 			if is_instance_valid(all_lawn_movers[i]) and not all_lawn_movers[i].is_moving:
 				continue
 			else:
 				var new_lawn_mover = create_lawn_mover(i, all_lawn_movers_type[i], all_lawn_movers_global_pos[i])
 				all_lawn_movers[i] = new_lawn_mover
+
+
+func _is_active_lawn_row(row: int) -> bool:
+	var rows := game_item_manager.game_para.active_lawn_rows
+	return rows.is_empty() or rows.has(row)
 
 ## 生成一个小推车
 func create_lawn_mover(lane:int, lawn_mover_type:E_LawnMoverType, global_pos:Vector2)->LawnMover:

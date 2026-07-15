@@ -21,18 +21,25 @@ func ready_set_plant() -> void:
 
 
 ## 僵尸靠近
-func zombie_approach(final:bool) -> void:
+func zombie_approach(final:bool, total_delay: float = -1.0) -> void:
 	visible = true
 	SoundManager.play_other_SFX("hugewave")
 	approaching.visible = true
-	await get_tree().create_timer(4, false).timeout  # 等待 4 秒
+	var approaching_time := 4.0 if total_delay < 0.0 else minf(4.0, total_delay)
+	await get_tree().create_timer(approaching_time, false).timeout
 	approaching.visible = false
-	await get_tree().create_timer(2, false).timeout  # 等待 2 秒
+	var final_time := 3.0 if final else 0.0
+	if total_delay >= 0.0:
+		final_time = minf(final_time, maxf(0.0, total_delay - approaching_time))
+	var gap_time := 2.0 if total_delay < 0.0 else maxf(0.0, total_delay - approaching_time - final_time)
+	if gap_time > 0.0:
+		await get_tree().create_timer(gap_time, false).timeout
 	if final:
 		# SFX 最后一波红字音效
 		SoundManager.play_other_SFX("finalwave")
 		final_wave.visible = true
-		await get_tree().create_timer(3, false).timeout  # 等待 3 秒
+		if final_time > 0.0:
+			await get_tree().create_timer(final_time, false).timeout
 		final_wave.visible = false
 
 	visible = false

@@ -129,7 +129,7 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		1: CharacterRegistry.PlantType.P500PeaShooterSingle,
 		2: CharacterRegistry.PlantType.P501SunFlower,
 		3: CharacterRegistry.PlantType.P502CherryBomb,
-		4: CharacterRegistry.PlantType.P004WallNut,
+		4: CharacterRegistry.PlantType.P004WallNutBrigitte,
 		5: CharacterRegistry.PlantType.P504PotatoMine,
 		6: CharacterRegistry.PlantType.P505SnowPea,
 		7: CharacterRegistry.PlantType.P506Chomper,

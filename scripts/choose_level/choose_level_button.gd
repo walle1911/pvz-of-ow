@@ -9,6 +9,8 @@ class_name ChooseLevelButton
 
 ## 当前关卡游戏参数
 @export var curr_level_data_game_para :ResourceLevelData
+## 冒险成品关卡使用工坊同源字典动态生成，确保选关游玩与工坊编辑是同一份设计。
+@export var preset_level_id := ""
 
 
 ## 选关按钮信号信号

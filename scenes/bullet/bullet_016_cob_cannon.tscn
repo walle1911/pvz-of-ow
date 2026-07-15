@@ -72,7 +72,12 @@ z_index = -1
 position = Vector2(4, 37)
 texture = ExtResource("6_l1osl")
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="BombComponent/BombEffect" index="1"]
+[node name="GroundEffect" type="Sprite2D" parent="BombComponent/BombEffect" index="1"]
+z_index = -1
+position = Vector2(0, 28)
+scale = Vector2(1.5, 0.55)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="BombComponent/BombEffect" index="2"]
 material = SubResource("CanvasItemMaterial_0mq3m")
 position = Vector2(0, 28)
 emitting = false

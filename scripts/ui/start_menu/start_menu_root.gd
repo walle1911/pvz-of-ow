@@ -190,6 +190,7 @@ func _start_normal_adventure() -> void:
 		Global.level_workshop_edit_mode = "normal"
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 		return
+	Global.adventure_mainline_mode = "normal"
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
@@ -198,7 +199,8 @@ func _start_chessboard_adventure() -> void:
 		Global.level_workshop_edit_mode = "chessboard"
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 		return
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.MainGameChessboardFront])
+	Global.adventure_mainline_mode = "chessboard"
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
 ## 迷你游戏

@@ -66,23 +66,22 @@ func _ready() -> void:
 
 func _init_ow_result_candidates() -> void:
 	var has_pool_cells := _has_pool_cells()
-	for plant_type: CharacterRegistry.PlantType in Global.global_game_state.curr_plant:
-		if int(plant_type) > 0 and int(plant_type) < 500 and (has_pool_cells or not _is_pool_only_plant(plant_type)):
+	var config := Global.main_game.game_para
+	var plant_source: Array = config.available_plant_types if not config.available_plant_types.is_empty() else Global.global_game_state.curr_plant
+	for plant_type: CharacterRegistry.PlantType in plant_source:
+		if int(plant_type) >= 500 and int(plant_type) < 1000 and (has_pool_cells or not _is_pool_only_plant(plant_type)):
 			ow_plant_candidates.append(plant_type)
 	for zombie_type: CharacterRegistry.ZombieType in Global.main_game.game_para.zombie_refresh_types:
-		if int(zombie_type) > 0 and int(zombie_type) < 500:
+		if int(zombie_type) >= 500 and int(zombie_type) < 1000:
 			ow_zombie_candidates.append(zombie_type)
 	if ow_zombie_candidates.is_empty():
 		for zombie_type: CharacterRegistry.ZombieType in Global.global_game_state.curr_zombie:
-			if int(zombie_type) > 0 and int(zombie_type) < 500:
+			if int(zombie_type) >= 500 and int(zombie_type) < 1000:
 				ow_zombie_candidates.append(zombie_type)
-	var config := Global.main_game.game_para
 	if not config.chessboard_plant_card_pool.is_empty():
 		ow_plant_candidates.assign(config.chessboard_plant_card_pool)
-	if not config.chessboard_zombie_card_pool.is_empty():
-		hypno_zombie_card_candidates.assign(config.chessboard_zombie_card_pool)
-	else:
-		hypno_zombie_card_candidates.assign(ow_zombie_candidates)
+	## 棋盘格主线不掉落友军僵尸卡，只掉落逐关解锁的原版植物卡。
+	hypno_zombie_card_candidates.clear()
 
 
 func _has_pool_cells() -> bool:

@@ -1,5 +1,5 @@
 extends Plant000Base
-class_name Plant004WallNut
+class_name Plant004WallNutBrigitte
 
 @onready var hp_stage_change_component: HpStageChangeComponent = $HpStageChangeComponent
 

@@ -392,6 +392,9 @@ func main_game_start():
 	if game_para.look_show_zombie:
 		zombie_manager.delete_prepare_show_zombies()
 
+	## 首次白天教学关先播放原版滚动铺草皮，再进入 Ready/Set/Plant。
+	await background_manager.play_sod_rollout_if_needed()
+
 	## 开始天降阳光
 	if game_para.is_day_sun:
 		day_suns_manager.start_day_sun()

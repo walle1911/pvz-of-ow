@@ -164,7 +164,7 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 	var waves: Array = level.get("waves", [])
 	if waves.is_empty():
 		issues.append(issue("warning", "没有波次，关卡不会刷怪", "waves"))
-	elif not waves.any(func(wave): return str((wave as Dictionary).get("stageType", "flag")) == "flag"):
+	elif not bool(level.get("allowNoFlag", false)) and not waves.any(func(wave): return str((wave as Dictionary).get("stageType", "flag")) == "flag"):
 		issues.append(issue("error", "至少需要一个旗帜波", "waves"))
 	var ids := {str(level.get("id", "")): true}
 	for wave_index in waves.size():

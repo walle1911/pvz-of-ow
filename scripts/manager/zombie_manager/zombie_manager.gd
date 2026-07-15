@@ -117,8 +117,8 @@ func start_game():
 			return
 
 		ConstLevelData.E_MonsterMode.Norm:
-			## 10秒后开始刷新僵尸
-			await get_tree().create_timer(10).timeout
+			## 原版首次冒险首波为 18 秒；1-2 教学关为 50 秒。普通资源关卡仍用默认 10 秒。
+			await get_tree().create_timer(game_para.custom_initial_wave_delay).timeout
 			if game_para.custom_spawn_schedule.is_empty():
 				zombie_wave_manager.start_first_wave()
 			else:

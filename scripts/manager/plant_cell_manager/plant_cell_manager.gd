@@ -41,6 +41,13 @@ func _ready() -> void:
 		for plant_cells_col_j in range(plant_cells_row.get_child_count() - 1, -1, -1):
 			var plant_cell:PlantCell = plant_cells_row.get_child(plant_cells_col_j)
 			plant_cell.row_col = Vector2(plant_cells_row_i, plant_cells_col_j)
+			if not _is_active_lawn_row(plant_cells_row_i):
+				plant_cell.can_common_plant = false
+				plant_cell.can_common_zombie = false
+				var cell_button: BaseButton = plant_cell.get_node_or_null(^"Button") as BaseButton
+				if cell_button != null:
+					cell_button.disabled = true
+					cell_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			plant_cells_row_node.append(plant_cell)
 			plant_cell.signal_plant_create.connect(update_plant_info_create)
 			plant_cell.signal_plant_free.connect(update_plant_info_free)
@@ -88,9 +95,15 @@ func signal_connect_plant_cell_with_hand_manager(hand_manager:HandManager):
 	for plant_cells_row in all_plant_cells:
 		for plant_cell in plant_cells_row:
 			plant_cell = plant_cell as PlantCell
+			if not _is_active_lawn_row(plant_cell.row_col.x):
+				continue
 			plant_cell.click_cell.connect(hand_manager._on_click_cell)
 			plant_cell.cell_mouse_enter.connect(hand_manager._on_cell_mouse_enter)
 			plant_cell.cell_mouse_exit.connect(hand_manager._on_cell_mouse_exit)
+
+
+func _is_active_lawn_row(row: int) -> bool:
+	return game_para.active_lawn_rows.is_empty() or game_para.active_lawn_rows.has(row)
 
 
 ## 预种植植物数据

@@ -34,11 +34,15 @@ visible = false
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("3_tire")
 
+[node name="LordHammondRider" parent="." index="5"]
+visible = false
+
 [node name="CollisionShape2D" parent="BombComponent/Area2DBomb" index="0"]
 shape = SubResource("RectangleShape2D_mini_bomb")
 
 [node name="BombEffect" parent="BombComponent" index="1"]
 scale = Vector2(0.65, 0.65)
+animate_explosive_font = true
 
 [node name="ExplosiveFont" parent="BombComponent/BombEffect" index="2"]
 modulate = Color(1, 1, 1, 0.83)

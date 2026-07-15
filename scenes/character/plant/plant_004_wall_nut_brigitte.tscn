@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bjdufdnu8jj62"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_rscpg"]
-[ext_resource type="Texture2D" uid="uid://dxlf47w4fpv7k" path="res://assets/reanim/Wallnut_brigita_body.png" id="2_1opod"]
-[ext_resource type="Script" uid="uid://b4xe5rqsgv8p4" path="res://scripts/character/plant/original/plant_004_wall_nut.gd" id="2_v6xc2"]
+[ext_resource type="Texture2D" uid="uid://duasiggwu6o7b" path="res://assets/reanim/Wallnut_brigita_body.png" id="2_1opod"]
+[ext_resource type="Script" uid="uid://b4xe5rqsgv8p4" path="res://scripts/character/plant/ow/plant_004_wall_nut_brigitte.gd" id="2_v6xc2"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="3_ia1rq"]
 [ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="4_s15q3"]
 [ext_resource type="Animation" uid="uid://ctdx2rncxsv0k" path="res://animation/character/plant/original/004_wall_nut/Wallnut_face.tres" id="5_y4g8x"]
@@ -10,8 +10,8 @@
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="7_s15q3"]
 [ext_resource type="Texture2D" uid="uid://cku5wd5qvdq7m" path="res://assets/reanim/Wallnut_blink2.png" id="7_v6xc2"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="8_y4g8x"]
-[ext_resource type="Texture2D" uid="uid://c4nu1p5afj8f8" path="res://assets/reanim/Wallnut_brigita_cracked1.png" id="11_hev76"]
-[ext_resource type="Texture2D" uid="uid://bder5d2jp5f4x" path="res://assets/reanim/Wallnut_brigita_cracked2.png" id="13_akyvq"]
+[ext_resource type="Texture2D" uid="uid://dg6856wyiu0o0" path="res://assets/reanim/Wallnut_brigita_body1.png" id="11_hev76"]
+[ext_resource type="Texture2D" uid="uid://g0skvf1bgoom" path="res://assets/reanim/Wallnut_brigita_body2.png" id="13_akyvq"]
 
 [sub_resource type="Resource" id="Resource_gq356"]
 script = ExtResource("8_y4g8x")
@@ -68,8 +68,16 @@ sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Anim_face")])
 sprite_change_texture = Array[Texture2D]([ExtResource("13_akyvq")])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
-[node name="Plant004WallNut" instance=ExtResource("1_rscpg")]
+[node name="Plant004WallNutBrigitte" unique_id=1723955843 instance=ExtResource("1_rscpg")]
 script = ExtResource("2_v6xc2")
+heal_amount_per_pulse = 40
+heal_pulse_interval = 1.0
+heal_ripple_color = Color(1, 0.86, 0.24, 0.3)
+heal_ripple_radius = 135.0
+heal_ripple_duration = 0.7
+heal_ripple_ring_count = 3
+heal_ripple_line_width = 2.5
+heal_ripple_vertical_scale = 0.75
 plant_type = 4
 is_can_ladder = true
 
@@ -80,29 +88,30 @@ position = Vector2(0, -5)
 unique_name_in_owner = true
 position = Vector2(-43, -69)
 
-[node name="_ground" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
+[node name="_ground" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=848281413]
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1"]
+[node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=776232786]
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(6.5065374, 4.1246166)
-rotation = -0.0053410362
-scale = Vector2(0.7, 0.71550256)
+[node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=390674287]
+position = Vector2(3.8641696, 8.208224)
+rotation = -0.04505322
+scale = Vector2(0.7, 0.6896417)
+skew = 0.0007946625
 texture = ExtResource("2_1opod")
 centered = false
 
-[node name="Anim_blink_twitch" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
+[node name="Anim_blink_twitch" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1392859434]
 visible = false
-position = Vector2(28.981411, 35.75301)
+position = Vector2(27.427607, 36.840675)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_ia1rq")
 centered = false
 
-[node name="Anim_blink_twice" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
+[node name="Anim_blink_twice" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1869722294]
 visible = false
-position = Vector2(27.78141, 21.753014)
+position = Vector2(26.227606, 22.840677)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("4_s15q3")
 centered = false
@@ -113,19 +122,17 @@ max_hp = 4000
 [node name="BlinkComponent" parent="." index="5"]
 all_blink_body_change = Array[ExtResource("8_y4g8x")]([SubResource("Resource_gq356")])
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8"]
-libraries = {
-&"": SubResource("AnimationLibrary_w5ly5")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="8" unique_id=539990245]
+libraries/ = SubResource("AnimationLibrary_w5ly5")
 
-[node name="AnimationTree" type="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" type="AnimationTree" parent="." index="9" unique_id=2143163079]
 deterministic = false
 tree_root = SubResource("AnimationNodeBlendTree_hev76")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
 
-[node name="HpStageChangeComponent" type="Node2D" parent="." index="10"]
+[node name="HpStageChangeComponent" type="Node2D" parent="." index="10" unique_id=159315153]
 script = ExtResource("7_s15q3")
 boundary_value_hp = Array[int]([2666, 1333, 0])
 body_change = Array[ExtResource("8_y4g8x")]([SubResource("Resource_hev76"), SubResource("Resource_akyvq"), null])

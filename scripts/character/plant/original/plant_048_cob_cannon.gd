@@ -18,6 +18,8 @@ var attack_target_global_pos:Vector2
 
 ## 炮弹落地后的爆炸伤害。
 @export var cannon_attack_value:int = 1800
+## 炮弹落地后的专属地面特效；为空时沿用普通玉米加农炮效果。
+@export var cannon_ground_effect_texture:Texture2D
 ## 充能cd
 @export var charge_cd:float = 35
 var charge_cd_timer:Timer
@@ -89,7 +91,7 @@ func shoot_bullet():
 	is_attack = false
 
 	var bullet_cob_cannon :Bullet016CobCannon =  Global.bullet_registry.get_bullet_scenes(BulletRegistry.BulletType.Bullet016CobCannon).instantiate()
-	bullet_cob_cannon.init_cannon(attack_target_global_pos, cannon_attack_value)
+	bullet_cob_cannon.init_cannon(attack_target_global_pos, cannon_attack_value, cannon_ground_effect_texture)
 	Global.main_game.bullets.add_child(bullet_cob_cannon)
 	bullet_cob_cannon.global_position = marker_2d_bullet.global_position
 

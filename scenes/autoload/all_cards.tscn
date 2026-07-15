@@ -57,7 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="51_ocwvu"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="52_dc0c5"]
 [ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="53_vm05c"]
-[ext_resource type="Texture2D" uid="uid://dxlf47w4fpv7k" path="res://assets/reanim/Wallnut_brigita_body.png" id="53_wallnut_brigita"]
+[ext_resource type="Texture2D" uid="uid://duasiggwu6o7b" path="res://assets/reanim/Wallnut_brigita_body.png" id="53_wallnut_brigita"]
 [ext_resource type="Texture2D" uid="uid://bo22elcj4cnrl" path="res://assets/reanim/PotatoMine_rock4.png" id="54_xqigo"]
 [ext_resource type="Texture2D" uid="uid://cwcs1c31vf7xx" path="res://assets/reanim/PotatoMine_rock2.png" id="55_vfoxv"]
 [ext_resource type="Texture2D" uid="uid://blo1ft25x0qrk" path="res://assets/reanim/PotatoMine_body.png" id="56_ro17d"]
@@ -994,6 +994,7 @@ all_plant_card_prefabs = {
 500: NodePath("PlantCards2/Card1"),
 501: NodePath("PlantCards2/Card2"),
 502: NodePath("PlantCards2/Card3"),
+503: NodePath("PlantCards2/CardWallNutOriginal"),
 504: NodePath("PlantCards2/Card4"),
 505: NodePath("PlantCards2/Card5"),
 506: NodePath("PlantCards2/Card6"),
@@ -1209,8 +1210,7 @@ zombie_card_ids = Dictionary[int, int]({
 524: 37,
 1001: 38
 })
-metadata/_edit_vertical_guides_ = [-949.0, -144.0, -81.0]
-metadata/_edit_horizontal_guides_ = [-22.0, 138.0, 160.0]
+metadata/_edit_vertical_guides_ = [-949.0]
 
 [node name="CardImitater" parent="." unique_id=349133254 instance=ExtResource("2_5pqky")]
 layout_mode = 0
@@ -1405,37 +1405,37 @@ sun_cost = 50
 [node name="CardBg" parent="PlantCards/Card4" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant004WallNut" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic" index="0" unique_id=1220945878]
+[node name="Plant004WallNutBrigitte" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic" index="0" unique_id=1220945878]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut" unique_id=917004916]
+[node name="Body" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte" unique_id=917004916]
 
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body" unique_id=285605303]
+[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body" unique_id=285605303]
 unique_name_in_owner = true
 position = Vector2(-43, -69)
 
-[node name="_ground" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect" unique_id=1671604966]
+[node name="_ground" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body/BodyCorrect" unique_id=1671604966]
 position = Vector2(44.8, 75.5)
 centered = false
 
-[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect" unique_id=1815878855]
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body/BodyCorrect" unique_id=1815878855]
 centered = false
 
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect" unique_id=948279783]
+[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body/BodyCorrect" unique_id=948279783]
 position = Vector2(7.3, 3.6)
 scale = Vector2(0.7, 0.719)
 texture = ExtResource("53_wallnut_brigita")
 centered = false
 
-[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect" unique_id=1771334518]
+[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body/BodyCorrect" unique_id=1771334518]
 visible = false
 position = Vector2(29.2, 35.6)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("52_dc0c5")
 centered = false
 
-[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNut/Body/BodyCorrect" unique_id=1494036742]
+[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards/Card4/CardBg/CharacterStatic/Plant004WallNutBrigitte/Body/BodyCorrect" unique_id=1494036742]
 visible = false
 position = Vector2(28, 21.6)
 scale = Vector2(0.7, 0.7)
@@ -1464,8 +1464,8 @@ visible = false
 texture = ExtResource("98_ev02b")
 
 [node name="card" type="Sprite2D" parent="PlantCards/Card5/CardBg/CharacterStatic/Plant054SquashDoomfist" unique_id=771105281]
-position = Vector2(2.77, -33.69)
-scale = Vector2(0.69, 0.69)
+position = Vector2(-1.83, -31.54)
+scale = Vector2(0.44, 0.44)
 texture = ExtResource("385_cnu4l")
 
 [node name="Card6" parent="PlantCards" unique_id=1908091940 instance=ExtResource("2_5pqky")]
@@ -2602,6 +2602,55 @@ centered = false
 position = Vector2(18, 14.9)
 scale = Vector2(0.8, 0.871)
 texture = ExtResource("50_6m8rv")
+centered = false
+
+[node name="CardWallNutOriginal" parent="PlantCards2" unique_id=89594364 instance=ExtResource("2_5pqky")]
+layout_mode = 2
+imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
+imitater_whiteness = 0.5
+imitater_gray_strength = 0.0
+card_id = 34
+card_plant_type = 503
+cool_time = 30.0
+sun_cost = 50
+
+[node name="CardBg" parent="PlantCards2/CardWallNutOriginal" index="0"]
+texture = ExtResource("3_m4n4y")
+
+[node name="Plant503WallNut" type="Node2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic" index="0"]
+position = Vector2(1, 14)
+scale = Vector2(0.5, 0.5)
+
+[node name="Body" type="Node2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut"]
+
+[node name="BodyCorrect" type="Node2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body"]
+position = Vector2(-43, -69)
+
+[node name="_ground" type="Sprite2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body/BodyCorrect"]
+centered = false
+
+[node name="Anim_idle" type="Sprite2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body/BodyCorrect"]
+centered = false
+
+[node name="Anim_face" type="Sprite2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body/BodyCorrect"]
+position = Vector2(6.51, 4.12)
+rotation = -0.00534104
+scale = Vector2(0.7, 0.715503)
+texture = ExtResource("51_ocwvu")
+centered = false
+
+[node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body/BodyCorrect"]
+visible = false
+position = Vector2(28.98, 35.75)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("52_dc0c5")
+centered = false
+
+[node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards2/CardWallNutOriginal/CardBg/CharacterStatic/Plant503WallNut/Body/BodyCorrect"]
+visible = false
+position = Vector2(27.78, 21.75)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("53_vm05c")
 centered = false
 
 [node name="Card4" parent="PlantCards2" unique_id=1745505784 instance=ExtResource("2_5pqky")]
@@ -13523,6 +13572,7 @@ centered = false
 [editable path="PlantCards2/Card1"]
 [editable path="PlantCards2/Card2"]
 [editable path="PlantCards2/Card3"]
+[editable path="PlantCards2/CardWallNutOriginal"]
 [editable path="PlantCards2/Card4"]
 [editable path="PlantCards2/Card5"]
 [editable path="PlantCards2/Card6"]

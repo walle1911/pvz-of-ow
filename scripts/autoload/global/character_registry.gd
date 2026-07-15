@@ -21,7 +21,7 @@ enum PlantType {
 	P001PeaShooterSoldier76 = 1,
 	P002SunflowerMercy = 2,
 	P003CherryBombJunkrat = 3,
-	P004WallNut = 4,
+	P004WallNutBrigitte = 4,
 	P006SnowPeaMei = 6,
 	P011FumeShroomRoadhog = 11,
 	P013HypnoShroomJuno = 13,
@@ -55,7 +55,7 @@ enum PlantType {
 	P500PeaShooterSingle = 500,
 	P501SunFlower,
 	P502CherryBomb,
-
+	P503WallNut,
 	P504PotatoMine = 504,
 	P505SnowPea,
 	P506Chomper,
@@ -230,12 +230,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_502_cherry_bomb.tscn")
 		},
-	PlantType.P004WallNut: {
+	PlantType.P503WallNut: {
 		PlantInfoAttribute.PlantName: "WallNut",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_004_wall_nut.tscn")
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_503_wall_nut.tscn")
 		},
 	PlantType.P504PotatoMine: {
 		PlantInfoAttribute.PlantName: "PotatoMine",
@@ -585,6 +585,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_003_cherry_bomb_junkrat.tscn")
+		},
+	PlantType.P004WallNutBrigitte: {
+		PlantInfoAttribute.PlantName: "WallNutBrigitte",
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 50,
+		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
+		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_004_wall_nut_brigitte.tscn")
 		},
 	PlantType.P018SquashDoomfist: {
 		PlantInfoAttribute.PlantName: "Squash_Doomfist",

@@ -85,6 +85,19 @@ var custom_stage_schedule: Array[Dictionary] = []
 ## 旗帜波在时间轴上的位置，用于大波提示和右下角进度条。
 var custom_flag_data: Array[Dictionary] = []
 var custom_timeline_duration := 0.0
+## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
+var available_plant_types: Array[CharacterRegistry.PlantType] = []
+var adventure_card_lock_active := false
+var active_lawn_rows: Array[int] = []
+var sod_layout_rows := 5
+var sod_rollout_rows := 0
+var custom_initial_wave_delay := 10.0
+var custom_original_timing := false
+var custom_minimum_wave_time := 6.0
+var custom_early_refresh_delay := 0.0
+var custom_wave_interval_range := Vector2(25.0, 31.0)
+var custom_health_threshold_range := Vector2(0.5, 0.67)
+var custom_huge_wave_warning_delay := 6.0
 ## 是否有蹦极僵尸
 @export var is_bungi := false
 ## 大波时生成的蹦极僵尸数量范围

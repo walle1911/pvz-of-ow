@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_2veis"]
 [ext_resource type="Script" uid="uid://b60b5obdhl5to" path="res://scripts/character/plant/ow/plant_054_squash_doomfist.gd" id="2_rin1p"]
 [ext_resource type="Texture2D" uid="uid://db3ehuxapn0l1" path="res://assets/reanim/Squash_stem.png" id="2_tfn24"]
-[ext_resource type="Texture2D" uid="uid://irbh4snyltu1" path="res://assets/reanim/Squash_body.png" id="3_kh2ri"]
+[ext_resource type="Texture2D" uid="uid://dfo35chfphswa" path="res://assets/reanim/Squash_Doomfist_body.png" id="3_kh2ri"]
 [ext_resource type="Texture2D" uid="uid://bgijsa0y0ayos" path="res://assets/reanim/Squash_eyes.png" id="4_rin1p"]
-[ext_resource type="Texture2D" uid="uid://kewigqip7qgf" path="res://assets/reanim/Squash_eyebrows.png" id="5_xoecu"]
+[ext_resource type="Texture2D" uid="uid://5l5m8kk1sdvm" path="res://assets/reanim/Squash_Doomfist_eyebrows.png" id="5_xoecu"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_018_squash_doomfist/018_squash/Squash_jumpdown.tres" id="6_3pxe2"]
 [ext_resource type="Texture2D" uid="uid://dmuc5wyi3p4jr" path="res://assets/reanim/Squash_Doomfist.png" id="7_c5dkp"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_018_squash_doomfist/018_squash/Squash_jumpup.tres" id="7_taict"]
@@ -522,6 +522,7 @@ size = Vector2(80, 5)
 
 [node name="Plant018SquashDoomfist" unique_id=398787074 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_2veis")]
 script = ExtResource("2_rin1p")
+squash_attack_value = 1800
 can_attack_plant_status = 5
 can_attack_zombie_status = 5
 is_attack = false

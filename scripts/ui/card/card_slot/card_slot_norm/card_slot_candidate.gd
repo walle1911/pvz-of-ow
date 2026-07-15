@@ -46,6 +46,8 @@ var all_show_page_imitater:Array[GridContainer] =[]
 func _ready() -> void:
 	_init_card_slot_candidate_pages()
 	_init_card_slot_candidate_imitater()
+	if _adventure_card_lock_active():
+		imitater_bg.visible = false
 
 	_init_card_page()
 
@@ -102,8 +104,10 @@ func _add_plant_card_page(cards_parent_node:GridContainer):
 		var card := node as Card
 		if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
 			continue
-		# 棋盘格正式模式的开局选卡只提供 500+ 的原版植物。
-		if _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
+		if _adventure_card_lock_active() and not _is_adventure_plant_available(card.card_plant_type):
+			continue
+		# 非冒险锁定的棋盘格场景也只提供 500+ 的原版植物。
+		if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
 			continue
 		ordered_cards.append(card)
 
@@ -111,6 +115,9 @@ func _add_plant_card_page(cards_parent_node:GridContainer):
 
 
 func _add_zombie_card_page(cards_parent_node:GridContainer):
+	## 两条冒险主线都是植物选卡，棋盘格也不提供友军僵尸卡。
+	if _adventure_card_lock_active():
+		return
 	var ordered_cards:Array[Card] = []
 	for node in cards_parent_node.get_children():
 		var card := node as Card
@@ -154,7 +161,9 @@ func _init_card_slot_candidate_imitater():
 	var curr_num_page_imitater:=-1
 	for idx:int in Global.global_game_state.curr_plant.size():
 		var plant_type = Global.global_game_state.curr_plant[idx]
-		if _is_chessboard_mode() and (int(plant_type) < 500 or int(plant_type) >= 1000):
+		if _adventure_card_lock_active() and not _is_adventure_plant_available(plant_type):
+			continue
+		if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(plant_type) < 500 or int(plant_type) >= 1000):
 			continue
 		if not AllCards.all_plant_card_prefabs.has(plant_type):
 			continue
@@ -189,6 +198,14 @@ func _init_card_slot_candidate_imitater():
 func _is_chessboard_mode() -> bool:
 	var scene := get_tree().current_scene
 	return scene != null and scene.get_node_or_null(^"ChessboardMode") != null
+
+
+func _adventure_card_lock_active() -> bool:
+	return is_instance_valid(Global.main_game) and Global.main_game.game_para.adventure_card_lock_active
+
+
+func _is_adventure_plant_available(plant_type: CharacterRegistry.PlantType) -> bool:
+	return Global.main_game.game_para.available_plant_types.has(plant_type)
 
 
 ## 上一页
