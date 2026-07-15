@@ -59,6 +59,7 @@ enum E_Influence_Speed_Factor{
 	Butter,			## 黄油
 	EatGarlic,		## 啃食大蒜后短时间停止
 	OutBattlefield,	## 宽屏战场外僵尸移动加速
+	TallNutSigmaSlam,	## 被西格玛高坚果抬起时保持静止
 }
 ## 是否被魅惑
 var is_hypno:bool = false

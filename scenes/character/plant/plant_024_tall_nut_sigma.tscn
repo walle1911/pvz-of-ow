@@ -2,14 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_qbo1e"]
 [ext_resource type="Script" uid="uid://lihog3c1dlyq" path="res://scripts/character/plant/ow/plant_057_tall_nut_sigma.gd" id="2_lgypc"]
-[ext_resource type="Texture2D" uid="uid://bwmr47mulc2xd" path="res://assets/image/ui/Character_Card/TallNut_Sigma_Card.png" id="3_i7n2a"]
+[ext_resource type="Texture2D" uid="uid://cqb7ocud2br40" path="res://assets/reanim/TallNut_Sigma_0.png" id="3_i7n2a"]
 [ext_resource type="Texture2D" uid="uid://df5yxhm82xo61" path="res://assets/reanim/Tallnut_blink1.png" id="3_se5o2"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_024_tall_nut_sigma/024_tall_nut/Tallnut_idle.tres" id="4_6hwhb"]
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="5_ecgny"]
 [ext_resource type="Texture2D" uid="uid://dx41doer20tqv" path="res://assets/reanim/Tallnut_blink2.png" id="6_ecgny"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="6_lgypc"]
-[ext_resource type="Texture2D" uid="uid://d0q3vvxpeqiia" path="res://assets/reanim/Tallnut_cracked1.png" id="9_0h6i8"]
-[ext_resource type="Texture2D" uid="uid://c6a2y7jjdxove" path="res://assets/reanim/Tallnut_cracked2.png" id="10_2d134"]
+[ext_resource type="Texture2D" uid="uid://dygivmtxbhv2t" path="res://assets/reanim/TallNut_Sigma_1.png" id="9_0h6i8"]
+[ext_resource type="Texture2D" uid="uid://fxtuxdqrx3x4" path="res://assets/reanim/TallNut_Sigma_2.png" id="10_2d134"]
 
 [sub_resource type="Resource" id="Resource_6hwhb"]
 script = ExtResource("6_lgypc")
@@ -41,7 +41,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-25.157, -31.856)]
+"values": [Vector2(-39.57, -31.856)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -130,11 +130,12 @@ position = Vector2(28.7, 0)
 position = Vector2(-67.13, -72.05)
 
 [node name="Anim_idle" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=712037803]
-position = Vector2(-25.157, -31.856)
+position = Vector2(-39.57, -31.856)
 rotation = 0.009130421
 scale = Vector2(0.80830824, 0.8035377)
 texture = ExtResource("3_i7n2a")
 centered = false
+offset = Vector2(12.09, 0)
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1708990816]
 visible = false

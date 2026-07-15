@@ -59,6 +59,7 @@ class TallNutSigmaSlamSequence extends Node:
 		shadow_air_modulate.a *= air_shadow_alpha
 
 		zombie.set_meta(SLAM_ACTIVE_META, true)
+		zombie.update_speed_factor(0.0, Character000Base.E_Influence_Speed_Factor.TallNutSigmaSlam)
 		zombie.move_component.update_move_factor(true, MoveComponent.E_MoveFactor.IsTallNutSigmaSlam)
 		zombie.attack_component.disable_component(ComponentNormBase.E_IsEnableFactor.TallNutSigmaSlam)
 		var slam_tween:Tween = create_tween()
@@ -87,6 +88,7 @@ class TallNutSigmaSlamSequence extends Node:
 		zombie.body.position.y = body_start_y
 		zombie.shadow.scale = shadow_start_scale
 		zombie.shadow.modulate = shadow_start_modulate
+		zombie.update_speed_factor(1.0, Character000Base.E_Influence_Speed_Factor.TallNutSigmaSlam)
 		zombie.move_component.update_move_factor(false, MoveComponent.E_MoveFactor.IsTallNutSigmaSlam)
 		zombie.attack_component.enable_component(ComponentNormBase.E_IsEnableFactor.TallNutSigmaSlam)
 		zombie.remove_meta(SLAM_ACTIVE_META)
