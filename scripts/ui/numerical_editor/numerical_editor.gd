@@ -289,7 +289,6 @@ func _populate_almanac_panel(panel: AlmanacCharacterShowPanel, item: Dictionary)
 		else:
 			panel.almanac_update_zombie_panel(item["id"])
 	else:
-		panel.character_name.text = item["display_name"]
 		panel.character_text_1.text = "该角色暂无完整图鉴描述。"
 		for para in panel.character_text_2_para.get_children():
 			para.visible = false
@@ -299,7 +298,7 @@ func _populate_almanac_panel(panel: AlmanacCharacterShowPanel, item: Dictionary)
 			panel.create_plant(item["id"])
 		else:
 			panel.create_zombie(item["id"])
-	panel.character_name.text = item["display_name"]
+	panel.update_character_name(null, item["display_name"])
 	panel.get_node("AllBg/PlantEndPara").visible = is_plant
 	if is_plant:
 		panel.cost.get_node("Value").text = str(Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.SunCost))

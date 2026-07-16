@@ -23,6 +23,10 @@ func _run() -> void:
 	await process_frame
 	assert((editor.detail_page.get_child(0) as TextureRect).texture.resource_path == "res://assets/image/Almanac/Almanac_PlantBack.jpg")
 	assert(editor.field_box.get_child_count() > 0)
+	var almanac_panel: Node = editor.detail_page.get_node_or_null("AlmanacCharacterShowPanel")
+	assert(almanac_panel != null)
+	assert(almanac_panel.character_name.texture == null)
+	assert(almanac_panel.character_name_text.text == editor.catalog[0]["display_name"])
 	for ui_node in editor.call("_all_nodes", editor):
 		if ui_node is Label or ui_node is LineEdit:
 			var ui_font: Font = ui_node.get_theme_font("font")
