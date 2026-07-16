@@ -19,13 +19,20 @@ signal signal_choose_level_button(choose_level_button:ChooseLevelButton)
 
 func _ready() -> void:
 	if curr_level_data_game_para != null:
-		texture_button.pressed.connect(_on_pressed)
-		set_mouse_filter_recursive(self, Control.MOUSE_FILTER_IGNORE)
-		texture_button.mouse_filter = Control.MOUSE_FILTER_STOP
+		activate_runtime_level(curr_level_data_game_para)
 	else:
 		texture_button.visible= false
 		success.visible= false
 		round_num.visible= false
+
+
+func activate_runtime_level(level_data: ResourceLevelData) -> void:
+	curr_level_data_game_para = level_data
+	texture_button.visible = true
+	if not texture_button.pressed.is_connected(_on_pressed):
+		texture_button.pressed.connect(_on_pressed)
+	set_mouse_filter_recursive(self, Control.MOUSE_FILTER_IGNORE)
+	texture_button.mouse_filter = Control.MOUSE_FILTER_STOP
 
 func set_mouse_filter_recursive(root: Node, filter_value: int) -> void:
 	# root 是你想从这个节点开始，递归设置 mouse_filter 的根节点

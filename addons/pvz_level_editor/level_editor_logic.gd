@@ -12,6 +12,14 @@ const LEGACY_ZOMBIE_TYPE_IDS := {
 	"normal": 500, "conehead": 502, "buckethead": 504,
 	"football": 507, "digger": 517, "gargantuar": 523,
 }
+const LEGACY_PLANT_TYPE_IDS := {
+	"peashooter": 1,
+	"sunflower": 2,
+	"cherrybomb": 3,
+	"wallnut": 4,
+	"snowpea": 6,
+	"lilypad": 516,
+}
 const DEFAULT_PLANTS := ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb", "lilypad"]
 const DEFAULT_EVENTS := ["all_waves_cleared", "survive_duration", "protect_plants", "zombie_reaches_house", "sun_below_zero"]
 const THREAT_BY_ZOMBIE := {
@@ -33,7 +41,8 @@ static func example_level() -> Dictionary:
 		"playerConfig": {"initialSun": 150, "sunDropSpeed": 1.0, "cooldownMultiplier": 1.0},
 		"workshopMode": "normal",
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
-		"availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
+		"availablePlants": [1, 2, 4, 6, 3],
+		"plantSelectionEnabled": true,
 		"rewardPlant": -1,
 		"waves": [
 			make_wave("interval_1", "第一波前", 0.0, 28.0, [
@@ -96,7 +105,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "rewardPlant", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "rewardPlant", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -116,6 +125,12 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 		if not chessboard.has(key):
 			chessboard[key] = chessboard_defaults[key].duplicate(true) if chessboard_defaults[key] is Array else chessboard_defaults[key]
 	result["chessboardConfig"] = chessboard
+	var normalized_plants: Array = []
+	for plant_value in result.get("availablePlants", []):
+		var plant_type := int(LEGACY_PLANT_TYPE_IDS.get(str(plant_value).to_lower(), plant_value))
+		if plant_type > 0 and not normalized_plants.has(plant_type):
+			normalized_plants.append(plant_type)
+	result["availablePlants"] = normalized_plants
 	var waves: Array = result.get("waves", [])
 	if not waves.is_empty() and not waves.any(func(wave): return (wave as Dictionary).has("stageType")):
 		waves = _migrate_legacy_waves(waves)
@@ -152,6 +167,15 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 	var reward_plant := int(level.get("rewardPlant", -1))
 	if reward_plant >= 0 and not CharacterRegistry.PlantInfo.has(reward_plant):
 		issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlant"))
+	if bool(level.get("plantSelectionEnabled", false)):
+		var available_plants: Array = level.get("availablePlants", [])
+		if available_plants.is_empty():
+			issues.append(issue("error", "可选卡片至少需要保留一张植物卡", "availablePlants"))
+		for plant_value in available_plants:
+			var plant_type := int(plant_value)
+			if plant_type <= 0 or not CharacterRegistry.PlantInfo.has(plant_type):
+				issues.append(issue("error", "可选卡片未在植物注册表中登记", "availablePlants"))
+				break
 	var map: Dictionary = level.get("mapConfig", {})
 	var rows := int(map.get("rows", 0))
 	var columns := int(map.get("columns", 0))

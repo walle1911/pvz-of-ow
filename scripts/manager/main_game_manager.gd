@@ -290,7 +290,12 @@ func signal_connect():
 
 
 func _setup_workshop_return_button() -> void:
-	if game_para.game_mode != MainSceneRegistry.MainScenes.LevelWorkshop:
+	var is_workshop_playtest: bool = game_para.game_mode == MainSceneRegistry.MainScenes.LevelWorkshop
+	var is_developer_editable_level: bool = (
+		Global.developer_level_adjustments_active
+		and not Global.developer_workshop_level_source.is_empty()
+	)
+	if not is_workshop_playtest and not is_developer_editable_level:
 		return
 	## 复制菜单键的完整样式、脚本和按压动画，但不复制它原有的“打开菜单”信号。
 	## Node.DUPLICATE_SIGNALS = 1，因此使用 14 保留组、脚本和实例化信息。
@@ -308,8 +313,6 @@ func _setup_workshop_return_button() -> void:
 
 
 func _return_to_level_workshop() -> void:
-	if game_para.game_mode != MainSceneRegistry.MainScenes.LevelWorkshop:
-		return
 	EventBus.push_event("change_is_mouse_visibel_on_hammer", true)
 	TreePauseManager.end_tree_pause_clear_all_pause_factors()
 	Global.time_scale = 1.0

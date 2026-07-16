@@ -297,6 +297,7 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"workshopMode": workshop_mode,
 		"chessboardConfig": chessboard_config,
 		"availablePlants": available_plants,
+		"plantSelectionEnabled": true,
 		"rewardPlant": _default_reward_plant(world, level_number, workshop_mode, available_plants),
 		"activeLawnRows": active_rows,
 		"sodLayoutRows": 5,

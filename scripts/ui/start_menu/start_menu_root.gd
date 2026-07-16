@@ -4,6 +4,11 @@ class_name StartMenuRoot
 
 const RETURN_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/button_return.png")
 const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/button_developer.png")
+const OPTION_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options1.png")
+const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png")
+const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png")
+const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
+const DeveloperPackageStore := preload("res://scripts/resources/developer_package_store.gd")
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
@@ -20,6 +25,8 @@ const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_m
 @onready var level_workshop_button: TextureButton = $BG_Right/Menu/LevelWorkshopButton
 @onready var developer_mode_label: Label = $BG_Right/Menu/LevelWorkshopButton/Label
 @onready var adventure_mode_dialog = $AdventureModeDialog
+@onready var option_button: TextureButton = $BG_Right/Option/TextureButton
+@onready var help_button: TextureButton = $BG_Right/Option/TextureButton2
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
@@ -148,7 +155,10 @@ func _apply_editor_menu_preview() -> void:
 func _apply_developer_mode(enabled: bool) -> void:
 	developer_mode = enabled
 	## 开发者菜单本身不是关卡；只有从对应入口真正进关时才开启数值覆盖。
-	Global.developer_level_adjustments_active = false
+	## @tool 的 Inspector 预览也会调用本方法；编辑器预览不能修改运行时 Global 状态。
+	if not Engine.is_editor_hint():
+		Global.developer_level_adjustments_active = false
+		Global.developer_workshop_level_source = {}
 	developer_menu.modulate = Color.WHITE
 	for button in [menu_button_1, menu_button_2, menu_button_3, menu_button_4]:
 		button.visible = not developer_mode
@@ -157,14 +167,62 @@ func _apply_developer_mode(enabled: bool) -> void:
 		level_workshop_button.texture_normal = RETURN_NORMAL_TEXTURE
 		level_workshop_button.tooltip_text = "返回正常模式"
 		developer_mode_label.visible = false
-		developer_button_1.tooltip_text = "选择并游玩已保存的自定义关卡"
+		developer_button_1.tooltip_text = "选择关卡模板或自制关卡"
 		developer_button_2.tooltip_text = "打开地图工坊"
 		developer_button_3.tooltip_text = "调整植物与僵尸数值"
-		developer_button_4.tooltip_text = "保存与导出（暂未开放）"
+		developer_button_4.tooltip_text = "保存当前开发者数据并导出开发者包"
+		_apply_developer_option_buttons()
 	else:
 		level_workshop_button.texture_normal = normal_level_workshop_texture
 		level_workshop_button.tooltip_text = "进入开发者模式"
 		developer_mode_label.visible = false
+		_apply_normal_option_buttons()
+
+
+func _apply_developer_option_buttons() -> void:
+	## 复用原有布袋素材；左侧按钮覆盖“导入”文字，中间按钮恢复原“选项”。
+	option_button.texture_normal = OPTION_NORMAL_TEXTURE
+	option_button.texture_pressed = OPTION_HOVER_TEXTURE
+	option_button.texture_hover = OPTION_HOVER_TEXTURE
+	option_button.tooltip_text = "导入开发者包"
+	var import_label := option_button.get_node_or_null("DeveloperImportLabel") as Label
+	if import_label == null:
+		import_label = Label.new()
+		import_label.name = "DeveloperImportLabel"
+		import_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		import_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		import_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		import_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		import_label.add_theme_font_size_override("font_size", 15)
+		import_label.add_theme_color_override("font_color", Color(0.05, 0.035, 0.02, 1))
+		import_label.add_theme_color_override("font_outline_color", Color(0.73, 0.69, 0.48, 1))
+		import_label.add_theme_constant_override("outline_size", 5)
+		option_button.add_child(import_label)
+	import_label.text = "导入"
+	import_label.visible = true
+
+	help_button.position = Vector2(94, 98)
+	help_button.size = Vector2(68, 31)
+	help_button.texture_normal = OPTION_NORMAL_TEXTURE
+	help_button.texture_pressed = OPTION_HOVER_TEXTURE
+	help_button.texture_hover = OPTION_HOVER_TEXTURE
+	help_button.tooltip_text = "选项"
+
+
+func _apply_normal_option_buttons() -> void:
+	var import_label := option_button.get_node_or_null("DeveloperImportLabel") as Label
+	if import_label != null:
+		import_label.visible = false
+	option_button.texture_normal = OPTION_NORMAL_TEXTURE
+	option_button.texture_pressed = OPTION_HOVER_TEXTURE
+	option_button.texture_hover = OPTION_HOVER_TEXTURE
+	option_button.tooltip_text = "选项"
+	help_button.position = Vector2(100, 98)
+	help_button.size = Vector2(49, 26)
+	help_button.texture_normal = HELP_NORMAL_TEXTURE
+	help_button.texture_pressed = HELP_HOVER_TEXTURE
+	help_button.texture_hover = HELP_HOVER_TEXTURE
+	help_button.tooltip_text = "帮助"
 
 ## 花园需要浇水
 var garden_need_water:=true
@@ -216,7 +274,7 @@ func _on_button_3_pressed() -> void:
 ## 生存模式
 func _on_button_4_pressed() -> void:
 	if developer_mode:
-		_unrealized()
+		_save_and_export_developer_package()
 		return
 	Global.game_para = null
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelSurvival])
@@ -233,11 +291,58 @@ func _on_level_workshop_button_pressed() -> void:
 
 #region 选项
 func _on_option_button_1_pressed() -> void:
+	if developer_mode:
+		_open_developer_package_import()
+		return
 	$StartMenuOptionDialog.appear_menu()
 
 
 func _on_option_button_2_pressed() -> void:
+	if developer_mode:
+		$StartMenuOptionDialog.appear_menu()
+		return
 	$Dialog_Help.appear_dialog()
+
+
+func _save_and_export_developer_package() -> void:
+	var backup := DeveloperPackageStore.save_backup()
+	if not backup["ok"]:
+		_show_developer_package_message("保存失败：%s" % str(backup["error"]))
+		return
+	var file_dialog := FileDialog.new()
+	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.current_file = "pvz_of_ow_developer_package.json"
+	file_dialog.filters = ["*.json ; PVZ-of-OW 开发者包"]
+	file_dialog.file_selected.connect(func(path: String):
+		var result := DeveloperPackageStore.write_package(path, DeveloperPackageStore.build_package())
+		_show_developer_package_message("保存并导出成功：%s" % path if result["ok"] else "导出失败：%s" % str(result["error"]))
+		file_dialog.queue_free()
+	)
+	add_child(file_dialog)
+	file_dialog.popup_centered_ratio(0.72)
+
+
+func _open_developer_package_import() -> void:
+	var file_dialog := FileDialog.new()
+	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.filters = ["*.json ; PVZ-of-OW 开发者包"]
+	file_dialog.file_selected.connect(func(path: String):
+		var result := DeveloperPackageStore.import_package(path)
+		if result["ok"]:
+			_show_developer_package_message("导入成功：%d 个关卡模板，%d 个自制关卡。" % [result["classic_count"], result["custom_count"]])
+		else:
+			_show_developer_package_message("导入失败：%s" % str(result["error"]))
+		file_dialog.queue_free()
+	)
+	add_child(file_dialog)
+	file_dialog.popup_centered_ratio(0.72)
+
+
+func _show_developer_package_message(message: String) -> void:
+	$Dialog/Label.text = message
+	$Dialog.appear_dialog()
 
 ## 退出游戏
 func _on_option_button_3_pressed() -> void:

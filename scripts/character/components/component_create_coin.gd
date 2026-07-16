@@ -38,7 +38,6 @@ func change_production_interval():
 
 ## 掉落金银钻
 func drop_coin():
-	Global.create_coin()
 	EventBus.push_event("create_coin", [
 			drop_coin_silver_glod_diamond_rate, marker_2d_create_coin.global_position
 		])
@@ -64,4 +63,3 @@ func owner_update_speed(speed_product:float):
 				create_coin_timer.start(create_coin_timer.time_left / speed_product)
 
 	create_speed = speed_product
-

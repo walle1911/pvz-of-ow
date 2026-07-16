@@ -100,7 +100,9 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.custom_wave_interval_range = _vector2_from_array(level.get("waveIntervalRange", [25.0, 31.0]), Vector2(25.0, 31.0))
 	game_para.custom_health_threshold_range = _vector2_from_array(level.get("healthThresholdRange", [0.5, 0.67]), Vector2(0.5, 0.67))
 	game_para.custom_huge_wave_warning_delay = float(level.get("hugeWaveWarningDelay", 6.0))
-	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false))
+	## 预设冒险关和启用了“可选卡片”的自制关都只展示编辑器选中的植物池。
+	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false)) \
+		or bool(level.get("plantSelectionEnabled", false))
 	game_para.reward_plant_type = int(level.get("rewardPlant", -1))
 	if game_para.adventure_card_lock_active:
 		for value in level.get("availablePlants", []):

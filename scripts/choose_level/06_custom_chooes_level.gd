@@ -3,17 +3,35 @@ class_name CustomChooseLevel
 
 const CHOOSE_LEVEL_BUTTON_CUSTOMIZE = preload("res://scenes/choose_level/choose_level_button_customize.tscn")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
+const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 
 @onready var panel_help: Panel = $PanelHelp
 @onready var grid_container: GridContainer = $AllPage/GridContainer
 
 ## 每一页的关卡数量
 var num_level_button_every_page:=20
+var classic_entries: Array[Dictionary] = []
+var custom_entries: Array[Dictionary] = []
+var detached_grid_template: GridContainer
+var developer_list_mode := "classic"
 
 func _ready() -> void:
-	## 开发者入口先列出与普通冒险相同的全部正式预设，但读取工坊的开发者覆盖。
-	## 玩家资源关卡和保存的 JSON 草稿只追加在这些预设之后；普通“自定义关卡”入口不显示预设。
-	var all_game_paras: Array = []
+	detached_grid_template = grid_container
+	all_page.remove_child(detached_grid_template)
+	detached_grid_template.name = "GridTemplate"
+	add_child(detached_grid_template)
+	$ClassicLevels.visible = Global.developer_level_adjustments_active
+	$CustomLevels.visible = Global.developer_level_adjustments_active
+	_build_level_entries()
+	if Global.developer_level_adjustments_active:
+		_show_developer_list("classic")
+	else:
+		_rebuild_pages(custom_entries)
+
+
+func _build_level_entries() -> void:
+	classic_entries.clear()
+	custom_entries.clear()
 	if Global.developer_level_adjustments_active:
 		var title := get_node_or_null("Label") as Label
 		if title != null:
@@ -21,26 +39,63 @@ func _ready() -> void:
 		for preset in AdventurePresets.list_presets("normal"):
 			var preset_id := str(preset["id"])
 			var source := AdventurePresets.build_level(preset_id, true)
+			var cover_source := AdventurePresets.build_level(preset_id, false)
 			var preset_built := CustomRuntime.build_game_para(source)
 			if preset_built["ok"]:
-				all_game_paras.append([preset_built["game_para"], preset_id, str(source.get("name", preset["name"]))])
-	all_game_paras.append_array(load_resources_with_get_files("level_game_para"))
+				classic_entries.append({
+					"game_para": preset_built["game_para"],
+					"id": preset_id,
+					"name": str(source.get("name", preset["name"])),
+					"preset": preset,
+					## 关卡模板封面始终取普通模式原始数据；编辑内容只影响实际游玩。
+					"cover_source": cover_source,
+					"editor_source": source,
+					"modified": AdventureStore.load_developer_level(preset_id)["ok"],
+				})
+	for resource_entry in load_resources_with_get_files("level_game_para"):
+		custom_entries.append({
+			"game_para": resource_entry[0],
+			"id": str(resource_entry[1]),
+			"name": str(resource_entry[1]),
+			"editor_source": {},
+		})
 	for draft in DraftStore.list_drafts():
 		var loaded := DraftStore.load_draft(draft["path"])
 		if not loaded["ok"]:
 			continue
 		var built := CustomRuntime.build_game_para(loaded["level"])
 		if built["ok"]:
-			all_game_paras.append([built["game_para"], str(draft["id"]), str(draft["name"])])
-	## 初始化页面数据
+			custom_entries.append({
+				"game_para": built["game_para"],
+				"id": str(draft["id"]),
+				"name": str(draft["name"]),
+				"editor_source": loaded["level"],
+			})
+
+
+func _show_developer_list(mode: String) -> void:
+	developer_list_mode = mode
+	var title := get_node_or_null("Label") as Label
+	if title != null:
+		title.text = "关 卡 模 板" if mode == "classic" else "自 制 关 卡"
+	_rebuild_pages(classic_entries if mode == "classic" else custom_entries)
+
+
+func _rebuild_pages(entries: Array[Dictionary]) -> void:
+	for page in all_page.get_children():
+		all_page.remove_child(page)
+		page.queue_free()
 	all_pages_array.clear()
-	all_page.remove_child(grid_container)
 	var curr_num_page:int = -1
-	for i in range(all_game_paras.size()):
+	var previous_classic_source: Dictionary = {}
+	for i in range(entries.size()):
 		var page_i:int = int(float(i) / num_level_button_every_page)
 		if curr_num_page < page_i:
 			curr_num_page += 1
-			var new_grid_container = grid_container.duplicate()
+			var new_grid_container = detached_grid_template.duplicate()
+			## 先统一隐藏，_ready_update_page() 只打开当前页，避免多页文字和封面叠放。
+			new_grid_container.visible = false
+			new_grid_container.process_mode = Node.PROCESS_MODE_DISABLED
 			all_page.add_child(new_grid_container)
 			all_pages_array.append(new_grid_container)
 		## 当前页面
@@ -48,18 +103,40 @@ func _ready() -> void:
 
 		## 关卡按钮
 		var chooes_level_button:ChooseLevelButtonCustomize = CHOOSE_LEVEL_BUTTON_CUSTOMIZE.instantiate()
-		var display_name := str(all_game_paras[i][2]) if all_game_paras[i].size() > 2 else str(all_game_paras[i][1])
-		chooes_level_button.init_choose_level_button_customize(all_game_paras[i][0], display_name)
+		var entry := entries[i]
+		chooes_level_button.init_choose_level_button_customize(entry["game_para"], str(entry["name"]))
+		chooes_level_button.set_meta("developer_editor_source", entry.get("editor_source", {}))
 		curr_grid_container.add_child(chooes_level_button)
 
 		chooes_level_button.signal_choose_level_button.connect(_on_choose_level_button)
-		chooes_level_button.curr_level_data_game_para.set_choose_level(game_mode, page_i, all_game_paras[i][1])
+		chooes_level_button.curr_level_data_game_para.set_choose_level(game_mode, page_i, str(entry["id"]))
 		chooes_level_button.update_curr_level_button_state(Global.global_game_state.curr_all_level_state_data.get(chooes_level_button.curr_level_data_game_para.save_game_name, {}))
+		if entry.has("preset"):
+			_configure_adventure_cover(chooes_level_button, entry["preset"], entry["cover_source"], previous_classic_source)
+			previous_classic_source = entry["cover_source"]
+			if bool(entry.get("modified", false)):
+				## 开发者覆盖存在时，用通关奖杯直观标记这关已被编辑。
+				chooes_level_button.success.visible = true
 
-	grid_container.queue_free()
-	print("当前模式关卡数量:", all_game_paras.size())
+	print("当前模式关卡数量:", entries.size())
 
+	curr_page = 0
 	_ready_update_page()
+
+
+func _on_classic_levels_pressed() -> void:
+	_show_developer_list("classic")
+
+
+func _on_custom_levels_pressed() -> void:
+	_show_developer_list("custom")
+
+
+func _on_choose_level_button(choose_level_button: ChooseLevelButton) -> void:
+	Global.developer_workshop_level_source = (
+		choose_level_button.get_meta("developer_editor_source", {}) as Dictionary
+	).duplicate(true)
+	super._on_choose_level_button(choose_level_button)
 
 
 func get_base_path() -> String:
@@ -112,4 +189,5 @@ func back_start_menu() -> void:
 	if Global.developer_level_adjustments_active:
 		Global.return_to_developer_mode = true
 	Global.developer_level_adjustments_active = false
+	Global.developer_workshop_level_source = {}
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])

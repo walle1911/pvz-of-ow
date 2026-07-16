@@ -97,6 +97,12 @@ var background_sprite: Sprite2D
 var reward_mode_button: TextureButton
 var background_normal_x := -334.0
 var formal_preset_id := ""
+var locked_available_plant_types: Array[int] = []
+var selected_plant_tray: PanelContainer
+var selected_plant_row: HBoxContainer
+var workshop_menu_dialog: MainGameMenuOptionDialog
+var workshop_menu_fallback_dialog: Dialog
+var workshop_menu_host: Control
 
 
 func _layout_control(path: String) -> Control:
@@ -104,24 +110,35 @@ func _layout_control(path: String) -> Control:
 
 
 func _ready() -> void:
+	## 工坊入口固定为普通编辑器，先设置模式再生成两类卡片目录。
+	var active_mode := "normal"
+	Global.level_workshop_edit_mode = active_mode
 	_apply_font()
 	_refresh_zombie_catalog()
 	_build_scene()
-	## 工坊入口固定为普通编辑器，不再先进入模式或正式关卡选择页。
-	var active_mode := "normal"
-	Global.level_workshop_edit_mode = active_mode
-	var recovered := DraftStore.load_autosave()
-	if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
-		level = recovered["level"]
+	var developer_source: Dictionary = Global.developer_workshop_level_source
+	Global.developer_workshop_level_source = {}
+	if not developer_source.is_empty():
+		level = developer_source.duplicate(true)
 		formal_preset_id = str(level.get("formalPresetId", ""))
-		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
+		status_label.text = "已载入当前实战关卡，可直接继续编辑。"
+		DraftStore.save_autosave(level)
+	else:
+		var recovered := DraftStore.load_autosave()
+		if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
+			level = recovered["level"]
+			formal_preset_id = str(level.get("formalPresetId", ""))
+			status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
 	level["workshopMode"] = active_mode
+	_refresh_locked_available_plants()
+	_ensure_locked_plants_selected()
 	_force_random_lane_rules()
 	_recalculate_stage_times()
 	_snapshot(false)
 	_refresh_draft_picker()
 	_refresh_wave()
+	_refresh_selected_plant_tray()
 
 
 func _process(_delta: float) -> void:
@@ -147,6 +164,7 @@ func _build_scene() -> void:
 
 	_build_drawer()
 	_build_road_overlay()
+	_build_selected_plant_tray()
 	_animate_drawer_in()
 
 
@@ -159,8 +177,9 @@ func _build_drawer() -> void:
 	wave_summary = sidebar_content.get_node("WaveSummary") as Label
 	status_label = sidebar_content.get_node("StatusLabel") as Label
 	reward_mode_button = sidebar_content.get_node("RewardModeButton") as TextureButton
-	reward_mode_button.visible = Global.level_workshop_edit_mode == "chessboard"
+	reward_mode_button.visible = true
 	reward_mode_button.pressed.connect(_toggle_reward_catalog)
+	_update_catalog_button_label()
 	card_scroll = sidebar_content.get_node("CardScroll") as ScrollContainer
 	card_grid = card_scroll.get_node("CardGridHolder/CardGrid") as GridContainer
 	card_page_label = sidebar_content.get_node("Pagination/PageLabel") as Label
@@ -173,25 +192,23 @@ func _build_drawer() -> void:
 
 func _build_drawer_actions() -> void:
 	var actions := sidebar_content.get_node("BottomActions")
-	## 成品关卡在编辑器内部载入；应用只写开发者模式覆盖。
-	var action_names := ["BackButton", "SettingsButton", "PlaytestButton", "SaveButton"]
+	var action_names := ["SettingsButton", "LoadButton", "SaveButton"]
+	var action_width := 142.0
+	var action_gap := 19.0
 	for action_index in action_names.size():
 		var action_button := actions.get_node(action_names[action_index]) as TextureButton
-		action_button.position.x = action_index * 78.0
-		action_button.size.x = 74.0
-	var preset_button := _texture_button("成品关卡", Vector2(312, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_preset_picker, 13)
-	actions.add_child(preset_button)
-	var apply_formal_button := _texture_button("应用预设", Vector2(390, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_apply_formal_dialog, 13)
-	actions.add_child(apply_formal_button)
-	(actions.get_node("BackButton") as TextureButton).pressed.connect(_back_to_menu)
+		action_button.position.x = action_index * (action_width + action_gap)
+		action_button.size.x = action_width
 	(actions.get_node("SettingsButton") as TextureButton).pressed.connect(_open_level_settings)
-	(actions.get_node("PlaytestButton") as TextureButton).pressed.connect(_playtest)
+	(actions.get_node("LoadButton") as TextureButton).pressed.connect(_open_preset_picker)
 	(actions.get_node("SaveButton") as TextureButton).pressed.connect(_open_save_dialog)
+	(get_node("TopActions/PlaytestButton") as BaseButton).pressed.connect(_playtest)
+	(get_node("TopActions/MenuButton") as BaseButton).pressed.connect(_open_workshop_menu)
 
 
 func _open_preset_picker() -> void:
 	var dialog := ConfirmationDialog.new()
-	dialog.title = "选择要编辑的成品关卡"
+	dialog.title = "载入关卡"
 	dialog.ok_button_text = "载入编辑"
 	dialog.cancel_button_text = "取消"
 	dialog.min_size = Vector2i(460, 210)
@@ -199,7 +216,7 @@ func _open_preset_picker() -> void:
 	box.add_theme_constant_override("separation", 10)
 	dialog.add_child(box)
 	var hint := Label.new()
-	hint.text = "载入后可编辑；点底部“应用预设”只会覆盖开发者模式中的对应关卡。"
+	hint.text = "载入后可直接编辑；点击底部“保存”会覆盖开发者模式中的对应关卡模板。"
 	box.add_child(hint)
 	var picker := OptionButton.new()
 	var presets := AdventurePresets.list_presets("normal")
@@ -220,20 +237,19 @@ func _open_preset_picker() -> void:
 func _load_preset_for_edit(preset_id: String) -> void:
 	var preset := AdventurePresets.build_level(preset_id, true)
 	if preset.is_empty():
-		status_label.text = "成品关卡不存在：%s" % preset_id
+		status_label.text = "关卡不存在：%s" % preset_id
 		return
 	level = Logic.normalize_level(preset)
 	formal_preset_id = preset_id
 	level["formalPresetId"] = preset_id
-	## 普通“保存”仍写入 user:// 草稿；只有“应用预设”才写开发者覆盖数据。
 	level["id"] = "%s_edit" % preset_id
 	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
-	reward_mode_button.visible = Global.level_workshop_edit_mode == "chessboard"
+	reward_mode_button.visible = true
 	catalog_mode = CatalogMode.SPAWN_ZOMBIES
 	background_sprite.position.x = background_normal_x
-	var reward_button_label := reward_mode_button.get_child(0) as Label
-	if reward_button_label != null:
-		reward_button_label.text = "奖励卡槽"
+	_update_catalog_button_label()
+	_refresh_locked_available_plants()
+	_ensure_locked_plants_selected()
 	_refresh_zombie_catalog()
 	_force_random_lane_rules()
 	selected_wave = 0
@@ -244,36 +260,121 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	_snapshot(false)
 	DraftStore.save_autosave(level)
 	_refresh_wave()
+	_refresh_selected_plant_tray()
 	status_label.text = "已载入“%s”，可直接修改波次、数量和出怪间隔。" % str(level["name"])
 
 
-func _open_apply_formal_dialog() -> void:
-	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
-		status_label.text = "请先点“成品关卡”，载入要修改的正式关卡。"
+func _build_selected_plant_tray() -> void:
+	selected_plant_tray = PanelContainer.new()
+	selected_plant_tray.position = Vector2(530, 18)
+	selected_plant_tray.size = Vector2(310, 108)
+	selected_plant_tray.z_index = 80
+	selected_plant_tray.visible = false
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.12, 0.075, 0.025, 0.88)
+	panel_style.border_color = Color(0.63, 0.43, 0.16, 0.95)
+	panel_style.set_border_width_all(3)
+	panel_style.set_corner_radius_all(9)
+	selected_plant_tray.add_theme_stylebox_override("panel", panel_style)
+	add_child(selected_plant_tray)
+	var tray_content := VBoxContainer.new()
+	tray_content.add_theme_constant_override("separation", 2)
+	selected_plant_tray.add_child(tray_content)
+	var title := Label.new()
+	title.text = "本关可用植物"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", WORKSHOP_FONT)
+	title.add_theme_font_size_override("font_size", 16)
+	title.add_theme_color_override("font_color", Color("f3e7ba"))
+	tray_content.add_child(title)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(294, 76)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tray_content.add_child(scroll)
+	selected_plant_row = HBoxContainer.new()
+	selected_plant_row.add_theme_constant_override("separation", 4)
+	scroll.add_child(selected_plant_row)
+
+
+func _refresh_selected_plant_tray() -> void:
+	if not is_instance_valid(selected_plant_tray) or not is_instance_valid(selected_plant_row):
 		return
-	var dialog := ConfirmationDialog.new()
-	dialog.title = "应用到开发者预设"
-	dialog.ok_button_text = "确认覆盖"
-	dialog.cancel_button_text = "取消"
-	dialog.min_size = Vector2i(480, 200)
-	var hint := Label.new()
-	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hint.text = "当前配置将写入 %s。它只影响开发者模式“开始冒险吧”中的 %s；普通模式正式关卡不会改变。" % [FormalLevelStore.formal_level_path(formal_preset_id), formal_preset_id]
-	dialog.add_child(hint)
-	dialog.confirmed.connect(func():
-		_recalculate_stage_times()
-		level["formalPresetId"] = formal_preset_id
-		var result := FormalLevelStore.save_developer_level(level, formal_preset_id)
-		if result["ok"]:
-			DraftStore.save_autosave(level)
-			status_label.text = "已应用到开发者预设 %s；普通冒险不受影响。" % formal_preset_id
-		else:
-			status_label.text = "应用开发者预设失败：%s" % str(result["error"])
-		dialog.queue_free()
-	)
-	add_child(dialog)
-	_force_font_recursive(dialog)
-	dialog.popup_centered()
+	var show_tray := catalog_mode == CatalogMode.REWARD_CARDS \
+		and Global.level_workshop_edit_mode == "normal"
+	selected_plant_tray.visible = show_tray
+	_clear(selected_plant_row)
+	if not show_tray:
+		return
+	var selected_types := _selected_available_plants()
+	if selected_types.is_empty():
+		var empty_label := Label.new()
+		empty_label.text = "还没有选择植物卡"
+		empty_label.custom_minimum_size = Vector2(286, 62)
+		empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		empty_label.add_theme_font_override("font", WORKSHOP_FONT)
+		empty_label.add_theme_color_override("font_color", Color("e9d28a"))
+		selected_plant_row.add_child(empty_label)
+		return
+	for plant_type in selected_types:
+		var prefab: Card = plant_card_prefabs.get(plant_type)
+		if prefab == null:
+			continue
+		var holder := Control.new()
+		holder.custom_minimum_size = Vector2(45, 64)
+		var card := prefab.duplicate() as Card
+		card.scale = Vector2.ONE * 0.86
+		card.set_process(false)
+		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var card_button := card.get_node_or_null("Button") as Button
+		if card_button != null:
+			card_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		card.tooltip_text = "预设必选卡，不能取消" if locked_available_plant_types.has(plant_type) else "本关可用植物"
+		holder.add_child(card)
+		selected_plant_row.add_child(holder)
+
+
+func _refresh_locked_available_plants() -> void:
+	locked_available_plant_types.clear()
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		return
+	var official_level := AdventurePresets.build_level(formal_preset_id, false)
+	for value in official_level.get("availablePlants", []):
+		var plant_type := int(value)
+		if CharacterRegistry.PlantInfo.has(plant_type) and not locked_available_plant_types.has(plant_type):
+			locked_available_plant_types.append(plant_type)
+
+
+func _ensure_locked_plants_selected() -> void:
+	var selected := _selected_available_plants()
+	for plant_type in locked_available_plant_types:
+		if not selected.has(plant_type):
+			selected.append(plant_type)
+	level["availablePlants"] = selected
+	if not locked_available_plant_types.is_empty():
+		level["plantSelectionEnabled"] = true
+
+
+func _selected_available_plants() -> Array[int]:
+	var result: Array[int] = []
+	for value in level.get("availablePlants", []):
+		var plant_type := int(value)
+		if plant_type > 0 and CharacterRegistry.PlantInfo.has(plant_type) and not result.has(plant_type):
+			result.append(plant_type)
+	return result
+
+
+func _update_catalog_button_label() -> void:
+	if not is_instance_valid(reward_mode_button):
+		return
+	var button_label := reward_mode_button.get_child(0) as Label
+	if button_label == null:
+		return
+	if catalog_mode == CatalogMode.REWARD_CARDS:
+		button_label.text = "返回刷怪"
+	else:
+		button_label.text = "奖励卡槽" if Global.level_workshop_edit_mode == "chessboard" else "可选卡片"
 
 
 func _animate_drawer_in() -> void:
@@ -813,11 +914,17 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	card.scale = Vector2.ONE * 1.235
 	card.is_imitater = false
 	card.set_process(false)
-	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
-	var selected_pool: Array = level["chessboardConfig"].get(pool_key, [])
-	var selected := selected_pool.has(type_id)
+	var normal_available_mode := Global.level_workshop_edit_mode == "normal"
+	var selected := _selected_available_plants().has(type_id) if normal_available_mode else \
+		(level["chessboardConfig"].get("plantCardPool" if is_plant else "zombieCardPool", []) as Array).has(type_id)
+	var locked := normal_available_mode and locked_available_plant_types.has(type_id)
 	card.modulate = Color.WHITE if selected else Color(0.55, 0.55, 0.55, 0.72)
-	card.tooltip_text = "%s奖励%s" % ["移除" if selected else "加入", "植物卡槽" if is_plant else "友军僵尸卡槽"]
+	if locked:
+		card.tooltip_text = "冒险进度基础卡，本关不能取消"
+	elif normal_available_mode:
+		card.tooltip_text = "%s本关可选卡片" % ("移出" if selected else "加入")
+	else:
+		card.tooltip_text = "%s奖励%s" % ["移除" if selected else "加入", "植物卡槽" if is_plant else "友军僵尸卡槽"]
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
 	if button != null:
@@ -825,10 +932,40 @@ func _make_reward_card(entry: Dictionary) -> Control:
 			button.pressed.disconnect(connection.callable)
 		button.pressed.connect(_toggle_reward_card.bind(type_id, is_plant))
 	holder.add_child(card)
+	if locked:
+		var lock_label := Label.new()
+		lock_label.position = Vector2(39, 2)
+		lock_label.size = Vector2(22, 22)
+		lock_label.z_index = 20
+		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lock_label.text = "锁"
+		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lock_label.add_theme_font_override("font", WORKSHOP_FONT)
+		lock_label.add_theme_font_size_override("font_size", 13)
+		lock_label.add_theme_color_override("font_color", Color("fff2a1"))
+		lock_label.add_theme_color_override("font_outline_color", Color("493011"))
+		lock_label.add_theme_constant_override("outline_size", 3)
+		holder.add_child(lock_label)
 	return holder
 
 
 func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
+	if Global.level_workshop_edit_mode == "normal":
+		var selected := _selected_available_plants()
+		if selected.has(type_id):
+			if locked_available_plant_types.has(type_id):
+				status_label.text = "这张卡来自冒险进度基础卡池，不能取消"
+				return
+			selected.erase(type_id)
+		else:
+			selected.append(type_id)
+		level["availablePlants"] = selected
+		level["plantSelectionEnabled"] = true
+		_changed("本关可选植物 %d 张" % selected.size())
+		_refresh_card_page()
+		_refresh_selected_plant_tray()
+		return
 	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
 	var pool: Array = level["chessboardConfig"].get(pool_key, [])
 	if pool.has(type_id):
@@ -844,10 +981,8 @@ func _toggle_reward_catalog() -> void:
 	catalog_mode = CatalogMode.REWARD_CARDS if catalog_mode == CatalogMode.SPAWN_ZOMBIES else CatalogMode.SPAWN_ZOMBIES
 	current_card_page = 0
 	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
-	stage_heading.text = "奖励原版植物卡" if show_rewards else "旗帜波僵尸"
-	var reward_button_label := reward_mode_button.get_child(0) as Label
-	if reward_button_label != null:
-		reward_button_label.text = "返回刷怪" if show_rewards else "奖励卡槽"
+	stage_heading.text = ("奖励原版植物卡" if Global.level_workshop_edit_mode == "chessboard" else "本关可选植物卡") if show_rewards else "旗帜波僵尸"
+	_update_catalog_button_label()
 	wave_title.visible = not show_rewards
 	wave_summary.visible = not show_rewards
 	road_title.visible = not show_rewards
@@ -856,8 +991,12 @@ func _toggle_reward_catalog() -> void:
 	## 奖励池编辑时把草坪主体移入右侧可视区，退出后恢复道路预览视角。
 	var target_x := background_normal_x + 334.0 if show_rewards else background_normal_x
 	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
-	status_label.text = "点击原版植物卡加入或移出奖励卡槽；亮色为已选择" if show_rewards else "点击卡片，设置本阶段出场数量"
+	if show_rewards:
+		status_label.text = "点击植物卡设置本关卡池；亮色为已选，冒险基础卡不可取消" if Global.level_workshop_edit_mode == "normal" else "点击原版植物卡加入或移出奖励卡槽；亮色为已选择"
+	else:
+		status_label.text = "点击卡片，设置本阶段出场数量"
 	_refresh_card_page()
+	_refresh_selected_plant_tray()
 
 
 func _change_card_page(offset: int) -> void:
@@ -987,7 +1126,7 @@ func _refresh_wave() -> void:
 	var stage_number := _stage_number(selected_wave, str(wave.get("stageType", "flag")))
 	wave_title.text = ("第 %d 面旗帜" if is_flag else "旗帜间隔 %d") % stage_number
 	if catalog_mode == CatalogMode.REWARD_CARDS:
-		stage_heading.text = "奖励原版植物卡"
+		stage_heading.text = "奖励原版植物卡" if Global.level_workshop_edit_mode == "chessboard" else "本关可选植物卡"
 		_refresh_timeline()
 		return
 	stage_heading.text = "旗帜波僵尸" if is_flag else "波间阶段僵尸"
@@ -1222,7 +1361,6 @@ func _open_level_settings() -> void:
 	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 180), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
 	var cooldown := _settings_spin(dialog, "冷却时长倍率", Vector2(76, 252), 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
 	var seed := _settings_spin(dialog, "随机种子", Vector2(322, 252), 1, 2147483647, int(level["randomSeed"]), 1)
-	var reward_plant_picker: OptionButton
 	var chessboard: Dictionary = level.get("chessboardConfig", {})
 	var mine_count: SpinBox
 	var plant_probability: SpinBox
@@ -1235,15 +1373,13 @@ func _open_level_settings() -> void:
 		mine_count = _settings_spin(dialog, "地雷数量上限", Vector2(76, 360), 0, 45, int(chessboard.get("mineCount", 8)), 1)
 		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
 		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
-	else:
-		reward_plant_picker = _settings_reward_picker(dialog, Vector2(322, 322), int(level.get("rewardPlant", -1)))
 	var save_callback := func():
-		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, reward_plant_picker, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
+		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
 	dialog.add_child(_texture_button("保存设置", Vector2(205, 487), Vector2(210, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 18))
 	dialog.add_child(_texture_button("取消", Vector2(265, 454 if str(level.get("workshopMode", "normal")) != "chessboard" else 522), Vector2(90, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _close_quantity_dialog, 14))
 
 
-func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, reward_plant_picker: OptionButton, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
+func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
 	var level_name := name_input.text.strip_edges()
 	if level_name.is_empty():
 		status_label.text = "设置失败：关卡名称不能为空"
@@ -1258,8 +1394,6 @@ func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox
 		chessboard["zombieCardProbability"] = 0.0
 		chessboard["enemyZombieProbability"] = float(enemy_probability.value)
 		level["chessboardConfig"] = chessboard
-	elif is_instance_valid(reward_plant_picker):
-		level["rewardPlant"] = int(reward_plant_picker.get_item_metadata(reward_plant_picker.selected))
 	level["name"] = level_name
 	level["id"] = id_input.text.strip_edges()
 	level["playerConfig"]["initialSun"] = int(sun.value)
@@ -1283,34 +1417,6 @@ func _settings_line(parent: Control, label_text: String, pos: Vector2, value: St
 	input.add_theme_color_override("caret_color", Color("fff2a1"))
 	parent.add_child(input)
 	return input
-
-
-func _settings_reward_picker(parent: Control, pos: Vector2, selected_type: int) -> OptionButton:
-	var label := _paper_label("通关掉落新卡", pos, Vector2(210, 25), 16, Color("e9d28a"))
-	parent.add_child(label)
-	var picker := OptionButton.new()
-	picker.position = pos + Vector2(0, 27)
-	picker.size = Vector2(210, 34)
-	picker.add_theme_font_override("font", WORKSHOP_FONT)
-	picker.add_item("无卡牌掉落")
-	picker.set_item_metadata(0, -1)
-	var plant_types: Array = AllCards.all_plant_card_prefabs.keys()
-	plant_types.sort()
-	for value in plant_types:
-		var plant_type := int(value)
-		if plant_type <= 0 or plant_type >= 1000 or not CharacterRegistry.PlantInfo.has(plant_type):
-			continue
-		var plant_name := str(Global.character_registry.get_plant_info(
-			plant_type as CharacterRegistry.PlantType,
-			CharacterRegistry.PlantInfoAttribute.PlantName
-		))
-		picker.add_item("%s（%d）" % [plant_name, plant_type])
-		var item_index := picker.item_count - 1
-		picker.set_item_metadata(item_index, plant_type)
-		if plant_type == selected_type:
-			picker.select(item_index)
-	parent.add_child(picker)
-	return picker
 
 
 func _settings_spin(parent: Control, label_text: String, pos: Vector2, min_value: float, max_value: float, value: float, step: float) -> SpinBox:
@@ -1521,18 +1627,19 @@ func _refresh_zombie_catalog() -> void:
 		elif Global.level_workshop_edit_mode == "chessboard" and zombie_id >= 500 and zombie_id < 1000:
 			zombie_card_order.append(zombie_id)
 	plant_card_prefabs = all_cards.all_plant_card_prefabs
-	if Global.level_workshop_edit_mode == "chessboard":
-		for plant_type in plant_card_prefabs.keys():
-			var plant_id := int(plant_type)
-			if plant_id >= 500 and plant_id < 1000:
-				reward_card_order.append({"id": plant_id, "is_plant": true})
+	for plant_type in plant_card_prefabs.keys():
+		var plant_id := int(plant_type)
+		if Global.level_workshop_edit_mode == "chessboard" and plant_id >= 500 and plant_id < 1000:
+			reward_card_order.append({"id": plant_id, "is_plant": true})
+		elif Global.level_workshop_edit_mode == "normal" and plant_id > 0 and plant_id < 1000 \
+		and CharacterRegistry.PlantInfo.has(plant_id):
+			reward_card_order.append({"id": plant_id, "is_plant": true})
 	zombie_card_order.sort_custom(func(left, right):
 		return int(all_cards.zombie_card_ids.get(left, 999999)) < int(all_cards.zombie_card_ids.get(right, 999999))
 	)
 	reward_card_order.sort_custom(func(left: Dictionary, right: Dictionary):
-		if bool(left["is_plant"]) != bool(right["is_plant"]):
-			return bool(left["is_plant"])
-		return int(left["id"]) < int(right["id"])
+		return int(all_cards.plant_card_ids.get(int(left["id"]), 999999)) \
+			< int(all_cards.plant_card_ids.get(int(right["id"]), 999999))
 	)
 	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
 	if registry != null:
@@ -1635,6 +1742,7 @@ func _undo() -> void:
 	selected_zombie_key = ""
 	DraftStore.save_autosave(level)
 	_refresh_wave()
+	_refresh_selected_plant_tray()
 	status_label.text = "已撤销"
 
 
@@ -1649,10 +1757,14 @@ func _redo() -> void:
 	selected_zombie_key = ""
 	DraftStore.save_autosave(level)
 	_refresh_wave()
+	_refresh_selected_plant_tray()
 	status_label.text = "已重做"
 
 
 func _open_save_dialog() -> void:
+	if FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		_open_save_formal_dialog()
+		return
 	var dialog := ConfirmationDialog.new()
 	dialog.title = "保存自定义关卡"
 	dialog.ok_button_text = "保存"
@@ -1677,6 +1789,29 @@ func _open_save_dialog() -> void:
 	dialog.popup_centered()
 	name_input.grab_focus()
 	name_input.select_all()
+
+
+func _open_save_formal_dialog() -> void:
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "保存关卡模板"
+	dialog.ok_button_text = "保存并覆盖"
+	dialog.cancel_button_text = "取消"
+	dialog.dialog_text = "确认保存对 %s 的修改吗？\n这会覆盖该关卡模板在开发者模式中的版本，普通模式不受影响。" % formal_preset_id
+	dialog.min_size = Vector2i(520, 180)
+	dialog.confirmed.connect(func():
+		_recalculate_stage_times()
+		level["formalPresetId"] = formal_preset_id
+		var result := FormalLevelStore.save_developer_level(level, formal_preset_id)
+		if result["ok"]:
+			DraftStore.save_autosave(level)
+			status_label.text = "已保存并覆盖关卡模板 %s；普通模式不受影响。" % formal_preset_id
+		else:
+			status_label.text = "保存关卡模板失败：%s" % str(result["error"])
+		dialog.queue_free()
+	)
+	add_child(dialog)
+	_force_font_recursive(dialog)
+	dialog.popup_centered(Vector2i(520, 180))
 
 
 func _save_draft() -> void:
@@ -1730,10 +1865,84 @@ func _clear(parent: Node) -> void:
 		child.queue_free()
 
 
+func _open_workshop_menu() -> void:
+	_end_timeline_mode()
+	DraftStore.save_autosave(level)
+	if not is_instance_valid(workshop_menu_dialog):
+		_build_workshop_main_game_menu()
+	if is_instance_valid(workshop_menu_dialog):
+		workshop_menu_dialog.appear_menu()
+
+
+func _build_workshop_main_game_menu() -> void:
+	## 从主游戏权威场景取出菜单本体，保证纹理、字号、滑轨和各功能按钮完全一致。
+	var main_game_scene := load("res://scenes/main/MainGame00Base.tscn") as PackedScene
+	if main_game_scene == null:
+		return
+	var template_root := main_game_scene.instantiate()
+	var template_all_ui := template_root.get_node_or_null("CanvasLayerUI/All_UI")
+	if template_all_ui == null:
+		template_root.free()
+		return
+	workshop_menu_fallback_dialog = template_all_ui.get_node_or_null("Dialog") as Dialog
+	workshop_menu_dialog = template_all_ui.get_node_or_null("MainGameMenuOptionDialog") as MainGameMenuOptionDialog
+	if not is_instance_valid(workshop_menu_dialog) or not is_instance_valid(workshop_menu_fallback_dialog):
+		template_root.free()
+		workshop_menu_dialog = null
+		workshop_menu_fallback_dialog = null
+		return
+	template_all_ui.remove_child(workshop_menu_fallback_dialog)
+	template_all_ui.remove_child(workshop_menu_dialog)
+	template_root.free()
+	workshop_menu_host = Control.new()
+	workshop_menu_host.name = "WorkshopMainGameMenu"
+	workshop_menu_host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	workshop_menu_host.process_mode = Node.PROCESS_MODE_ALWAYS
+	workshop_menu_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	workshop_menu_host.theme = load("res://data/PVZ_theme.tres") as Theme
+	workshop_menu_fallback_dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	workshop_menu_dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	workshop_menu_host.add_child(workshop_menu_fallback_dialog)
+	workshop_menu_host.add_child(workshop_menu_dialog)
+	_assign_runtime_owner(workshop_menu_fallback_dialog, workshop_menu_host)
+	_assign_runtime_owner(workshop_menu_dialog, workshop_menu_host)
+	add_child(workshop_menu_host)
+	var return_label := workshop_menu_dialog.get_node_or_null("Return/Label") as Label
+	if return_label != null:
+		return_label.text = "返回工坊"
+	var restart_button := workshop_menu_dialog.get_node_or_null("Option/Button2") as BaseButton
+	if restart_button != null:
+		for connection in restart_button.pressed.get_connections():
+			restart_button.pressed.disconnect(connection.callable)
+		restart_button.pressed.connect(_restart_workshop)
+	var main_menu_button := workshop_menu_dialog.get_node_or_null("Option/Button3") as BaseButton
+	if main_menu_button != null:
+		for connection in main_menu_button.pressed.get_connections():
+			main_menu_button.pressed.disconnect(connection.callable)
+		main_menu_button.pressed.connect(_back_to_menu)
+
+
+func _assign_runtime_owner(node: Node, scene_owner: Node) -> void:
+	node.owner = scene_owner
+	for child in node.get_children():
+		_assign_runtime_owner(child, scene_owner)
+
+
+func _restart_workshop() -> void:
+	DraftStore.save_autosave(level)
+	TreePauseManager.end_tree_pause_clear_all_pause_factors()
+	Global.time_scale = 1.0
+	Engine.time_scale = Global.time_scale
+	get_tree().reload_current_scene()
+
+
 func _back_to_menu() -> void:
 	_end_timeline_mode()
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()
+	TreePauseManager.end_tree_pause_clear_all_pause_factors()
+	Global.time_scale = 1.0
+	Engine.time_scale = Global.time_scale
 	var global := get_node("/root/Global")
 	global.developer_level_adjustments_active = false
 	global.return_to_developer_mode = true

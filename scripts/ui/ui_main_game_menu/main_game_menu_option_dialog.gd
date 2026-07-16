@@ -84,6 +84,7 @@ func return_main_menu():
 	if Global.developer_level_adjustments_active:
 		Global.return_to_developer_mode = true
 	Global.developer_level_adjustments_active = false
+	Global.developer_workshop_level_source = {}
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])
 
 ## 功能未实现

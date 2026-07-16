@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://cqdma5cmebu84" path="res://assets/image/Almanac/Almanac_CloseButton.png" id="7_close"]
 [ext_resource type="Texture2D" uid="uid://gm7pwyw5fmdc" path="res://assets/image/Almanac/Almanac_CloseButtonHighlight.png" id="8_close_hover"]
 [ext_resource type="Texture2D" uid="uid://blge6mwmus5fv" path="res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2.png" id="9_dialog_button"]
+[ext_resource type="Theme" uid="uid://em12la0rqibq" path="res://data/PVZ_theme.tres" id="10_pvz_theme"]
+[ext_resource type="Script" uid="uid://3j46ottso760" path="res://scripts/ui/main_game_ui/main_game_menu_button.gd" id="11_menu_button"]
 
 [node name="LevelWorkshop" type="Control" unique_id=738736573]
 layout_mode = 3
@@ -229,37 +231,13 @@ offset_top = 558.0
 offset_right = 482.0
 offset_bottom = 596.0
 
-[node name="BackButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=252548313]
-layout_mode = 0
-offset_right = 110.0
-offset_bottom = 38.0
-texture_normal = ExtResource("7_close")
-texture_pressed = ExtResource("8_close_hover")
-texture_hover = ExtResource("8_close_hover")
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/BackButton" unique_id=2115900844]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("4_font")
-theme_override_font_sizes/font_size = 17
-text = "返回"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="SettingsButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=1055685604]
 layout_mode = 0
-offset_left = 118.0
-offset_right = 228.0
+offset_right = 142.0
 offset_bottom = 38.0
-texture_normal = ExtResource("7_close")
-texture_pressed = ExtResource("8_close_hover")
-texture_hover = ExtResource("8_close_hover")
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -270,44 +248,46 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 17
 text = "设置"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlaytestButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=338472046]
+[node name="LoadButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions"]
 layout_mode = 0
-offset_left = 236.0
-offset_right = 346.0
+offset_left = 161.0
+offset_right = 303.0
 offset_bottom = 38.0
-texture_normal = ExtResource("7_close")
-texture_pressed = ExtResource("8_close_hover")
-texture_hover = ExtResource("8_close_hover")
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/PlaytestButton" unique_id=2107615440]
+[node name="Label" type="Label" parent="AlmanacDrawer/Content/BottomActions/LoadButton"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 17
-text = "试玩"
+text = "载入关卡"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SaveButton" type="TextureButton" parent="AlmanacDrawer/Content/BottomActions" unique_id=817281907]
 layout_mode = 0
-offset_left = 354.0
+offset_left = 322.0
 offset_right = 464.0
 offset_bottom = 38.0
-texture_normal = ExtResource("7_close")
-texture_pressed = ExtResource("8_close_hover")
-texture_hover = ExtResource("8_close_hover")
+texture_normal = ExtResource("5_page")
+texture_pressed = ExtResource("6_page_hover")
+texture_hover = ExtResource("6_page_hover")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -318,9 +298,86 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.172549, 0.109804, 0.0431373, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 17
 text = "保存"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TopActions" type="Control" parent="."]
+z_index = 200
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PlaytestButton" type="BaseButton" parent="TopActions" unique_id=338472046]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -212.0
+offset_right = -108.0
+offset_bottom = 38.0
+grow_horizontal = 0
+theme = ExtResource("10_pvz_theme")
+script = ExtResource("11_menu_button")
+
+[node name="Panel" type="Panel" parent="TopActions/PlaytestButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"PanelButtonBG"
+
+[node name="Label" type="Label" parent="TopActions/PlaytestButton" unique_id=2107615440]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "试玩"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuButton" type="BaseButton" parent="TopActions" unique_id=252548313]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -104.0
+offset_right = 0.0
+offset_bottom = 38.0
+grow_horizontal = 0
+theme = ExtResource("10_pvz_theme")
+script = ExtResource("11_menu_button")
+
+[node name="Panel" type="Panel" parent="TopActions/MenuButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"PanelButtonBG"
+
+[node name="Label" type="Label" parent="TopActions/MenuButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "菜单"
 horizontal_alignment = 1
 vertical_alignment = 1
 

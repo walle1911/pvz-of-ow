@@ -342,6 +342,7 @@ script_list_meta = {
 "res://scripts/manager/zombie_manager/zombie_manager.gd": [-1, -1],
 "res://scripts/resources/crazy_dave_dialog_detail_resource.gd": [-1, -1],
 "res://scripts/resources/crazy_dave_dialog_resource.gd": [-1, -1],
+"res://scripts/resources/developer_package_store.gd": [-1, -1],
 "res://scripts/resources/level/adventure_level_presets.gd": [-1, -1],
 "res://scripts/resources/level/adventure_level_store.gd": [-1, -1],
 "res://scripts/resources/level/level_custom_runtime.gd": [-1, -1],
