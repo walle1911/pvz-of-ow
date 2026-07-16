@@ -164,15 +164,6 @@ func _ready() -> void:
 	if is_mini_zombie:
 		update_mini_zombie()
 	super()
-	##INFO: 检测是否有头节点
-	var is_have_head:=false
-	for head1_path:NodePath in head1_path_candidate:
-		if has_node(head1_path):
-			head_node = get_node(head1_path)
-			is_have_head = true
-			break
-	if not is_have_head:
-		printerr(name, "没有获取头节点")
 
 ## 初始化正常出战角色
 func ready_norm():

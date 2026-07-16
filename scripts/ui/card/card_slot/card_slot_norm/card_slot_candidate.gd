@@ -131,25 +131,28 @@ func _add_zombie_card_page(cards_parent_node:GridContainer):
 func _add_card_page(page_template:GridContainer, ordered_cards:Array[Card], card_candidate_containers:Dictionary[int, CardCandidateContainer]):
 	if ordered_cards.is_empty():
 		return
+	var cards_per_page := page_template.get_child_count()
+	if cards_per_page <= 0:
+		return
+	var page_start := 0
+	while page_start < ordered_cards.size():
+		var new_grid_container:GridContainer = page_template.duplicate()
+		all_card_page.add_child(new_grid_container)
+		all_card_page_array.append(new_grid_container)
+		new_grid_container.visible = false
 
-	var new_grid_container:GridContainer = page_template.duplicate()
-	all_card_page.add_child(new_grid_container)
-	all_card_page_array.append(new_grid_container)
-	new_grid_container.visible = false
+		var all_card_selected_placeholder:Array = new_grid_container.get_children()
+		var cards_on_page := mini(cards_per_page, ordered_cards.size() - page_start)
+		for page_card_i:int in cards_on_page:
+			var curr_card:Card = ordered_cards[page_start + page_card_i]
+			var new_card:Card = curr_card.duplicate()
+			var card_candidate_container:CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
 
-	var all_card_selected_placeholder:Array = new_grid_container.get_children()
-	for page_card_i:int in min(ordered_cards.size(), all_card_selected_placeholder.size()):
-		var curr_card:Card = ordered_cards[page_card_i]
-		var new_card:Card = curr_card.duplicate()
-		var card_candidate_container:CardCandidateContainer = SceneRegistry.CARD_CANDIDATE_CONTAINER.instantiate()
-
-		card_candidate_container.init_card_in_seed_chooser(new_card)
-		all_card_selected_placeholder[page_card_i].add_child(card_candidate_container)
-		card_candidate_containers[curr_card.card_id] = card_candidate_container
-		card_candidate_container.visible = true
-
-	if ordered_cards.size() > all_card_selected_placeholder.size():
-		push_warning("选卡页面容量不足，已跳过 %s 张卡片" % (ordered_cards.size() - all_card_selected_placeholder.size()))
+			card_candidate_container.init_card_in_seed_chooser(new_card)
+			all_card_selected_placeholder[page_card_i].add_child(card_candidate_container)
+			card_candidate_containers[curr_card.card_id] = card_candidate_container
+			card_candidate_container.visible = true
+		page_start += cards_on_page
 
 ## 初始化生成模仿者待选卡槽
 func _init_card_slot_candidate_imitater():

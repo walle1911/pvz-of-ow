@@ -88,6 +88,8 @@ var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []
 var adventure_card_lock_active := false
+## 通关后掉落并解锁的新卡；-1 表示本关没有卡牌奖励。
+var reward_plant_type := -1
 var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
 var sod_rollout_rows := 0

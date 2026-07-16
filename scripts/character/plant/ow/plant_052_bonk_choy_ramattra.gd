@@ -103,7 +103,8 @@ func ready_norm() -> void:
 
 
 func ready_show() -> void:
-	_ensure_frames_loaded()
+	## 选关页和图鉴展示只需 idle，不应为未提供的 watered 帧反复报错。
+	_ensure_frames_loaded([STATE_IDLE])
 	super()
 	detect_component.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
 	_play_state_loop(STATE_IDLE)
@@ -166,11 +167,11 @@ func satisfy_need(item: GardenManager.E_NeedItem):
 		_play_state_once(STATE_WATERED)
 
 
-func _ensure_frames_loaded():
+func _ensure_frames_loaded(states: Array = FRAME_COUNTS.keys()):
 	if _is_frames_loaded:
 		return
 
-	for state in FRAME_COUNTS.keys():
+	for state in states:
 		var textures := []
 		var frame_count: int = FRAME_COUNTS[state]
 		for frame_number in range(frame_count):

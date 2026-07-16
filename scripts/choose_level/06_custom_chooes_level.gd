@@ -3,7 +3,6 @@ class_name CustomChooseLevel
 
 const CHOOSE_LEVEL_BUTTON_CUSTOMIZE = preload("res://scenes/choose_level/choose_level_button_customize.tscn")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
-const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 
 @onready var panel_help: Panel = $PanelHelp
 @onready var grid_container: GridContainer = $AllPage/GridContainer

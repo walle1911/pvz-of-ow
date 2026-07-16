@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" path="res://assets/reanim/Zombie_imp_ashe_arm1.png" id="13_ashe_imp_arm"]
 [ext_resource type="Texture2D" path="res://assets/reanim/Zombie_imp_ashe_innerleg_upper.png" id="14_ashe_imp_innerleg"]
 [ext_resource type="Texture2D" path="res://assets/reanim/gargantuar_ashe_body2.png" id="15_ashe_imp_body2"]
-[ext_resource type="Texture2D" path="res://assets/reanim/gargantuar_ashe_clouth.png" id="16_ashe_imp_clouth"]
+[ext_resource type="Texture2D" path="res://assets/reanim/gargantuar_ashe_cloth.png" id="16_ashe_imp_clouth"]
 [ext_resource type="Texture2D" uid="uid://da3mvpr7yt4yo" path="res://assets/reanim/gargantuar_ashe_hat.png" id="17_w2mpa"]
 [ext_resource type="Texture2D" path="res://assets/reanim/Zombie_imp_ashe_outerleg_lower.png" id="18_ashe_imp_outerleg_lower"]
 [ext_resource type="Texture2D" path="res://assets/reanim/Zombie_imp_ashe_outerleg_upper.png" id="19_ashe_imp_outerleg_upper"]
@@ -962,6 +962,7 @@ nodes/TimeScale/position = Vector2(580, 160)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"]
 
 [node name="Zombie025GargantuarBob" unique_id=955882055 node_paths=PackedStringArray("body_imp") instance=ExtResource("1_jh7yf")]
+scale = Vector2(1.25, 1.25)
 script = ExtResource("2_788gv")
 body_imp = [NodePath("Body/BodyCorrect/Imp1"), NodePath("Body/BodyCorrect/Imp2"), NodePath("CharredComponent/ZombieCharred/CharredCorrect/Imp1"), NodePath("CharredComponent/ZombieCharred/CharredCorrect/Imp2")]
 MinXThrowGargantuar = 400.0
@@ -1264,11 +1265,11 @@ centered = false
 [node name="ZombieDeathBomb" parent="Body" index="2" unique_id=2147080158 instance=ExtResource("28_dyoa7")]
 
 [node name="HpStageChangeComponent" parent="." index="3"]
-boundary_value_hp = Array[int]([2000, 1000, 1])
+boundary_value_hp = Array[int]([6000, 3000, 1])
 body_change = Array[ExtResource("28_2cj4s")]([SubResource("Resource_qmb45"), SubResource("Resource_ycoi7"), SubResource("Resource_r13f2")])
 
 [node name="HpComponent" parent="." index="4"]
-max_hp = 3000
+max_hp = 9000
 
 [node name="VBoxContainer" parent="HpComponent" index="0"]
 offset_left = -18.0
@@ -1328,6 +1329,7 @@ libraries/ = SubResource("AnimationLibrary_fuck")
 
 [node name="AttackComponent" parent="." index="6"]
 script = ExtResource("28_f5ii0")
+smash_attack_value = 3600
 
 [node name="DetectComponent" parent="AttackComponent" index="0"]
 is_detect_items = 3

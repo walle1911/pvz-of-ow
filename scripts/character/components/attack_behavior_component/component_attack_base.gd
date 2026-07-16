@@ -4,7 +4,8 @@ extends ComponentNormBase
 ## 列外:全局攻击组件同时使用全局检测组件
 class_name AttackComponentBase
 
-@onready var detect_component: DetectComponent = $DetectComponent
+## 远程特化组件会在 _ready() 中改绑 DetectComponentBullet，因此这里不能用强制 $DetectComponent 提前报错。
+@onready var detect_component: DetectComponent = get_node_or_null("DetectComponent") as DetectComponent
 
 ### 是否正在攻击
 #var is_attack := false

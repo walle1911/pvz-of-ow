@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://mcad1jl5d1ui"]
+[gd_scene load_steps=55 format=3 uid="uid://mcad1jl5d1ui"]
 
 [ext_resource type="Texture2D" uid="uid://bwevuvs5nnwfx" path="res://assets/image/ui/ui_challenge/Challenge_Background.jpg" id="1_77tr5"]
 [ext_resource type="Theme" uid="uid://cx302yraw066y" path="res://data/ChooesLevel.tres" id="1_dw7cd"]
@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://c82uuprowr5d" path="res://assets/image/ui/ui_level/Almanac_CloseButtonHighlight.png" id="12_7gy53"]
 [ext_resource type="Resource" uid="uid://r8eb38jjjno7" path="res://resources/level_date_resource/mode_adventure/adventure_02_night.tres" id="12_43bok"]
 [ext_resource type="BitMap" uid="uid://bc7yq02xscrlr" path="res://assets/image/ui/ui_level/Almanac_CloseButton_Mask.png" id="13_c1hwb"]
+[ext_resource type="Texture2D" uid="uid://om7aubyyu3le" path="res://assets/image/ui/ui_level/SeedChooser_Button2.png" id="13_page_button"]
+[ext_resource type="Texture2D" uid="uid://cx854vkq3n8gs" path="res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png" id="14_page_button_glow"]
 [ext_resource type="Texture2D" uid="uid://qtifu6lsmq6x" path="res://assets/reanim/hammer_1.png" id="13_ddvl6"]
 [ext_resource type="Texture2D" uid="uid://dweon5ml8otw5" path="res://assets/reanim/Hammer_2.png" id="14_a108d"]
 [ext_resource type="PackedScene" uid="uid://w2cplfosy68e" path="res://scenes/character/plant/plant_516_lily_pad.tscn" id="14_dw7cd"]
@@ -775,7 +777,88 @@ text = "主菜单"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="LastWorld" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -32.0
+offset_right = -49.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("13_page_button")
+texture_pressed = ExtResource("14_page_button_glow")
+texture_hover = ExtResource("14_page_button_glow")
+texture_click_mask = ExtResource("13_c1hwb")
+
+[node name="Label" type="Label" parent="LastWorld"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+text = "上一世界"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextWorld" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_top = -31.0
+offset_right = 165.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("13_page_button")
+texture_pressed = ExtResource("14_page_button_glow")
+texture_hover = ExtResource("14_page_button_glow")
+texture_click_mask = ExtResource("13_c1hwb")
+
+[node name="Label" type="Label" parent="NextWorld"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 13
+text = "下一世界"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelPage" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 55.0
+offset_top = -30.0
+offset_right = 122.0
+offset_bottom = -10.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "当前页数:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="pressed" from="MainMenu" to="." method="back_start_menu"]
+[connection signal="pressed" from="LastWorld" to="." method="_on_last_pressed"]
+[connection signal="pressed" from="NextWorld" to="." method="_on_next_pressed"]
 
 [editable path="AllPage/GridContainer/ChooseLevelButton"]
 [editable path="AllPage/GridContainer/ChooseLevelButton2"]

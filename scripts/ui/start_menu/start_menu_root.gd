@@ -180,15 +180,19 @@ func _on_button_1_pressed() -> void:
 	if developer_mode:
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
 		return
-	mode_dialog_context = "adventure"
-	adventure_mode_dialog.configure("请选择冒险模式", "普通模式", "棋盘格模式")
-	adventure_mode_dialog.appear()
+	Global.level_workshop_selecting_formal_level = false
+	Global.level_workshop_selected_preset_id = ""
+	Global.adventure_mainline_mode = "normal"
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
 func _start_normal_adventure() -> void:
 	if mode_dialog_context == "workshop":
 		Global.level_workshop_edit_mode = "normal"
-		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+		Global.adventure_mainline_mode = "normal"
+		Global.level_workshop_selecting_formal_level = true
+		Global.level_workshop_selected_preset_id = ""
+		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 		return
 	Global.adventure_mainline_mode = "normal"
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
@@ -197,6 +201,8 @@ func _start_normal_adventure() -> void:
 func _start_chessboard_adventure() -> void:
 	if mode_dialog_context == "workshop":
 		Global.level_workshop_edit_mode = "chessboard"
+		Global.level_workshop_selecting_formal_level = false
+		Global.level_workshop_selected_preset_id = ""
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 		return
 	Global.adventure_mainline_mode = "chessboard"

@@ -58,8 +58,8 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		var zombie_type := _zombie_type_id(event.get("zombieType", "500"))
 		if not CharacterRegistry.ZombieInfo.has(zombie_type):
 			return _failure(level, "僵尸类型 %d 未在角色注册表中登记" % zombie_type)
-		if workshop_mode == "normal" and (zombie_type <= 0 or zombie_type >= 500):
-			return _failure(level, "普通模式只能刷新 OW 改版僵尸，发现类型 %d" % zombie_type)
+		if workshop_mode == "normal" and zombie_type <= 0:
+			return _failure(level, "普通模式发现无效僵尸类型 %d" % zombie_type)
 		if workshop_mode == "chessboard" and (zombie_type < 500 or zombie_type >= 1000):
 			return _failure(level, "棋盘格模式只能刷新原版僵尸，发现类型 %d" % zombie_type)
 		var stage_index := int(stage_indexes.get(str(event.get("waveId", "")), 0))
@@ -101,15 +101,18 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.custom_health_threshold_range = _vector2_from_array(level.get("healthThresholdRange", [0.5, 0.67]), Vector2(0.5, 0.67))
 	game_para.custom_huge_wave_warning_delay = float(level.get("hugeWaveWarningDelay", 6.0))
 	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false))
+	game_para.reward_plant_type = int(level.get("rewardPlant", -1))
 	if game_para.adventure_card_lock_active:
 		for value in level.get("availablePlants", []):
 			var plant_type := int(value) as CharacterRegistry.PlantType
-			if CharacterRegistry.PlantInfo.has(plant_type):
-				game_para.available_plant_types.append(plant_type)
+			if not CharacterRegistry.PlantInfo.has(plant_type):
+				continue
+			game_para.available_plant_types.append(plant_type)
 		game_para.max_choosed_card_num = maxi(1, mini(10, game_para.available_plant_types.size()))
-	## 两条主线都没有墓碑，避免触发尚未制作的 OW 墓碑玩法。
-	game_para.is_have_tombston = false
-	game_para.init_tombstone_num = 0
+	var environment: Dictionary = level.get("environmentConfig", {})
+	game_para.init_tombstone_num = maxi(0, int(environment.get("initialTombstones", 0)))
+	game_para.is_have_tombston = bool(environment.get("tombstoneSpawns", false))
+	game_para.is_bungi = bool(environment.get("bungee", false))
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
 	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}

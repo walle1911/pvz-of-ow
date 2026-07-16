@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://dv3jkvtrar62p"]
+[gd_scene load_steps=43 format=3 uid="uid://dv3jkvtrar62p"]
 
 [ext_resource type="Theme" uid="uid://cx302yraw066y" path="res://data/ChooesLevel.tres" id="1_c1y5h"]
 [ext_resource type="Script" uid="uid://jru6xfv7g4f1" path="res://scripts/choose_level/choose_level.gd" id="2_memm2"]
@@ -33,9 +33,12 @@
 [ext_resource type="Texture2D" uid="uid://bj57iq2dgnb0g" path="res://assets/image/Almanac/Almanac_GroundRoof.jpg" id="36_6ic1y"]
 [ext_resource type="Resource" uid="uid://dm2i8rxcmf8ky" path="res://resources/level_date_resource/mode_survival/survival_flag_15_Roof.tres" id="36_y1t6b"]
 [ext_resource type="PackedScene" uid="uid://g6ybgmhkx6rj" path="res://scenes/character/plant/plant_532_cabbage_pult.tscn" id="37_ttjhx"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_survival/survival_chessboard_01_ten_flags.tres" id="38_chess_flags"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_survival/survival_chessboard_02_ten_rounds.tres" id="39_chess_rounds"]
 [ext_resource type="Texture2D" uid="uid://xc3kqag3vqlq" path="res://assets/image/ui/ui_level/Almanac_CloseButton.png" id="40_mfip2"]
 [ext_resource type="Texture2D" uid="uid://c82uuprowr5d" path="res://assets/image/ui/ui_level/Almanac_CloseButtonHighlight.png" id="41_5u2b0"]
 [ext_resource type="BitMap" uid="uid://bc7yq02xscrlr" path="res://assets/image/ui/ui_level/Almanac_CloseButton_Mask.png" id="42_wgaqh"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_survival/survival_chessboard_03_endless.tres" id="43_chess_endless"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1i0xb"]
 
@@ -107,7 +110,7 @@ offset_bottom = 508.0
 grow_horizontal = 2
 theme_override_constants/h_separation = 49
 theme_override_constants/v_separation = 20
-columns = 5
+columns = 6
 
 [node name="ChooseLevelButton" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
 layout_mode = 2
@@ -318,6 +321,48 @@ texture = ExtResource("36_6ic1y")
 
 [node name="Plant532CabbagePult" parent="AllPage/GridContainer/ChooseLevelButton5/Panel/TextureRect" instance=ExtResource("37_ttjhx")]
 position = Vector2(103.233, 113.353)
+character_init_type = 1
+
+[node name="ChooseLevelButtonChessFlags" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
+layout_mode = 2
+curr_level_data_game_para = ExtResource("38_chess_flags")
+
+[node name="Label" parent="AllPage/GridContainer/ChooseLevelButtonChessFlags/TextureButton" index="0"]
+text = "十旗 棋盘格"
+
+[node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButtonChessFlags"]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -49.0
+offset_top = 2.13101
+offset_right = 46.0
+offset_bottom = 74.131
+grow_horizontal = 2
+pivot_offset = Vector2(41, 33.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1i0xb")
+
+[node name="TextureRect" type="TextureRect" parent="AllPage/GridContainer/ChooseLevelButtonChessFlags/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -55.0
+offset_top = -39.0
+offset_right = 145.0
+offset_bottom = 161.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("7_v10ix")
+
+[node name="Plant500PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButtonChessFlags/Panel/TextureRect" instance=ExtResource("8_nmuw1")]
+position = Vector2(97.5, 115)
 character_init_type = 1
 
 [node name="ChooseLevelButton6" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
@@ -668,6 +713,48 @@ texture = ExtResource("36_6ic1y")
 [node name="Zombie520Bungi" parent="AllPage/GridContainer/ChooseLevelButton10/Panel/TextureRect" instance=ExtResource("31_yp0s4")]
 position = Vector2(99.05, 118.353)
 scale = Vector2(0.6, 0.6)
+character_init_type = 1
+
+[node name="ChooseLevelButtonChessRounds" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
+layout_mode = 2
+curr_level_data_game_para = ExtResource("39_chess_rounds")
+
+[node name="Label" parent="AllPage/GridContainer/ChooseLevelButtonChessRounds/TextureButton" index="0"]
+text = "十轮 棋盘格"
+
+[node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButtonChessRounds"]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -49.0
+offset_top = 2.13101
+offset_right = 46.0
+offset_bottom = 74.131
+grow_horizontal = 2
+pivot_offset = Vector2(41, 33.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1i0xb")
+
+[node name="TextureRect" type="TextureRect" parent="AllPage/GridContainer/ChooseLevelButtonChessRounds/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -55.0
+offset_top = -39.0
+offset_right = 145.0
+offset_bottom = 161.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("7_v10ix")
+
+[node name="Zombie500Norm" parent="AllPage/GridContainer/ChooseLevelButtonChessRounds/Panel/TextureRect" instance=ExtResource("24_j77gj")]
+position = Vector2(100, 118)
 character_init_type = 1
 
 [node name="ChooseLevelButton11" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
@@ -1062,6 +1149,54 @@ node_follow_body_direction = []
 character_init_type = 1
 node2d_detect_in_slope = []
 
+[node name="ChooseLevelButtonChessEndless" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
+layout_mode = 2
+curr_level_data_game_para = ExtResource("43_chess_endless")
+
+[node name="Label" parent="AllPage/GridContainer/ChooseLevelButtonChessEndless/TextureButton" index="0"]
+text = "无尽 棋盘格"
+
+[node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButtonChessEndless"]
+clip_children = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -49.0
+offset_top = 2.13101
+offset_right = 46.0
+offset_bottom = 74.131
+grow_horizontal = 2
+pivot_offset = Vector2(41, 33.5)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1i0xb")
+
+[node name="TextureRect" type="TextureRect" parent="AllPage/GridContainer/ChooseLevelButtonChessEndless/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -55.0
+offset_top = -39.0
+offset_right = 145.0
+offset_bottom = 161.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("7_v10ix")
+
+[node name="Zombie500Norm" parent="AllPage/GridContainer/ChooseLevelButtonChessEndless/Panel/TextureRect" instance=ExtResource("24_j77gj")]
+position = Vector2(112, 119)
+scale = Vector2(0.6, 0.6)
+character_init_type = 1
+
+[node name="Plant500PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButtonChessEndless/Panel/TextureRect" instance=ExtResource("8_nmuw1")]
+position = Vector2(90, 115)
+scale = Vector2(0.6, 0.6)
+character_init_type = 1
+
 [node name="MainMenu" type="TextureButton" parent="."]
 layout_mode = 0
 offset_left = 669.0
@@ -1108,6 +1243,9 @@ vertical_alignment = 1
 [editable path="AllPage/GridContainer/ChooseLevelButton11"]
 [editable path="AllPage/GridContainer/ChooseLevelButton12"]
 [editable path="AllPage/GridContainer/ChooseLevelButton13"]
+[editable path="AllPage/GridContainer/ChooseLevelButtonChessFlags"]
+[editable path="AllPage/GridContainer/ChooseLevelButtonChessRounds"]
+[editable path="AllPage/GridContainer/ChooseLevelButtonChessEndless"]
 [editable path="AllPage/GridContainer/ChooseLevelButton13/Panel/TextureRect/Zombie500Norm"]
 [editable path="AllPage/GridContainer/ChooseLevelButton14"]
 [editable path="AllPage/GridContainer/ChooseLevelButton15"]

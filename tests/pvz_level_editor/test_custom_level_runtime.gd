@@ -4,12 +4,16 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 
 func _ready() -> void:
-	var built := Runtime.build_game_para(Logic.example_level())
+	var example := Logic.example_level()
+	example["rewardPlant"] = int(CharacterRegistry.PlantType.P001PeaShooterSoldier76)
+	var built := Runtime.build_game_para(example)
 	assert(built["ok"], built["error"])
 	var game_para: ResourceLevelData = built["game_para"]
+	assert(game_para.reward_plant_type == int(CharacterRegistry.PlantType.P001PeaShooterSoldier76))
 	assert(game_para.custom_spawn_schedule.size() == 14)
 	assert(game_para.custom_flag_data.size() == 2)
-	assert(game_para.custom_timeline_duration == 56.0)
+	## 示例包含 0-28、28-38、38-66、66-76 四个阶段，完整时间轴应结束于 76 秒。
+	assert(game_para.custom_timeline_duration == 76.0)
 	assert(float(game_para.custom_spawn_schedule[0]["time"]) < float(game_para.custom_spawn_schedule[-1]["time"]))
 	assert(load("res://scenes/main/07LevelWorkshop.tscn") != null)
 	assert(load("res://scenes/main/06CustomChooesLevel.tscn") != null)
@@ -19,7 +23,7 @@ func _ready() -> void:
 	get_tree().root.add_child(start_menu)
 	await get_tree().process_frame
 	assert(start_menu.get_node("BG_Right/Menu/LevelWorkshopButton") is TextureButton)
-	assert(start_menu.get_node("BG_Right/Menu/LevelWorkshopButton/Label").text == "关\n卡\n工\n坊")
+	assert(start_menu.get_node("BG_Right/Menu/LevelWorkshopButton/Label").text == "开\n发\n者\n模\n式")
 	start_menu.queue_free()
 	await get_tree().process_frame
 	var workshop_scene: PackedScene = load("res://scenes/main/07LevelWorkshop.tscn")
@@ -31,7 +35,28 @@ func _ready() -> void:
 	workshop.level = Logic.example_level()
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
-	assert(workshop.zombie_card_order.size() == AllCards.all_zombie_card_prefabs.size())
+	workshop.level["waves"] = [
+		Logic.make_wave("normal_1", "普通波 1", 0.0, 28.0, [], "interval"),
+		Logic.make_wave("normal_2", "普通波 2", 28.0, 28.0, [], "interval"),
+	]
+	workshop.call("_normalize_timeline_structure")
+	assert((workshop.level["waves"] as Array).size() == 2)
+	workshop.level = AdventureLevelPresets.build_level("adventure_1_10")
+	var formal_wave_count := (workshop.level["waves"] as Array).size()
+	workshop.call("_recalculate_stage_times")
+	assert((workshop.level["waves"] as Array).size() == formal_wave_count)
+	workshop.level["waves"] = [Logic.make_wave("only_interval", "无旗帜关卡", 0.0, 28.0, [], "interval")]
+	workshop.call("_insert_flag_in_interval", 0, 0.0)
+	assert((workshop.level["waves"] as Array).size() == 2)
+	assert(workshop.level["waves"][-1]["stageType"] == "flag")
+	workshop.level = Logic.example_level()
+	workshop.selected_wave = 0
+	workshop.call("_refresh_wave")
+	var expected_normal_zombies := AllCards.all_zombie_card_prefabs.keys().filter(func(value):
+		var zombie_id := int(value)
+		return zombie_id > 0 and (zombie_id < 500 or AdventureLevelPresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id))
+	)
+	assert(workshop.zombie_card_order.size() == expected_normal_zombies.size())
 	workshop.call("_create_next_wave")
 	assert((workshop.level["waves"] as Array).size() == 6)
 	assert(workshop.level["waves"][-2]["stageType"] == "interval")
@@ -43,14 +68,29 @@ func _ready() -> void:
 	workshop.level["waves"][-2]["spawnGroups"][0]["count"] = 25
 	workshop.call("_refresh_road_zombies")
 	assert(workshop.preview_zombies.size() == workshop.PREVIEW_MAX_ZOMBIES)
+	var clicked_preview: Node2D = workshop.preview_zombies[5]
+	var untouched_preview: Node2D = workshop.preview_zombies[0]
+	workshop.call("_remove_zombie", str(workshop.level["waves"][-2]["spawnGroups"][0]["zombieType"]), clicked_preview)
+	assert(not workshop.preview_zombies.has(clicked_preview))
+	assert(workshop.preview_zombies.has(untouched_preview))
+	assert(workshop.preview_zombies.size() == workshop.PREVIEW_MAX_ZOMBIES - 1)
+	assert(int(workshop.level["waves"][-2]["spawnGroups"][0]["count"]) == 24)
+	## 两面旗帜之间的波间不能删除；改为删除刚创建的末尾旗帜。
+	workshop.call("_select_stage", (workshop.level["waves"] as Array).size() - 1)
 	workshop.call("_delete_current_stage")
 	assert((workshop.level["waves"] as Array).size() == 5)
 	workshop.queue_free()
 	await get_tree().process_frame
 	game_para.custom_spawn_schedule = [
 		{"time": 0.0, "zombie_type": 500, "lane": 0, "stage_index": 0},
-		{"time": 0.1, "zombie_type": 502, "lane": 3, "stage_index": 1},
+		{"time": 0.1, "zombie_type": 502, "lane": 3, "stage_index": 0},
 	]
+	game_para.custom_stage_schedule = [{
+		"stage_index": 0,
+		"stage_type": "interval",
+		"name": "逐只生成测试",
+		"events": game_para.custom_spawn_schedule.duplicate(true),
+	}]
 	game_para.custom_flag_data = []
 	game_para.custom_timeline_duration = 0.2
 	game_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "runtime_test")
@@ -62,6 +102,15 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert(Global.main_game == main_game)
+	var workshop_return_button := main_game.get_node_or_null("CanvasLayerUI/All_UI/WorkshopReturnButton") as BaseButton
+	assert(workshop_return_button != null)
+	assert((workshop_return_button.get_node("Label") as Label).text == "编辑")
+	assert(workshop_return_button.position.x < (main_game.get_node("CanvasLayerUI/All_UI/MainGameMenuButton") as BaseButton).position.x)
+	var progress_stages: Array[Dictionary] = []
+	for stage_index in 20:
+		progress_stages.append({"stage_index": stage_index, "stage_type": "flag" if stage_index % 10 == 9 else "interval"})
+	var first_flag_progress := float(main_game.zombie_manager.zombie_wave_manager.call("_custom_stage_progress", progress_stages, 9, false))
+	assert(is_equal_approx(first_flag_progress, 9.0 / 19.0))
 	main_game.zombie_manager.zombie_wave_manager.start_custom_timeline()
 	await get_tree().create_timer(0.05, false).timeout
 	assert(main_game.zombie_manager.curr_zombie_num == 1)

@@ -50,9 +50,15 @@ static func formal_level_path(preset_id: String) -> String:
 
 
 static func is_formal_preset_id(preset_id: String) -> bool:
-	if not preset_id.begins_with("adventure_1_") and not preset_id.begins_with("chess_1_"):
+	var parts := preset_id.split("_")
+	if parts.size() != 3 or not str(parts[1]).is_valid_int() or not str(parts[2]).is_valid_int():
 		return false
-	var level_text := preset_id.get_slice("_", preset_id.get_slice_count("_") - 1)
-	if not level_text.is_valid_int():
+	var world := int(parts[1])
+	var level_number := int(parts[2])
+	if level_number < 1 or level_number > 10:
 		return false
-	return int(level_text) >= 1 and int(level_text) <= 10
+	if parts[0] == "adventure":
+		return world >= 1 and world <= 5
+	if parts[0] == "chess":
+		return world == 1
+	return false

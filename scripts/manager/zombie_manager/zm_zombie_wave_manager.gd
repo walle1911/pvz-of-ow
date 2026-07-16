@@ -129,11 +129,17 @@ func start_custom_timeline() -> void:
 		curr_wave = stage_index
 		while flag_index < flags.size() and int(flags[flag_index].get("stage_index", -1)) == stage_index:
 			var flag_data: Dictionary = flags[flag_index]
+			var is_final_flag := flag_index == flags.size() - 1
 			flag_progress_bar.set_progress(stage_progress_start * 100.0, flag_index)
 			if game_para.custom_original_timing:
-				await ui_remind_word.zombie_approach(flag_index == flags.size() - 1, game_para.custom_huge_wave_warning_delay)
+				await ui_remind_word.zombie_approach(is_final_flag, game_para.custom_huge_wave_warning_delay)
 			else:
-				await ui_remind_word.zombie_approach(flag_index == flags.size() - 1)
+				await ui_remind_word.zombie_approach(is_final_flag)
+			## 动态正式关卡也要执行地图原生的大波机制：墓碑出怪、泳池珊瑚和屋顶蹦极。
+			if game_para.is_have_tombston:
+				await call_tombstone_create_zombie()
+			if is_final_flag or zombie_wave_create_manager.zombie_manager.is_bungi:
+				zombie_wave_create_manager.spawn_special_zombie_in_big_wave(is_final_flag)
 			flag_index += 1
 		while true:
 			while event_index < events.size() and float((events[event_index] as Dictionary).get("time", 0.0)) <= elapsed:
@@ -173,15 +179,11 @@ func _on_custom_stage_hp_loss(loss_health: int, stage_index: int) -> void:
 
 
 func _custom_stage_progress(stages: Array[Dictionary], stage_position: int, include_current_interval: bool) -> float:
-	var total_intervals := 0
-	var completed_intervals := 0
-	for index in stages.size():
-		var is_interval := str((stages[index] as Dictionary).get("stage_type", "flag")) == "interval"
-		if is_interval:
-			total_intervals += 1
-			if index < stage_position or include_current_interval and index == stage_position:
-				completed_intervals += 1
-	return float(completed_intervals) / float(maxi(1, total_intervals))
+	## 与正式波次进度条一致：普通波、旗前波和旗帜波都占一个波次位置。
+	## 最后一波开始时小僵尸头到达终点，与 set_progress_bar() 的正式公式相同。
+	var last_stage_index := maxi(1, stages.size() - 1)
+	var progress_index := stage_position + (1 if include_current_interval else 0)
+	return clampf(float(progress_index) / float(last_stage_index), 0.0, 1.0)
 
 ## 开始刷新下一波,发射刷新下一波信号
 func start_next_wave() -> void:

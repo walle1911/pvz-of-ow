@@ -282,8 +282,12 @@ func _on_cell_plant_created(_cell: PlantCell, _plant_type: CharacterRegistry.Pla
 
 
 func _awaken_night_plant_in_cell(cell: PlantCell) -> void:
-	for plant: Plant000Base in cell.plant_in_cell.values():
-		if is_instance_valid(plant) and plant.is_sleep_in_day and is_instance_valid(plant.sleep_component):
+	for plant_value in cell.plant_in_cell.values():
+		## plant_in_cell 的释放信号可能比翻地回调晚一帧，先校验原始 Variant，避免把悬空引用赋给强类型变量。
+		if not is_instance_valid(plant_value) or not plant_value is Plant000Base:
+			continue
+		var plant := plant_value as Plant000Base
+		if plant.is_sleep_in_day and is_instance_valid(plant.sleep_component):
 			plant.sleep_component.end_sleep()
 
 

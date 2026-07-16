@@ -67,6 +67,8 @@ var marker_2d_sun_target: Marker2D
 @onready var suns: Node2D = %Suns
 
 @onready var coin_bank_label: CoinBankLabel = %CoinBankLabel
+@onready var main_game_menu_button: BaseButton = %MainGameMenuButton
+var workshop_return_button: BaseButton
 ## 卡槽
 @onready var card_slot_root: CardSlotRoot = %CardSlotRoot
 ## 僵尸进家panel
@@ -195,6 +197,7 @@ func _exit_tree() -> void:
 func _ready() -> void:
 	apply_test_display_overrides()
 	game_para.init_para()
+	_setup_workshop_return_button()
 	## 多轮游戏并且有存档
 	is_save_game_data_on_init = game_para.game_round != 1 and game_para.save_game_data_main_game != null
 
@@ -284,6 +287,35 @@ func signal_connect():
 		for ui_node:Control in node_mouse_appear_have_hammer:
 			ui_node.mouse_entered.connect(mouse_appear_have_hammer)
 			ui_node.mouse_exited.connect(mouse_disappear_have_hammer)
+
+
+func _setup_workshop_return_button() -> void:
+	if game_para.game_mode != MainSceneRegistry.MainScenes.LevelWorkshop:
+		return
+	## 复制菜单键的完整样式、脚本和按压动画，但不复制它原有的“打开菜单”信号。
+	## Node.DUPLICATE_SIGNALS = 1，因此使用 14 保留组、脚本和实例化信息。
+	workshop_return_button = main_game_menu_button.duplicate(14) as BaseButton
+	workshop_return_button.name = "WorkshopReturnButton"
+	workshop_return_button.unique_name_in_owner = false
+	main_game_menu_button.get_parent().add_child(workshop_return_button)
+	workshop_return_button.position.x -= 108.0
+	workshop_return_button.tooltip_text = "返回关卡工坊编辑"
+	var label := workshop_return_button.get_node_or_null("Label") as Label
+	if label != null:
+		label.text = "编辑"
+	workshop_return_button.pressed.connect(_return_to_level_workshop)
+	node_mouse_appear_have_hammer.append(workshop_return_button)
+
+
+func _return_to_level_workshop() -> void:
+	if game_para.game_mode != MainSceneRegistry.MainScenes.LevelWorkshop:
+		return
+	EventBus.push_event("change_is_mouse_visibel_on_hammer", true)
+	TreePauseManager.end_tree_pause_clear_all_pause_factors()
+	Global.time_scale = 1.0
+	Engine.time_scale = Global.time_scale
+	Global.developer_level_adjustments_active = false
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 
 ## 初始化游戏bgm
 func _init_game_BGM():
@@ -599,6 +631,11 @@ func update_level_state_data_success():
 	## 更新全局关卡数据
 	var curr_level_state_data:Dictionary = Global.global_game_state.curr_all_level_state_data.get(game_para.save_game_name, {})
 	curr_level_state_data["IsSuccess"] = true
+	var reward_plant := int(game_para.reward_plant_type)
+	if reward_plant >= 0:
+		curr_level_state_data["RewardPlant"] = reward_plant
+		if not Global.global_game_state.curr_plant.has(reward_plant):
+			Global.global_game_state.curr_plant.append(reward_plant as CharacterRegistry.PlantType)
 	Global.global_game_state.curr_all_level_state_data[game_para.save_game_name] = curr_level_state_data
 	Global.save_service.save_now()
 

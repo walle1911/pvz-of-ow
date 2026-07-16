@@ -108,17 +108,22 @@ func _ready() -> void:
 	_refresh_zombie_catalog()
 	_build_scene()
 	var active_mode := str(Global.level_workshop_edit_mode)
-	var default_preset_id := "chess_1_1" if active_mode == "chessboard" else "adventure_1_1"
+	var selected_preset_id := str(Global.level_workshop_selected_preset_id)
+	var default_preset_id := selected_preset_id if not selected_preset_id.is_empty() else ("chess_1_1" if active_mode == "chessboard" else "adventure_1_1")
 	var default_level := AdventurePresets.build_level(default_preset_id)
 	if not default_level.is_empty():
 		level = default_level
 		formal_preset_id = default_preset_id
 	var recovered := DraftStore.load_autosave()
-	if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
+	if selected_preset_id.is_empty() and recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
 		level = recovered["level"]
 		formal_preset_id = str(level.get("formalPresetId", ""))
 		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
+	if not selected_preset_id.is_empty():
+		level["formalPresetId"] = selected_preset_id
+		level["id"] = "%s_edit" % selected_preset_id
+		Global.level_workshop_selected_preset_id = ""
 	level["workshopMode"] = active_mode
 	if active_mode == "chessboard":
 		status_label.text = "棋盘格地图工坊：可在关卡设置中调整翻地概率和奖励卡池。"
@@ -448,9 +453,14 @@ func _on_timeline_gui_input(event: InputEvent) -> void:
 	if mouse_button.button_index != MOUSE_BUTTON_LEFT or not mouse_button.pressed:
 		return
 	var interval_index := _timeline_interval_at_position(mouse_button.position)
+	var endpoint_ratio := -1.0
+	if interval_index < 0 and timeline_mode == TimelineMode.PLACE_FLAG:
+		var endpoint_hit := _timeline_endpoint_interval_at_position(mouse_button.position)
+		interval_index = int(endpoint_hit.get("stage_index", -1))
+		endpoint_ratio = float(endpoint_hit.get("visual_ratio", -1.0))
 	if interval_index >= 0:
 		var interval_rect := _timeline_interval_rect(interval_index)
-		var click_ratio := clampf((mouse_button.position.x - interval_rect.position.x) / maxf(1.0, interval_rect.size.x), 0.0, 1.0)
+		var click_ratio := endpoint_ratio if endpoint_ratio >= 0.0 else clampf((mouse_button.position.x - interval_rect.position.x) / maxf(1.0, interval_rect.size.x), 0.0, 1.0)
 		_on_interval_pressed(interval_index, click_ratio)
 		timeline_stages.accept_event()
 		return
@@ -486,6 +496,23 @@ func _timeline_interval_rect(stage_index: int) -> Rect2:
 		if index == stage_index:
 			return Rect2(minf(segment_start, segment_end), 24.0, maxf(1.0, absf(segment_start - segment_end)), 15.0)
 	return Rect2()
+
+
+func _timeline_endpoint_interval_at_position(local_position: Vector2) -> Dictionary:
+	## 插旗时终点的旗头区也可点击，不要强制玩家只点黄色槽下半部。
+	if local_position.y < 0.0 or local_position.y > timeline_stages.size.y:
+		return {}
+	var left_x := FLAG_CENTER_LEFT * timeline_width_ratio
+	var right_x := FLAG_CENTER_RIGHT * timeline_width_ratio
+	if absf(local_position.x - left_x) <= 10.0:
+		for stage_index in range((level.get("waves", []) as Array).size() - 1, -1, -1):
+			if str(level["waves"][stage_index].get("stageType", "flag")) == "interval":
+				return {"stage_index": stage_index, "visual_ratio": 0.0}
+	if absf(local_position.x - right_x) <= 10.0:
+		for stage_index in (level.get("waves", []) as Array).size():
+			if str(level["waves"][stage_index].get("stageType", "flag")) == "interval":
+				return {"stage_index": stage_index, "visual_ratio": 1.0}
+	return {}
 
 
 func _timeline_flag_at_position(local_position: Vector2) -> int:
@@ -620,31 +647,50 @@ func _end_timeline_mode() -> void:
 	_hide_interval_preview()
 
 
-func _insert_flag_in_interval(stage_index: int, _visual_click_ratio: float) -> void:
+func _insert_flag_in_interval(stage_index: int, visual_click_ratio: float) -> void:
 	var stages: Array = level.get("waves", [])
 	if stage_index < 0 or stage_index >= stages.size():
 		return
 	var interval: Dictionary = stages[stage_index]
 	if str(interval.get("stageType", "flag")) != "interval":
 		return
-	## duration 只保留为旧草稿结构字段，不参与动态波次推进。
-	interval["duration"] = DEFAULT_INTERVAL_DURATION
+	## 时间轴是从右向左推进，而 Rect 内的点击比例是从左向右。
+	var progress_ratio := 1.0 - clampf(visual_click_ratio, 0.0, 1.0)
+	var insert_at := stage_index + 1
+	var split_interval := progress_ratio > 0.001 and progress_ratio < 0.999
+	if progress_ratio <= 0.001:
+		insert_at = stage_index
+		if stage_index > 0 and str((stages[stage_index - 1] as Dictionary).get("stageType", "interval")) == "flag":
+			status_label.text = "该端点已有旗帜。"
+			return
+	elif progress_ratio >= 0.999 and stage_index + 1 < stages.size() \
+	and str((stages[stage_index + 1] as Dictionary).get("stageType", "interval")) == "flag":
+		status_label.text = "该端点已有旗帜。"
+		return
 
+	var original_duration := maxf(2.0, float(interval.get("duration", DEFAULT_INTERVAL_DURATION)))
 	var flag_number := _count_stage_type("flag") + 1
 	var flag_id := Logic.make_unique_id("wave", _all_ids())
 	var inserted_flag := Logic.make_wave(flag_id, "第 %d 波" % flag_number, 0.0, DEFAULT_FLAG_DURATION, [], "flag")
-	stages.insert(stage_index + 1, inserted_flag)
-	var interval_id := Logic.make_unique_id("interval", _all_ids())
-	var inserted_interval := Logic.make_wave(interval_id, "新波间", 0.0, DEFAULT_INTERVAL_DURATION, [], "interval")
-	stages.insert(stage_index + 2, inserted_interval)
-	selected_wave = stage_index + 1
+	if split_interval:
+		interval["duration"] = maxf(MIN_SPLIT_INTERVAL_DURATION, original_duration * progress_ratio)
+		var interval_id := Logic.make_unique_id("interval", _all_ids())
+		var following_duration := maxf(MIN_SPLIT_INTERVAL_DURATION, original_duration * (1.0 - progress_ratio))
+		var inserted_interval := Logic.make_wave(interval_id, "新波间", 0.0, following_duration, [], "interval")
+		stages.insert(stage_index + 1, inserted_flag)
+		stages.insert(stage_index + 2, inserted_interval)
+		selected_wave = stage_index + 1
+	else:
+		interval["duration"] = original_duration
+		stages.insert(insert_at, inserted_flag)
+		selected_wave = insert_at
 	selected_zombie_key = ""
 	_recalculate_stage_times()
 	_end_timeline_mode()
 	_snapshot()
 	DraftStore.save_autosave(level)
 	_refresh_wave()
-	status_label.text = "已在目标动态波间插入一面旗帜，并建立后续动态波间。"
+	status_label.text = "已在左侧终点插入旗帜。" if progress_ratio >= 0.999 else ("已在右侧起点插入旗帜。" if progress_ratio <= 0.001 else "已在目标动态波间插入一面旗帜，并拆分前后波间。")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1009,7 +1055,7 @@ func _on_preview_hit_layer_input(event: InputEvent) -> void:
 	var zombie_key := str(preview_zombie_keys.get(clicked_zombie.get_instance_id(), ""))
 	if zombie_key.is_empty():
 		return
-	_remove_zombie(zombie_key)
+	_remove_zombie(zombie_key, clicked_zombie)
 	preview_hit_layer.accept_event()
 
 
@@ -1081,7 +1127,7 @@ func _add_zombie(zombie_key: String) -> void:
 	_refresh_wave()
 
 
-func _remove_zombie(zombie_key: String) -> void:
+func _remove_zombie(zombie_key: String, clicked_preview: Node2D = null) -> void:
 	var wave: Dictionary = level["waves"][selected_wave]
 	var group := _find_group(wave, zombie_key)
 	if group.is_empty():
@@ -1091,8 +1137,34 @@ func _remove_zombie(zombie_key: String) -> void:
 		wave["spawnGroups"].erase(group)
 		if selected_zombie_key == zombie_key:
 			selected_zombie_key = ""
+	if is_instance_valid(clicked_preview):
+		## 道路点击删除必须是所见即所得：只移除命中的这个实例，
+		## 不重建整个随机布局，否则视觉上会像是随机删除了另一只。
+		preview_zombie_keys.erase(clicked_preview.get_instance_id())
+		preview_zombies.erase(clicked_preview)
+		if clicked_preview.get_parent() != null:
+			clicked_preview.get_parent().remove_child(clicked_preview)
+		clicked_preview.queue_free()
+		_update_road_labels_after_exact_delete(wave)
+		_changed("已删除点中的%s" % _zombie_name(zombie_key))
+		_refresh_timeline()
+		preview_hit_layer.tooltip_text = ""
+		preview_hit_layer.mouse_default_cursor_shape = Control.CURSOR_ARROW
+		return
 	_changed("已减少%s数量" % _zombie_name(zombie_key))
 	_refresh_wave()
+
+
+func _update_road_labels_after_exact_delete(wave: Dictionary) -> void:
+	var total := _wave_total_count(wave)
+	var is_flag := str(wave.get("stageType", "flag")) == "flag"
+	road_title.text = "当前阶段 · 马路预览 · 共 %d 只" % total
+	wave_summary.text = "%s　共 %d 只" % ["旗帜前动态推进" if not is_flag else "旗帜波动态推进", total]
+	road_hint.visible = total == 0 or total > PREVIEW_MAX_ZOMBIES
+	if total == 0:
+		road_hint.text = "这个阶段还没有僵尸\n请点击左侧卡片"
+	elif total > PREVIEW_MAX_ZOMBIES:
+		road_hint.text = "当前阶段共 %d 只\n当前展示 %d 只" % [total, preview_zombies.size()]
 
 
 func _switch_wave(delta: int) -> void:
@@ -1161,6 +1233,7 @@ func _open_level_settings() -> void:
 	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 180), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
 	var cooldown := _settings_spin(dialog, "冷却时长倍率", Vector2(76, 252), 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
 	var seed := _settings_spin(dialog, "随机种子", Vector2(322, 252), 1, 2147483647, int(level["randomSeed"]), 1)
+	var reward_plant_picker: OptionButton
 	var chessboard: Dictionary = level.get("chessboardConfig", {})
 	var mine_count: SpinBox
 	var plant_probability: SpinBox
@@ -1173,13 +1246,19 @@ func _open_level_settings() -> void:
 		mine_count = _settings_spin(dialog, "地雷数量上限", Vector2(76, 360), 0, 45, int(chessboard.get("mineCount", 8)), 1)
 		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
 		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 360), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
+	else:
+		reward_plant_picker = _settings_reward_picker(dialog, Vector2(322, 322), int(level.get("rewardPlant", -1)))
 	var save_callback := func():
-		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
+		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, reward_plant_picker, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
 	dialog.add_child(_texture_button("保存设置", Vector2(205, 487), Vector2(210, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 18))
 	dialog.add_child(_texture_button("取消", Vector2(265, 454 if str(level.get("workshopMode", "normal")) != "chessboard" else 522), Vector2(90, 26), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _close_quantity_dialog, 14))
 
 
-func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
+func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, reward_plant_picker: OptionButton, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
+	var level_name := name_input.text.strip_edges()
+	if level_name.is_empty():
+		status_label.text = "设置失败：关卡名称不能为空"
+		return
 	if str(level.get("workshopMode", "normal")) == "chessboard":
 		var probability_sum := float(plant_probability.value + enemy_probability.value)
 		if probability_sum > 1.0:
@@ -1190,7 +1269,9 @@ func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox
 		chessboard["zombieCardProbability"] = 0.0
 		chessboard["enemyZombieProbability"] = float(enemy_probability.value)
 		level["chessboardConfig"] = chessboard
-	level["name"] = name_input.text
+	elif is_instance_valid(reward_plant_picker):
+		level["rewardPlant"] = int(reward_plant_picker.get_item_metadata(reward_plant_picker.selected))
+	level["name"] = level_name
 	level["id"] = id_input.text.strip_edges()
 	level["playerConfig"]["initialSun"] = int(sun.value)
 	level["playerConfig"]["sunDropSpeed"] = float(sun_speed.value)
@@ -1213,6 +1294,34 @@ func _settings_line(parent: Control, label_text: String, pos: Vector2, value: St
 	input.add_theme_color_override("caret_color", Color("fff2a1"))
 	parent.add_child(input)
 	return input
+
+
+func _settings_reward_picker(parent: Control, pos: Vector2, selected_type: int) -> OptionButton:
+	var label := _paper_label("通关掉落新卡", pos, Vector2(210, 25), 16, Color("e9d28a"))
+	parent.add_child(label)
+	var picker := OptionButton.new()
+	picker.position = pos + Vector2(0, 27)
+	picker.size = Vector2(210, 34)
+	picker.add_theme_font_override("font", WORKSHOP_FONT)
+	picker.add_item("无卡牌掉落")
+	picker.set_item_metadata(0, -1)
+	var plant_types: Array = AllCards.all_plant_card_prefabs.keys()
+	plant_types.sort()
+	for value in plant_types:
+		var plant_type := int(value)
+		if plant_type <= 0 or plant_type >= 1000 or not CharacterRegistry.PlantInfo.has(plant_type):
+			continue
+		var plant_name := str(Global.character_registry.get_plant_info(
+			plant_type as CharacterRegistry.PlantType,
+			CharacterRegistry.PlantInfoAttribute.PlantName
+		))
+		picker.add_item("%s（%d）" % [plant_name, plant_type])
+		var item_index := picker.item_count - 1
+		picker.set_item_metadata(item_index, plant_type)
+		if plant_type == selected_type:
+			picker.select(item_index)
+	parent.add_child(picker)
+	return picker
 
 
 func _settings_spin(parent: Control, label_text: String, pos: Vector2, min_value: float, max_value: float, value: float, step: float) -> SpinBox:
@@ -1417,7 +1526,8 @@ func _refresh_zombie_catalog() -> void:
 	zombie_card_prefabs = all_cards.all_zombie_card_prefabs
 	for zombie_type in zombie_card_prefabs.keys():
 		var zombie_id := int(zombie_type)
-		if Global.level_workshop_edit_mode == "normal" and zombie_id > 0 and zombie_id < 500:
+		if Global.level_workshop_edit_mode == "normal" and zombie_id > 0 \
+		and (zombie_id < 500 or AdventurePresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id)):
 			zombie_card_order.append(zombie_id)
 		elif Global.level_workshop_edit_mode == "chessboard" and zombie_id >= 500 and zombie_id < 1000:
 			zombie_card_order.append(zombie_id)
@@ -1494,11 +1604,8 @@ func _normalize_timeline_structure() -> void:
 		var following: Dictionary = stages[index + 1]
 		var current_type := str(current.get("stageType", "flag"))
 		var following_type := str(following.get("stageType", "flag"))
-		if current_type == "interval" and following_type == "interval":
-			current["duration"] = float(current.get("duration", DEFAULT_INTERVAL_DURATION)) + float(following.get("duration", DEFAULT_INTERVAL_DURATION))
-			(current.get("spawnGroups", []) as Array).append_array((following.get("spawnGroups", []) as Array).duplicate(true))
-			stages.remove_at(index + 1)
-			continue
+		## 连续普通波是正式关卡的独立波次，不能合并；否则各波从 0 秒同时刷怪，
+		## 进度条也会丢失大量普通波。只修复不合法的“旗帜紧贴旗帜”结构。
 		if current_type == "flag" and following_type == "flag":
 			var interval_id := Logic.make_unique_id("interval", _all_ids())
 			stages.insert(index + 1, Logic.make_wave(interval_id, "旗帜间隔", 0.0, DEFAULT_INTERVAL_DURATION, [], "interval"))
@@ -1640,5 +1747,10 @@ func _back_to_menu() -> void:
 	_clear_preview_zombies()
 	var global := get_node("/root/Global")
 	global.developer_level_adjustments_active = false
+	if str(level.get("workshopMode", "normal")) == "normal" and not formal_preset_id.is_empty():
+		global.level_workshop_selecting_formal_level = true
+		global.adventure_mainline_mode = "normal"
+		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
+		return
 	global.return_to_developer_mode = true
 	get_tree().change_scene_to_file("res://scenes/main/01StartMenu.tscn")

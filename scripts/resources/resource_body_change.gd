@@ -8,6 +8,9 @@ class_name ResourceBodyChange
 ## 改变纹理的精灵节点对应的纹理
 @export var sprite_change_texture:Array[Texture2D]
 
+## 改变纹理后对应精灵使用的偏移；未配置的项保留节点当前偏移
+@export var sprite_change_offset:Array[Vector2]
+
 ## 出现的精灵节点
 @export var sprite_appear:Array[NodePath]
 ## 消失的精灵节点
@@ -20,6 +23,8 @@ func update_body(curr_node:Node):
 	for i in range(sprite_change.size()):
 		var sprite:Sprite2D = curr_node.get_node(sprite_change[i])
 		sprite.texture = sprite_change_texture[i]
+		if i < sprite_change_offset.size():
+			sprite.offset = sprite_change_offset[i]
 
 	for i in range(sprite_appear.size()):
 		var node:Node2D = curr_node.get_node(sprite_appear[i])

@@ -50,7 +50,11 @@ var return_to_developer_mode := false
 var developer_level_adjustments_active := false
 ## 地图工坊当前编辑目标：normal / chessboard。
 var level_workshop_edit_mode := "normal"
-## “开始冒险吧”的两条平行主线：normal / chessboard。
+## 普通工坊复用正式冒险选关页时，按钮点击应进入编辑器而不是开局。
+var level_workshop_selecting_formal_level := false
+## 从正式选关页带入工坊的关卡 ID。
+var level_workshop_selected_preset_id := ""
+## 冒险预设选择状态；主菜单的“开始冒险吧”固定进入 normal。
 var adventure_mainline_mode := "normal"
 
 ## 游戏倍速

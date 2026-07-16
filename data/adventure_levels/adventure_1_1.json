@@ -1,0 +1,303 @@
+{
+	"activeLawnRows": [
+		0,
+		1,
+		2,
+		3,
+		4
+	],
+	"allowNoFlag": true,
+	"availablePlants": [
+		1
+	],
+	"chessboardConfig": {
+		"enemyZombieProbability": 0.35,
+		"mineCount": 0,
+		"plantCardPool": [
+			1
+		],
+		"plantCardProbability": 0.25,
+		"zombieCardPool": [],
+		"zombieCardProbability": 0.0
+	},
+	"earlyRefreshDelay": 1.5,
+	"environmentConfig": {
+		"bungee": false,
+		"initialTombstones": 0,
+		"tombstoneSpawns": false
+	},
+	"formalPresetId": "adventure_1_1",
+	"healthThresholdRange": [
+		0.558,
+		0.678
+	],
+	"hugeWaveWarningDelay": 6.0,
+	"id": "adventure_1_1",
+	"initialWaveDelay": 18.0,
+	"loseConditions": [
+		{
+			"type": "zombie_reaches_house"
+		}
+	],
+	"mapConfig": {
+		"columns": 9,
+		"rows": 5,
+		"type": "front_lawn"
+	},
+	"minimumWaveTime": 5.965,
+	"name": "1-1 黑爪下乡",
+	"playerConfig": {
+		"cooldownMultiplier": 1.0,
+		"initialSun": 150,
+		"sunDropSpeed": 1.0
+	},
+	"randomSeed": 2026071501,
+	"rewardPlant": 2,
+	"schemaVersion": 1,
+	"sodLayoutRows": 5,
+	"sodRolloutRows": 5,
+	"strictOriginalTiming": true,
+	"waveIntervalRange": [
+		28.86,
+		33.86
+	],
+	"waves": [
+		{
+			"duration": 28.0,
+			"id": "adventure_1_1_wave_01",
+			"name": "第 1 波",
+			"spawnGroups": [
+				{
+					"count": 2,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "group_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 0.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_1_1_wave_02",
+			"name": "第 2 波",
+			"spawnGroups": [
+				{
+					"count": 2,
+					"fixedInterval": 0.63,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "adventure_1_1_wave_02_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 28,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 28.0
+		},
+		{
+			"duration": 16.3805579275858,
+			"id": "adventure_1_1_wave_03",
+			"name": "第 3 波",
+			"spawnGroups": [
+				{
+					"count": 3,
+					"fixedInterval": 0.63,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "adventure_1_1_wave_03_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 28,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 56.0
+		},
+		{
+			"duration": 10.0,
+			"id": "wave_1",
+			"name": "第 1 波",
+			"spawnGroups": [
+				{
+					"count": 4,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "group_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "flag",
+			"startTime": 72.3805579275858
+		},
+		{
+			"duration": 11.6194420724142,
+			"id": "interval_1",
+			"name": "新波间",
+			"spawnGroups": [
+				{
+					"count": 4,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "group_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 82.3805579275858
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_1_1_wave_04",
+			"name": "第 4 波",
+			"spawnGroups": [
+				{
+					"count": 3,
+					"fixedInterval": 0.63,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "adventure_1_1_wave_04_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 28,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 94.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_1_1_wave_05",
+			"name": "第 5 波",
+			"spawnGroups": [
+				{
+					"count": 5,
+					"fixedInterval": 0.63,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "adventure_1_1_wave_05_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 28,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 122.0
+		}
+	],
+	"winConditions": [
+		{
+			"type": "all_waves_cleared"
+		}
+	],
+	"workshopMode": "normal"
+}

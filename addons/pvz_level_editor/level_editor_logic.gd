@@ -34,6 +34,7 @@ static func example_level() -> Dictionary:
 		"workshopMode": "normal",
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
 		"availablePlants": ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb"],
+		"rewardPlant": -1,
 		"waves": [
 			make_wave("interval_1", "第一波前", 0.0, 28.0, [
 				make_group("group_1", "normal", 8, 1.0, "fixed", 1.6, "random", [1, 1, 1, 1, 1]),
@@ -95,7 +96,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "rewardPlant", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -148,6 +149,9 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "关卡 ID 不能为空", "id"))
 	if str(level.get("name", "")).strip_edges().is_empty():
 		issues.append(issue("error", "关卡名称不能为空", "name"))
+	var reward_plant := int(level.get("rewardPlant", -1))
+	if reward_plant >= 0 and not CharacterRegistry.PlantInfo.has(reward_plant):
+		issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlant"))
 	var map: Dictionary = level.get("mapConfig", {})
 	var rows := int(map.get("rows", 0))
 	var columns := int(map.get("columns", 0))
