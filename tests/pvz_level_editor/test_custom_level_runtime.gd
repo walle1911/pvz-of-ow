@@ -26,6 +26,26 @@ func _ready() -> void:
 	assert(start_menu.get_node("BG_Right/Menu/LevelWorkshopButton/Label").text == "开\n发\n者\n模\n式")
 	start_menu.queue_free()
 	await get_tree().process_frame
+	Global.developer_level_adjustments_active = true
+	var developer_chooser_scene: PackedScene = load("res://scenes/main/06CustomChooesLevel.tscn")
+	var developer_chooser := developer_chooser_scene.instantiate()
+	get_tree().root.add_child(developer_chooser)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert((developer_chooser.get_node("Label") as Label).text == "开 发 者 关 卡")
+	var developer_buttons: Array[ChooseLevelButtonCustomize] = []
+	for page in developer_chooser.get_node("AllPage").get_children():
+		for child in page.get_children():
+			if child is ChooseLevelButtonCustomize:
+				developer_buttons.append(child)
+	assert(developer_buttons.size() >= AdventureLevelPresets.list_presets("normal").size())
+	for preset_index in AdventureLevelPresets.list_presets("normal").size():
+		var preset_id := str(AdventureLevelPresets.list_presets("normal")[preset_index]["id"])
+		var expected_name := str(AdventureLevelPresets.build_level(preset_id, true)["name"])
+		assert(developer_buttons[preset_index].level_name == expected_name)
+	developer_chooser.queue_free()
+	await get_tree().process_frame
+	Global.developer_level_adjustments_active = false
 	var workshop_scene: PackedScene = load("res://scenes/main/07LevelWorkshop.tscn")
 	var workshop := workshop_scene.instantiate()
 	await get_tree().process_frame

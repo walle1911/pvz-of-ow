@@ -107,26 +107,16 @@ func _ready() -> void:
 	_apply_font()
 	_refresh_zombie_catalog()
 	_build_scene()
-	var active_mode := str(Global.level_workshop_edit_mode)
-	var selected_preset_id := str(Global.level_workshop_selected_preset_id)
-	var default_preset_id := selected_preset_id if not selected_preset_id.is_empty() else ("chess_1_1" if active_mode == "chessboard" else "adventure_1_1")
-	var default_level := AdventurePresets.build_level(default_preset_id)
-	if not default_level.is_empty():
-		level = default_level
-		formal_preset_id = default_preset_id
+	## 工坊入口固定为普通编辑器，不再先进入模式或正式关卡选择页。
+	var active_mode := "normal"
+	Global.level_workshop_edit_mode = active_mode
 	var recovered := DraftStore.load_autosave()
-	if selected_preset_id.is_empty() and recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
+	if recovered["ok"] and str((recovered["level"] as Dictionary).get("workshopMode", "normal")) == active_mode:
 		level = recovered["level"]
 		formal_preset_id = str(level.get("formalPresetId", ""))
 		status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
-	if not selected_preset_id.is_empty():
-		level["formalPresetId"] = selected_preset_id
-		level["id"] = "%s_edit" % selected_preset_id
-		Global.level_workshop_selected_preset_id = ""
 	level["workshopMode"] = active_mode
-	if active_mode == "chessboard":
-		status_label.text = "棋盘格地图工坊：可在关卡设置中调整翻地概率和奖励卡池。"
 	_force_random_lane_rules()
 	_recalculate_stage_times()
 	_snapshot(false)
@@ -183,7 +173,7 @@ func _build_drawer() -> void:
 
 func _build_drawer_actions() -> void:
 	var actions := sidebar_content.get_node("BottomActions")
-	## 六个入口等宽排布；成品关卡可载入编辑，也可把当前修改写回项目内正式关卡 JSON。
+	## 成品关卡在编辑器内部载入；应用只写开发者模式覆盖。
 	var action_names := ["BackButton", "SettingsButton", "PlaytestButton", "SaveButton"]
 	for action_index in action_names.size():
 		var action_button := actions.get_node(action_names[action_index]) as TextureButton
@@ -191,7 +181,7 @@ func _build_drawer_actions() -> void:
 		action_button.size.x = 74.0
 	var preset_button := _texture_button("成品关卡", Vector2(312, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_preset_picker, 13)
 	actions.add_child(preset_button)
-	var apply_formal_button := _texture_button("应用正式", Vector2(390, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_apply_formal_dialog, 13)
+	var apply_formal_button := _texture_button("应用预设", Vector2(390, 0), Vector2(74, 38), ALMANAC_CLOSE_BUTTON, ALMANAC_CLOSE_BUTTON_HOVER, _open_apply_formal_dialog, 13)
 	actions.add_child(apply_formal_button)
 	(actions.get_node("BackButton") as TextureButton).pressed.connect(_back_to_menu)
 	(actions.get_node("SettingsButton") as TextureButton).pressed.connect(_open_level_settings)
@@ -209,11 +199,10 @@ func _open_preset_picker() -> void:
 	box.add_theme_constant_override("separation", 10)
 	dialog.add_child(box)
 	var hint := Label.new()
-	hint.text = "载入后可编辑；点底部“应用正式”才会覆盖项目内对应成品关卡。"
+	hint.text = "载入后可编辑；点底部“应用预设”只会覆盖开发者模式中的对应关卡。"
 	box.add_child(hint)
 	var picker := OptionButton.new()
 	var presets := AdventurePresets.list_presets("normal")
-	presets.append_array(AdventurePresets.list_presets("chessboard"))
 	for preset: Dictionary in presets:
 		picker.add_item(str(preset["name"]))
 	box.add_child(picker)
@@ -229,14 +218,14 @@ func _open_preset_picker() -> void:
 
 
 func _load_preset_for_edit(preset_id: String) -> void:
-	var preset := AdventurePresets.build_level(preset_id)
+	var preset := AdventurePresets.build_level(preset_id, true)
 	if preset.is_empty():
 		status_label.text = "成品关卡不存在：%s" % preset_id
 		return
 	level = Logic.normalize_level(preset)
 	formal_preset_id = preset_id
 	level["formalPresetId"] = preset_id
-	## 普通“保存”仍写入 user:// 草稿；只有“应用正式”才写回项目数据。
+	## 普通“保存”仍写入 user:// 草稿；只有“应用预设”才写开发者覆盖数据。
 	level["id"] = "%s_edit" % preset_id
 	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
 	reward_mode_button.visible = Global.level_workshop_edit_mode == "chessboard"
@@ -263,23 +252,23 @@ func _open_apply_formal_dialog() -> void:
 		status_label.text = "请先点“成品关卡”，载入要修改的正式关卡。"
 		return
 	var dialog := ConfirmationDialog.new()
-	dialog.title = "应用到正式关卡"
+	dialog.title = "应用到开发者预设"
 	dialog.ok_button_text = "确认覆盖"
 	dialog.cancel_button_text = "取消"
 	dialog.min_size = Vector2i(480, 200)
 	var hint := Label.new()
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	hint.text = "当前波次和僵尸数量将写入 %s。之后从“开始冒险吧”进入 %s 时会直接使用这份数据。" % [FormalLevelStore.formal_level_path(formal_preset_id), formal_preset_id]
+	hint.text = "当前配置将写入 %s。它只影响开发者模式“开始冒险吧”中的 %s；普通模式正式关卡不会改变。" % [FormalLevelStore.formal_level_path(formal_preset_id), formal_preset_id]
 	dialog.add_child(hint)
 	dialog.confirmed.connect(func():
 		_recalculate_stage_times()
 		level["formalPresetId"] = formal_preset_id
-		var result := FormalLevelStore.save_formal_level(level, formal_preset_id)
+		var result := FormalLevelStore.save_developer_level(level, formal_preset_id)
 		if result["ok"]:
 			DraftStore.save_autosave(level)
-			status_label.text = "已应用到正式关卡 %s；正式选关会读取当前工坊配置。" % formal_preset_id
+			status_label.text = "已应用到开发者预设 %s；普通冒险不受影响。" % formal_preset_id
 		else:
-			status_label.text = "应用正式关卡失败：%s" % str(result["error"])
+			status_label.text = "应用开发者预设失败：%s" % str(result["error"])
 		dialog.queue_free()
 	)
 	add_child(dialog)
@@ -1747,10 +1736,5 @@ func _back_to_menu() -> void:
 	_clear_preview_zombies()
 	var global := get_node("/root/Global")
 	global.developer_level_adjustments_active = false
-	if str(level.get("workshopMode", "normal")) == "normal" and not formal_preset_id.is_empty():
-		global.level_workshop_selecting_formal_level = true
-		global.adventure_mainline_mode = "normal"
-		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
-		return
 	global.return_to_developer_mode = true
 	get_tree().change_scene_to_file("res://scenes/main/01StartMenu.tscn")

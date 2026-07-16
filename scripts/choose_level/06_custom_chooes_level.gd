@@ -11,8 +11,20 @@ const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd"
 var num_level_button_every_page:=20
 
 func _ready() -> void:
-	## 获取游戏参数文件
-	var all_game_paras:Array = load_resources_with_get_files("level_game_para")
+	## 开发者入口先列出与普通冒险相同的全部正式预设，但读取工坊的开发者覆盖。
+	## 玩家资源关卡和保存的 JSON 草稿只追加在这些预设之后；普通“自定义关卡”入口不显示预设。
+	var all_game_paras: Array = []
+	if Global.developer_level_adjustments_active:
+		var title := get_node_or_null("Label") as Label
+		if title != null:
+			title.text = "开 发 者 关 卡"
+		for preset in AdventurePresets.list_presets("normal"):
+			var preset_id := str(preset["id"])
+			var source := AdventurePresets.build_level(preset_id, true)
+			var preset_built := CustomRuntime.build_game_para(source)
+			if preset_built["ok"]:
+				all_game_paras.append([preset_built["game_para"], preset_id, str(source.get("name", preset["name"]))])
+	all_game_paras.append_array(load_resources_with_get_files("level_game_para"))
 	for draft in DraftStore.list_drafts():
 		var loaded := DraftStore.load_draft(draft["path"])
 		if not loaded["ok"]:

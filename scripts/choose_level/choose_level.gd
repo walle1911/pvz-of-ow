@@ -32,10 +32,7 @@ func _ready() -> void:
 	if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
 		_build_adventure_preset_buttons()
 	## 如果没有开放所有关卡
-	if Global.level_workshop_selecting_formal_level and game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
-		## 工坊编辑可直接选择任意正式关卡，不受玩家通关进度锁定。
-		open_level_num = -1
-	elif not Global.config_service.open_all_level:
+	if not Global.config_service.open_all_level:
 		if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
 			open_level_num = 1
 		## 自定义关卡全开放
@@ -111,12 +108,6 @@ func generate_level_id() -> String:
 	return id_str
 
 func _on_choose_level_button(choose_level_button:ChooseLevelButton):
-	if Global.level_workshop_selecting_formal_level \
-	and game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure \
-	and not choose_level_button.preset_level_id.is_empty():
-		Global.level_workshop_selected_preset_id = choose_level_button.preset_level_id
-		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
-		return
 	if not choose_level_button.preset_level_id.is_empty():
 		var source := AdventurePresets.build_level(choose_level_button.preset_level_id)
 		var built := CustomRuntime.build_game_para(source)
@@ -134,10 +125,7 @@ func _build_adventure_preset_buttons() -> void:
 	var mainline_mode := str(Global.adventure_mainline_mode)
 	var title := get_node_or_null("Label") as Label
 	if title != null:
-		if Global.level_workshop_selecting_formal_level:
-			title.text = "关 卡 工 坊 · 选 择 正 式 关 卡"
-		else:
-			title.text = "棋 盘 格 主 线" if mainline_mode == "chessboard" else "冒 险 模 式 · 五 大 世 界"
+		title.text = "棋 盘 格 主 线" if mainline_mode == "chessboard" else "冒 险 模 式 · 五 大 世 界"
 	var presets: Array[Dictionary] = AdventurePresets.list_presets(mainline_mode)
 	if presets.is_empty() or all_page.get_child_count() == 0:
 		return
@@ -331,10 +319,6 @@ func choose_level_start_game(game_scense:MainSceneRegistry.MainScenes):
 
 ## 返回开始菜单
 func back_start_menu():
-	if Global.level_workshop_selecting_formal_level:
-		Global.level_workshop_selecting_formal_level = false
-		Global.level_workshop_selected_preset_id = ""
-		Global.return_to_developer_mode = true
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])
 
 

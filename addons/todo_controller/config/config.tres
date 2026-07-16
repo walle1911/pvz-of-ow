@@ -413,6 +413,7 @@ script_list_meta = {
 "res://scripts/ui/ui_main_game_menu/canvas_layer_control.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/main_game_menu_option_dialog.gd": [-1, -1],
 "res://scripts/util/image_combiner.gd": [-1, -1],
+"res://tests/pvz_level_editor/test_adventure_presets.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_custom_level_runtime.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_logic.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_editor_panel_smoke.gd": [-1, -1],

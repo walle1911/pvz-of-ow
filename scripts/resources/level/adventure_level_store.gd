@@ -4,10 +4,11 @@ class_name AdventureLevelStore
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const JsonRuntime := preload("res://scripts/resources/level/level_json_runtime.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
-const FORMAL_LEVEL_DIR := "res://data/adventure_levels"
+## 工坊覆盖只属于开发者模式。普通冒险始终使用代码内置的正式预设。
+const DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
 
 
-static func load_formal_level(preset_id: String) -> Dictionary:
+static func load_developer_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "成品关卡 ID 不合法：%s" % preset_id}
 	var path := formal_level_path(preset_id)
@@ -22,7 +23,7 @@ static func load_formal_level(preset_id: String) -> Dictionary:
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
-static func save_formal_level(source: Dictionary, preset_id: String) -> Dictionary:
+static func save_developer_level(source: Dictionary, preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "path": "", "error": "请先从“成品关卡”载入要覆盖的关卡"}
 	var level := Logic.normalize_level(source)
@@ -31,7 +32,7 @@ static func save_formal_level(source: Dictionary, preset_id: String) -> Dictiona
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
 		return {"ok": false, "path": formal_level_path(preset_id), "error": str(built["error"])}
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(FORMAL_LEVEL_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DEVELOPER_LEVEL_DIR))
 	var path := formal_level_path(preset_id)
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
@@ -46,7 +47,7 @@ static func save_formal_level(source: Dictionary, preset_id: String) -> Dictiona
 
 
 static func formal_level_path(preset_id: String) -> String:
-	return "%s/%s.json" % [FORMAL_LEVEL_DIR, preset_id]
+	return "%s/%s.json" % [DEVELOPER_LEVEL_DIR, preset_id]
 
 
 static func is_formal_preset_id(preset_id: String) -> bool:

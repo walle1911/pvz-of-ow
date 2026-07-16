@@ -238,12 +238,13 @@ static func list_presets(workshop_mode := "normal") -> Array[Dictionary]:
 	return result
 
 
-static func build_level(preset_id: String) -> Dictionary:
-	var stored := FormalLevelStore.load_formal_level(preset_id)
-	if stored["ok"]:
-		return stored["level"]
-	if stored["exists"]:
-		push_error("正式关卡覆盖数据无法载入：%s" % str(stored["error"]))
+static func build_level(preset_id: String, use_developer_override := false) -> Dictionary:
+	if use_developer_override:
+		var stored := FormalLevelStore.load_developer_level(preset_id)
+		if stored["ok"]:
+			return stored["level"]
+		if stored["exists"]:
+			push_error("开发者关卡覆盖数据无法载入：%s" % str(stored["error"]))
 	var parsed := _parse_preset_id(preset_id)
 	var workshop_mode := str(parsed.get("mode", ""))
 	var world := int(parsed.get("world", 0))

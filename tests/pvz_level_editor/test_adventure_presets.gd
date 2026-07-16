@@ -18,6 +18,7 @@ func _ready() -> void:
 	_test_pool_lane_rules()
 	_test_difficulty_growth()
 	_test_formal_level_ids()
+	_test_developer_override_isolation()
 	await _test_choose_level_pages()
 	if failures.is_empty():
 		print("ADVENTURE_PRESETS_OK levels=50 final_plants=51 pool_rule=ow_first")
@@ -189,6 +190,19 @@ func _test_formal_level_ids() -> void:
 	_expect(Store.is_formal_preset_id("adventure_5_10"), "5-10 应是合法正式关卡 ID")
 	_expect(not Store.is_formal_preset_id("adventure_6_1"), "不应接受第六世界")
 	_expect(not Store.is_formal_preset_id("chess_2_1"), "棋盘格线目前只保留第一世界")
+
+
+func _test_developer_override_isolation() -> void:
+	var preset_id := "adventure_1_2"
+	var stored := Store.load_developer_level(preset_id)
+	_expect(bool(stored["ok"]), "测试所需的开发者覆盖 %s 应可读取" % preset_id)
+	if not stored["ok"]:
+		return
+	var normal_level := Presets.build_level(preset_id)
+	var developer_level := Presets.build_level(preset_id, true)
+	_expect(str(normal_level["name"]) == "1-2 重装改坚果", "普通冒险必须忽略开发者覆盖名称")
+	_expect(str(developer_level["name"]) == str((stored["level"] as Dictionary)["name"]), "开发者入口应读取工坊覆盖")
+	_expect(str(developer_level["name"]) != str(normal_level["name"]), "开发者覆盖与普通正式预设必须保持隔离")
 
 
 func _test_choose_level_pages() -> void:
