@@ -26,9 +26,9 @@ var global_game_state: GlobalGameState
 
 ## 更新每个已经制作的卡片（卡片类型不为空）
 func _ready() -> void:
-	## 非编辑器中运行隐藏(游戏中)
-	if not Engine.is_editor_hint():
-		visible = false
+	## 卡牌预制体只在直接编辑 all_cards 场景时显示。
+	## 作为 @tool 自动加载运行在其他场景编辑器中时，避免其网格渲染到编辑器界面上。
+	visible = Engine.is_editor_hint() and get_tree().edited_scene_root == self
 
 	if not Global.has_node("GlobalGameState"):
 		return

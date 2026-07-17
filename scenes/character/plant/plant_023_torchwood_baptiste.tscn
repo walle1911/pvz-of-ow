@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_d3e4f"]
 [ext_resource type="Script" uid="uid://durri3mek6ar6" path="res://scripts/character/plant/ow/plant_023_torchwood_baptiste.gd" id="2_d3e4f"]
 [ext_resource type="Texture2D" uid="uid://bxf2w1rk7r03s" path="res://assets/reanim/Torchwood_spark.png" id="2_f3mgj"]
-[ext_resource type="Texture2D" uid="uid://cb0u1a7b8se76" path="res://assets/reanim/Torchwood_fire1c.png" id="4_frv33"]
 [ext_resource type="Texture2D" uid="uid://dejh82cbf5y5q" path="res://assets/reanim/Torchwood_body.png" id="4_ji27e"]
+[ext_resource type="Texture2D" uid="uid://c3chyllw8wp1c" path="res://assets/reanim/Torchwood_fire1a.png" id="4_v3nbr"]
 [ext_resource type="Texture2D" uid="uid://dskdfdfajmrkk" path="res://assets/reanim/Torchwood_mouth.png" id="5_w81nd"]
 [ext_resource type="Texture2D" uid="uid://cwhpp4e3mm63u" path="res://assets/reanim/Torchwood_eyes1.png" id="6_lpob7"]
 [ext_resource type="Texture2D" uid="uid://c10j1o0nbf3ub" path="res://assets/reanim/Torchwood_Baptiste_equipment.png" id="6_v3nbr"]
@@ -15,6 +15,99 @@
 [ext_resource type="Texture2D" uid="uid://bw72ppt6vew5p" path="res://assets/reanim/Torchwood_eyes2.png" id="9_1e0vl"]
 [ext_resource type="Texture2D" uid="uid://bhs4smbiuvaj5" path="res://assets/reanim/Torchwood_Baptiste_matrix.png" id="9_v3nbr"]
 [ext_resource type="Script" uid="uid://dlojdy8cdbdqn" path="res://scripts/character/components/component_fog_clearer.gd" id="11_lpob7"]
+
+[sub_resource type="Shader" id="Shader_holographic_flame"]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform vec4 deep_blue : source_color = vec4(0.01, 0.16, 0.56, 1.0);
+uniform vec4 electric_cyan : source_color = vec4(0.18, 0.86, 1.0, 1.0);
+uniform vec4 scan_color : source_color = vec4(0.68, 0.97, 1.0, 1.0);
+uniform float projection_alpha : hint_range(0.0, 1.0) = 0.68;
+uniform float fresnel_strength : hint_range(0.0, 2.0) = 1.15;
+uniform float scan_speed : hint_range(0.05, 1.0) = 0.32;
+uniform float scan_width : hint_range(0.01, 0.3) = 0.065;
+uniform float grid_strength : hint_range(0.0, 0.2) = 0.028;
+uniform float vertex_displacement : hint_range(0.0, 3.0) = 0.55;
+uniform float glitch_displacement : hint_range(0.0, 3.0) = 0.8;
+
+float random_2d(vec2 seed) {
+	return fract(sin(dot(seed, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+void vertex() {
+	float random_tick = floor(TIME * 5.0);
+	float random_offset = random_2d(vec2(random_tick, UV.y * 17.0)) - 0.5;
+	float tip_weight = mix(1.0, 0.28, UV.y);
+	float sway = sin(TIME * 1.9 + UV.y * 4.5) * vertex_displacement * tip_weight;
+	VERTEX.x += sway + random_offset * vertex_displacement * 0.12;
+	VERTEX.y += sin(TIME * 1.25 + UV.x * 3.0) * vertex_displacement * 0.08;
+}
+
+void fragment() {
+	float glitch_tick = floor(TIME * 3.2);
+	float glitch_gate = step(0.91, random_2d(vec2(glitch_tick, 2.7)));
+	float slice_id = floor(UV.y * 10.0);
+	float slice_gate = step(0.7, random_2d(vec2(slice_id, glitch_tick)));
+	float slice_direction = random_2d(vec2(slice_id + 4.1, glitch_tick)) * 2.0 - 1.0;
+	vec2 sample_uv = UV;
+	sample_uv.x += slice_direction * TEXTURE_PIXEL_SIZE.x * glitch_displacement * glitch_gate * slice_gate;
+	sample_uv = clamp(sample_uv, vec2(0.0), vec2(1.0));
+
+	vec4 tex = texture(TEXTURE, sample_uv);
+	float luminance = dot(tex.rgb, vec3(0.299, 0.587, 0.114));
+	float inner_light = smoothstep(0.08, 0.95, luminance);
+
+	vec2 pixel_x = vec2(TEXTURE_PIXEL_SIZE.x, 0.0);
+	vec2 pixel_y = vec2(0.0, TEXTURE_PIXEL_SIZE.y);
+	float alpha_left = texture(TEXTURE, sample_uv - pixel_x).a;
+	float alpha_right = texture(TEXTURE, sample_uv + pixel_x).a;
+	float alpha_up = texture(TEXTURE, sample_uv - pixel_y).a;
+	float alpha_down = texture(TEXTURE, sample_uv + pixel_y).a;
+	vec2 alpha_gradient = vec2(alpha_right - alpha_left, alpha_down - alpha_up);
+	float alpha_fresnel = smoothstep(0.045, 0.42, length(alpha_gradient)) * tex.a;
+	float nearby_alpha = min(min(alpha_left, alpha_right), min(alpha_up, alpha_down));
+	float silhouette_edge = clamp((tex.a - nearby_alpha) * 3.5, 0.0, 1.0);
+	float fresnel = max(alpha_fresnel, silhouette_edge) * fresnel_strength;
+
+	float scan_position = 1.12 - fract(TIME * scan_speed) * 1.24;
+	float scan_distance = abs(UV.y - scan_position);
+	float scan_core = exp(-pow(scan_distance / scan_width, 2.0));
+	float scan_tail = exp(-pow((UV.y - scan_position - scan_width * 1.7) / (scan_width * 2.6), 2.0));
+
+	vec2 flowing_grid_uv = UV * vec2(18.0, 22.0);
+	flowing_grid_uv.y += TIME * 0.22;
+	flowing_grid_uv.x += sin(UV.y * 8.0 - TIME * 0.7) * 0.08;
+	vec2 grid_cell = abs(fract(flowing_grid_uv) - 0.5);
+	float grid_line = max(smoothstep(0.465, 0.495, grid_cell.x), smoothstep(0.465, 0.495, grid_cell.y));
+	float visible_grid = grid_line * grid_strength * (0.55 + scan_core * 2.2);
+
+	vec2 fleck_cell = floor(UV * vec2(22.0, 26.0));
+	float fleck = step(0.975, random_2d(fleck_cell + floor(TIME * 4.0)));
+	fleck *= step(0.2, tex.a);
+
+	float uv_flow = 0.5 + 0.5 * sin((UV.y * 2.2 + UV.x * 0.3 - TIME * 0.65) * 6.28318);
+	vec3 hologram = mix(deep_blue.rgb, electric_cyan.rgb, 0.2 + inner_light * 0.5 + fresnel * 0.22);
+	hologram = mix(hologram, scan_color.rgb, clamp(scan_core * 0.62 + visible_grid + fleck * 0.12, 0.0, 0.82));
+	float brightness = 0.82 + inner_light * 0.24 + fresnel * 0.48 + scan_core * 0.38 + scan_tail * 0.08;
+	brightness *= 0.97 + uv_flow * 0.06;
+	float alpha = tex.a * projection_alpha * (0.72 + inner_light * 0.2);
+	alpha += fresnel * 0.18 + scan_core * tex.a * 0.14 + visible_grid * tex.a;
+	COLOR = vec4(hologram * brightness, clamp(alpha, 0.0, 1.0));
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_holographic_flame"]
+shader = SubResource("Shader_holographic_flame")
+shader_parameter/deep_blue = Color(0, 0.16, 0.85, 1)
+shader_parameter/electric_cyan = Color(0.12, 0.92, 1, 1)
+shader_parameter/scan_color = Color(0.68, 0.97, 1, 1)
+shader_parameter/projection_alpha = 0.82
+shader_parameter/fresnel_strength = 1.15
+shader_parameter/scan_speed = 0.32
+shader_parameter/scan_width = 0.065
+shader_parameter/grid_strength = 0.028
+shader_parameter/vertex_displacement = 0.55
+shader_parameter/glitch_displacement = 0.8
 
 [sub_resource type="Shader" id="Shader_matrix_depth_split"]
 code = "shader_type canvas_item;
@@ -92,37 +185,35 @@ visible = false
 centered = false
 
 [node name="Layer 35" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=834428134]
-visible = false
-self_modulate = Color(1, 1, 1, 0.18934137)
-position = Vector2(38.49042, -0.31898928)
+self_modulate = Color(1, 1, 1, 0.60922855)
+position = Vector2(58.5, 16.152525)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f3mgj")
 centered = false
 
 [node name="Layer 33" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=801051263]
-self_modulate = Color(1, 1, 1, 0.48235244)
-position = Vector2(55.1, 11.332335)
+self_modulate = Color(1, 1, 1, 0.7044214)
+position = Vector2(32.7, 19.416025)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f3mgj")
 centered = false
 
 [node name="Layer 34" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=211030247]
 visible = false
-self_modulate = Color(1, 1, 1, 0.18934137)
-position = Vector2(50.724293, 3.908214)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_f3mgj")
+position = Vector2(7.5394607, 5.678334)
+scale = Vector2(0.90504456, 0.90504456)
 centered = false
 
 [node name="Torchwood_fire1" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=565111788]
-position = Vector2(17.798887, -5.5419164)
-scale = Vector2(0.72403336, 0.9273567)
-texture = ExtResource("4_frv33")
+material = SubResource("ShaderMaterial_holographic_flame")
+position = Vector2(16.705044, -8.264688)
+scale = Vector2(0.7360623, 0.9607359)
+texture = ExtResource("4_v3nbr")
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=1734854339]
-position = Vector2(6.7, 29.34816)
-scale = Vector2(0.7278272, 0.69586396)
+position = Vector2(6.881009, 28.156973)
+scale = Vector2(0.7221899, 0.7140504)
 texture = ExtResource("4_ji27e")
 centered = false
 
@@ -142,6 +233,7 @@ scale = Vector2(0.65437114, 0.62)
 texture = ExtResource("8_v3nbr")
 
 [node name="matrix" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="3" unique_id=1809493325]
+visible = false
 z_index = -1
 material = SubResource("ShaderMaterial_matrix_far")
 position = Vector2(48.203, -21.08)
@@ -150,6 +242,7 @@ scale = Vector2(0.44, 0.44)
 texture = ExtResource("9_v3nbr")
 
 [node name="matrix_player_side" type="Sprite2D" parent="Body/BodyCorrect/Anim_face" index="4" unique_id=1635451231]
+visible = false
 z_index = 1
 material = SubResource("ShaderMaterial_matrix_near")
 position = Vector2(48.203, -21.08)
@@ -158,16 +251,16 @@ scale = Vector2(0.44, 0.44)
 texture = ExtResource("9_v3nbr")
 
 [node name="Torchwood_mouth" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1279068901]
-position = Vector2(22.51728, 42.98272)
+position = Vector2(22.862019, 42.7)
 rotation = -0.006981
-scale = Vector2(0.764136, 0.8589264)
+scale = Vector2(0.74775964, 0.8142789)
 skew = 0.006981
 texture = ExtResource("5_w81nd")
 centered = false
 
 [node name="Torchwood_blink" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=602491039]
 visible = false
-position = Vector2(30.276924, 40.16131)
+position = Vector2(30.294312, 39.210915)
 scale = Vector2(0.737, 0.787)
 texture = ExtResource("6_lpob7")
 centered = false
