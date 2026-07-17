@@ -33,6 +33,10 @@ func _candidates_position(rows:int, cols_start:int, cols_end:int=plant_cell_mana
 	var candidates: Array[Vector2i]= []
 	for r in range(rows):
 		for c in range(cols_start, cols_end):
+			var plant_cell: PlantCell = plant_cell_manager.all_plant_cells[r][c]
+			## 墓碑只能生成在陆地格，水池/雾夜中间两行必须排除。
+			if not _can_place_tombstone(plant_cell):
+				continue
 			## 如果没有墓碑
 			if not all_is_tombstone[r][c]:
 				candidates.append(Vector2i(r, c))
@@ -40,6 +44,10 @@ func _candidates_position(rows:int, cols_start:int, cols_end:int=plant_cell_mana
 	# 打乱顺序确保随机性
 	candidates.shuffle()
 	return candidates
+
+
+static func _can_place_tombstone(plant_cell: PlantCell) -> bool:
+	return plant_cell.plant_cell_type != PlantCell.PlantCellType.Pool
 
 ## 随机生成墓碑的位置
 func _reandom_tombstone_pos(new_num:int) ->  Array[Vector2i]:

@@ -2731,19 +2731,19 @@ label_settings = SubResource("LabelSettings_altii")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureButtonOk" type="TextureButton" parent="User/Panel/HBoxContainer" unique_id=2142719227]
+[node name="TextureButtonCancel" type="TextureButton" parent="User/Panel/HBoxContainer" unique_id=4519486]
 layout_mode = 2
 texture_normal = ExtResource("77_nu6d8")
 script = ExtResource("5_j2mjb")
 
-[node name="Label" type="Label" parent="User/Panel/HBoxContainer/TextureButtonOk" unique_id=1011742938]
+[node name="Label" type="Label" parent="User/Panel/HBoxContainer/TextureButtonCancel" unique_id=1970012816]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "好"
+text = "取消"
 label_settings = SubResource("LabelSettings_altii")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2765,19 +2765,19 @@ label_settings = SubResource("LabelSettings_altii")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureButtonCancel" type="TextureButton" parent="User/Panel/HBoxContainer" unique_id=4519486]
+[node name="TextureButtonOk" type="TextureButton" parent="User/Panel/HBoxContainer" unique_id=2142719227]
 layout_mode = 2
 texture_normal = ExtResource("77_nu6d8")
 script = ExtResource("5_j2mjb")
 
-[node name="Label" type="Label" parent="User/Panel/HBoxContainer/TextureButtonCancel" unique_id=1970012816]
+[node name="Label" type="Label" parent="User/Panel/HBoxContainer/TextureButtonOk" unique_id=1011742938]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "取消"
+text = "好"
 label_settings = SubResource("LabelSettings_altii")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -2909,30 +2909,13 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -147.0
+offset_left = -196.0
 offset_top = -89.0
-offset_right = 147.0
+offset_right = 196.0
 offset_bottom = -39.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/separation = 50
-
-[node name="ButtonOK" type="TextureButton" parent="User/PanelCreateNewUser/HBoxContainer" unique_id=1448411939]
-layout_mode = 2
-texture_normal = ExtResource("77_nu6d8")
-script = ExtResource("5_j2mjb")
-
-[node name="Label" type="Label" parent="User/PanelCreateNewUser/HBoxContainer/ButtonOK" unique_id=493310163]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "好"
-label_settings = SubResource("LabelSettings_altii")
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_constants/separation = 16
 
 [node name="ButtonCancel" type="TextureButton" parent="User/PanelCreateNewUser/HBoxContainer" unique_id=1987892322]
 layout_mode = 2
@@ -2947,6 +2930,40 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "取消"
+label_settings = SubResource("LabelSettings_altii")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonRandomID" type="TextureButton" parent="User/PanelCreateNewUser/HBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("77_nu6d8")
+script = ExtResource("5_j2mjb")
+
+[node name="Label" type="Label" parent="User/PanelCreateNewUser/HBoxContainer/ButtonRandomID"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "随机ID"
+label_settings = SubResource("LabelSettings_altii")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonOK" type="TextureButton" parent="User/PanelCreateNewUser/HBoxContainer" unique_id=1448411939]
+layout_mode = 2
+texture_normal = ExtResource("77_nu6d8")
+script = ExtResource("5_j2mjb")
+
+[node name="Label" type="Label" parent="User/PanelCreateNewUser/HBoxContainer/ButtonOK" unique_id=493310163]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "好"
 label_settings = SubResource("LabelSettings_altii")
 horizontal_alignment = 1
 vertical_alignment = 1

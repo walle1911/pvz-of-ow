@@ -189,12 +189,15 @@ func _custom_stage_progress(stages: Array[Dictionary], stage_position: int, incl
 func start_next_wave() -> void:
 	curr_wave += 1
 	var curr_wave_all_zombies:Array[Zombie000Base]
+	var waves_per_flag := max_wave if max_wave < 10 else 10
+	var is_flag_wave := curr_wave % waves_per_flag == waves_per_flag - 1
+	var next_is_flag_wave := curr_wave + 1 < max_wave and (curr_wave + 1) % waves_per_flag == waves_per_flag - 1
 	## 旗前波
-	if curr_wave % 10 == 8:
+	if next_is_flag_wave:
 		curr_wave_type = E_WaveType.FlagFront
 		curr_wave_all_zombies = zombie_wave_create_manager.create_curr_wave_all_zombies(curr_wave, false)
 	## 旗帜波
-	elif curr_wave % 10 == 9 :
+	elif is_flag_wave:
 		## 最后一波
 		if curr_wave == max_wave - 1:
 			curr_wave_type = E_WaveType.Final
@@ -217,6 +220,12 @@ func start_next_wave() -> void:
 		## 如果有墓碑
 		if is_have_tombston:
 			call_tombstone_create_zombie()
+
+	## 原版允许总波数不是 10 的倍数；这种最终波不是旗帜波，但仍必须停止后续刷新。
+	elif curr_wave == max_wave - 1:
+		curr_wave_type = E_WaveType.Final
+		curr_wave_all_zombies = zombie_wave_create_manager.create_curr_wave_all_zombies(curr_wave, false)
+		set_progress_bar()
 
 	## 普通波
 	else:
@@ -244,7 +253,8 @@ func call_tombstone_create_zombie():
 ## 更新每秒旗帜进度(僵尸波次更新管理器信号触发)
 func update_progress_bar_segment_mini_every_sec(time:float):
 	## 如果是旗帜波，时间加6（僵尸靠近）+3（最后一波置为0）秒红字时间
-	if curr_wave % 10 == 9:
+	var waves_per_flag := max_wave if max_wave < 10 else 10
+	if curr_wave % waves_per_flag == waves_per_flag - 1:
 		time += 6
 		if curr_wave == max_wave - 1:
 			time = 0

@@ -109,7 +109,7 @@ func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	zombie_multy = game_para.zombie_multy
 	range_num_bungi = game_para.range_num_bungi
 	zombie_choose_row_system.init_zombie_choose_row_system()
-	if game_para.custom_spawn_schedule.is_empty():
+	if game_para.custom_spawn_schedule.is_empty() and not game_para.custom_simple_original_mode:
 		update_zombie_refresh_types()
 
 ## 更新可以刷新的僵尸列表
@@ -202,13 +202,19 @@ func wave_create_zombie(
 #region 创建当前波僵尸生成列表
 ## 创建当前波僵尸生成列表
 func create_curr_wave_zombie_list(wave:int, is_big_wave:bool):
+	if zombie_manager.game_para.custom_simple_original_mode:
+		var picked_waves: Array[Array] = zombie_manager.game_para.custom_simple_wave_zombies
+		var picked: Array[CharacterRegistry.ZombieType] = []
+		if wave >= 0 and wave < picked_waves.size():
+			for zombie_type in picked_waves[wave]:
+				picked.append(int(zombie_type) as CharacterRegistry.ZombieType)
+		return picked
 	## 计算当前波僵尸战力上限
 	var curr_wave_power_limit = calculate_wave_power_limit(wave, is_big_wave)
 	## 更新僵尸权重上限
 	update_curr_zombie_weight_upper_limit(wave)
 	## 获取当前波的生成僵尸列表
 	var wave_spawn :Array[CharacterRegistry.ZombieType] = get_curr_wave_zombie_list(wave, is_big_wave, curr_wave_power_limit)
-
 	return wave_spawn
 
 ## 计算每波的战力上限

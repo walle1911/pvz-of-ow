@@ -18,6 +18,7 @@ const CHARACTER_NAMES := {
 	"CobCannon": "玉米加农炮", "Imitater": "模仿者", "Sprout": "萌芽",
 	"WallNutBowling": "坚果保龄球", "WallNutBowlingBomb": "爆炸坚果保龄球", "WallNutBowlingBig": "巨型坚果保龄球",
 	"PeaShooterDoubleReverse": "反向双发射手", "PeaShooterSoldier76": "豌豆射手（士兵76）",
+	"WallNutBrigitte": "坚果墙（布丽吉塔）",
 	"Sunflower_Mercy": "向日葵（天使）", "CherryBomb_Junkrat": "樱桃炸弹（狂鼠）",
 	"Squash_Doomfist": "倭瓜（末日铁拳）", "SnowPea_Mei": "寒冰射手（美）",
 	"GatlingPea_Bastion": "机枪射手（堡垒）", "TwinSunFlower_Illari": "双子向日葵（伊拉锐）",
@@ -55,7 +56,9 @@ const PROPERTY_LABELS := {
 	"balloon_pop_glo_pos_x_in_zombie_mode": "僵尸模式气球破裂横坐标", "beam_curve_height": "光束弯曲高度",
 	"beam_glow_width": "光束发光宽度", "beam_z_index": "光束显示层级", "blink_time": "眨眼间隔",
 	"blover_time": "三叶草生效时间", "bomb_lane": "爆炸影响行数", "bomb_value": "爆炸伤害",
+	"baby_launch_duration": "幼体发射耗时", "boss_throw_thresholds": "首领投掷血量阈值",
 	"bounce_damping": "弹跳衰减", "boundary_value_hp": "本体血量阶段阈值", "boundary_value_hp_armor1": "一类防具阶段阈值",
+	"boundary_value_hp_armor2": "二类防具阶段阈值",
 	"bullet_attack_intervals": "三路线额外间隔（上、中、下）", "bullet_attack_values": "三路线伤害（上、中、下）",
 	"bullet_damage_multiplier": "子弹伤害倍率", "bullet_speeds": "三路线子弹速度（上、中、下）",
 	"cannon_attack_value": "炮弹爆炸伤害", "charge_cd": "蓄力间隔", "correct_y": "纵向修正", "covered_front_child_alpha_percent": "前方遮挡透明度",
@@ -65,7 +68,8 @@ const PROPERTY_LABELS := {
 	"digger_target_pos_x": "矿工目标横坐标", "drop_coin_rate": "硬币掉落概率", "drop_coin_silver_glod_diamond_rate": "银币、金币、钻石掉落权重",
 	"drop_garden_plant_rate": "花园植物掉落概率", "eat_CD": "啃食间隔", "eat_attack": "啃食伤害",
 	"eat_brain_glo_pos_x_in_zombie_mode": "僵尸模式吃脑横坐标", "escape_hp_threshold": "触发逃生血量", "escape_move_time": "逃生位移耗时",
-	"exist_time": "持续时间", "frame_scale": "帧缩放倍率", "frame_time": "帧持续时间", "global_pos_x_can_attack": "可攻击横坐标",
+	"exist_time": "持续时间", "flashbang_every_shots": "闪光弹触发射击数", "flashbang_front_range": "闪光弹前方范围",
+	"flashbang_stun_time": "闪光弹眩晕时间", "frame_scale": "帧缩放倍率", "frame_time": "帧持续时间", "global_pos_x_can_attack": "可攻击横坐标",
 	"glow_flow_speed": "发光流动速度", "glow_overlay_flow_speed": "发光叠层流动速度", "glow_overlay_pulse_amount": "发光叠层脉冲幅度",
 	"glow_overlay_pulse_speed": "发光叠层脉冲速度", "glow_pulse_amount": "发光脉冲幅度", "glow_pulse_speed": "发光脉冲速度",
 	"ground_y": "地面纵坐标", "heal_amount_per_second": "每秒回血量", "heal_delay_after_attack": "受伤后回血等待",
@@ -114,7 +118,7 @@ static func character_name(registry_name: String) -> String:
 
 
 static func property_name(raw_name: String) -> String:
-	return str(PROPERTY_LABELS.get(raw_name, "其他玩法参数"))
+	return str(PROPERTY_LABELS.get(raw_name, "自定义参数：%s" % raw_name))
 
 
 static func component_name(raw_name: String) -> String:

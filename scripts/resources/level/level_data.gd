@@ -84,6 +84,9 @@ var custom_spawn_schedule: Array[Dictionary] = []
 var custom_stage_schedule: Array[Dictionary] = []
 ## 旗帜波在时间轴上的位置，用于大波提示和右下角进度条。
 var custom_flag_data: Array[Dictionary] = []
+## PvZ1 原版会在开局前用 ZombiePicker 生成完整逐波列表。
+var custom_simple_original_mode := false
+var custom_simple_wave_zombies: Array[Array] = []
 var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []

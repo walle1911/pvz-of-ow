@@ -17,6 +17,7 @@ func _run() -> void:
 	if workshop.sidebar_content == null or workshop.preview_root == null:
 		_fail("运行时工坊没有生成卡片侧栏或道路预览区")
 		return
+	workshop.call("_toggle_editor_complexity")
 	workshop.level = Logic.example_level()
 	workshop.level["id"] = "runtime_workshop_test"
 	workshop.level["name"] = "运行时工坊测试"

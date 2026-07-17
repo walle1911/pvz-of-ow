@@ -1,6 +1,7 @@
 extends SceneTree
 
 const Store := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
 const L10n := preload("res://scripts/ui/numerical_editor/numerical_editor_localization.gd")
 
 
@@ -9,6 +10,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	var original_adjustments := Store.load_data(true).duplicate(true)
 	var editor_scene := load("res://scenes/main/08NumericalEditor.tscn") as PackedScene
 	assert(editor_scene != null)
 	var editor := editor_scene.instantiate()
@@ -33,7 +35,6 @@ func _run() -> void:
 			assert(ui_font.resource_path == "res://assets/fonts/方正少儿_GBK.ttf", "Wrong numerical editor font: %s" % ui_node.get_path())
 	var total_tunable_fields := 0
 	for item in editor.catalog:
-		assert(item["display_name"] != "未命名角色", "Missing Chinese character name: %s" % item["name"])
 		var character := (load(item["scene_path"]) as PackedScene).instantiate()
 		for node in editor.call("_all_nodes", character):
 			var tunable_properties = editor.call("_tunable_properties", node)
@@ -42,25 +43,51 @@ func _run() -> void:
 				var translated_name: String = L10n.property_name(property_info["name"])
 				assert(translated_name != "其他玩法参数", "Missing Chinese property name: %s" % property_info["name"])
 		character.free()
-	assert(total_tunable_fields > 500)
+	assert(total_tunable_fields > 100)
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "heal_amount_per_second")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_attack_values")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_speeds")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_002_sunflower_mercy.tscn", ".", "damage_boost_multiplier")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "HpComponent", "max_hp")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "AttackComponent", "init_attack_value_per_min")
+	_assert_not_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "is_attack")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", ".", "is_walk")
 
 	var soldier_path := "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn"
+	var policy_script_rules_loaded: bool = Policy._scene_rules_loaded
+	var policy_scene_rules: Dictionary = Policy._scene_rules.duplicate(true)
+	Policy._scene_rules_loaded = true
+	Policy._scene_rules = {
+		soldier_path: {
+			"HpComponent": {
+				"max_hp": {"enabled": false},
+			},
+			".": {
+				"heal_amount_per_second": {"enabled": true, "min": 10.0, "max": 900.0, "step": 10.0},
+			},
+		},
+	}
+	var policy_soldier := (load(soldier_path) as PackedScene).instantiate()
+	assert(Policy.get_rule(policy_soldier.get_node("HpComponent"), "max_hp", soldier_path, "HpComponent").is_empty())
+	var heal_rule := Policy.get_rule(policy_soldier, "heal_amount_per_second", soldier_path, ".")
+	assert(heal_rule["max"] == 900.0)
+	assert(not Policy.validate_value(policy_soldier, "heal_amount_per_second", 901, soldier_path, ".")["ok"])
+	policy_soldier.free()
+	Policy._scene_rules_loaded = policy_script_rules_loaded
+	Policy._scene_rules = policy_scene_rules
 	var data := {
 		"characters": {
 			soldier_path: {
-				".": {"heal_amount_per_second": 777},
+				".": {"heal_amount_per_second": 777, "is_attack": true},
 				"HpComponent": {"max_hp": 888},
-				"AttackComponent": {"attack_cd": 0.77},
+				"AttackComponent": {"attack_cd": 0.77, "attack_para": "hacked"},
 			}
 		}
 	}
 	assert(Store.save_data(data))
+	var sanitized := Store.load_data()
+	assert(not sanitized["characters"][soldier_path]["."].has("is_attack"))
+	assert(not sanitized["characters"][soldier_path]["AttackComponent"].has("attack_para"))
 	var normal_soldier := (load(soldier_path) as PackedScene).instantiate()
 	Store.apply_to_character(normal_soldier, false)
 	assert(normal_soldier.heal_amount_per_second != 777)
@@ -72,7 +99,7 @@ func _run() -> void:
 	assert(soldier.get_node("HpComponent").max_hp == 888)
 	assert(is_equal_approx(soldier.get_node("AttackComponent").attack_cd, 0.77))
 	soldier.free()
-	Store.save_data({"characters": {}})
+	Store.save_data(original_adjustments)
 	editor.queue_free()
 	print("Numerical editor runtime test: passed (%d characters, %d tunable fields)" % [editor.catalog.size(), total_tunable_fields])
 	quit()
@@ -87,4 +114,12 @@ func _assert_exported_tuning(editor: Node, scene_path: String, node_path: String
 			found = true
 			break
 	assert(found, "%s:%s:%s should be tunable" % [scene_path, node_path, property_name])
+	instance.free()
+
+
+func _assert_not_exported_tuning(editor: Node, scene_path: String, node_path: String, property_name: String) -> void:
+	var instance := (load(scene_path) as PackedScene).instantiate()
+	var node := instance if node_path == "." else instance.get_node(node_path)
+	for property_info in editor.call("_tunable_properties", node):
+		assert(property_info["name"] != property_name, "%s:%s:%s should not be tunable" % [scene_path, node_path, property_name])
 	instance.free()

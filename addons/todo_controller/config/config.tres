@@ -350,6 +350,7 @@ script_list_meta = {
 "res://scripts/resources/level/level_draft_store.gd": [-1, -1],
 "res://scripts/resources/level/level_json_runtime.gd": [-1, -1],
 "res://scripts/resources/level/pre_plant_in_level.gd": [-1, -1],
+"res://scripts/resources/numerical_adjustment_policy.gd": [-1, -1],
 "res://scripts/resources/numerical_adjustment_store.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_000_plant_base.gd": [-1, -1],
 "res://scripts/resources/plant_condition/condition_012_grave_buster.gd": [-1, -1],
@@ -364,6 +365,7 @@ script_list_meta = {
 "res://scripts/resources/save_game/save_game_plant_cell_manager.gd": [-1, -1],
 "res://scripts/start_menu/garden_water_flag.gd": [-1, -1],
 "res://scripts/start_menu/one_user_button.gd": [-1, -1],
+"res://scripts/start_menu/overwatch_streamer_id_library.gd": [-1, -1],
 "res://scripts/start_menu/panel_create_new_user.gd": [-1, -1],
 "res://scripts/start_menu/panel_rename_user.gd": [-1, -1],
 "res://scripts/start_menu/start_menu_flower_button.gd": [-1, -1],
@@ -421,7 +423,9 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_level_workshop_redesign.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
-"res://tests/test_numerical_editor_runtime.gd": [-1, -1]
+"res://tests/test_numerical_editor_runtime.gd": [-1, -1],
+"res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
+"res://tests/test_overwatch_streamer_id_library.gd": [-1, -1]
 }
 line_number_show = true
 complete_path_show = true

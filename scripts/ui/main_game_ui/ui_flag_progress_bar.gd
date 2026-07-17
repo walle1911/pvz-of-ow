@@ -74,8 +74,10 @@ func create_flags_at_progress(flag_progresses: Array[float]) -> void:
 
 ## 根据波数生成大波的旗帜
 func init_flag_from_wave(wave_num:int):
-	assert(wave_num % 10 == 0, "当前波数不为10的倍数")
-	var flag_num : int = int(wave_num / 10.0)
+	## PvZ1 首次冒险少于 10 波时整关只有一面旗帜；否则每满 10 波一面。
+	## 总波数无需是 10 的倍数，尾部不足 10 波不会凭空补一面旗帜。
+	var waves_per_flag := wave_num if wave_num < 10 else 10
+	var flag_num := maxi(1, int(wave_num / maxi(1, waves_per_flag)))
 	create_flag(flag_num)
 
 ## 开始下一轮游戏,进度条更新数据

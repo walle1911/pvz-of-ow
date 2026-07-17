@@ -40,10 +40,19 @@ static func example_level() -> Dictionary:
 		"mapConfig": {"type": "front_lawn", "rows": 5, "columns": 9},
 		"playerConfig": {"initialSun": 150, "sunDropSpeed": 1.0, "cooldownMultiplier": 1.0},
 		"workshopMode": "normal",
+		"editorMode": "advanced",
+		"simpleWaveCount": 20,
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
 		"availablePlants": [1, 2, 4, 6, 3],
 		"plantSelectionEnabled": true,
+		"freePlantSelection": true,
+		"forcedPlants": [],
 		"rewardPlant": -1,
+		"environmentConfig": {
+			"initialTombstones": 0,
+			"tombstoneSpawns": false,
+			"bungee": false,
+		},
 		"waves": [
 			make_wave("interval_1", "第一波前", 0.0, 28.0, [
 				make_group("group_1", "normal", 8, 1.0, "fixed", 1.6, "random", [1, 1, 1, 1, 1]),
@@ -105,7 +114,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "rewardPlant", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -119,6 +128,8 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	player["cooldownMultiplier"] = float(player.get("cooldownMultiplier", 1.0))
 	result["playerConfig"] = player
 	result["workshopMode"] = str(result.get("workshopMode", "normal"))
+	result["editorMode"] = str(result.get("editorMode", "advanced"))
+	result["simpleWaveCount"] = clampi(int(result.get("simpleWaveCount", 20)), 1, 100)
 	var chessboard: Dictionary = result.get("chessboardConfig", {})
 	var chessboard_defaults: Dictionary = defaults["chessboardConfig"]
 	for key in chessboard_defaults:
@@ -131,6 +142,18 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 		if plant_type > 0 and not normalized_plants.has(plant_type):
 			normalized_plants.append(plant_type)
 	result["availablePlants"] = normalized_plants
+	var normalized_forced_plants: Array = []
+	for plant_value in result.get("forcedPlants", []):
+		var plant_type := int(LEGACY_PLANT_TYPE_IDS.get(str(plant_value).to_lower(), plant_value))
+		if plant_type > 0 and normalized_plants.has(plant_type) and not normalized_forced_plants.has(plant_type):
+			normalized_forced_plants.append(plant_type)
+	result["forcedPlants"] = normalized_forced_plants
+	result["freePlantSelection"] = bool(result.get("freePlantSelection", true))
+	var environment: Dictionary = result.get("environmentConfig", {})
+	environment["initialTombstones"] = maxi(0, int(environment.get("initialTombstones", 0)))
+	environment["tombstoneSpawns"] = bool(environment.get("tombstoneSpawns", false))
+	environment["bungee"] = bool(environment.get("bungee", false))
+	result["environmentConfig"] = environment
 	var waves: Array = result.get("waves", [])
 	if not waves.is_empty() and not waves.any(func(wave): return (wave as Dictionary).has("stageType")):
 		waves = _migrate_legacy_waves(waves)
@@ -164,6 +187,8 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "关卡 ID 不能为空", "id"))
 	if str(level.get("name", "")).strip_edges().is_empty():
 		issues.append(issue("error", "关卡名称不能为空", "name"))
+	if not ["simple", "advanced"].has(str(level.get("editorMode", "advanced"))):
+		issues.append(issue("error", "编辑模式必须是简易模式或进阶模式", "editorMode"))
 	var reward_plant := int(level.get("rewardPlant", -1))
 	if reward_plant >= 0 and not CharacterRegistry.PlantInfo.has(reward_plant):
 		issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlant"))
@@ -176,6 +201,13 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 			if plant_type <= 0 or not CharacterRegistry.PlantInfo.has(plant_type):
 				issues.append(issue("error", "可选卡片未在植物注册表中登记", "availablePlants"))
 				break
+		var forced_plants: Array = level.get("forcedPlants", [])
+		for plant_value in forced_plants:
+			if not available_plants.has(int(plant_value)):
+				issues.append(issue("error", "必须携带的植物必须同时位于本关可用植物池", "forcedPlants"))
+				break
+		if not bool(level.get("freePlantSelection", true)) and forced_plants.is_empty():
+			issues.append(issue("error", "关闭自由选卡后至少需要设置一张必须携带的植物", "forcedPlants"))
 	var map: Dictionary = level.get("mapConfig", {})
 	var rows := int(map.get("rows", 0))
 	var columns := int(map.get("columns", 0))
@@ -183,6 +215,13 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "地图类型不存在", "mapConfig/type"))
 	if rows < 1 or rows > 8 or columns < 1 or columns > 12:
 		issues.append(issue("error", "地图行数必须为 1–8、列数必须为 1–12", "mapConfig"))
+	var environment: Dictionary = level.get("environmentConfig", {})
+	if bool(environment.get("tombstoneSpawns", false)) and str(map.get("type", "")) != "night_lawn":
+		issues.append(issue("error", "墓碑机制只能用于夜晚草坪", "environmentConfig/tombstoneSpawns"))
+	if int(environment.get("initialTombstones", 0)) < 0:
+		issues.append(issue("error", "初始墓碑数量不能为负数", "environmentConfig/initialTombstones"))
+	if bool(environment.get("bungee", false)) and str(map.get("type", "")) != "roof":
+		issues.append(issue("error", "蹦极大波只能用于屋顶地图", "environmentConfig/bungee"))
 	if int((level.get("playerConfig", {}) as Dictionary).get("initialSun", -1)) < 0:
 		issues.append(issue("error", "初始阳光不能为负数", "playerConfig/initialSun"))
 	if (level.get("winConditions", []) as Array).is_empty():

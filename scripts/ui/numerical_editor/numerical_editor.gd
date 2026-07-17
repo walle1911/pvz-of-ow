@@ -2,6 +2,7 @@ extends Control
 class_name NumericalEditor
 
 const Store := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
 const L10n := preload("res://scripts/ui/numerical_editor/numerical_editor_localization.gd")
 const ALMANAC_PANEL := preload("res://scenes/almanac/almanac_character_show_panel.tscn")
 
@@ -22,23 +23,6 @@ const TITLE_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const ALMANAC_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 
 const CARDS_PER_PAGE := 24
-const SKIPPED_PROPERTIES := {
-	"plant_type": true,
-	"zombie_type": true,
-	"character_init_type": true,
-	"init_be_attack_status": true,
-	"direction_x_root": true,
-	"direction_x_body": true,
-	"is_death": true,
-	"is_idle": true,
-	"is_show": true,
-	"is_sleeping": true,
-	"is_walk": true,
-	"is_attack": true,
-	"is_swimming": true,
-	"is_garden_aquarium": true,
-}
-
 ## 这些字段无论实际归属于角色根节点、血量组件还是攻击组件，
 ## 都统一提到角色详情最上方的“基础参数”中。
 const BASIC_PARAMETER_PROPERTIES := {
@@ -316,7 +300,7 @@ func _build_character_fields(scene_path: String) -> void:
 	var basic_fields: Array[Dictionary] = []
 	var normal_fields: Array[Dictionary] = []
 	for node in _all_nodes(instance):
-		var properties := _tunable_properties(node)
+		var properties := _tunable_properties(node, instance)
 		for property_info in properties:
 			var field := {"node": node, "property_info": property_info}
 			if BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
@@ -352,14 +336,16 @@ func _all_nodes(root: Node) -> Array[Node]:
 	return result
 
 
-func _tunable_properties(node: Node) -> Array[Dictionary]:
+func _tunable_properties(node: Node, character_root: Node = null) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
+	var scene_path := character_root.scene_file_path if character_root != null else ""
+	var node_path := "." if node == character_root else (str(character_root.get_path_to(node)) if character_root != null else "")
 	for property_info in node.get_property_list():
 		var usage := int(property_info.get("usage", 0))
 		if (usage & PROPERTY_USAGE_EDITOR) == 0 or (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
 			continue
 		var property_name := str(property_info.get("name", ""))
-		if SKIPPED_PROPERTIES.has(property_name):
+		if Policy.get_rule(node, property_name, scene_path, node_path).is_empty():
 			continue
 		var property_type := int(property_info.get("type", TYPE_NIL))
 		var property_hint := int(property_info.get("hint", PROPERTY_HINT_NONE))
@@ -404,6 +390,7 @@ func _add_node_header(root: Node, node: Node) -> void:
 func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> void:
 	var property_name := str(property_info["name"])
 	var node_path := "." if node == root else str(root.get_path_to(node))
+	var policy_rule := Policy.get_rule(node, property_name, root.scene_file_path, node_path)
 	var original_value = _editor_original_value(node, property_name, node.get(property_name))
 	var current_value = _effective_value(node_path, property_name, original_value)
 	current_value = _editor_original_value(node, property_name, current_value)
@@ -429,11 +416,11 @@ func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> 
 		TYPE_INT, TYPE_FLOAT:
 			var spin := SpinBox.new()
 			spin.custom_minimum_size.x = 220
-			spin.allow_greater = true
-			spin.allow_lesser = true
-			spin.min_value = -1000000000.0
-			spin.max_value = 1000000000.0
-			spin.step = 1.0 if int(property_info["type"]) == TYPE_INT else 0.01
+			spin.allow_greater = false
+			spin.allow_lesser = false
+			spin.min_value = float(policy_rule.get("min", -1000000000.0))
+			spin.max_value = float(policy_rule.get("max", 1000000000.0))
+			spin.step = float(policy_rule.get("step", 1.0 if int(property_info["type"]) == TYPE_INT else 0.01))
 			spin.value = float(current_value)
 			_style_line_edit(spin.get_line_edit())
 			spin.value_changed.connect(func(value): _set_pending_value(node_path, property_name, int(value) if int(property_info["type"]) == TYPE_INT else value))

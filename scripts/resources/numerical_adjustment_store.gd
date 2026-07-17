@@ -1,6 +1,8 @@
 extends RefCounted
 class_name NumericalAdjustmentStore
 
+const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
+
 const SAVE_PATH := "user://numerical_adjustments.json"
 const DATA_VERSION := 1
 
@@ -26,9 +28,7 @@ static func load_data(force_reload := false) -> Dictionary:
 
 
 static func save_data(data: Dictionary) -> bool:
-	data["version"] = DATA_VERSION
-	if not data.get("characters") is Dictionary:
-		data["characters"] = {}
+	data = _sanitize_data(data)
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
 		push_error("无法保存数值调整：", FileAccess.get_open_error())
@@ -62,35 +62,40 @@ static func apply_to_character(character: Node, is_developer_level := false) -> 
 			continue
 		for property_value in properties:
 			var property_name := str(property_value)
-			var current_value = target.get(property_name)
-			var adjusted_value = _coerce_value(properties[property_value], current_value)
-			if adjusted_value != null:
-				target.set(property_name, adjusted_value)
+			var validation := Policy.validate_value(target, property_name, properties[property_value], scene_path, node_path)
+			if validation.get("ok", false):
+				target.set(property_name, validation["value"])
 
 
-static func _coerce_value(saved_value, current_value):
-	match typeof(current_value):
-		TYPE_BOOL:
-			return bool(saved_value)
-		TYPE_INT:
-			return int(saved_value)
-		TYPE_FLOAT:
-			return float(saved_value)
-		TYPE_ARRAY:
-			if not saved_value is Array:
-				return null
-			var typed_result: Array = current_value.duplicate()
-			typed_result.clear()
-			var sample = current_value[0] if not current_value.is_empty() else null
-			for value in saved_value:
-				match typeof(sample):
-					TYPE_BOOL:
-						typed_result.append(bool(value))
-					TYPE_INT:
-						typed_result.append(int(value))
-					TYPE_FLOAT:
-						typed_result.append(float(value))
-					_:
-						typed_result.append(value)
-			return typed_result
-	return null
+static func _sanitize_data(data: Dictionary) -> Dictionary:
+	var clean := {"version": DATA_VERSION, "characters": {}}
+	var characters = data.get("characters", {})
+	if not characters is Dictionary:
+		return clean
+	for scene_path_value in characters:
+		var scene_path := str(scene_path_value)
+		var packed := load(scene_path) as PackedScene
+		if packed == null:
+			continue
+		var character := packed.instantiate()
+		var clean_character := {}
+		var node_overrides = characters[scene_path_value]
+		if node_overrides is Dictionary:
+			for node_path_value in node_overrides:
+				var node_path := str(node_path_value)
+				var target := character if node_path == "." else character.get_node_or_null(NodePath(node_path))
+				var properties = node_overrides[node_path_value]
+				if target == null or not properties is Dictionary:
+					continue
+				var clean_properties := {}
+				for property_value in properties:
+					var property_name := str(property_value)
+					var validation := Policy.validate_value(target, property_name, properties[property_value], scene_path, node_path)
+					if validation.get("ok", false):
+						clean_properties[property_name] = validation["value"]
+				if not clean_properties.is_empty():
+					clean_character[node_path] = clean_properties
+		character.free()
+		if not clean_character.is_empty():
+			clean["characters"][scene_path] = clean_character
+	return clean

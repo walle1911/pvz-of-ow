@@ -10,8 +10,57 @@ func _ready() -> void:
 	assert(built["ok"], built["error"])
 	var game_para: ResourceLevelData = built["game_para"]
 	assert(game_para.reward_plant_type == int(CharacterRegistry.PlantType.P001PeaShooterSoldier76))
+	var forced_level := Logic.example_level()
+	forced_level["freePlantSelection"] = false
+	forced_level["forcedPlants"] = [int(CharacterRegistry.PlantType.P001PeaShooterSoldier76)]
+	forced_level["mapConfig"] = {"type": "roof", "rows": 5, "columns": 9}
+	forced_level["environmentConfig"] = {"initialTombstones": 0, "tombstoneSpawns": false, "bungee": true}
+	var forced_built := Runtime.build_game_para(forced_level)
+	assert(forced_built["ok"], forced_built["error"])
+	var forced_para: ResourceLevelData = forced_built["game_para"]
+	assert(not forced_para.can_choosed_card)
+	assert(forced_para.pre_choosed_card_list_plant.has(CharacterRegistry.PlantType.P001PeaShooterSoldier76))
+	assert(forced_para.is_bungi)
 	assert(game_para.custom_spawn_schedule.size() == 14)
 	assert(game_para.custom_flag_data.size() == 2)
+	var simple_level := Logic.example_level()
+	simple_level["editorMode"] = "simple"
+	var simple_built := Runtime.build_game_para(simple_level)
+	assert(simple_built["ok"], simple_built["error"])
+	var simple_para: ResourceLevelData = simple_built["game_para"]
+	## PvZ1 原版在开局前按点值/权重预生成全部波次名单。
+	assert(simple_para.custom_simple_original_mode)
+	assert(simple_para.custom_initial_wave_delay == 18.0)
+	assert(simple_para.max_wave == 20)
+	assert(simple_para.custom_spawn_schedule.is_empty())
+	assert(simple_para.custom_stage_schedule.is_empty())
+	assert(simple_para.custom_flag_data.is_empty())
+	assert(simple_para.custom_simple_wave_zombies.size() == 20)
+	assert(simple_para.custom_simple_wave_zombies[0] == [int(CharacterRegistry.ZombieType.Z500Norm)])
+	assert(simple_para.custom_simple_wave_zombies[9].has(int(CharacterRegistry.ZombieType.Z501Flag)))
+	assert(simple_para.custom_simple_wave_zombies[19].has(int(CharacterRegistry.ZombieType.Z501Flag)))
+	for allowed_type in simple_para.zombie_refresh_types:
+		assert(simple_para.custom_simple_wave_zombies[19].has(int(allowed_type)))
+	var twelve_wave_level := simple_level.duplicate(true)
+	twelve_wave_level["simpleWaveCount"] = 12
+	var twelve_wave_built := Runtime.build_game_para(twelve_wave_level)
+	assert(twelve_wave_built["ok"], twelve_wave_built["error"])
+	var twelve_wave_para: ResourceLevelData = twelve_wave_built["game_para"]
+	assert(twelve_wave_para.custom_simple_wave_zombies[9].has(int(CharacterRegistry.ZombieType.Z501Flag)))
+	assert(not twelve_wave_para.custom_simple_wave_zombies[11].has(int(CharacterRegistry.ZombieType.Z501Flag)))
+	var normal_only_level := simple_level.duplicate(true)
+	for stage in normal_only_level["waves"]:
+		stage["spawnGroups"] = []
+	var normal_only_built := Runtime.build_game_para(normal_only_level)
+	assert(normal_only_built["ok"], normal_only_built["error"])
+	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z500Norm])
+	var grass_cell := PlantCell.new()
+	var pool_cell := PlantCell.new()
+	pool_cell.plant_cell_type = PlantCell.PlantCellType.Pool
+	assert(TombStoneManager._can_place_tombstone(grass_cell))
+	assert(not TombStoneManager._can_place_tombstone(pool_cell))
+	grass_cell.free()
+	pool_cell.free()
 	## 示例包含 0-28、28-38、38-66、66-76 四个阶段，完整时间轴应结束于 76 秒。
 	assert(game_para.custom_timeline_duration == 76.0)
 	assert(float(game_para.custom_spawn_schedule[0]["time"]) < float(game_para.custom_spawn_schedule[-1]["time"]))
@@ -52,6 +101,7 @@ func _ready() -> void:
 	get_tree().root.add_child(workshop)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	workshop.call("_toggle_editor_complexity")
 	workshop.level = Logic.example_level()
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
@@ -72,9 +122,11 @@ func _ready() -> void:
 	workshop.level = Logic.example_level()
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
-	var expected_normal_zombies := AllCards.all_zombie_card_prefabs.keys().filter(func(value):
+	var expected_normal_zombies: Array = AllCards.all_zombie_card_prefabs.keys().filter(func(value):
 		var zombie_id := int(value)
-		return zombie_id > 0 and (zombie_id < 500 or AdventureLevelPresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id))
+		return zombie_id != int(CharacterRegistry.ZombieType.Z520Bungi) and zombie_id > 0 \
+			and (zombie_id < 500 or AdventureLevelPresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id)) \
+			and bool(workshop.call("_has_original_pick_weight", zombie_id))
 	)
 	assert(workshop.zombie_card_order.size() == expected_normal_zombies.size())
 	workshop.call("_create_next_wave")

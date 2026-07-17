@@ -9,9 +9,16 @@
     "schemaVersion": {"const": 1},
     "id": {"type": "string", "minLength": 1},
     "name": {"type": "string", "minLength": 1},
+    "editorMode": {"enum": ["simple", "advanced"]},
+    "simpleWaveCount": {"type": "integer", "minimum": 1, "maximum": 100},
     "mapConfig": {"$ref": "#/$defs/mapConfig"},
     "playerConfig": {"$ref": "#/$defs/playerConfig"},
-    "availablePlants": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "availablePlants": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+    "plantSelectionEnabled": {"type": "boolean"},
+    "freePlantSelection": {"type": "boolean"},
+    "forcedPlants": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+    "rewardPlant": {"type": "integer", "minimum": -1},
+    "environmentConfig": {"$ref": "#/$defs/environmentConfig"},
     "waves": {"type": "array", "items": {"$ref": "#/$defs/wave"}},
     "winConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}, "minItems": 1},
     "loseConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}},
@@ -32,6 +39,15 @@
       "required": ["initialSun"],
       "properties": {"initialSun": {"type": "integer", "minimum": 0}}
     },
+    "environmentConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "initialTombstones": {"type": "integer", "minimum": 0},
+        "tombstoneSpawns": {"type": "boolean"},
+        "bungee": {"type": "boolean"}
+      }
+    },
     "condition": {
       "type": "object",
       "required": ["type"],
@@ -44,6 +60,7 @@
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "name": {"type": "string", "minLength": 1},
+        "stageType": {"enum": ["flag", "interval"]},
         "startTime": {"type": "number", "minimum": 0},
         "duration": {"type": "number", "exclusiveMinimum": 0},
         "spawnGroups": {"type": "array", "items": {"$ref": "#/$defs/spawnGroup"}}
@@ -70,7 +87,8 @@
         "laneWeights": {"type": "array", "items": {"type": "number", "minimum": 0}},
         "healthMultiplier": {"type": "number", "exclusiveMinimum": 0},
         "speedMultiplier": {"type": "number", "exclusiveMinimum": 0},
-        "maxAlive": {"type": "integer", "minimum": 1}
+        "maxAlive": {"type": "integer", "minimum": 1},
+        "mustAppear": {"type": "boolean"}
       }
     }
   }
