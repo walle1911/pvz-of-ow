@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bxqg04mmrwwvj"]
+
+[ext_resource type="PackedScene" uid="uid://c0i88im6af6ik" path="res://scenes/character/zombie/zombie_009_dancing_zombie_lucio.tscn" id="1_dj"]
+
+[node name="DjFlexibleRuntimePreview" type="Node2D" unique_id=832964235]
+
+[node name="Background" type="Polygon2D" parent="." unique_id=1983760268]
+color = Color(0.22, 0.25, 0.29, 1)
+polygon = PackedVector2Array(0, 0, 800, 0, 800, 600, 0, 600)
+
+[node name="DancingZombieDj" parent="." unique_id=1395500810 instance=ExtResource("1_dj")]
+position = Vector2(390, 325)
+scale = Vector2(2.5, 2.5)
+character_init_type = 1

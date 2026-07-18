@@ -119,6 +119,7 @@ script_list_meta = {
 "res://scripts/character/components/swim_box_component/component_swim_box.gd": [-1, -1],
 "res://scripts/character/components/swim_box_component/component_swim_box_norm.gd": [-1, -1],
 "res://scripts/character/components/swim_box_component/component_swim_box_snorkle.gd": [-1, -1],
+"res://scripts/character/components/visual/component_dj_flexible_clothing.gd": [-1, -1],
 "res://scripts/character/components/zombie013Zamboni/zombie_013_death_bomb.gd": [-1, -1],
 "res://scripts/character/components/zombie_death_bomb/zombie_death_bomb.gd": [-1, -1],
 "res://scripts/character/effects/ana_nano_boost.gd": [-1, -1],
