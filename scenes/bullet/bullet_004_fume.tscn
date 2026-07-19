@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://qby4vrnkgom4"]
+[gd_scene load_steps=3 format=3 uid="uid://qby4vrnkgom4"]
 
 [ext_resource type="PackedScene" uid="uid://cit8bsc5op7f0" path="res://scenes/bullet/bullet_000_linear_base.tscn" id="1_58nqe"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_004_fume.gd" id="2_fume"]
 
 [node name="Bullet004Fume" instance=ExtResource("1_58nqe")]
+script = ExtResource("2_fume")
 bullet_type = 4
 max_attack_num = -1
 speed = 450.0

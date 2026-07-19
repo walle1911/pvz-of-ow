@@ -42,6 +42,9 @@ const SCRIPT_RULES := {
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd": {
 		"attack_value_bullet": "damage", "attack_cd": "seconds",
 	},
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_fume_shroom_roadhog.gd": {
+		"hp_threshold": "non_negative_int", "close_burst_distance": "distance",
+	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_three_pea.gd": {
 		"bullet_attack_values": "damage_array", "bullet_attack_intervals": "seconds_array",
 		"bullet_speeds": "speed_array", "middle_triple_shot_enabled": "bool",

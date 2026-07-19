@@ -19,7 +19,7 @@
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_011_fume_shroom_roadhog/011_fume_shroom/FumeShroom_sleep.tres" id="10_gkpnf"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="11_0qv5g"]
 [ext_resource type="Texture2D" uid="uid://dfqmrl67p86b6" path="res://assets/reanim/FumeShroom_Roadhog_Lip.png" id="11_02gsd"]
-[ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="12_47ii7"]
+[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_fume_shroom_roadhog.gd" id="12_47ii7"]
 
 [sub_resource type="Resource" id="Resource_234co"]
 script = ExtResource("8_h5tkg")
@@ -227,6 +227,7 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=103257219 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("12_47ii7")
+hp_threshold = 120
 attack_bullet_type = 4
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
 attack_sfx = &"Fume"
