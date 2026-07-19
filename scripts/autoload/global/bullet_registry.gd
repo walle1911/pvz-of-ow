@@ -25,6 +25,8 @@ enum BulletType{
 	Bullet015WinterMelon,	## 冰瓜子弹
 
 	Bullet016CobCannon,		## 玉米加农炮子弹
+	Bullet017SnowFume,		## 小美近距离寒冰喷雾
+	Bullet018GiantPea,		## 堡垒版机枪射手巨型豌豆
 
 
 	Bullet1001Bowling = 1001,		## 保龄球
@@ -67,6 +69,8 @@ enum AttackMode {
 	BulletType.Bullet015WinterMelon :preload("res://scenes/bullet/bullet_015_winter_melon.tscn"),
 
 	BulletType.Bullet016CobCannon :preload("res://scenes/bullet/bullet_016_cob_cannon.tscn"),
+	BulletType.Bullet017SnowFume :preload("res://scenes/bullet/bullet_017_snow_fume.tscn"),
+	BulletType.Bullet018GiantPea :preload("res://scenes/bullet/bullet_018_giant_pea.tscn"),
 }
 
 ## 获取子弹场景方法

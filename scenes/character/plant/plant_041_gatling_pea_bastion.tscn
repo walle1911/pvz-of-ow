@@ -22,7 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://ieoyttvsgfuf" path="res://assets/reanim/GatlingPea_Bastion_helmet.png" id="18_k57mf"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_041_gatling_pea_bastion/041_gatling_pea/GatlingPea_shooting.tres" id="19_5dfgl"]
 [ext_resource type="Texture2D" uid="uid://d20qd1yvau4h4" path="res://assets/reanim/GatlingPea_Bastion_bird.png" id="19_ht3e3"]
-[ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="21_k2f5v"]
+[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_gatling_pea_bastion.gd" id="21_k2f5v"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="22_uh7kt"]
 
 [sub_resource type="Animation" id="Animation_4pecn"]
@@ -267,6 +267,10 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1089846292 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("21_k2f5v")
+shots_per_round = 4
+giant_pea_attack_value = 80
+giant_pea_knockback_distance = 30.0
+giant_pea_bullet_type = 18
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Anim_idle/HeadCorrect/Marker2D")]
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=922873479]

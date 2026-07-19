@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" uid="uid://cit8bsc5op7f0" path="res://scenes/bullet/bullet_000_linear_base.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://c4xnk3a5vdxgi" path="res://scripts/bullet/bullet_017_snow_fume.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://barututfhosa7" path="res://assets/image/particles/bullet/SnowPea_puff.png" id="3_texture"]
+
+[node name="Bullet017SnowFume" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+bullet_type = 17
+max_attack_num = -1
+speed = 450.0
+bullet_mode = 1
+max_distance = 200.0
+type_bullet_SFX = 0
+
+[node name="BulletShadow" parent="." index="0"]
+visible = false
+
+[node name="BulletBody" parent="Body" index="0"]
+texture = ExtResource("3_texture")
+hframes = 6
+modulate = Color(0.65, 0.9, 1, 0.28)
+scale = Vector2(0.65, 0.65)
+
+[node name="BulletEffect" parent="." index="2"]
+is_bullet_effect = false

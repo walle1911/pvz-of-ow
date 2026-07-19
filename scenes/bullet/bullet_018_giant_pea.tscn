@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" uid="uid://gncshyivuwtb" path="res://scenes/bullet/bullet_001_pea.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_018_giant_pea.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://kr4r24a1l80x" path="res://scripts/bullet/component/spatter_component.gd" id="3_spatter"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_spatter"]
+radius = 60.0
+height = 300.0
+
+[node name="Bullet018GiantPea" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+attack_value = 80
+bullet_mode = 1
+can_attack_zombie_status = 5
+bullet_type = 18
+knockback_distance = 30.0
+
+[node name="BulletShadow" parent="." index="0"]
+scale = Vector2(1.75, 1.75)
+
+[node name="BulletBody" parent="Body" index="0"]
+scale = Vector2(1.75, 1.75)
+
+[node name="CollisionShape2D" parent="Area2DAttack" index="0"]
+scale = Vector2(1.75, 1.75)
+
+[node name="SpatterComponent" type="Node2D" parent="." index="5"]
+script = ExtResource("3_spatter")
+sum_attack_value = 574
+range_attack_value = Vector2i(1, 26)
+spatter_lane_up_down = 1
+
+[node name="Area2DSpatter" type="Area2D" parent="SpatterComponent" index="0"]
+collision_layer = 8
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpatterComponent/Area2DSpatter" index="0"]
+shape = SubResource("CapsuleShape2D_spatter")
