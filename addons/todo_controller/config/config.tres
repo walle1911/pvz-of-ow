@@ -44,6 +44,7 @@ script_list_meta = {
 "res://scripts/bullet/bullet_016_cob_cannon.gd": [-1, -1],
 "res://scripts/bullet/bullet_017_snow_fume.gd": [-1, -1],
 "res://scripts/bullet/bullet_018_giant_pea.gd": [-1, -1],
+"res://scripts/bullet/bullet_027_cactus_cassidy_skill.gd": [-1, -1],
 "res://scripts/bullet/bullet_053_cherry_bomb_junkrat_tire.gd": [-1, -1],
 "res://scripts/bullet/bullet_1001_bowling.gd": [-1, -1],
 "res://scripts/bullet/bullet_1002_bowling_bomb.gd": [-1, -1],

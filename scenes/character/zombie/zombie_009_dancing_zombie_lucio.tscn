@@ -1548,7 +1548,6 @@ script = ExtResource("45_gmpqk")
 body_change = Array[ExtResource("3_pi4sv")]([SubResource("Resource_gmpqk"), SubResource("Resource_lh6oh")])
 
 [node name="HpComponent" parent="." index="4"]
-visible = false
 max_hp = 500
 
 [node name="Anim_blink" type="Sprite2D" parent="CharredComponent/ZombieCharred/CharredCorrect" index="0" unique_id=1937953142]
@@ -1606,13 +1605,7 @@ centered = false
 [node name="AnimLib" type="AnimationPlayer" parent="CharredComponent/ZombieCharred/CharredCorrect" index="12" unique_id=1143872077]
 libraries/ = SubResource("AnimationLibrary_bab66")
 
-[node name="AttackComponent" parent="." index="6"]
-visible = false
-
 [node name="SwimBoxComponent" parent="." index="8"]
-visible = false
-
-[node name="HurtBoxComponent" parent="." index="10"]
 visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="11" unique_id=1257690969]

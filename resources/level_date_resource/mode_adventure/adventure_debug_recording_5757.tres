@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="ResourceLevelData" format=3]
+[gd_resource type="Resource" script_class="ResourceLevelData" format=3 uid="uid://cp1aapxwjw2h5"]
 
-[ext_resource type="Script" path="res://scripts/resources/level/level_data.gd" id="1_level"]
+[ext_resource type="Script" uid="uid://bke3sg5otco7s" path="res://scripts/resources/level/pre_plant_in_level.gd" id="1_dmnqu"]
+[ext_resource type="Script" uid="uid://bjt3l56exxmdw" path="res://scripts/resources/level/level_data.gd" id="1_level"]
 
 [resource]
 script = ExtResource("1_level")
-look_show_zombie = true
-can_choosed_card = true
 is_day_sun = false
 is_zombie_can_home = false
 monster_mode = 0
