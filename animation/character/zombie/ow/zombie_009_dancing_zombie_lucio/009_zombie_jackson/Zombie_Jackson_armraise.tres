@@ -1237,10 +1237,10 @@ tracks/102/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/dj_out
 tracks/102/interp = 1
 tracks/102/loop_wrap = true
 tracks/102/keys = {
-"times": PackedFloat32Array(0, 0.23382092, 0.73069036, 0.833333),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.23382092, 0.46764183, 0.5991661, 0.73069036, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(11.407921, 4.2352066), Vector2(16.07577, 4.2352066), Vector2(12.987681, 4.2352066), Vector2(10.681274, 4.2352066)]
+"values": [Vector2(11.407921, 4.2352066), Vector2(16.07577, 4.2352066), Vector2(16.092085, 4.2352066), Vector2(16.205387, 4.2352066), Vector2(12.987681, 4.2352066), Vector2(10.681274, 4.2352066)]
 }
 tracks/103/type = "value"
 tracks/103/imported = false
@@ -1249,10 +1249,10 @@ tracks/103/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/dj_out
 tracks/103/interp = 1
 tracks/103/loop_wrap = true
 tracks/103/keys = {
-"times": PackedFloat32Array(0, 0.23382092, 0.73069036, 0.833333),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.23382092, 0.46764183, 0.5991661, 0.73069036, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [0.0, 0.0, 0.0, 0.0]
+"values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 tracks/104/type = "value"
 tracks/104/imported = false
@@ -1261,8 +1261,8 @@ tracks/104/path = NodePath("Body/BodyCorrect/Zombie_Jackson_outerleg_foot/dj_out
 tracks/104/interp = 1
 tracks/104/loop_wrap = true
 tracks/104/keys = {
-"times": PackedFloat32Array(0, 0.23382092, 0.73069036, 0.833333),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.23382092, 0.46764183, 0.5991661, 0.73069036, 0.833333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(0.96882516, 0.7362504), Vector2(0.76239043, 0.7362504), Vector2(0.92953247, 0.7362504), Vector2(0.9963848, 0.7362504)]
+"values": [Vector2(0.96882516, 0.7362504), Vector2(0.76239043, 0.7362504), Vector2(0.79845035, 0.7362504), Vector2(0.7376435, 0.7362504), Vector2(0.92953247, 0.7362504), Vector2(0.9963848, 0.7362504)]
 }

@@ -5,6 +5,7 @@ enum E_PauseFactor {
 	Menu,			## 菜单
 	GameOver,		## 游戏结束
 	ReChooseCard,	## 重新选卡
+	DebugRecording,	## 录制调试场景布置角色、排队事件
 }
 
 var curr_pause_factor: Dictionary = {}

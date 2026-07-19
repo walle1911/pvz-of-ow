@@ -60,14 +60,14 @@ node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"AnimationNode
 script = ExtResource("8_y4g8x")
 sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Anim_face")])
 sprite_change_texture = Array[Texture2D]([ExtResource("11_hev76")])
-sprite_change_offset = Array[Vector2]([Vector2(-10.03, -14.62)])
+sprite_change_offset = Array[Vector2]([Vector2(-10.03, -19.62)])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [sub_resource type="Resource" id="Resource_akyvq"]
 script = ExtResource("8_y4g8x")
 sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Anim_face")])
 sprite_change_texture = Array[Texture2D]([ExtResource("13_akyvq")])
-sprite_change_offset = Array[Vector2]([Vector2(-10.03, -14.62)])
+sprite_change_offset = Array[Vector2]([Vector2(-10.03, -19.62)])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant004WallNutBrigitte" unique_id=1723955843 instance=ExtResource("1_rscpg")]
@@ -97,27 +97,28 @@ centered = false
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=390674287]
-position = Vector2(8.114551, 3.995356)
-rotation = 0.01687541
-scale = Vector2(0.7, 0.7088545)
-skew = -0.0013295666
+position = Vector2(5.650925, 5.4108806)
+rotation = -0.017548243
+scale = Vector2(0.7, 0.7070729)
 texture = ExtResource("2_1opod")
 centered = false
 offset = Vector2(-10.03, -14.62)
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1392859434]
 visible = false
-position = Vector2(29.819195, 34.92879)
+position = Vector2(28.481829, 36.10272)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_ia1rq")
 centered = false
+offset = Vector2(0, -4.33)
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1869722294]
 visible = false
-position = Vector2(28.619194, 20.92879)
+position = Vector2(27.281828, 22.10272)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("4_s15q3")
 centered = false
+offset = Vector2(0, -2.97)
 
 [node name="HpComponent" parent="." index="3"]
 max_hp = 4000

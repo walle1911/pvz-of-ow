@@ -50,6 +50,10 @@ movie_writer/movie_file="E:/movie"
 
 enabled=PackedStringArray("res://addons/DragNDropNodes/plugin.cfg", "res://addons/R2Ga_PVZ/plugin.cfg", "res://addons/anim_free_common_tracks/plugin.cfg", "res://addons/anim_player_refactor/plugin.cfg", "res://addons/numerical_whitelist_editor/plugin.cfg", "res://addons/pvz_level_editor/plugin.cfg", "res://addons/todo_controller/plugin.cfg")
 
+[gui]
+
+theme/custom="res://data/global_font_theme.tres"
+
 [input]
 
 ShortcutKeys_Shovel={

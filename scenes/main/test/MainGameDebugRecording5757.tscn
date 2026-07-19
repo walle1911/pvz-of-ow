@@ -1,14 +1,11 @@
-[gd_scene format=3 uid="uid://dgdok1dw8w2a"]
+[gd_scene format=3 uid="uid://cb2h3unhc5d14"]
 
 [ext_resource type="PackedScene" uid="uid://c1w2cmehilec8" path="res://scenes/main/MainGame01Front.tscn" id="1_front"]
-[ext_resource type="Resource" uid="uid://evdpsat2avsr" path="res://resources/level_date_resource/mode_adventure/adventure_debug_9999_sun.tres" id="2_level"]
-[ext_resource type="Script" path="res://scripts/main_game_item/debug_9999_sun_bob_auto_throw.gd" id="3_bob_throw"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757.tres" id="2_level"]
+[ext_resource type="Script" uid="uid://bbgd6awbe1dt1" path="res://scripts/main_game_item/recording_debug_controller.gd" id="3_controller"]
 
-[node name="MainGameDebug9999Sun" unique_id=1737605305 instance=ExtResource("1_front")]
+[node name="MainGameDebugRecording5757" unique_id=1121518709 instance=ExtResource("1_front")]
 game_para = ExtResource("2_level")
-
-[node name="BobAutoThrowDebug" type="Node" parent="."]
-script = ExtResource("3_bob_throw")
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
 plant_in_cell = {
@@ -414,3 +411,7 @@ plant_in_cell = {
 3: null,
 4: null
 }
+
+[node name="RecordingDebugController" type="Node" parent="." index="18" unique_id=1462498711]
+process_mode = 3
+script = ExtResource("3_controller")

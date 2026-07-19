@@ -57,6 +57,8 @@ var is_ice:bool
 var ice_timer:Timer
 
 signal signal_curr_zombie_num_change(num:int)
+## 僵尸完成正常出战创建后发出；测试关卡可据此挂接仅调试用行为。
+signal signal_zombie_created(zombie:Zombie000Base)
 
 func _ready():
 	## 注册事件总线
@@ -88,6 +90,9 @@ func init_manager() -> void:
 	match monster_mode:
 		## 没有僵尸刷新,直接启动最后一波僵尸检查计时器
 		ConstLevelData.E_MonsterMode.Null:
+			## 录制/测试关仍需用关卡列表展示僵尸并进入正常选卡，但不会启动任何波次。
+			is_bungi = game_para.is_bungi
+			zombie_refresh_types = game_para.zombie_refresh_types
 			check_zombie_end_wave_timer.start()
 
 		ConstLevelData.E_MonsterMode.Norm:
@@ -156,6 +161,7 @@ func create_norm_zombie(
 	all_zombies_1d.append(zombie)
 
 	curr_zombie_num += 1
+	signal_zombie_created.emit(zombie)
 
 	return zombie
 

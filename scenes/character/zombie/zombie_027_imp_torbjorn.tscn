@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bxohnratlon7g"]
 
 [ext_resource type="PackedScene" uid="uid://cktksmdbn2nmn" path="res://scenes/character/zombie/zombie_000_base.tscn" id="1_cklgi"]
-[ext_resource type="Script" path="res://scripts/character/zombie/ow/zombie_027_imp_torbjorn.gd" id="2_r3fwd"]
+[ext_resource type="Script" uid="uid://d4ju0begdosht" path="res://scripts/character/zombie/ow/zombie_027_imp_torbjorn.gd" id="2_r3fwd"]
 [ext_resource type="Texture2D" uid="uid://ddxjngjxjdtdk" path="res://assets/reanim/Zombie_imp_arm1.png" id="3_r3fwd"]
 [ext_resource type="Texture2D" uid="uid://s58kvgbmcik2" path="res://assets/reanim/Zombie_imp_arm2.png" id="4_app00"]
 [ext_resource type="Texture2D" uid="uid://c4eemc3cx7mbg" path="res://assets/reanim/Zombie_imp_innerleg_foot.png" id="5_b0o6p"]
@@ -1011,86 +1011,86 @@ zombie_type = 27
 position = Vector2(-55, -120)
 
 [node name="_ground" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=1715434550]
-position = Vector2(1.3834039, 90.1)
+position = Vector2(-29.012598, 90.1)
 centered = false
 
 [node name="Zombie_imp_innerarm_upper" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=958192005]
-position = Vector2(30.230942, 91.94036)
-rotation = 5.4484286
-scale = Vector2(0.9043094, 0.9043094)
+position = Vector2(28.41612, 90.32293)
+rotation = 5.6312413
+scale = Vector2(0.90536773, 0.90536773)
 texture = ExtResource("3_r3fwd")
 centered = false
 
 [node name="Zombie_imp_innerarm_lower" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=1002930069]
-position = Vector2(26.585653, 99.94979)
-rotation = 5.570358
-scale = Vector2(0.845, 0.9043094)
+position = Vector2(23.18967, 95.18036)
+rotation = 5.9500146
+scale = Vector2(0.8463678, 0.9061839)
 texture = ExtResource("4_app00")
 centered = false
 
 [node name="Zombie_imp_innerleg_foot" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1003050582]
-position = Vector2(43.907173, 114.1)
-rotation = 6.287503
-scale = Vector2(0.99307173, 0.99307173)
+position = Vector2(59.4597, 125.05517)
+rotation = 4.588293
+scale = Vector2(0.9911839, 0.9911839)
 texture = ExtResource("5_b0o6p")
 centered = false
 
 [node name="Zombie_imp_innerleg_lower" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1168876303]
-position = Vector2(44.628693, 112.09283)
-rotation = 6.0981894
-scale = Vector2(0.99238116, 1.0811392)
+position = Vector2(54.659702, 121.755165)
+rotation = 4.7506046
+scale = Vector2(0.99218386, 0.99218386)
 texture = ExtResource("6_1o1iv")
 centered = false
 
 [node name="Zombie_imp_innerleg_upper" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1696926788]
-position = Vector2(44.392826, 101.77623)
-rotation = 6.311971
-scale = Vector2(0.9966906, 0.9966906)
+position = Vector2(49.00227, 106.43904)
+rotation = 5.9784803
+scale = Vector2(0.99636775, 0.99636775)
 texture = ExtResource("7_ph26a")
 centered = false
 
 [node name="Zombie_imp_body2" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=588032495]
-position = Vector2(41.538116, 91.54754)
-rotation = 0.13784151
-scale = Vector2(1, 0.999)
-skew = -0.042012855
+position = Vector2(40.589672, 92.739044)
+rotation = 0.14271668
+scale = Vector2(1, 0.998)
+skew = -0.06535951
 texture = ExtResource("8_3351q")
 centered = false
 
 [node name="Zombie_imp_body1" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=1689925644]
-position = Vector2(35.72152, 65.27848)
-rotation = 0.09582864
-scale = Vector2(0.999, 0.999)
+position = Vector2(35.087406, 66.557434)
+rotation = 0.09765954
+scale = Vector2(0.998, 0.998)
 texture = ExtResource("9_btf2t")
 centered = false
 
 [node name="Zombie_imp_outerleg_foot" type="Sprite2D" parent="Body/BodyCorrect" index="8" unique_id=460622571]
-position = Vector2(47.60942, 118.84036)
-rotation = 5.8988156
-scale = Vector2(0.99238116, 0.99238116)
+position = Vector2(44.587406, 118.3)
+rotation = 6.133732
+scale = Vector2(0.9891839, 0.9891839)
 texture = ExtResource("10_kp36n")
 centered = false
 
 [node name="Zombie_imp_outerleg_lower" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=611694221]
-position = Vector2(49, 111.70943)
-rotation = 5.8774056
-scale = Vector2(0.9936906, 1.2216905)
+position = Vector2(45.11612, 113.371284)
+rotation = 5.8208323
+scale = Vector2(0.99236774, 1.2203678)
 texture = ExtResource("11_v156j")
 centered = false
 
 [node name="Zombie_imp_outerleg_upper" type="Sprite2D" parent="Body/BodyCorrect" index="10" unique_id=1405811641]
-position = Vector2(52, 99.95471)
-rotation = 0.21260129
-scale = Vector2(0.996, 0.996)
+position = Vector2(52.41839, 99.33678)
+rotation = 0.5032753
+scale = Vector2(0.99536777, 1.0521487)
 texture = ExtResource("12_sd2ba")
 centered = false
 
 [node name="Head" type="Node2D" parent="Body/BodyCorrect" index="11" unique_id=341124349]
 
 [node name="Anim_head1" type="Sprite2D" parent="Body/BodyCorrect/Head" index="0" unique_id=299632160]
-position = Vector2(29.97398, 44.933193)
-rotation = 0.12774509
-scale = Vector2(0.99830943, 0.99830943)
+position = Vector2(26.03803, 48.98842)
+rotation = 0.034106158
+scale = Vector2(0.998, 0.998)
 texture = ExtResource("13_16r2g")
 centered = false
 
@@ -1099,36 +1099,43 @@ position = Vector2(17.155197, 12.596906)
 scale = Vector2(-0.8363027, 0.8527592)
 texture = ExtResource("26_torb_head")
 
-[node name="TorbjornBeard" type="Sprite2D" parent="Body/BodyCorrect/Head/Anim_head1" index="1" unique_id=1377503029]
+[node name="TorbjornBeardFollow" type="RemoteTransform2D" parent="Body/BodyCorrect/Head/Anim_head1" index="1" unique_id=169608162]
 position = Vector2(12.843, 36.768)
 rotation = 3.1358287
 scale = Vector2(0.69513, -0.822193)
 skew = 0.0255512
-texture = ExtResource("27_torb_beard")
+remote_path = NodePath("../../Anim_head2/TorbjornBeard")
 
 [node name="Anim_head2" type="Sprite2D" parent="Body/BodyCorrect/Head" index="1" unique_id=388804477]
-position = Vector2(31.652462, 68.0166)
-rotation = 0.09312831
-scale = Vector2(0.999, 0.99830943)
-skew = -0.015042572
+position = Vector2(30.187403, 69.85743)
+rotation = 0.05829956
+scale = Vector2(0.999, 0.998)
+skew = -0.0427104
 texture = ExtResource("14_1fvp5")
 centered = false
 
+[node name="TorbjornBeard" type="Sprite2D" parent="Body/BodyCorrect/Head/Anim_head2" index="0" unique_id=1377503029]
+position = Vector2(7.6761646, 15.827942)
+rotation = 3.1116164
+scale = Vector2(0.6953239, -0.82353765)
+skew = 0.068214655
+texture = ExtResource("27_torb_beard")
+
 [node name="Zombie_imp_outerarm_upper" type="Sprite2D" parent="Body/BodyCorrect" index="12" unique_id=539135280]
-position = Vector2(47.238113, 93.37848)
-rotation = 5.4198384
-scale = Vector2(1.0143094, 1.0243094)
-skew = 0.046043936
+position = Vector2(45.089672, 95.1126)
+rotation = 5.4640436
+scale = Vector2(1.0123677, 1.0223677)
+skew = 0.048548665
 texture = ExtResource("3_r3fwd")
 centered = false
 
 [node name="Hand" type="Node2D" parent="Body/BodyCorrect" index="13" unique_id=11207957]
 
 [node name="Zombie_outerarm_lower" type="Sprite2D" parent="Body/BodyCorrect/Hand" index="0" unique_id=1780713800]
-position = Vector2(44.485653, 107.44036)
-rotation = 5.2949605
-scale = Vector2(1.0573094, 1.0213094)
-skew = 0.04953466
+position = Vector2(39.17355, 104.93326)
+rotation = 5.677174
+scale = Vector2(1.0533677, 1.0173677)
+skew = 0.04854804
 texture = ExtResource("4_app00")
 centered = false
 
@@ -1164,12 +1171,12 @@ position = Vector2(17.155197, 12.596906)
 scale = Vector2(-0.8363027, 0.8527592)
 texture = ExtResource("26_torb_head")
 
-[node name="TorbjornBeard" type="Sprite2D" parent="Body/NodeDrop/Node2D_Head_Drop/Head_Drop/Anim_head1" index="1" unique_id=2115916155]
+[node name="TorbjornBeardFollow" type="RemoteTransform2D" parent="Body/NodeDrop/Node2D_Head_Drop/Head_Drop/Anim_head1" index="1" unique_id=66504159]
 position = Vector2(12.843, 36.768)
 rotation = 3.1358287
 scale = Vector2(0.69513, -0.822193)
 skew = 0.0255512
-texture = ExtResource("27_torb_beard")
+remote_path = NodePath("../../Anim_head2/TorbjornBeard")
 
 [node name="Anim_head2" type="Sprite2D" parent="Body/NodeDrop/Node2D_Head_Drop/Head_Drop" index="1" unique_id=47244445]
 position = Vector2(-11.5548, -1.59137)
@@ -1178,6 +1185,13 @@ scale = Vector2(1, 0.997452)
 skew = -0.0644654
 texture = ExtResource("14_1fvp5")
 centered = false
+
+[node name="TorbjornBeard" type="Sprite2D" parent="Body/NodeDrop/Node2D_Head_Drop/Head_Drop/Anim_head2" index="0" unique_id=2115916155]
+position = Vector2(7.92474, 16.746752)
+rotation = 3.0713568
+scale = Vector2(0.6965077, -0.8232429)
+skew = 0.08998883
+texture = ExtResource("27_torb_beard")
 
 [node name="HpStageChangeComponent" parent="." index="3"]
 body_change = Array[ExtResource("15_b0o6p")]([SubResource("Resource_ph26a"), SubResource("Resource_3351q")])
