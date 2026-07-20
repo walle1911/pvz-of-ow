@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bnfv6m0ut4477" path="res://scenes/bullet/bullet_000_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_019_widowmaker_tracer.gd" id="2_script"]
+
+[node name="Bullet019WidowmakerTracer" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+bullet_type = 19
+
+[node name="BulletShadow" parent="." index="0"]
+visible = false
+
+[node name="Body" parent="." index="1"]
+visible = false

@@ -22,7 +22,7 @@
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_014_scaredy_shroom_widowmaker/014_scaredy_shroom/ScaredyShroom_sleep.tres" id="17_uifxs"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="19_68pw3"]
 [ext_resource type="Script" uid="uid://djb8gwri8n6tg" path="res://scripts/character/components/component_scaredy.gd" id="19_tthcx"]
-[ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="20_wh8am"]
+[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_widowmaker.gd" id="20_wh8am"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ftdw2"]
 _data = {
@@ -135,6 +135,7 @@ height = 378.0
 [node name="Plant014ScaredyShroomWidowmaker" unique_id=1787225348 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_rixsb")]
 script = ExtResource("2_esfqn")
 is_scared = false
+shot_interval = 5.0
 plant_type = 14
 is_sleep_in_day = true
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
@@ -267,7 +268,9 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1589178663 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("20_wh8am")
-attack_bullet_type = 5
+attack_value_bullet = 250
+attack_cd = 5.0
+attack_bullet_type = 19
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=453602712]
