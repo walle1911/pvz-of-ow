@@ -10,12 +10,23 @@ class_name Plant004WallNutBrigitte
 @export_range(0.1, 10.0, 0.1, "or_greater") var heal_pulse_interval:float = 1.0
 
 @export_subgroup("黄色水波纹")
-@export var heal_ripple_color:Color = Color(1.0, 0.86, 0.24, 0.3)
+## 水波纹主色；Alpha 决定整体基础透明度。
+@export var heal_ripple_color:Color = Color(1.0, 0.78, 0.08, 0.72)
 @export_range(10.0, 300.0, 1.0, "or_greater") var heal_ripple_radius:float = 135.0
 @export_range(0.1, 3.0, 0.05, "or_greater") var heal_ripple_duration:float = 0.7
 @export_range(1, 5, 1) var heal_ripple_ring_count:int = 3
 @export_range(0.5, 8.0, 0.5, "or_greater") var heal_ripple_line_width:float = 2.5
 @export_range(0.1, 1.0, 0.05) var heal_ripple_vertical_scale:float = 0.75
+## 在颜色 Alpha 的基础上进一步调节整组水波纹的显眼程度。
+@export_range(0.0, 3.0, 0.05, "or_greater") var heal_ripple_opacity_strength:float = 1.25
+## 控制柔光各层向外扩散的宽度。
+@export_range(0.25, 3.0, 0.05, "or_greater") var heal_ripple_glow_spread:float = 1.0
+## 后续圆环相对动画总时长的错峰比例。
+@export_range(0.0, 0.8, 0.05) var heal_ripple_ring_stagger:float = 0.3
+## 小于 1 时尾段消失更慢，大于 1 时消失更快。
+@export_range(0.1, 3.0, 0.05, "or_greater") var heal_ripple_fade_power:float = 0.75
+## 数值越大，水波纹越快接近最大半径。
+@export_range(0.5, 5.0, 0.1, "or_greater") var heal_ripple_expand_ease:float = 2.0
 
 var _active_heal_ripples:Array[float] = []
 var _heal_pulse_cooldown:float = 0.0
@@ -79,24 +90,27 @@ func _draw():
 	for elapsed:float in _active_heal_ripples:
 		var base_progress := clampf(elapsed / safe_duration, 0.0, 1.0)
 		for ring_index in range(safe_ring_count):
-			var ring_delay := float(ring_index) / float(safe_ring_count) * 0.3
+			var ring_delay := float(ring_index) / float(safe_ring_count) * heal_ripple_ring_stagger
 			var ring_progress := (base_progress - ring_delay) / (1.0 - ring_delay)
 			if ring_progress <= 0.0 or ring_progress >= 1.0:
 				continue
-			var eased_progress := 1.0 - pow(1.0 - ring_progress, 2.0)
-			var ring_alpha := heal_ripple_color.a * (1.0 - ring_progress) * (1.0 - float(ring_index) * 0.12)
+			var eased_progress := 1.0 - pow(1.0 - ring_progress, heal_ripple_expand_ease)
+			var fade_alpha := pow(1.0 - ring_progress, heal_ripple_fade_power)
+			var ring_alpha := heal_ripple_color.a * heal_ripple_opacity_strength * fade_alpha \
+				* (1.0 - float(ring_index) * 0.12)
 			_draw_soft_ripple_ring(heal_ripple_radius * eased_progress, ring_alpha)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 ## 用更宽、更淡的多层线叠加，让水波边缘呈雾状过渡而不是清晰描边。
 func _draw_soft_ripple_ring(radius:float, ring_alpha:float):
-	_draw_ripple_arc(radius, ring_alpha * 0.025, heal_ripple_line_width * 8.0)
-	_draw_ripple_arc(radius, ring_alpha * 0.04, heal_ripple_line_width * 6.0)
-	_draw_ripple_arc(radius, ring_alpha * 0.065, heal_ripple_line_width * 4.5)
-	_draw_ripple_arc(radius, ring_alpha * 0.10, heal_ripple_line_width * 3.0)
-	_draw_ripple_arc(radius, ring_alpha * 0.14, heal_ripple_line_width * 1.8)
-	_draw_ripple_arc(radius, ring_alpha * 0.18, heal_ripple_line_width * 0.9)
+	var spread_width := heal_ripple_line_width * heal_ripple_glow_spread
+	_draw_ripple_arc(radius, ring_alpha * 0.04, spread_width * 8.0)
+	_draw_ripple_arc(radius, ring_alpha * 0.065, spread_width * 6.0)
+	_draw_ripple_arc(radius, ring_alpha * 0.10, spread_width * 4.5)
+	_draw_ripple_arc(radius, ring_alpha * 0.16, spread_width * 3.0)
+	_draw_ripple_arc(radius, ring_alpha * 0.25, spread_width * 1.8)
+	_draw_ripple_arc(radius, ring_alpha * 0.42, heal_ripple_line_width * 0.9)
 
 
 func _draw_ripple_arc(radius:float, alpha:float, width:float):
@@ -106,7 +120,7 @@ func _draw_ripple_arc(radius:float, alpha:float, width:float):
 		0.0,
 		TAU,
 		96,
-		Color(heal_ripple_color.r, heal_ripple_color.g, heal_ripple_color.b, alpha),
+		Color(heal_ripple_color.r, heal_ripple_color.g, heal_ripple_color.b, clampf(alpha, 0.0, 1.0)),
 		width,
 		true
 	)

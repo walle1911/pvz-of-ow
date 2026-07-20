@@ -32,7 +32,6 @@ class_name Plant052SunflowerMercy
 	CharacterRegistry.PlantType.P011FumeShroomRoadhog,
 	CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,
 	CharacterRegistry.PlantType.P019ThreepeaterDaotian,
-	CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 ]
 
 @export_subgroup("蓝线增伤 | 自定义目标配置")
@@ -94,7 +93,6 @@ static func is_blue_line_damage_boost_target_type(target_plant_type:CharacterReg
 		CharacterRegistry.PlantType.P011FumeShroomRoadhog,
 		CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,
 		CharacterRegistry.PlantType.P019ThreepeaterDaotian,
-		CharacterRegistry.PlantType.P042TwinSunFlowerIllari,
 	]
 
 

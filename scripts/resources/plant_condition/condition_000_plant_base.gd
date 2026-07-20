@@ -55,8 +55,8 @@ func _is_chessboard_reward_card(curr_plant_type: CharacterRegistry.PlantType) ->
 func _judge_chessboard_reward_plant(plant_cell: PlantCell, curr_plant_type: CharacterRegistry.PlantType) -> bool:
 	if not plant_cell.can_common_plant or is_instance_valid(plant_cell.plant_in_cell[place_plant_in_cell]):
 		return false
-	# 两种 OW 香蒲奖励卡可以不依赖睡莲，直接落在水池格。
-	if curr_plant_type in [CharacterRegistry.PlantType.P044CattailJetpackCat, CharacterRegistry.PlantType.P051CattailSierra]:
+	# OW 香蒲奖励卡可以不依赖睡莲，直接落在水池格。
+	if curr_plant_type == CharacterRegistry.PlantType.P044CattailJetpackCat:
 		return plant_cell.plant_cell_type == PlantCell.PlantCellType.Pool
 	return bool(plant_condition & plant_cell.curr_condition)
 

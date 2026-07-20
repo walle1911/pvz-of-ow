@@ -3,8 +3,6 @@ extends Control
 ## 所有的卡片
 class_name AllCardsClass
 
-const CARD_SCENE := preload("res://scenes/ui/all_cards/card.tscn")
-
 @onready var all_plant_cards_parent_node_root: Array[GridContainer] = [
 	%PlantCards, %PlantCards2, %PlantCards3
 ]
@@ -41,8 +39,6 @@ func _ready() -> void:
 	character_registry = Global.get_node("Registry/CharacterRegistry") as CharacterRegistry
 	if not is_instance_valid(character_registry):
 		return
-	_ensure_sierra_card()
-
 	var plant_cards_by_type: Dictionary[CharacterRegistry.PlantType, Card] = {}
 	var plant_card_order: Array[CharacterRegistry.PlantType] = []
 	all_plant_card_prefabs.clear()
@@ -73,37 +69,6 @@ func _ready() -> void:
 			zombie_card_order.append(card.card_zombie_type)
 	_register_ordered_zombie_cards(zombie_cards_by_type, global_game_state.curr_zombie, zombie_card_order)
 
-
-## P051 已有完整角色场景和注册信息，但历史上漏了卡牌节点。
-## 这里用现有角色美术组装静态卡面，不引入新图片资源。
-func _ensure_sierra_card() -> void:
-	for cards_parent in all_plant_cards_parent_node_root:
-		for child in cards_parent.get_children():
-			if child is Card and (child as Card).card_plant_type == CharacterRegistry.PlantType.P051CattailSierra:
-				return
-	var character_scene := character_registry.get_plant_info(
-		CharacterRegistry.PlantType.P051CattailSierra,
-		CharacterRegistry.PlantInfoAttribute.PlantScenes
-	) as PackedScene
-	if character_scene == null:
-		return
-	var character := character_scene.instantiate() as Node2D
-	var body := character.get_node_or_null("Body") as Node2D
-	if body == null:
-		character.free()
-		return
-	var body_preview := body.duplicate() as Node2D
-	body_preview.set_script(null)
-	body_preview.position = Vector2(0, 15)
-	body_preview.scale = Vector2(0.42, 0.42)
-	character.free()
-
-	var card := CARD_SCENE.instantiate() as Card
-	card.name = "CardSierra"
-	card.card_plant_type = CharacterRegistry.PlantType.P051CattailSierra
-	var static_root := card.get_node("CardBg/CharacterStatic") as Node2D
-	static_root.add_child(body_preview)
-	all_plant_cards_parent_node_root[0].add_child(card)
 
 func _register_ordered_plant_cards(
 		cards_by_type: Dictionary[CharacterRegistry.PlantType, Card],

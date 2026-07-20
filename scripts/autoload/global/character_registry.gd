@@ -43,11 +43,9 @@ enum PlantType {
 	P038UmbrellaLeafLifeweaver = 38,
 	P040MelonPultAshe = 40,
 	P041GatlingPeaBastion = 41,
-	P042TwinSunFlowerIllari = 42,
 	P043GloomShroomMoira = 43,
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
-	P051CattailSierra = 51,
 	P052BonkChoyRamattra = 52,
 	P053ImitaterEcho = 53,
 
@@ -614,13 +612,6 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_041_gatling_pea_bastion.tscn")
 		},
-	PlantType.P042TwinSunFlowerIllari: {
-		PlantInfoAttribute.PlantName: "TwinSunFlower_Illari",
-		PlantInfoAttribute.CoolTime: 50.0,
-		PlantInfoAttribute.SunCost: 150,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_042_twin_sun_flower_illari.tscn")
-		},
 	PlantType.P024TallNutSigma: {
 		PlantInfoAttribute.PlantName: "TallNut_Sigma",
 		PlantInfoAttribute.CoolTime: 30.0,
@@ -782,13 +773,6 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 500,
 		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/000_common_plant_land.tres"),
 		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_048_cob_cannon_emre.tscn")
-		},
-	PlantType.P051CattailSierra: {
-		PlantInfoAttribute.PlantName: "Cattail_Sierra",
-		PlantInfoAttribute.CoolTime: 50.0,
-		PlantInfoAttribute.SunCost: 225,
-		PlantInfoAttribute.PlantConditionResource : preload("res://resources/character_resource/plant_condition/020_tanglekelp.tres"),
-		PlantInfoAttribute.PlantScenes : preload("res://scenes/character/plant/plant_051_cattail_sierra.tscn")
 		},
 	## 模仿者
 	PlantType.P548Imitater:{

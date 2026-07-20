@@ -581,7 +581,6 @@
 [ext_resource type="Texture2D" uid="uid://c35d32esorc1n" path="res://assets/image/ui/Character_Card/Tanglekelp_Mizuki_Card.png" id="402_repef"]
 [ext_resource type="Texture2D" uid="uid://t5r3hpemowiq" path="res://assets/image/ui/Character_Card/Caltrop_Hazard_Card.png" id="403_odne4"]
 [ext_resource type="Texture2D" uid="uid://cw78c2yeffgip" path="res://assets/image/ui/Character_Card/Garlic_Mauga_Card.png" id="404_grlnh"]
-[ext_resource type="Texture2D" uid="uid://dxvlqvahfmjaa" path="res://pvz_icon.png" id="413_ysrnk"]
 [ext_resource type="Texture2D" uid="uid://vldte0uy1iof" path="res://assets/image/ui/Character_Card/DancingZombie_DJ_card.png" id="417_t0nyc"]
 [ext_resource type="Texture2D" uid="uid://dsdoat4v14hbs" path="res://assets/image/ui/Character_Card/Zomboni_Shion_Card.png" id="417_v6elg"]
 [ext_resource type="Texture2D" uid="uid://cg4s8553p7c4a" path="res://assets/image/ui/Character_Card/forg_card.png" id="418_nxasx"]
@@ -985,7 +984,6 @@ all_plant_card_prefabs = {
 38: NodePath("PlantCards/Card29"),
 40: NodePath("PlantCards/Card11"),
 41: NodePath("PlantCards/Card7"),
-42: NodePath("PlantCards/Card31"),
 43: NodePath("PlantCards/Card14"),
 44: NodePath("PlantCards/Card9"),
 48: NodePath("PlantCards/Card30"),
@@ -1111,7 +1109,6 @@ plant_card_ids = Dictionary[int, int]({
 38: 22,
 40: 23,
 41: 24,
-42: 80,
 43: 25,
 44: 26,
 48: 27,
@@ -2075,33 +2072,6 @@ texture = ExtResource("98_ev02b")
 position = Vector2(0, -45.62)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("72_fw713")
-
-[node name="Card31" parent="PlantCards" unique_id=1257254692 instance=ExtResource("2_5pqky")]
-visible = false
-layout_mode = 2
-imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
-imitater_whiteness = 0.5
-imitater_gray_strength = 0.0
-card_id = 80
-card_plant_type = 42
-cool_time = 50.0
-sun_cost = 150
-
-[node name="CardBg" parent="PlantCards/Card31" index="0"]
-texture = ExtResource("3_m4n4y")
-
-[node name="lant042TwinsunflowerIllari" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic" index="0" unique_id=1679902851]
-position = Vector2(1, 14)
-scale = Vector2(0.5, 0.5)
-
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=2015382191]
-visible = false
-texture = ExtResource("98_ev02b")
-
-[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/lant042TwinsunflowerIllari" unique_id=1724240049]
-position = Vector2(-3.84, -22.84)
-scale = Vector2(0.66, 0.66)
-texture = ExtResource("413_ysrnk")
 
 [node name="PlantCards2" type="GridContainer" parent="." unique_id=1732057181]
 unique_name_in_owner = true

@@ -14,7 +14,7 @@ rg --files | rg "关键词"
 
 ## 新增或复制植物（含 OW 变体）
 
-当基于已有植物原型创建新变体（如 `MelonPult_Ashe`、`TwinSunFlower_Illari`）时，**必须**按以下完整流程操作，每一步都不可省略。
+当基于已有植物原型创建新变体（如 `MelonPult_Ashe`）时，**必须**按以下完整流程操作，每一步都不可省略。
 
 ### 1. 新建脚本
 
@@ -48,7 +48,7 @@ Number 用 `PlantType` 枚举值（如 MelonPultAshe 枚举 =40，场景用 `pla
 在 OW 变体区块（`P500PeaShooterSingle` 上方）添加：
 
 ```gdscript
-P042TwinSunFlowerIllari = 42,
+P040MelonPultAshe = 40,
 ```
 
 枚举值用植物在原版 PvZ 中的编号，查阅相邻变体确定可用值。
@@ -62,7 +62,7 @@ P042TwinSunFlowerIllari = 42,
 若原型在 `AllPrePlantPurple` 中有前置植物关系，新变体复制一份：
 
 ```gdscript
-PlantType.P042TwinSunFlowerIllari:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
+PlantType.P544WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P539MelonPult],
 ```
 
 ### 4. 添加到 `global_game_state.gd`
