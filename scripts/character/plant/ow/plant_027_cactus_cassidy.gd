@@ -9,16 +9,16 @@ const TUMBLEWEED_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy
 
 @export_group("Cassidy 蓄力技能")
 @export_range(0.1, 30.0, 0.1, "suffix:秒") var charge_time:= 4.0
+@export_range(1, 5000, 1, "suffix:血") var skill_trigger_hp:= 50
 @export_range(1, 20, 1) var max_skill_targets:= 3
 @export_range(1, 5000, 1) var max_skill_damage:= 300
 @export_range(1, 9, 1) var skill_column_count:= 3
 
+var _skill_has_triggered:= false
 var _skill_is_pending_rise:= false
 var _skill_is_charging:= false
 var _skill_forces_rise:= false
 var _charge_elapsed:= 0.0
-var _last_hp:= 0
-var _zombies_in_range_last_frame:Dictionary[int, bool] = {}
 var _flare_remote_final_scale:= Vector2.ONE
 var _tumbleweed:Sprite2D
 var _tumbleweed_move_tween:Tween
@@ -27,7 +27,6 @@ var _tumbleweed_bob_tween:Tween
 
 func ready_norm_signal_connect():
 	super()
-	_last_hp = hp_component.curr_hp
 	hp_component.signal_hp_loss.connect(_on_hp_loss_for_charge)
 	## 原版仙人掌先更新气球状态，卡西迪随后叠加技能的强制升高状态。
 	attack_component.signal_change_is_attack.connect(_refresh_cassidy_rise)
@@ -39,7 +38,6 @@ func ready_norm_signal_connect():
 func _physics_process(delta:float) -> void:
 	if character_init_type != E_CharacterInitType.IsNorm or is_death:
 		return
-	_update_skill_trigger()
 	if not _skill_is_charging:
 		return
 	_charge_elapsed = minf(_charge_elapsed + delta, charge_time)
@@ -52,25 +50,6 @@ func anim_rise_end():
 	super()
 	if _skill_is_pending_rise and not is_death:
 		_begin_charge()
-
-
-func _update_skill_trigger() -> void:
-	var zombies_in_range := _get_zombies_in_skill_range()
-	var current_ids:Dictionary[int, bool] = {}
-	var has_new_zombie:= false
-	var has_zombie_outside_own_lane:= false
-	for zombie:Zombie000Base in zombies_in_range:
-		var zombie_id:= zombie.get_instance_id()
-		current_ids[zombie_id] = true
-		if not _zombies_in_range_last_frame.has(zombie_id):
-			has_new_zombie = true
-		if zombie.lane != lane:
-			has_zombie_outside_own_lane = true
-	_zombies_in_range_last_frame = current_ids
-
-	if has_new_zombie and has_zombie_outside_own_lane \
-	and not _skill_is_pending_rise and not _skill_is_charging:
-		_start_skill()
 
 
 func _start_skill() -> void:
@@ -92,10 +71,10 @@ func _begin_charge() -> void:
 
 
 func _on_hp_loss_for_charge(curr_hp:int, _is_drop:bool) -> void:
-	var took_damage:= curr_hp < _last_hp
-	_last_hp = curr_hp
-	if took_damage and _skill_is_charging and not is_death:
-		_fire_charged_shots()
+	if _skill_has_triggered or is_death or curr_hp > skill_trigger_hp:
+		return
+	_skill_has_triggered = true
+	_start_skill()
 
 
 func _fire_charged_shots() -> void:
@@ -118,6 +97,36 @@ func _fire_charged_shots() -> void:
 	_skill_forces_rise = false
 	attack_component.update_is_attack_factors(true, AttackComponentBase.E_IsAttackFactors.Character)
 	_refresh_cassidy_rise(false)
+
+
+func be_zombie_eat(attack_value:int, attack_zombie:Zombie000Base):
+	if _skill_is_pending_rise or _skill_is_charging:
+		return
+	super(attack_value, attack_zombie)
+
+
+func be_attacked_bullet(attack_value:int, bullet_mode:BulletRegistry.AttackMode=BulletRegistry.AttackMode.Norm, is_drop:bool=true, trigger_be_attack_SFX:=true):
+	if _skill_is_pending_rise or _skill_is_charging:
+		return
+	super(attack_value, bullet_mode, is_drop, trigger_be_attack_SFX)
+
+
+func be_attacked_hammer(attack_value:int):
+	if _skill_is_pending_rise or _skill_is_charging:
+		return false
+	return super(attack_value)
+
+
+func be_attack_to_death(trigger_be_attack_SFX:=true):
+	if _skill_is_pending_rise or _skill_is_charging:
+		return
+	super(trigger_be_attack_SFX)
+
+
+func be_flattened():
+	if _skill_is_pending_rise or _skill_is_charging:
+		return
+	super()
 
 
 func _spawn_skill_bullet(target:Zombie000Base, damage:int) -> void:
@@ -195,17 +204,14 @@ func _get_zombies_in_skill_range() -> Array[Zombie000Base]:
 	if row_col.y < 0 or row_col.y >= lane_cells.size():
 		return result
 
-	## 正前方连续三列，不包含卡西迪自己所在的列。
-	var nearest_front_column:= row_col.y + direction_x_root
-	if nearest_front_column < 0 or nearest_front_column >= lane_cells.size():
-		return result
+	## 卡西迪所在列加正前方连续三列，共四列。
 	var furthest_front_column:= clampi(
 		row_col.y + skill_column_count * direction_x_root,
 		0,
 		lane_cells.size() - 1
 	)
-	var first_column:= mini(nearest_front_column, furthest_front_column)
-	var last_column:= maxi(nearest_front_column, furthest_front_column)
+	var first_column:= mini(row_col.y, furthest_front_column)
+	var last_column:= maxi(row_col.y, furthest_front_column)
 	var first_cell:PlantCell = lane_cells[first_column]
 	var last_cell:PlantCell = lane_cells[last_column]
 	var range_min_x:= minf(first_cell.global_position.x, last_cell.global_position.x)
@@ -214,7 +220,7 @@ func _get_zombies_in_skill_range() -> Array[Zombie000Base]:
 		last_cell.global_position.x + last_cell.size.x
 	)
 
-	## 自身行及上下相邻行，和正前三列共同组成最多 3×3 的九宫格。
+	## 自身行及上下相邻行，与四列共同组成最多 3×4 的十二格范围。
 	var first_lane:= maxi(0, lane - 1)
 	var last_lane:= mini(Global.main_game.zombie_manager.all_zombies_2d.size() - 1, lane + 1)
 	for target_lane in range(first_lane, last_lane + 1):

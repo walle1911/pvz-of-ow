@@ -16,7 +16,7 @@ const PLANT_DETECTION_MASK := 2
 const ZOMBIE_PEA_DIRECTION := Vector2.LEFT
 ## 植物真实受击层 256 + 斜坡 1(植物真实层见 component_detect.gd C_LayTypeValueReal[ZombieEnemy]=256+1024)
 const ZOMBIE_PEA_ATTACK_MASK := 257
-const PEAS_BEFORE_LASER := 5
+const PEAS_BEFORE_LASER := 4
 const PRE_LASER_PAUSE := 1.0
 const POST_LASER_PAUSE := 1.5
 ## Head_Attack 动画方法轨道中的实际开火时间。
@@ -47,6 +47,9 @@ func _ready() -> void:
 		peashooter_head.fire_pea.connect(_shoot_bullet)
 	## 尽早定位 Marker2DBullet，不依赖僵尸脚本外部设置
 	_try_auto_find_marker()
+	## 每次实际开火后再安排下一次攻击，避免循环 Timer 在长停顿期间
+	## 重启动画、吞掉后续连发。
+	bullet_attack_cd_timer.one_shot = true
 
 func _physics_process(delta: float) -> void:
 	if not is_enabling or not is_instance_valid(detect_component):
@@ -111,7 +114,7 @@ func _get_attack_animation_speed() -> float:
 	var attack_animation := peashooter_head.anim.get_animation(&"Head_Attack")
 	if attack_animation == null:
 		return 1.0
-	return maxf(1.0, attack_animation.length / maxf(bullet_attack_cd_timer.wait_time, 0.01))
+	return maxf(1.0, attack_animation.length / maxf(_get_regular_shot_interval(), 0.01))
 
 ## 从 PeashooterHead 内部定位 Marker2DBullet，不依赖外部设置
 func _try_auto_find_marker() -> void:
@@ -123,7 +126,7 @@ func _try_auto_find_marker() -> void:
 	if is_instance_valid(marker):
 		markers_2d_bullet = [marker]
 
-## 动画开火帧：五发豌豆、停顿、蓝色穿透激光、再停顿后循环。
+## 动画开火帧：四发豌豆、停顿、蓝色穿透激光、再停顿后循环。
 func _shoot_bullet():
 	_try_auto_find_marker()  # 最后兜底
 	if markers_2d_bullet.is_empty():
@@ -132,18 +135,30 @@ func _shoot_bullet():
 	if _pea_shots_in_cycle >= PEAS_BEFORE_LASER:
 		_shoot_penetrating_laser()
 		_pea_shots_in_cycle = 0
-		_start_pause_before_next_shot(POST_LASER_PAUSE)
+		_schedule_next_shot(POST_LASER_PAUSE)
 	else:
 		_shoot_pea()
 		_pea_shots_in_cycle += 1
 		if _pea_shots_in_cycle >= PEAS_BEFORE_LASER:
-			_start_pause_before_next_shot(PRE_LASER_PAUSE)
+			_schedule_next_shot(PRE_LASER_PAUSE)
+		else:
+			_schedule_next_shot(_get_regular_shot_interval())
 
-## 扣除下一次攻击动画到开火帧的时间，让两次实际弹丸之间满足指定停火时长。
-func _start_pause_before_next_shot(pause_duration:float):
+## 当前攻速下，两次普通豌豆实际开火的目标间隔。
+func _get_regular_shot_interval() -> float:
+	var effective_speed := owner_speed_product * get_attack_speed_multiplier()
+	if is_zero_approx(effective_speed):
+		return pea_shot_interval
+	return pea_shot_interval / effective_speed
+
+## Timer 使用单次模式；扣除下一次攻击动画到开火帧的时间，
+## 让两次实际弹丸之间满足指定间隔，同时避免自动循环重启动画。
+func _schedule_next_shot(interval:float):
+	if not is_attack_res:
+		return
 	var next_attack_speed := _get_attack_animation_speed()
 	var next_fire_delay := HEAD_ATTACK_FIRE_TIME / maxf(next_attack_speed, 0.01)
-	bullet_attack_cd_timer.start(maxf(pause_duration - next_fire_delay, 0.01))
+	bullet_attack_cd_timer.start(maxf(interval - next_fire_delay, 0.01))
 
 ## 发射僵尸阵营豌豆，固定向左(植物方向)。
 func _shoot_pea():
