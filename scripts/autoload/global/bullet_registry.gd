@@ -28,6 +28,7 @@ enum BulletType{
 	Bullet017SnowFume,		## 小美近距离寒冰喷雾
 	Bullet018GiantPea,		## 堡垒版机枪射手巨型豌豆
 	Bullet019WidowmakerTracer,	## 黑百合胆小菇即时命中弹道
+	Bullet020SojournTracer,	## 索杰恩豌豆射手僵尸蓝色穿透弹道
 
 
 	Bullet1001Bowling = 1001,		## 保龄球
@@ -73,6 +74,7 @@ enum AttackMode {
 	BulletType.Bullet017SnowFume :preload("res://scenes/bullet/bullet_017_snow_fume.tscn"),
 	BulletType.Bullet018GiantPea :preload("res://scenes/bullet/bullet_018_giant_pea.tscn"),
 	BulletType.Bullet019WidowmakerTracer :preload("res://scenes/bullet/bullet_019_widowmaker_tracer.tscn"),
+	BulletType.Bullet020SojournTracer :preload("res://scenes/bullet/bullet_020_sojourn_tracer.tscn"),
 }
 
 ## 获取子弹场景方法

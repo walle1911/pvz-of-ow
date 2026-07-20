@@ -16,10 +16,21 @@ const PLANT_DETECTION_MASK := 2
 const ZOMBIE_PEA_DIRECTION := Vector2.LEFT
 ## 植物真实受击层 256 + 斜坡 1(植物真实层见 component_detect.gd C_LayTypeValueReal[ZombieEnemy]=256+1024)
 const ZOMBIE_PEA_ATTACK_MASK := 257
+const PEAS_BEFORE_LASER := 5
+const PRE_LASER_PAUSE := 1.0
+const POST_LASER_PAUSE := 1.5
+## Head_Attack 动画方法轨道中的实际开火时间。
+const HEAD_ATTACK_FIRE_TIME := 0.916667
 
 @export var detect_refresh_time := 0.2
+var pea_shot_interval := 0.45
+var pea_attack_damage := 10
+var pea_projectile_scale := 0.7
+var laser_penetration_damage := 80
+var laser_bullet_type := BulletRegistry.BulletType.Bullet020SojournTracer
 
 var _detect_refresh_left := 0.0
+var _pea_shots_in_cycle := 0
 
 func _ready() -> void:
 	## 在 super() 前把 detect_component 替换成本身的子弹检测组件，
@@ -74,13 +85,33 @@ func update_is_attack_factors(value: bool, factor: E_IsAttackFactors):
 	else:
 		attack_end()
 
+## 从索杰恩僵尸根节点的 Inspector 参数同步攻击数值。
+func configure_sojourn_attack(new_pea_interval:float, new_pea_damage:int, new_pea_scale:float, new_laser_damage:int):
+	pea_shot_interval = maxf(new_pea_interval, 0.1)
+	pea_attack_damage = maxi(new_pea_damage, 1)
+	pea_projectile_scale = maxf(new_pea_scale, 0.05)
+	laser_penetration_damage = maxi(new_laser_damage, 1)
+	attack_cd = pea_shot_interval
+	var effective_speed := owner_speed_product * get_attack_speed_multiplier()
+	if not is_zero_approx(effective_speed):
+		bullet_attack_cd_timer.wait_time = pea_shot_interval / effective_speed
+
 ## 攻击间隔到时播放头部攻击动画；真正发射由 Head_Attack 方法轨道回调 _shoot_bullet
 func _on_bullet_attack_cd_timer_timeout() -> void:
 	_try_auto_find_marker()
 	if is_instance_valid(peashooter_head):
-		peashooter_head.play_attack()
+		peashooter_head.play_attack(_get_attack_animation_speed())
 	else:
 		_shoot_bullet()
+
+## 让完整攻击动画在下一次射击计时前播完，避免高速射击反复重启动画而漏弹。
+func _get_attack_animation_speed() -> float:
+	if not is_instance_valid(peashooter_head) or not is_instance_valid(peashooter_head.anim):
+		return 1.0
+	var attack_animation := peashooter_head.anim.get_animation(&"Head_Attack")
+	if attack_animation == null:
+		return 1.0
+	return maxf(1.0, attack_animation.length / maxf(bullet_attack_cd_timer.wait_time, 0.01))
 
 ## 从 PeashooterHead 内部定位 Marker2DBullet，不依赖外部设置
 func _try_auto_find_marker() -> void:
@@ -92,22 +123,59 @@ func _try_auto_find_marker() -> void:
 	if is_instance_valid(marker):
 		markers_2d_bullet = [marker]
 
-## 发射僵尸阵营豌豆，固定向左(植物方向)。
+## 动画开火帧：五发豌豆、停顿、蓝色穿透激光、再停顿后循环。
 func _shoot_bullet():
 	_try_auto_find_marker()  # 最后兜底
 	if markers_2d_bullet.is_empty():
 		return
 	signal_shoot_bullet.emit()
+	if _pea_shots_in_cycle >= PEAS_BEFORE_LASER:
+		_shoot_penetrating_laser()
+		_pea_shots_in_cycle = 0
+		_start_pause_before_next_shot(POST_LASER_PAUSE)
+	else:
+		_shoot_pea()
+		_pea_shots_in_cycle += 1
+		if _pea_shots_in_cycle >= PEAS_BEFORE_LASER:
+			_start_pause_before_next_shot(PRE_LASER_PAUSE)
+
+## 扣除下一次攻击动画到开火帧的时间，让两次实际弹丸之间满足指定停火时长。
+func _start_pause_before_next_shot(pause_duration:float):
+	var next_attack_speed := _get_attack_animation_speed()
+	var next_fire_delay := HEAD_ATTACK_FIRE_TIME / maxf(next_attack_speed, 0.01)
+	bullet_attack_cd_timer.start(maxf(pause_duration - next_fire_delay, 0.01))
+
+## 发射僵尸阵营豌豆，固定向左(植物方向)。
+func _shoot_pea():
 	for i in range(markers_2d_bullet.size()):
 		if not is_instance_valid(markers_2d_bullet[i]):
 			continue
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, ZOMBIE_PEA_DIRECTION)
+		bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = pea_attack_damage
 		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
 		bullet.init_bullet(bullet_paras)
 		bullets.add_child(bullet)
+		bullet.scale *= Vector2.ONE * pea_projectile_scale
 		## 关键: add_child 之后 @onready area_2d_attack 才解析，此时覆盖 collision_mask 才生效
 		if bullet is Bullet000NormBase and is_instance_valid((bullet as Bullet000NormBase).area_2d_attack):
 			(bullet as Bullet000NormBase).area_2d_attack.collision_mask = ZOMBIE_PEA_ATTACK_MASK
+		play_throw_sfx()
+
+## 激光即时贯穿检测射线上的所有植物，每株只受击一次。
+func _shoot_penetrating_laser():
+	var targets:Array[Character000Base] = detect_component.get_all_enemy_can_be_attacked()
+	if targets.is_empty():
+		return
+	for marker:Marker2D in markers_2d_bullet:
+		if not is_instance_valid(marker):
+			continue
+		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(laser_bullet_type).instantiate()
+		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
+		var bullet_paras := get_bullet_paras(marker.global_position, ZOMBIE_PEA_DIRECTION)
+		bullet_paras[Bullet000NormBase.E_InitParasAttr.Enemy] = targets
+		bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = laser_penetration_damage
+		bullet.init_bullet(bullet_paras)
+		bullets.add_child(bullet)
 		play_throw_sfx()

@@ -21,11 +21,12 @@ func play_idle() -> void:
 	if is_instance_valid(anim) and anim.has_animation("Head_Idle"):
 		anim.play("Head_Idle")
 
-## 攻击动画(嘴张开吐豆)
-func play_attack() -> void:
+## 攻击动画(嘴张开吐豆)。高速连射宿主可传入倍率，保证方法轨道及时开火。
+func play_attack(attack_speed_scale:float = 1.0) -> void:
 	if not is_instance_valid(anim) or not anim.has_animation("Head_Attack"):
 		return
 	anim.stop()
+	anim.speed_scale = maxf(attack_speed_scale, 0.01)
 	anim.play("Head_Attack")
 
 func stop() -> void:
@@ -38,4 +39,5 @@ func _shoot_bullet() -> void:
 
 func _on_anim_finished(anim_name: StringName) -> void:
 	if anim_name == &"Head_Attack":
+		anim.speed_scale = 1.0
 		play_idle()

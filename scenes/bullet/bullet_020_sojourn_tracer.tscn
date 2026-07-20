@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/bullet/bullet_019_widowmaker_tracer.tscn" id="1_tracer"]
+
+[node name="Bullet020SojournTracer" instance=ExtResource("1_tracer")]
+bullet_type = 20
+bullet_camp = 2
+attack_value = 80
+bullet_mode = 1
+haze_color = Color(0.015, 0.3, 1, 0.035)
+outer_color = Color(0.02, 0.52, 1, 0.085)
+glow_color = Color(0.06, 0.74, 1, 0.2)
+core_color = Color(0.22, 0.88, 1, 0.42)

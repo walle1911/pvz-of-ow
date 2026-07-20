@@ -23,6 +23,10 @@ size = Vector2(1000, 5)
 
 [node name="Zombie026PeashooterZombie" unique_id=1412154441 instance=ExtResource("1_norm")]
 script = ExtResource("2_script")
+pea_shot_interval = 0.45
+pea_attack_damage = 10
+pea_projectile_scale = 0.7
+laser_penetration_damage = 80
 
 [node name="Anim_innerarm3" parent="Body/BodyCorrect/Anim_innerarm" index="0"]
 position = Vector2(24.505186, 78.1222)
@@ -80,12 +84,12 @@ texture = null
 [node name="ZombieSeaweed3" parent="Body/BodyCorrect/Anim_head/Anim_head1" index="0"]
 position = Vector2(46.428, 1.626)
 
-[node name="PeashooterHead" parent="Body/BodyCorrect/Anim_head/Anim_head1" index="2" unique_id=1190529282 instance=ExtResource("3_head")]
+[node name="PeashooterHead" parent="Body/BodyCorrect" index="6" unique_id=1190529282 instance=ExtResource("3_head")]
 unique_name_in_owner = true
 z_index = 10
-position = Vector2(77.022, -16.439)
-rotation = 2.911209
-scale = Vector2(1.2531329, -1.2531329)
+position = Vector2(72.232536, -6.1176777)
+rotation = 2.9291146
+scale = Vector2(1.0024414, -1.0024414)
 
 [node name="Zombie_innerleg_upper" parent="Body/BodyCorrect/leg" index="0"]
 position = Vector2(43.994812, 76.389626)
@@ -272,6 +276,7 @@ visible = false
 unique_name_in_owner = true
 visible = false
 script = ExtResource("4_attack")
+attack_cd = 0.45
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponentBullet" index="0" unique_id=1314535028]
 

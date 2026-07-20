@@ -69,14 +69,20 @@ func _start_heal_countdown():
 	_heal_after_delay(_heal_wait_token)
 
 func _heal_after_delay(token:int):
-	await get_tree().create_timer(heal_delay_after_attack).timeout
-	if token != _heal_wait_token or _has_used_heal or is_death or _is_healing:
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.create_timer(heal_delay_after_attack).timeout
+	if not is_inside_tree() or token != _heal_wait_token or _has_used_heal or is_death or _is_healing:
 		return
 	if hp_component.curr_hp >= hp_component.max_hp:
 		return
 	_begin_heal(token)
 
 func _begin_heal(token:int):
+	var tree := get_tree()
+	if tree == null:
+		return
 	_is_healing = true
 	_has_used_heal = true
 	body.body_light()
@@ -84,8 +90,10 @@ func _begin_heal(token:int):
 	var elapsed := 0.0
 	while elapsed < heal_duration:
 		var prev_msec := Time.get_ticks_msec()
-		await get_tree().process_frame
-		if token != _heal_wait_token or is_death or not _is_healing:
+		## 保留开始治疗时的 SceneTree；切换/退出场景后节点的 get_tree() 会变为 null。
+		await tree.process_frame
+		if not is_inside_tree() or token != _heal_wait_token or is_death or not _is_healing:
+			_is_healing = false
 			return
 		var delta := (Time.get_ticks_msec() - prev_msec) / 1000.0
 		elapsed += delta
