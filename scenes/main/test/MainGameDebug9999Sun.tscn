@@ -3,12 +3,16 @@
 [ext_resource type="PackedScene" uid="uid://c1w2cmehilec8" path="res://scenes/main/MainGame01Front.tscn" id="1_front"]
 [ext_resource type="Resource" uid="uid://evdpsat2avsr" path="res://resources/level_date_resource/mode_adventure/adventure_debug_9999_sun.tres" id="2_level"]
 [ext_resource type="Script" path="res://scripts/main_game_item/debug_9999_sun_bob_auto_throw.gd" id="3_bob_throw"]
+[ext_resource type="Script" path="res://scripts/main_game_item/debug_9999_sun_mauga_low_hp.gd" id="4_mauga_low_hp"]
 
 [node name="MainGameDebug9999Sun" unique_id=1737605305 instance=ExtResource("1_front")]
 game_para = ExtResource("2_level")
 
 [node name="BobAutoThrowDebug" type="Node" parent="."]
 script = ExtResource("3_bob_throw")
+
+[node name="MaugaLowHpDebug" type="Node" parent="."]
+script = ExtResource("4_mauga_low_hp")
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
 plant_in_cell = {

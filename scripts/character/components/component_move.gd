@@ -75,6 +75,7 @@ enum E_MoveFactor{
 	IsBlover,				## 被三叶草吹走
 	IsDeath,				## 停止移动的死亡时
 	IsTallNutSigmaSlam,	## 高坚果西格玛抬升下砸期间锁定位置
+	IsGarlicMaugaChain,	## 毛加大蒜锁链束缚
 }
 
 signal signal_move_body_y(move_y_value:float)
