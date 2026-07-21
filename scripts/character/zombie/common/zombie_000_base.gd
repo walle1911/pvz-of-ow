@@ -556,8 +556,8 @@ func be_caltrop_hazard_downpour_immobilized(immobilize_time:float = 3.0):
 		caltrop_hazard_downpour_effect.queue_free()
 	caltrop_hazard_downpour_effect = SceneRegistry.ICE_EFFECT.instantiate()
 	add_child(caltrop_hazard_downpour_effect)
-	## 保留寒冰菇/小美同款脚部造型，改成骇灾的紫色晶体观感。
-	caltrop_hazard_downpour_effect.modulate = Color(0.95, 0.22, 1.0, 1.0)
+	## 保留寒冰菇/小美同款脚部造型，使用更浅、更通透的薰衣草紫晶体观感。
+	caltrop_hazard_downpour_effect.modulate = Color(1.0, 0.58, 1.0, 0.92)
 	caltrop_hazard_downpour_effect.start_ice_effect(remaining_time)
 
 func _on_caltrop_hazard_downpour_timer_timeout() -> void:

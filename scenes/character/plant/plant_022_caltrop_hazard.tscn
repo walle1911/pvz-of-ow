@@ -85,6 +85,9 @@ size = Vector2(75, 5)
 
 [node name="Plant022CaltropHazard" unique_id=170120932 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_afx53")]
 script = ExtResource("2_5b05c")
+downpour_preview_time = 0.5
+downpour_immobilize_time = 5.0
+downpour_damage = 40
 attack_value = 20
 is_attack = false
 plant_type = 22
@@ -105,9 +108,9 @@ centered = false
 centered = false
 
 [node name="Caltrop_horn1" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=191601839]
-position = Vector2(9.40909, 43.486366)
-rotation = 0.047441285
-scale = Vector2(0.8, 0.83874995)
+position = Vector2(9.5258465, 43.31123)
+rotation = 0.051516656
+scale = Vector2(0.8, 0.8419607)
 texture = ExtResource("4_taal7")
 centered = false
 
@@ -118,9 +121,9 @@ scale = Vector2(0.78, 0.78)
 texture = ExtResource("6_oaav6")
 
 [node name="Caltrop_horn2" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1731425109]
-position = Vector2(24.804544, 39.286366)
-rotation = 0.04652913
-scale = Vector2(0.8, 0.83874995)
+position = Vector2(24.862923, 39.11123)
+rotation = 0.050095152
+scale = Vector2(0.8, 0.8419607)
 texture = ExtResource("5_w0kwl")
 centered = false
 
@@ -130,9 +133,9 @@ scale = Vector2(0.43, 0.43)
 texture = ExtResource("6_oaav6")
 
 [node name="Caltrop_horn3" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=653930272]
-position = Vector2(44.447727, 41.59091)
-rotation = -0.05973812
-scale = Vector2(0.8, 0.83874995)
+position = Vector2(44.41854, 41.474155)
+rotation = -0.06483248
+scale = Vector2(0.8, 0.8419607)
 texture = ExtResource("6_8g1ka")
 centered = false
 
@@ -142,9 +145,9 @@ scale = Vector2(0.82, 0.82)
 texture = ExtResource("10_hvm82")
 
 [node name="Caltrop_horn4" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=196487245]
-position = Vector2(55.543182, 48.59091)
-rotation = -0.049186807
-scale = Vector2(0.8, 0.83874995)
+position = Vector2(55.455616, 48.474155)
+rotation = -0.05326247
+scale = Vector2(0.8, 0.8419607)
 texture = ExtResource("7_4imoc")
 centered = false
 
@@ -155,8 +158,8 @@ scale = Vector2(0.77, 0.77)
 texture = ExtResource("8_kq3x4")
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="6" unique_id=396992536]
-position = Vector2(0.20454499, 43.09091)
-scale = Vector2(0.7833864, 0.83927274)
+position = Vector2(0.262923, 42.974155)
+scale = Vector2(0.78192693, 0.8427754)
 texture = ExtResource("3_qfs8i")
 centered = false
 
@@ -167,8 +170,8 @@ texture = ExtResource("11_oaav6")
 
 [node name="Anim_blink" type="Sprite2D" parent="Body/BodyCorrect" index="7" unique_id=119945017]
 visible = false
-position = Vector2(18.765907, 59.472725)
-scale = Vector2(0.810211, 0.9033339)
+position = Vector2(18.713364, 59.37931)
+scale = Vector2(0.81105715, 0.91189665)
 texture = ExtResource("8_0t614")
 centered = false
 

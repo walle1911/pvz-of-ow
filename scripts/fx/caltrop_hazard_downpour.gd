@@ -17,6 +17,7 @@ var damage := 40
 var target_rect := Rect2()
 var target_lanes:Array[int] = []
 var _hit_zombie_ids:Dictionary[int, bool] = {}
+var _preview_material:ShaderMaterial
 
 func setup(source_cell:PlantCell, new_preview_time:float, new_immobilize_time:float, new_damage:int):
 	preview_time = new_preview_time
@@ -27,8 +28,11 @@ func setup(source_cell:PlantCell, new_preview_time:float, new_immobilize_time:fl
 func _ready() -> void:
 	preview_shadow.position = to_local(target_rect.position)
 	preview_shadow.size = target_rect.size
-	var preview_material := preview_shadow.material as ShaderMaterial
-	preview_material.set_shader_parameter(&"preview_size", target_rect.size)
+	## 每场千针雨使用独立材质，避免同时触发时互相覆盖消退进度。
+	preview_shadow.material = preview_shadow.material.duplicate()
+	_preview_material = preview_shadow.material as ShaderMaterial
+	_preview_material.set_shader_parameter(&"preview_size", target_rect.size)
+	_preview_material.set_shader_parameter(&"clear_progress", 0.0)
 	_run_downpour.call_deferred()
 
 func _calculate_target_area(source_cell:PlantCell):
@@ -74,7 +78,8 @@ func _run_downpour():
 			var on_landed := Callable()
 			if row_index == 0:
 				## 代表尖刺真正落地的这一帧才结算命中，并从此刻开始完整定身计时。
-				on_landed = _impact_column.bind(target_x)
+				var cleared_ratio := float(column_index + 1) / float(column_count)
+				on_landed = _impact_column.bind(target_x, cleared_ratio)
 			_spawn_spike(
 				Vector2(target_x, target_y) + Vector2(randf_range(-5.0, 5.0), randf_range(-7.0, 7.0)),
 				on_landed
@@ -102,7 +107,13 @@ func _spawn_spike(target_global_position:Vector2, on_landed:Callable = Callable(
 	tween.tween_property(spike, ^"modulate:a", 0.0, 0.1)
 	tween.tween_callback(spike.queue_free)
 
-func _impact_column(target_x:float):
+func _impact_column(target_x:float, cleared_ratio:float):
+	## 预选能量跟随实际落地列从左向右消退，而不是等整场针雨结束后骤然消失。
+	if is_instance_valid(_preview_material):
+		_preview_material.set_shader_parameter(
+			&"clear_progress",
+			1.1 if is_equal_approx(cleared_ratio, 1.0) else cleared_ratio
+		)
 	if not is_instance_valid(Global.main_game):
 		return
 	var zombie_manager:ZombieManager = Global.main_game.zombie_manager
