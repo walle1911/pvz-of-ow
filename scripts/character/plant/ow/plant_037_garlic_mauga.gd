@@ -311,11 +311,7 @@ func _pull_zombie_toward_mauga(target_id:int, zombie:Zombie000Base) -> void:
 func _play_stink(zombie:Zombie000Base) -> void:
 	if not is_instance_valid(zombie):
 		return
-	SoundManager.play_character_SFX("yuck")
-	zombie.update_speed_factor(0.0, E_Influence_Speed_Factor.EatGarlic)
-	await get_tree().create_timer(chain_stink_pause, false).timeout
-	if is_instance_valid(zombie):
-		zombie.update_speed_factor(1.0, E_Influence_Speed_Factor.EatGarlic)
+	await zombie.play_garlic_reaction(chain_stink_pause)
 
 func _is_chain_target_active(target_id:int) -> bool:
 	if is_death or target_id != _active_pull_target_id or not _chained_zombies.has(target_id):

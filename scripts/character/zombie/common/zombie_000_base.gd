@@ -1,6 +1,9 @@
 extends Character000Base
 class_name Zombie000Base
 
+const GARLIC_GROSSOUT_TEXTURE := preload("res://assets/reanim/Zombie_head_grossout.png")
+const ORIGINAL_ZOMBIE_SCRIPT_PREFIX := "res://scripts/character/zombie/original/"
+
 
 @onready var attack_component: AttackComponentBase = %AttackComponent
 @onready var hp_stage_change_component: HpStageChangeComponent = %HpStageChangeComponent
@@ -132,6 +135,18 @@ var head1_path_candidate:Array[NodePath] = [
 var head_node:Node2D
 ## 黄油节点,
 var butter_splat:Node2D
+
+## 原版大蒜嫌恶脸会替代主头部，因此反应期间隐藏独立的下颚/舌头层。
+var garlic_grossout_hidden_node_paths:Array[NodePath] = [
+	"Body/BodyCorrect/Anim_head2",
+	"Body/BodyCorrect/Anim_tongue",
+	"Body/BodyCorrect/Anim_head_jaw",
+	"Body/BodyCorrect/Head/Anim_head2",
+]
+var _garlic_reaction_generation := 0
+var _garlic_reaction_active := false
+var _garlic_original_head_texture:Texture2D
+var _garlic_hidden_node_visibility:Dictionary = {}
 
 ## 骇灾地刺千针雨只钉住脚步，不冻结身体动画。
 var caltrop_hazard_downpour_timer:Timer
@@ -566,11 +581,66 @@ func _on_caltrop_hazard_downpour_timer_timeout() -> void:
 
 #region 僵尸吃大蒜换行
 func update_lane_on_eat_garlic():
-	SoundManager.play_character_SFX("yuck")
-	update_speed_factor(0.0, E_Influence_Speed_Factor.EatGarlic)
-	await get_tree().create_timer(0.5, false).timeout
-	update_speed_factor(1.0, E_Influence_Speed_Factor.EatGarlic)
+	await play_garlic_reaction(0.5)
 	update_lane()
+
+
+## 普通大蒜与毛加大蒜共用的臭味反馈。守望先锋改版只播放声音；
+## 原版中支持该反馈的僵尸还会临时换成嫌恶脸。
+func play_garlic_reaction(duration:float = 0.5) -> void:
+	SoundManager.play_character_SFX("yuck")
+	_garlic_reaction_generation += 1
+	var current_generation := _garlic_reaction_generation
+	update_speed_factor(0.0, E_Influence_Speed_Factor.EatGarlic)
+	if not _garlic_reaction_active:
+		_garlic_reaction_active = true
+		_show_garlic_grossout()
+	await get_tree().create_timer(duration, false).timeout
+	if current_generation != _garlic_reaction_generation:
+		return
+	_restore_garlic_grossout()
+	_garlic_reaction_active = false
+	update_speed_factor(1.0, E_Influence_Speed_Factor.EatGarlic)
+
+
+func _show_garlic_grossout() -> void:
+	if not _can_show_garlic_grossout():
+		return
+	var head_sprite := head_node as Sprite2D
+	_garlic_original_head_texture = head_sprite.texture
+	head_sprite.texture = GARLIC_GROSSOUT_TEXTURE
+	_garlic_hidden_node_visibility.clear()
+	for node_path:NodePath in garlic_grossout_hidden_node_paths:
+		if not has_node(node_path):
+			continue
+		var face_node := get_node(node_path) as CanvasItem
+		if face_node == null:
+			continue
+		_garlic_hidden_node_visibility[face_node] = face_node.visible
+		face_node.visible = false
+
+
+func _restore_garlic_grossout() -> void:
+	if is_instance_valid(head_node) and head_node is Sprite2D and _garlic_original_head_texture != null:
+		(head_node as Sprite2D).texture = _garlic_original_head_texture
+	for face_node:CanvasItem in _garlic_hidden_node_visibility:
+		if is_instance_valid(face_node):
+			face_node.visible = _garlic_hidden_node_visibility[face_node]
+	_garlic_hidden_node_visibility.clear()
+	_garlic_original_head_texture = null
+
+
+func _can_show_garlic_grossout() -> bool:
+	if not is_instance_valid(head_node) or not head_node is Sprite2D:
+		return false
+	var zombie_script := get_script() as Script
+	if zombie_script == null or not zombie_script.resource_path.begins_with(ORIGINAL_ZOMBIE_SCRIPT_PREFIX):
+		return false
+	## 原版潜水僵尸和小丑僵尸只发出嫌恶声并换行，不使用这张通用脸。
+	return zombie_type not in [
+		CharacterRegistry.ZombieType.Z511Snorkle,
+		CharacterRegistry.ZombieType.Z515Jackbox,
+	]
 
 
 ## 换行
