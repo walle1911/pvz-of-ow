@@ -1,7 +1,7 @@
 extends Node
 
 ## 仅挂在 MainGameDebug9999Sun：让本关生成的毛加大蒜以残血状态开始。
-const MAUGA_DEBUG_HP := 80
+const MAUGA_DEBUG_HP := 20
 
 var plant_cells:Array[PlantCell] = []
 

@@ -76,6 +76,7 @@ enum E_MoveFactor{
 	IsDeath,				## 停止移动的死亡时
 	IsTallNutSigmaSlam,	## 高坚果西格玛抬升下砸期间锁定位置
 	IsGarlicMaugaChain,	## 毛加大蒜锁链束缚
+	IsCaltropHazardDownpour,	## 骇灾地刺千针雨定身（只锁位移，不停动画）
 }
 
 signal signal_move_body_y(move_y_value:float)

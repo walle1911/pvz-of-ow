@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cpgxmqns3kreh"]
 
 [ext_resource type="PackedScene" uid="uid://c5cke4cm02um7" path="res://scenes/character/plant/plant_000_base.tscn" id="1_34mm5"]
-[ext_resource type="Script" path="res://scripts/character/plant/ow/plant_037_garlic_mauga.gd" id="2_5vkpm"]
+[ext_resource type="Script" uid="uid://bgxqg48ovxg8l" path="res://scripts/character/plant/ow/plant_037_garlic_mauga.gd" id="2_5vkpm"]
 [ext_resource type="Texture2D" uid="uid://c4tr5pxpgn1st" path="res://assets/reanim/Garlic_stem1.png" id="2_7chwr"]
 [ext_resource type="Texture2D" uid="uid://d1abmgqa60ngk" path="res://assets/reanim/Garlic_stem2.png" id="3_5vkpm"]
 [ext_resource type="Texture2D" uid="uid://njrw363r8de5" path="res://assets/reanim/Garlic_stem3.png" id="4_ce242"]
@@ -14,7 +14,6 @@
 [ext_resource type="Script" uid="uid://4o1wtnifn4tq" path="res://scripts/character/components/hp_component/component_hp_stage_change.gd" id="10_fgxvd"]
 [ext_resource type="Texture2D" uid="uid://u1hnt840w5f0" path="res://assets/reanim/Garlic_Mauga_Stem3.png" id="10_qkpav"]
 [ext_resource type="Script" uid="uid://jl0nl4a234bc" path="res://scripts/resources/resource_body_change.gd" id="11_eruay"]
-[ext_resource type="Texture2D" uid="uid://dir7aktx8gr3j" path="res://assets/reanim/Garlic_stink1.png" id="11_udmre"]
 [ext_resource type="Texture2D" uid="uid://by3h62tn0xch3" path="res://assets/reanim/Garlic_body2.png" id="12_u12re"]
 [ext_resource type="Texture2D" uid="uid://rnc8hg5e6g0l" path="res://assets/reanim/Garlic_body3.png" id="13_vggsd"]
 
@@ -51,14 +50,19 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant037GarlicMauga" unique_id=1402278193 instance=ExtResource("1_34mm5")]
 script = ExtResource("2_5vkpm")
+chain_lane_shift_time = 0.55
+chain_lane_hold_time = 1.0
+chain_pull_time = 0.75
+chain_stink_pause = 0.35
+chain_max_length = 70.0
 plant_type = 37
 
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-42, -66)
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="0" unique_id=460154567]
-position = Vector2(12.181537, 24.213848)
-scale = Vector2(0.9577385, 0.8307692)
+position = Vector2(14.097917, 20.002083)
+scale = Vector2(0.89640975, 0.90130556)
 texture = ExtResource("5_ljkad")
 centered = false
 
@@ -68,10 +72,10 @@ scale = Vector2(0.70636916, 0.74)
 texture = ExtResource("4_udmre")
 
 [node name="Garlic_stem1" type="Sprite2D" parent="Body/BodyCorrect" index="1" unique_id=1026486362]
-position = Vector2(31.390768, 25.418463)
-rotation = -0.0031418984
-scale = Vector2(0.9579232, 0.8311846)
-skew = 0.0031418984
+position = Vector2(32, 21.008335)
+rotation = 0.034179296
+scale = Vector2(0.8996736, 0.90130556)
+skew = -0.034179296
 texture = ExtResource("2_7chwr")
 centered = false
 
@@ -80,10 +84,10 @@ position = Vector2(5.32, 6.68)
 texture = ExtResource("6_ls011")
 
 [node name="Garlic_stem2" type="Sprite2D" parent="Body/BodyCorrect" index="2" unique_id=770726735]
-position = Vector2(38.88154, 21.695385)
-rotation = 0.0033029907
-scale = Vector2(0.95796937, 0.8311846)
-skew = -0.0033029907
+position = Vector2(38.902084, 17.434723)
+rotation = -0.036457807
+scale = Vector2(0.9003264, 0.90130556)
+skew = 0.036457807
 texture = ExtResource("3_5vkpm")
 centered = false
 
@@ -94,10 +98,10 @@ scale = Vector2(0.79, 0.79)
 texture = ExtResource("8_u3foe")
 
 [node name="Garlic_stem3" type="Sprite2D" parent="Body/BodyCorrect" index="3" unique_id=1695620963]
-position = Vector2(40.795383, 26.8)
-rotation = 0.0016917915
-scale = Vector2(0.9577847, 0.8311846)
-skew = -0.0016917915
+position = Vector2(40.8, 22.965277)
+rotation = -0.042154245
+scale = Vector2(0.90130556, 0.90130556)
+skew = 0.042154245
 texture = ExtResource("4_ce242")
 centered = false
 
@@ -107,10 +111,7 @@ scale = Vector2(0.7, 0.7)
 texture = ExtResource("10_qkpav")
 
 [node name="Garlic_stink" type="Sprite2D" parent="Body/BodyCorrect" index="4" unique_id=1548854818]
-self_modulate = Color(1, 1, 1, 0.5230791)
-position = Vector2(34.1, -15.030791)
-scale = Vector2(0.903, 0.901)
-texture = ExtResource("11_udmre")
+visible = false
 centered = false
 
 [node name="Garlic_blink" type="Sprite2D" parent="Body/BodyCorrect" index="5" unique_id=1695223659]

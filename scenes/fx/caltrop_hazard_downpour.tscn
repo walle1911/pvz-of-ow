@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/fx/caltrop_hazard_downpour.gd" id="1_downpour"]
+[ext_resource type="Shader" path="res://shaders/caltrop_hazard_downpour_preview.gdshader" id="2_preview_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_preview"]
+shader = ExtResource("2_preview_shader")
+
+[node name="CaltropHazardDownpour" type="Node2D"]
+script = ExtResource("1_downpour")
+
+[node name="PreviewShadow" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_preview")
+mouse_filter = 2

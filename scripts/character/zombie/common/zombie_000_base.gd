@@ -133,6 +133,10 @@ var head_node:Node2D
 ## 黄油节点,
 var butter_splat:Node2D
 
+## 骇灾地刺千针雨只钉住脚步，不冻结身体动画。
+var caltrop_hazard_downpour_timer:Timer
+var caltrop_hazard_downpour_effect:IceEffect
+
 ## 僵尸初始化属性
 enum E_ZInitAttr{
 	CharacterInitType,	## 角色初始化类型（正常、展示）
@@ -531,6 +535,33 @@ func death_stop_butter():
 func _on_butter_timer_timeout() -> void:
 	update_speed_factor(1.0, E_Influence_Speed_Factor.Butter)
 	butter_splat.visible = false
+#endregion
+
+#region 骇灾地刺千针雨定身
+func be_caltrop_hazard_downpour_immobilized(immobilize_time:float = 3.0):
+	if is_death:
+		return
+
+	move_component.update_move_factor(true, MoveComponent.E_MoveFactor.IsCaltropHazardDownpour)
+	if not is_instance_valid(caltrop_hazard_downpour_timer):
+		caltrop_hazard_downpour_timer = GlobalUtils.create_new_timer_once(
+			self,
+			_on_caltrop_hazard_downpour_timer_timeout
+		)
+	var remaining_time := maxf(caltrop_hazard_downpour_timer.time_left, immobilize_time)
+	if caltrop_hazard_downpour_timer.time_left < immobilize_time:
+		caltrop_hazard_downpour_timer.start(remaining_time)
+
+	if is_instance_valid(caltrop_hazard_downpour_effect):
+		caltrop_hazard_downpour_effect.queue_free()
+	caltrop_hazard_downpour_effect = SceneRegistry.ICE_EFFECT.instantiate()
+	add_child(caltrop_hazard_downpour_effect)
+	## 保留寒冰菇/小美同款脚部造型，改成骇灾的紫色晶体观感。
+	caltrop_hazard_downpour_effect.modulate = Color(0.95, 0.22, 1.0, 1.0)
+	caltrop_hazard_downpour_effect.start_ice_effect(remaining_time)
+
+func _on_caltrop_hazard_downpour_timer_timeout() -> void:
+	move_component.update_move_factor(false, MoveComponent.E_MoveFactor.IsCaltropHazardDownpour)
 #endregion
 
 #region 僵尸吃大蒜换行
