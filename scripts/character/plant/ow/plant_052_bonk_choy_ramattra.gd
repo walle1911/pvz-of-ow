@@ -89,6 +89,7 @@ var _attack_side := SIDE_FRONT
 var _has_hit_current_attack := false
 var _plant_food_hits_done := {}
 var _speed_product := 1.0
+var _attack_speed_multiplier_sources:Dictionary[int, float] = {}
 var _is_frames_loaded := false
 var _normal_attack_streak_side := 0
 var _normal_attack_streak_count := 0
@@ -130,7 +131,7 @@ func _process(delta: float) -> void:
 	if _frames.is_empty():
 		return
 
-	_frame_elapsed += delta * _speed_product
+	_frame_elapsed += delta * _speed_product * get_attack_speed_multiplier()
 	while _frame_elapsed >= frame_time:
 		_frame_elapsed -= frame_time
 		_advance_frame()
@@ -139,6 +140,25 @@ func _process(delta: float) -> void:
 
 func owner_update_speed(speed_product: float):
 	_speed_product = speed_product
+
+
+func add_attack_speed_multiplier(source:Object, multiplier:float):
+	if not is_instance_valid(source):
+		return
+	_attack_speed_multiplier_sources[source.get_instance_id()] = maxf(multiplier, 0.0)
+
+
+func remove_attack_speed_multiplier(source:Object):
+	if not is_instance_valid(source):
+		return
+	_attack_speed_multiplier_sources.erase(source.get_instance_id())
+
+
+func get_attack_speed_multiplier() -> float:
+	var result := 1.0
+	for multiplier:float in _attack_speed_multiplier_sources.values():
+		result = maxf(result, multiplier)
+	return result
 
 
 func play_plant_food():

@@ -18,9 +18,14 @@ func awake_up_plant():
 		return
 	if target_plant.is_sleeping:
 		plant_cell.coffee_bean_awake_up()
-	if not Plant052SunflowerMercy.is_blue_line_damage_boost_target_type(target_plant.plant_type):
+	if not is_nano_boost_target_type(target_plant.plant_type):
 		return
 	_apply_nano_boost(target_plant)
+
+
+static func is_nano_boost_target_type(target_plant_type:CharacterRegistry.PlantType) -> bool:
+	return target_plant_type == CharacterRegistry.PlantType.P052BonkChoyRamattra \
+			or Plant052SunflowerMercy.is_blue_line_damage_boost_target_type(target_plant_type)
 
 
 func _apply_nano_boost(target_plant:Plant000Base):

@@ -66,7 +66,6 @@ var marker_2d_sun_target: Marker2D
 @onready var bombs: Node2D = %Bombs
 @onready var suns: Node2D = %Suns
 
-@onready var coin_bank_label: CoinBankLabel = %CoinBankLabel
 @onready var main_game_menu_button: BaseButton = %MainGameMenuButton
 var workshop_return_button: BaseButton
 ## 卡槽
@@ -213,7 +212,6 @@ func _ready() -> void:
 	signal_connect()
 	## 初始化子管理器
 	init_manager()
-	coin_bank_label.visible = false
 	## 初始化游戏背景音乐
 	_init_game_BGM()
 
@@ -361,7 +359,6 @@ func start_next_round_game():
 	card_manager.start_next_game_card_manager_update()
 	## 更新背景,浓雾回退
 	background_manager.start_next_game_background_manager_update()
-	coin_bank_label.visible = false
 	## 更新僵尸管理器
 	zombie_manager.start_next_game_zombie_mananger_update()
 	## 更新植物格子数据，（创建罐子） 清除植物数据需要等待两帧

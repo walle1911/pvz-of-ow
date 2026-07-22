@@ -1,7 +1,7 @@
 extends Node
 
 ## 录制专用运行时调试面板。
-## F2 完全隐藏/显示面板，F3 进入/退出录制暂停。
+## F2 完全隐藏/显示面板，F3 进入/退出录制暂停，F4 触发全场射手齐射。
 ## 暂停时新增的角色会作为正式场上角色保留，也可将植物延迟到恢复 2 秒后批量种下。
 ## 指定事件在恢复 1.5 秒后触发。
 
@@ -13,6 +13,7 @@ const EVENT_JACKBOX_EXPLODE := &"jackbox_explode"
 
 var main_game: MainGameManager
 var is_recording_paused := false
+var was_bgm_bus_muted := false
 var target_characters: Array[Character000Base] = []
 var queued_events: Array[Dictionary] = []
 var queued_delayed_plants: Array[Dictionary] = []
@@ -38,6 +39,10 @@ var queue_label: Label
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	var bgm_bus_index := AudioServer.get_bus_index(&"BGM")
+	if bgm_bus_index >= 0:
+		was_bgm_bus_muted = AudioServer.is_bus_mute(bgm_bus_index)
+		AudioServer.set_bus_mute(bgm_bus_index, true)
 	main_game = Global.main_game
 	_build_panel()
 	_fill_character_options()
@@ -47,6 +52,9 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	var bgm_bus_index := AudioServer.get_bus_index(&"BGM")
+	if bgm_bus_index >= 0:
+		AudioServer.set_bus_mute(bgm_bus_index, was_bgm_bus_muted)
 	if is_recording_paused:
 		TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.DebugRecording)
 
@@ -59,6 +67,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_F3:
 		_toggle_recording_pause()
+		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_F4:
+		_force_all_shooters_fire()
 		get_viewport().set_input_as_handled()
 
 
@@ -84,7 +95,7 @@ func _build_panel() -> void:
 	panel.add_child(root_box)
 
 	var title := Label.new()
-	title.text = "录制调试台（F2 隐藏 / F3 暂停）"
+	title.text = "录制调试台（F2 隐藏 / F3 暂停 / F4 齐射）"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root_box.add_child(title)
 
@@ -182,6 +193,27 @@ func _fill_character_options() -> void:
 		var display_name := str(Global.character_registry.get_zombie_info(zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieName))
 		zombie_option.add_item("%s  [%s]" % [display_name, zombie_type])
 		zombie_option.set_item_metadata(zombie_option.item_count - 1, zombie_type)
+
+
+func _force_all_shooters_fire() -> void:
+	if not is_instance_valid(main_game):
+		_feedback("主游戏尚未初始化。")
+		return
+	var triggered_plants: Array[Plant000Base] = []
+	for row_cells: Array in main_game.plant_cell_manager.all_plant_cells:
+		for plant_cell: PlantCell in row_cells:
+			for plant_value in plant_cell.plant_in_cell.values():
+				var plant := plant_value as Plant000Base
+				if not is_instance_valid(plant) or plant.is_death or triggered_plants.has(plant):
+					continue
+				if not Plant052SunflowerMercy.is_blue_line_damage_boost_target_type(plant.plant_type):
+					continue
+				var attack_component := plant.get_node_or_null(^"AttackComponent") as AttackComponentBulletBase
+				if not is_instance_valid(attack_component):
+					continue
+				attack_component.call(&"_on_bullet_attack_cd_timer_timeout")
+				triggered_plants.append(plant)
+	_feedback("F4 齐射：已触发 %d 株射手植物的一轮攻击。" % triggered_plants.size())
 
 
 func _toggle_recording_pause() -> void:

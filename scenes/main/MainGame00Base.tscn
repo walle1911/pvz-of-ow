@@ -34,7 +34,6 @@
 [ext_resource type="Texture2D" uid="uid://uh50cdkqdl67" path="res://assets/image/background/background1.jpg" id="20_ifnc6"]
 [ext_resource type="Texture2D" uid="uid://c4jwi8yjt7hmd" path="res://assets/image/ui/ui_remind_word/Approaching.png" id="21_48j6u"]
 [ext_resource type="Script" uid="uid://vemd6ndasc6s" path="res://scripts/manager/drop_item_manager/drop_item_manager.gd" id="21_xftc3"]
-[ext_resource type="Script" uid="uid://dapift6cdp60u" path="res://scripts/manager/drop_item_manager/dim_coin.gd" id="22_g6t7u"]
 [ext_resource type="Texture2D" uid="uid://bp2ironyexkgp" path="res://assets/image/ui/ui_remind_word/FinalWave.png" id="22_httmh"]
 [ext_resource type="Texture2D" uid="uid://cdoiwcmaapdkm" path="res://assets/image/background/background3_gameover_mask.png" id="22_xh73d"]
 [ext_resource type="Script" uid="uid://nc7vfachr5ub" path="res://scripts/manager/drop_item_manager/dim_garden_plant.gd" id="23_41ccn"]
@@ -50,7 +49,6 @@
 [ext_resource type="Script" uid="uid://djkmy1xylm8hs" path="res://scripts/ui/ui_main_game_menu/main_game_menu_option_dialog.gd" id="28_mddbc"]
 [ext_resource type="Script" uid="uid://parybxg7tb1k" path="res://scripts/ui/PVZ_button_base.gd" id="29_8fvtd"]
 [ext_resource type="Script" uid="uid://lu0twrv0u1t0" path="res://scripts/main_game_canvas_layer/canvas_layer_card_slot.gd" id="30_b6ai2"]
-[ext_resource type="PackedScene" uid="uid://b2xxhep8oyipk" path="res://scenes/item/coin_bank_label.tscn" id="30_xh73d"]
 [ext_resource type="BitMap" uid="uid://bhg7gejfpw036" path="res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2_mask.png" id="30_xvvqk"]
 [ext_resource type="Texture2D" uid="uid://blge6mwmus5fv" path="res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2.png" id="33_w0404"]
 [ext_resource type="Script" uid="uid://c5llwle352r6f" path="res://scripts/manager/card_manager.gd" id="34_5pjpf"]
@@ -180,10 +178,6 @@ script = ExtResource("19_a514a")
 [node name="DropItemManager" type="Node" parent="Manager" unique_id=391932896]
 unique_name_in_owner = true
 script = ExtResource("21_xftc3")
-
-[node name="DIM_Coin" type="Node" parent="Manager/DropItemManager" unique_id=36915664 node_paths=PackedStringArray("all_drop_coin_parent")]
-script = ExtResource("22_g6t7u")
-all_drop_coin_parent = NodePath("../../../CanvasLayerDropItem/AllDropCoin")
 
 [node name="DIM_GardenPlant" type="Node" parent="Manager/DropItemManager" unique_id=1886854044 node_paths=PackedStringArray("all_drop_garden_plant_parent")]
 script = ExtResource("23_41ccn")
@@ -403,19 +397,6 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 layer = 6
 follow_viewport_enabled = true
-
-[node name="CoinBankLabel" parent="CanvasLayerDropItem" unique_id=1533946444 instance=ExtResource("30_xh73d")]
-unique_name_in_owner = true
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 245.0
-offset_top = -41.0
-offset_right = 245.0
-offset_bottom = -41.0
-grow_vertical = 0
-
-[node name="AllDropCoin" type="Node2D" parent="CanvasLayerDropItem" unique_id=774699514]
 
 [node name="AllDropGardenPlant" type="Node2D" parent="CanvasLayerDropItem" unique_id=2097915783]
 

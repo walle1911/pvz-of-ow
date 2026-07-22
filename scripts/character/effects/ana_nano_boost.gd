@@ -27,6 +27,8 @@ func start_boost(
 	target_plant.add_attack_damage_multiplier(self, damage_multiplier)
 	if is_instance_valid(attack_component):
 		attack_component.add_attack_speed_multiplier(self, attack_speed_multiplier)
+	elif target_plant.has_method(&"add_attack_speed_multiplier"):
+		target_plant.call(&"add_attack_speed_multiplier", self, attack_speed_multiplier)
 	is_applied = true
 
 	if glow_pairs.is_empty():
@@ -60,6 +62,8 @@ func _remove_gameplay_boost() -> void:
 		target_plant.remove_attack_damage_multiplier(self)
 	if is_instance_valid(attack_component):
 		attack_component.remove_attack_speed_multiplier(self)
+	elif is_instance_valid(target_plant) and target_plant.has_method(&"remove_attack_speed_multiplier"):
+		target_plant.call(&"remove_attack_speed_multiplier", self)
 	is_applied = false
 
 
