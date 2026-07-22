@@ -2,14 +2,25 @@ extends BulletLinear000Base
 class_name Bullet021SeaShroomWuyang
 
 ## 海蘑菇无恙的鼠标制导孢子。
-## 按住鼠标左键并移动鼠标时逐步修正方向，其余时间依靠惯性直线飞行。
+## 制导状态下仅在鼠标移动时修正方向；鼠标静止时保持当前方向飞行。
 
 var travelled_distance := 0.0
 @export var max_lifetime := 8.0
 var lifetime := 0.0
+var guidance_source: Node
+
+@export_group("制导状态")
+## 点击无恙后的制导持续时间。
+@export_range(0.1, 60.0, 0.1, "or_greater") var guidance_duration := 10.0
+## 制导激活冷却，默认为玉米加农炮 35 秒的三分之二。
+@export_range(0.1, 60.0, 0.1, "or_greater") var guidance_cooldown := 35.0 * 2.0 / 3.0
+## 制导状态下的子弹发射频率倍率。
+@export_range(0.1, 5.0, 0.1, "or_greater") var guidance_attack_speed_multiplier := 1.5
+
+@export_group("鼠标制导")
+## 过滤鼠标的细微抖动，位移超过此值才修正子弹方向。
 @export var mouse_move_threshold := 0.5
-## 鼠标制导时每秒允许转动的最大角度。
-@export var max_turn_speed_degrees := 120.0
+
 var last_mouse_position := Vector2.ZERO
 
 
@@ -24,24 +35,30 @@ func init_bullet(bullet_paras: Dictionary):
 	is_activate_lane = false
 
 
+func set_guidance_source(source: Node) -> void:
+	guidance_source = source
+
+
 func _physics_process(delta: float) -> void:
 	lifetime += delta
 	var mouse_position := get_global_mouse_position()
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+	var is_guidance_active: bool = (
+		is_instance_valid(guidance_source)
+		and guidance_source.has_method("is_bullet_guidance_active")
+		and bool(guidance_source.call("is_bullet_guidance_active"))
+	)
+	var movement_distance := speed * delta
+	if is_guidance_active:
 		var mouse_move_distance_squared := mouse_position.distance_squared_to(last_mouse_position)
 		if mouse_move_distance_squared >= mouse_move_threshold * mouse_move_threshold:
+			last_mouse_position = mouse_position
 			var guided_direction := global_position.direction_to(mouse_position)
 			if not guided_direction.is_zero_approx():
-				var max_turn_radians := deg_to_rad(max_turn_speed_degrees) * delta
-				var turn_angle := clampf(direction.angle_to(guided_direction), -max_turn_radians, max_turn_radians)
-				direction = direction.rotated(turn_angle).normalized()
+				direction = guided_direction
 				body.rotation = direction.angle()
-			last_mouse_position = mouse_position
 	else:
-		## 未按下时只记录鼠标位置，避免刚按下就把历史位移当成制导输入。
 		last_mouse_position = mouse_position
 
-	var movement_distance := speed * delta
 	global_position += direction * movement_distance
 	travelled_distance += movement_distance
 

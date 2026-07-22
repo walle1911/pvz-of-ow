@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://ccojfay5ca52u"]
 
 [ext_resource type="PackedScene" uid="uid://ck3dwoh1myfde" path="res://scenes/bullet/bullet_003_puff.tscn" id="1_puff"]
-[ext_resource type="Script" path="res://scripts/bullet/bullet_021_sea_shroom_wuyang.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://cqgo1x302hjvr" path="res://scripts/bullet/bullet_021_sea_shroom_wuyang.gd" id="2_script"]
 
-[node name="Bullet021SeaShroomWuyang" instance=ExtResource("1_puff")]
+[node name="Bullet021SeaShroomWuyang" unique_id=1943444788 instance=ExtResource("1_puff")]
 script = ExtResource("2_script")
-bullet_type = 21
+max_lifetime = 8.0
+guidance_duration = 10.0
+guidance_cooldown = 25.0
+guidance_attack_speed_multiplier = 1.0
+mouse_move_threshold = 0.5
 max_distance = 2000.0
+bullet_type = 21

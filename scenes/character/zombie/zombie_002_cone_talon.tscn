@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://c52n67n557ek3" path="res://assets/reanim/Zombie_flagpole.png" id="8_7rguq"]
 [ext_resource type="Texture2D" uid="uid://dtsy8xvt3nwth" path="res://assets/reanim/Zombie_neck.png" id="8_dq6s3"]
 [ext_resource type="Texture2D" uid="uid://clby3d5uym1lh" path="res://assets/reanim/Zombie_head.png" id="9_2ppo8"]
+[ext_resource type="Texture2D" uid="uid://bwdb0awl7k44x" path="res://assets/reanim/Zombie_head_grossout.png" id="9_grossout"]
 [ext_resource type="Texture2D" uid="uid://8dtep3jbgt7j" path="res://assets/reanim/Zombie_flag1.png" id="9_b4qrn"]
 [ext_resource type="Texture2D" uid="uid://bpbib8rouh1bg" path="res://assets/image/particles/Zombie_seaweed.png" id="10_5lxj4"]
 [ext_resource type="Texture2D" uid="uid://bkwt3nt2oil06" path="res://assets/reanim/Zombie_innerleg_upper.png" id="11_6w8wl"]
@@ -1403,11 +1404,12 @@ _data = {
 &"Zombie_waterdeath": ExtResource("49_e4ogf")
 }
 
-[node name="Zombie002ConeTalon" type="Node2D" unique_id=457000493 node_paths=PackedStringArray("init_sprite_random", "node_no_change_direction", "node_follow_body_direction", "node2d_detect_in_slope")]
+[node name="Zombie002ConeTalon" type="Node2D" unique_id=457000493 node_paths=PackedStringArray("init_sprite_random", "garlic_grossout_face_sprite", "node_no_change_direction", "node_follow_body_direction", "node2d_detect_in_slope")]
 script = ExtResource("2_21wkp")
 init_sprite_random = [NodePath("Body/BodyCorrect/Zombie_tie"), NodePath("Body/BodyCorrect/Anim_hair")]
 zombie_type = 102
 body_change_on_pool = SubResource("Resource_vukf2")
+garlic_grossout_face_sprite = NodePath("Body/BodyCorrect/Anim_head/Anim_head1/GarlicGrossoutFacePreview")
 node_no_change_direction = [NodePath("HpComponent")]
 node_follow_body_direction = [NodePath("Body"), NodePath("Shadow")]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("HurtBoxComponent/HurtBoxDetectionOnAttack"), NodePath("AttackComponent/DetectComponent")]
@@ -1579,6 +1581,12 @@ position = Vector2(6.2604237, 10.652945)
 rotation = -0.056774415
 scale = Vector2(0.799, 0.799)
 texture = ExtResource("9_2ppo8")
+centered = false
+
+[node name="GarlicGrossoutFacePreview" type="Sprite2D" parent="Body/BodyCorrect/Anim_head/Anim_head1"]
+position = Vector2(1.3, -12.9)
+scale = Vector2(0.89, 0.89)
+texture = ExtResource("9_grossout")
 centered = false
 
 [node name="ZombieSeaweed3" type="Sprite2D" parent="Body/BodyCorrect/Anim_head/Anim_head1" unique_id=855193765]

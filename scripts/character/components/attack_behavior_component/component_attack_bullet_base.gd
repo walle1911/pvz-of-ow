@@ -132,12 +132,18 @@ func _shoot_bullet():
 	signal_shoot_bullet.emit()
 	for i in range(markers_2d_bullet.size()):
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
+		configure_bullet_before_init(bullet)
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, detect_component.ray_area_direction[i])
 		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
 		#print(bullet_paras)
 		bullet.init_bullet(bullet_paras)
 		bullets.add_child(bullet)
 		play_throw_sfx()
+
+
+## 子类可在标准初始化前向专属子弹注入发射者或状态。
+func configure_bullet_before_init(_bullet: Bullet000Base) -> void:
+	pass
 
 
 func get_bullet_paras(marker_2d_bullet_glo_pos:Vector2, ray_direction:Vector2) -> Dictionary[Bullet000NormBase.E_InitParasAttr,Variant]:

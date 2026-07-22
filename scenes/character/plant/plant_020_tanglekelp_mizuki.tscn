@@ -81,6 +81,9 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ytogi"]
 size = Vector2(150, 5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mizuki_mouse"]
+size = Vector2(100, 90)
+
 [node name="Plant020TangleKelpMizuki" unique_id=1989631732 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_jhhqw")]
 script = ExtResource("2_emppc")
 plant_type = 20
@@ -160,6 +163,13 @@ position = Vector2(50.875004, 61.58938)
 scale = Vector2(0.2, 0.30900505)
 texture = ExtResource("10_x58f2")
 
+[node name="Area2DMouse" type="Area2D" parent="Body" index="1"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_mizuki_mouse")
+
 [node name="Anim_blink1" type="Sprite2D" parent="Body/BodyCorrect" index="9" unique_id=1857871040]
 visible = false
 position = Vector2(21.7, 43.37918)
@@ -219,3 +229,7 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/Area2D" index="0" unique_id=231213798]
 shape = SubResource("RectangleShape2D_ytogi")
+
+[connection signal="input_event" from="Body/Area2DMouse" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_exited"]

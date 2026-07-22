@@ -101,6 +101,12 @@ height = 495.001
 
 [node name="Plant032MagnetShroomSombra" unique_id=1063671644 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_la5fr")]
 script = ExtResource("2_fmi46")
+emp_radius = 120.0
+emp_duration = 4.0
+emp_switch_interval = 0.8
+emp_switch_interval_randomness = 0.25
+emp_turn_reaction_duration = 0.35
+emp_zombie_fight_radius = 120.0
 is_attack = false
 plant_type = 32
 is_sleep_in_day = true

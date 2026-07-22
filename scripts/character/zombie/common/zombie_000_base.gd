@@ -147,6 +147,12 @@ var _garlic_reaction_generation := 0
 var _garlic_reaction_active := false
 var _garlic_original_head_texture:Texture2D
 var _garlic_hidden_node_visibility:Dictionary = {}
+var _garlic_grossout_overlay:Sprite2D
+var _garlic_grossout_hold_count := 0
+
+@export_group("大蒜嫌恶脸")
+## 场景中可直接拖动的嫌恶脸预览节点；赋值后优先使用它的可视化变换。
+@export var garlic_grossout_face_sprite:Sprite2D
 
 ## 骇灾地刺千针雨只钉住脚步，不冻结身体动画。
 var caltrop_hazard_downpour_timer:Timer
@@ -180,6 +186,9 @@ func init_zombie(zombie_init_para:Dictionary):
 
 
 func _ready() -> void:
+	## 预览节点在编辑器中保持可见，进入游戏后只由大蒜/EMP 状态控制显示。
+	if is_instance_valid(garlic_grossout_face_sprite):
+		garlic_grossout_face_sprite.visible = false
 	if is_mini_zombie:
 		update_mini_zombie()
 	super()
@@ -585,30 +594,58 @@ func update_lane_on_eat_garlic():
 	update_lane()
 
 
-## 普通大蒜与毛加大蒜共用的臭味反馈。守望先锋改版只播放声音；
-## 原版中支持该反馈的僵尸还会临时换成嫌恶脸。
-func play_garlic_reaction(duration:float = 0.5) -> void:
-	SoundManager.play_character_SFX("yuck")
+## 普通大蒜与毛加大蒜共用的臭味反馈。force_grossout 为 EMP 等特殊效果提供：
+## 改版僵尸也直接替换 Anim_head1 纹理，其 *helmet 子节点仍会绘制在嫌恶脸上方。
+func play_garlic_reaction(
+	duration:float = 0.5,
+	force_grossout:bool = false,
+	play_sfx:bool = true
+) -> void:
+	if play_sfx:
+		SoundManager.play_character_SFX("yuck")
 	_garlic_reaction_generation += 1
 	var current_generation := _garlic_reaction_generation
 	update_speed_factor(0.0, E_Influence_Speed_Factor.EatGarlic)
 	if not _garlic_reaction_active:
 		_garlic_reaction_active = true
-		_show_garlic_grossout()
+		if _garlic_original_head_texture == null:
+			_show_garlic_grossout(force_grossout)
+	elif force_grossout and _garlic_original_head_texture == null:
+		## 改版僵尸可能正处于只停步、不换脸的普通大蒜反应中，EMP 仍需补上嫌恶脸。
+		_show_garlic_grossout(true)
 	await get_tree().create_timer(duration, false).timeout
 	if current_generation != _garlic_reaction_generation:
 		return
-	_restore_garlic_grossout()
 	_garlic_reaction_active = false
+	if _garlic_grossout_hold_count <= 0:
+		_restore_garlic_grossout()
 	update_speed_factor(1.0, E_Influence_Speed_Factor.EatGarlic)
 
 
-func _show_garlic_grossout() -> void:
-	if not _can_show_garlic_grossout():
+## EMP 等持续状态持有嫌恶脸；持有期间转向停顿结束也不会恢复普通脸。
+func hold_garlic_grossout_face() -> void:
+	_garlic_grossout_hold_count += 1
+	if _garlic_original_head_texture == null:
+		_show_garlic_grossout(true)
+
+
+func release_garlic_grossout_face() -> void:
+	_garlic_grossout_hold_count = maxi(0, _garlic_grossout_hold_count - 1)
+	if _garlic_grossout_hold_count == 0 and not _garlic_reaction_active:
+		_restore_garlic_grossout()
+
+
+func _show_garlic_grossout(force_grossout:bool = false) -> void:
+	if not _can_show_garlic_grossout(force_grossout):
 		return
 	var head_sprite := head_node as Sprite2D
 	_garlic_original_head_texture = head_sprite.texture
-	head_sprite.texture = GARLIC_GROSSOUT_TEXTURE
+	if force_grossout or is_instance_valid(garlic_grossout_face_sprite):
+		## EMP 全程保持表情时使用独立层，避免行走动画把主头纹理写回普通脸。
+		_show_garlic_grossout_overlay(head_sprite)
+	else:
+		## 原版僵尸沿用直接替换主头纹理的表现。
+		head_sprite.texture = GARLIC_GROSSOUT_TEXTURE
 	_garlic_hidden_node_visibility.clear()
 	for node_path:NodePath in garlic_grossout_hidden_node_paths:
 		if not has_node(node_path):
@@ -621,6 +658,11 @@ func _show_garlic_grossout() -> void:
 
 
 func _restore_garlic_grossout() -> void:
+	if is_instance_valid(_garlic_grossout_overlay):
+		_garlic_grossout_overlay.visible = false
+		if _garlic_grossout_overlay != garlic_grossout_face_sprite:
+			_garlic_grossout_overlay.queue_free()
+		_garlic_grossout_overlay = null
 	if is_instance_valid(head_node) and head_node is Sprite2D and _garlic_original_head_texture != null:
 		(head_node as Sprite2D).texture = _garlic_original_head_texture
 	for face_node:CanvasItem in _garlic_hidden_node_visibility:
@@ -630,17 +672,71 @@ func _restore_garlic_grossout() -> void:
 	_garlic_original_head_texture = null
 
 
-func _can_show_garlic_grossout() -> bool:
+func _can_show_garlic_grossout(force_grossout:bool = false) -> bool:
 	if not is_instance_valid(head_node) or not head_node is Sprite2D:
 		return false
-	var zombie_script := get_script() as Script
-	if zombie_script == null or not zombie_script.resource_path.begins_with(ORIGINAL_ZOMBIE_SCRIPT_PREFIX):
+	if force_grossout:
+		return true
+	## 配置了可视化嫌恶脸的改版僵尸，普通大蒜和毛加大蒜也使用该节点。
+	if is_instance_valid(garlic_grossout_face_sprite):
+		return true
+	if not _is_original_zombie_script():
 		return false
 	## 原版潜水僵尸和小丑僵尸只发出嫌恶声并换行，不使用这张通用脸。
 	return zombie_type not in [
 		CharacterRegistry.ZombieType.Z511Snorkle,
 		CharacterRegistry.ZombieType.Z515Jackbox,
 	]
+
+
+func _is_original_zombie_script() -> bool:
+	var zombie_script := get_script() as Script
+	return zombie_script != null and zombie_script.resource_path.begins_with(ORIGINAL_ZOMBIE_SCRIPT_PREFIX)
+
+
+## EMP 使用独立表情层；Anim_head1 的 helmet 等子节点仍绘制在其上方。
+func _show_garlic_grossout_overlay(head_sprite:Sprite2D) -> void:
+	if _garlic_original_head_texture == null:
+		return
+	if is_instance_valid(garlic_grossout_face_sprite):
+		_garlic_grossout_overlay = garlic_grossout_face_sprite
+		_garlic_grossout_overlay.texture = GARLIC_GROSSOUT_TEXTURE
+		_garlic_grossout_overlay.visible = true
+		return
+	_garlic_grossout_overlay = Sprite2D.new()
+	_garlic_grossout_overlay.name = "GarlicGrossoutFace"
+	_garlic_grossout_overlay.texture = GARLIC_GROSSOUT_TEXTURE
+	_garlic_grossout_overlay.centered = false
+	head_sprite.add_child(_garlic_grossout_overlay)
+	## 放到第一个子节点，保证用户挂在 Anim_head1 下的 *helmet 最后绘制、不被遮盖。
+	head_sprite.move_child(_garlic_grossout_overlay, 0)
+	## 主头可继续被动画写入，表情层覆盖它；后续 helmet 子节点再覆盖表情层。
+
+	var source_rect := _get_texture_used_rect(GARLIC_GROSSOUT_TEXTURE)
+	var target_rect := _get_texture_used_rect(_garlic_original_head_texture)
+	var source_size := source_rect.size
+	var target_size := target_rect.size
+	var overlay_scale := 1.0
+	var overlay_position := Vector2.ZERO
+	if source_size.x > 0.0 and source_size.y > 0.0:
+		overlay_scale = minf(target_size.x / source_size.x, target_size.y / source_size.y)
+		var target_draw_origin := head_sprite.offset
+		if head_sprite.centered:
+			target_draw_origin -= _garlic_original_head_texture.get_size() * 0.5
+		var target_center := target_draw_origin + target_rect.position + target_size * 0.5
+		var source_center := source_rect.position + source_size * 0.5
+		overlay_position = target_center - source_center * overlay_scale
+	_garlic_grossout_overlay.scale = Vector2.ONE * overlay_scale
+	_garlic_grossout_overlay.position = overlay_position
+
+
+func _get_texture_used_rect(texture:Texture2D) -> Rect2:
+	var image := texture.get_image()
+	if image != null:
+		var used_rect := image.get_used_rect()
+		if used_rect.has_area():
+			return Rect2(Vector2(used_rect.position), Vector2(used_rect.size))
+	return Rect2(Vector2.ZERO, texture.get_size())
 
 
 ## 换行

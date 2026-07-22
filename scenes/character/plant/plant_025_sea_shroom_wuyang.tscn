@@ -16,7 +16,7 @@
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_idle_aquarium.tres" id="11_py3v7"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_shooting.tres" id="12_sjvba"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_sleep.tres" id="13_56fd0"]
-[ext_resource type="Script" uid="uid://gxh0w2813np7" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="14_x4qhn"]
+[ext_resource type="Script" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_sea_shroom_wuyang.gd" id="14_x4qhn"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="15_ai3ac"]
 
 [sub_resource type="Resource" id="Resource_ai3ac"]
@@ -108,6 +108,9 @@ node_connections = [&"output", 0, &"TimeScale", &"OneShot", 0, &"StateMachine", 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ai3ac"]
 size = Vector2(249, 5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wuyang_mouse"]
+size = Vector2(100, 100)
+
 [node name="Plant025SeaShroomWuyang" unique_id=1282507528 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_trumw")]
 script = ExtResource("2_y3aiw")
 plant_type = 25
@@ -180,6 +183,13 @@ centered = false
 position = Vector2(60, 46)
 scale = Vector2(0.5, 0.592593)
 
+[node name="Area2DMouse" type="Area2D" parent="Body" index="1"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_wuyang_mouse")
+
 [node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
 sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent")]
 
@@ -220,3 +230,6 @@ position = Vector2(124.5, 0)
 shape = SubResource("RectangleShape2D_ai3ac")
 
 [connection signal="timeout" from="AttackComponent/BulletAttackCdTimer" to="AttackComponent" method="_on_bullet_attack_cd_timer_timeout"]
+[connection signal="input_event" from="Body/Area2DMouse" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_exited"]

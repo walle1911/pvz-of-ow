@@ -17,6 +17,7 @@ const RULES := {
 	"non_negative_seconds": {"min": 0.0, "max": 600.0, "step": 0.01},
 	"probability": {"min": 0.0, "max": 1.0, "step": 0.01},
 	"multiplier": {"min": 0.0, "max": 100.0, "step": 0.01},
+	"percentage": {"min": 1.0, "max": 100.0, "step": 1.0},
 	"speed": {"min": 0.0, "max": 10000.0, "step": 0.1},
 	"signed_speed": {"min": -1.0, "max": 10000.0, "step": 0.1},
 	"distance": {"min": 0.0, "max": 10000.0, "step": 1.0},
@@ -93,6 +94,11 @@ const SCRIPT_RULES := {
 		"heal_delay_after_attack": "non_negative_seconds", "heal_duration": "seconds",
 		"heal_amount_per_second": "non_negative_int", "escape_move_time": "seconds",
 		"escape_hp_threshold": "non_negative_int",
+	},
+	"res://scripts/character/plant/ow/plant_020_tanglekelp_mizuki.gd": {
+		"hat_cooldown": "seconds", "hat_flight_scale_percent": "percentage",
+		"first_ally_heal": "non_negative_int", "second_ally_heal": "non_negative_int",
+		"third_ally_heal": "non_negative_int",
 	},
 	"res://scripts/character/plant/ow/plant_023_torchwood_baptiste.gd": {"bullet_damage_multiplier": "multiplier"},
 	"res://scripts/character/plant/ow/plant_051_pea_shooter_mccree.gd": {
