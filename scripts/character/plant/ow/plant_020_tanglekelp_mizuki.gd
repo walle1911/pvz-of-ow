@@ -10,7 +10,7 @@ const HAT_TARGET_OFFSET := Vector2(0.0, -35.0)
 ## 每次飞帽治疗结束后，重新准备所需的时间。
 @export_range(0.01, 600.0, 0.01, "suffix:秒") var hat_cooldown:float = 25.0
 ## 飞行帽相对本体帽子的缩放百分比。
-@export_range(1.0, 100.0, 1.0, "suffix:%") var hat_flight_scale_percent:float = 80.0
+@export_range(1.0, 100.0, 1.0, "suffix:%") var hat_flight_scale_percent:float = 75.0
 ## 帽子命中第一名友方植物时恢复的血量。
 @export_range(0, 10000000, 1, "or_greater") var first_ally_heal:int = 90
 ## 帽子命中第二名友方植物时恢复的血量。
@@ -138,7 +138,7 @@ func _get_nearest_ally_plants(max_targets:int) -> Array[Plant000Base]:
 				if (
 					candidate == self
 					or candidate.is_death
-					or candidate.hp_component.curr_hp < candidate.hp_component.max_hp
+					or candidate.hp_component.curr_hp >= candidate.hp_component.max_hp
 					or candidates.has(candidate)
 				):
 					continue
@@ -163,7 +163,10 @@ func _get_hat_segment_duration(from_position:Vector2, to_position:Vector2) -> fl
 
 
 func _heal_hat_target(target:Plant000Base, heal_amount:int):
-	if not is_instance_valid(target) or target.is_death or heal_amount <= 0:
+	if not is_instance_valid(target) or target.is_death:
+		return
+	SoundManager.play_other_SFX(&"coin")
+	if heal_amount <= 0:
 		return
 	target.hp_component.curr_hp = mini(target.hp_component.curr_hp + heal_amount, target.hp_component.max_hp)
 
