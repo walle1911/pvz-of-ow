@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://ck3dwoh1myfde" path="res://scenes/bullet/bullet_003_puff.tscn" id="1_puff"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_021_sea_shroom_wuyang.gd" id="2_script"]
+
+[node name="Bullet021SeaShroomWuyang" instance=ExtResource("1_puff")]
+script = ExtResource("2_script")
+bullet_type = 21
+max_distance = 2000.0

@@ -1,7 +1,7 @@
 extends Plant000Base
 class_name Plant064SeaShroomWuyang
 
-@onready var attack_component: AttackComponentBulletBase = $AttackComponent
+@onready var attack_component: AttackComponentBulletTrack = $AttackComponent
 
 
 ## 初始化正常出战角色信号连接

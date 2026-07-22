@@ -16,7 +16,7 @@
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_idle_aquarium.tres" id="11_py3v7"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_shooting.tres" id="12_sjvba"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_025_sea_shroom_wuyang/025_sea_shroom/SeaShroom_sleep.tres" id="13_56fd0"]
-[ext_resource type="Script" uid="uid://d27ifln7bjwup" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_base.gd" id="14_x4qhn"]
+[ext_resource type="Script" uid="uid://gxh0w2813np7" path="res://scripts/character/components/attack_behavior_component/component_attack_bullet_track.gd" id="14_x4qhn"]
 [ext_resource type="Script" uid="uid://bafp0ax1lmlge" path="res://scripts/character/components/detect_component/component_detect.gd" id="15_ai3ac"]
 
 [sub_resource type="Resource" id="Resource_ai3ac"]
@@ -202,7 +202,7 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=106587470 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("14_x4qhn")
-attack_bullet_type = 3
+attack_bullet_type = 21
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=77714322]
