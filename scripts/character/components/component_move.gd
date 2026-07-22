@@ -77,6 +77,7 @@ enum E_MoveFactor{
 	IsTallNutSigmaSlam,	## 高坚果西格玛抬升下砸期间锁定位置
 	IsGarlicMaugaChain,	## 毛加大蒜锁链束缚
 	IsCaltropHazardDownpour,	## 骇灾地刺千针雨定身（只锁位移，不停动画）
+	IsPumpkinZaryaGravity,	## 查莉娅南瓜头引力吸附后的禁行
 }
 
 signal signal_move_body_y(move_y_value:float)

@@ -21,6 +21,9 @@ size = Vector2(60, 80)
 radius = 30.0
 height = 80.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_zarya_mouse"]
+size = Vector2(100, 100)
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6x5pj"]
 _data = {
 &"ALL_ANIMS": ExtResource("4_4j68l")
@@ -60,6 +63,8 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant031PumpkinZarya" unique_id=462202408 instance=ExtResource("1_j7k8l")]
 script = ExtResource("2_j7k8l")
+gravity_trigger_hp_threshold = 1000
+gravity_hold_duration = 3.0
 covered_front_child_path = NodePath("Body/BodyCorrect/Pumpkin_front/hair")
 covered_front_child_alpha_percent = 50.0
 plant_type = 31
@@ -99,6 +104,13 @@ position = Vector2(60.497, 10.42)
 scale = Vector2(0.81, 0.81)
 texture = ExtResource("7_2b1r0")
 
+[node name="Area2DMouse" type="Area2D" parent="Body" index="1"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_zarya_mouse")
+
 [node name="HpComponent" parent="." index="3"]
 max_hp = 4000
 
@@ -122,3 +134,7 @@ parameters/TimeScale/scale = 1.0
 script = ExtResource("5_ep6lu")
 boundary_value_hp = Array[int]([3000, 2000, 1000, 0])
 body_change = Array[ExtResource("6_4j68l")]([SubResource("Resource_sum7j"), SubResource("Resource_hev76"), SubResource("Resource_e83t0"), null])
+
+[connection signal="input_event" from="Body/Area2DMouse" to="." method="_on_area_2d_input_event"]
+[connection signal="mouse_entered" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Body/Area2DMouse" to="." method="_on_area_2d_mouse_exited"]
