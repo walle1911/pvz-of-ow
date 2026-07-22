@@ -13,6 +13,8 @@ const TUMBLEWEED_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy
 @export_range(1, 20, 1) var max_skill_targets:= 3
 @export_range(1, 5000, 1) var max_skill_damage:= 300
 @export_range(1, 9, 1) var skill_column_count:= 3
+@export_range(0.05, 2.0, 0.05, "suffix:秒") var backstep_duration:= 0.25
+@export_range(0.25, 3.0, 0.25, "suffix:圈") var backstep_roll_turns:= 1.0
 
 var _skill_has_triggered:= false
 var _skill_is_pending_rise:= false
@@ -23,6 +25,12 @@ var _flare_remote_final_scale:= Vector2.ONE
 var _tumbleweed:Sprite2D
 var _tumbleweed_move_tween:Tween
 var _tumbleweed_bob_tween:Tween
+var _backstep_tween:Tween
+var _backstep_body_position:= Vector2.ZERO
+var _backstep_body_rotation:= 0.0
+var _backstep_body_scale:= Vector2.ONE
+var _backstep_roll_pivot:= Vector2.ZERO
+var _backstep_roll_direction:= -1.0
 
 
 func ready_norm_signal_connect():
@@ -53,14 +61,14 @@ func anim_rise_end():
 
 
 func _start_skill() -> void:
-	var was_risen:= is_rise
-	_skill_is_pending_rise = not was_risen
+	_skill_is_pending_rise = false
+	_try_backstep_for_charge()
 	_skill_forces_rise = true
 	## 蓄力优先于普通气球攻击；检测组件保持工作，释放后可立即恢复攻击气球。
 	attack_component.update_is_attack_factors(false, AttackComponentBase.E_IsAttackFactors.Character)
 	_refresh_cassidy_rise(false)
-	if was_risen:
-		_begin_charge()
+	## 后撤、升起动画与蓄力视觉在同一时刻开始；动画结束仍沿用原版仙人掌恢复攻击权限。
+	_begin_charge()
 
 
 func _begin_charge() -> void:
@@ -68,6 +76,112 @@ func _begin_charge() -> void:
 	_skill_is_charging = true
 	_charge_elapsed = 0.0
 	_start_charge_visuals()
+
+
+func _try_backstep_for_charge() -> void:
+	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
+		return
+	var all_plant_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
+	if row_col.x < 0 or row_col.x >= all_plant_cells.size():
+		return
+	var lane_cells:Array = all_plant_cells[row_col.x]
+	var back_column:= row_col.y - direction_x_root
+	if back_column < 0 or back_column >= lane_cells.size():
+		return
+	var target_cell:PlantCell = lane_cells[back_column]
+	## 后退只进入完整空格，避免覆盖花盆、睡莲或其他位置的植物。
+	if target_cell.get_curr_plant_num() > 0:
+		return
+	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
+		plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	if not plant_condition.judge_is_can_plant(target_cell, plant_type):
+		return
+
+	var place:= plant_condition.place_plant_in_cell
+	var old_cell:= plant_cell
+	if old_cell.plant_in_cell.get(place) == self:
+		old_cell.plant_in_cell[place] = null
+	target_cell.plant_in_cell[place] = self
+	plant_cell = target_cell
+	row_col = target_cell.row_col
+	lane = target_cell.row_col.x
+
+	var target_parent:Node = target_cell.plant_container_node[place]
+	reparent(target_parent, true)
+	GlobalUtils.update_plant_cell_slope_y_array(plant_cell, node2d_detect_in_slope)
+	if is_instance_valid(_backstep_tween):
+		_backstep_tween.kill()
+	_prepare_backstep_roll()
+	_backstep_tween = create_tween().set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_backstep_tween.tween_property(self, ^"global_position", target_parent.global_position, backstep_duration)
+	_backstep_tween.tween_method(_update_backstep_roll_visual, 0.0, 1.0, backstep_duration)
+	_backstep_tween.chain()
+	_backstep_tween.tween_callback(_finish_backstep_roll)
+
+
+func _prepare_backstep_roll() -> void:
+	_backstep_body_position = body.position
+	_backstep_body_rotation = body.rotation
+	_backstep_body_scale = body.scale
+	_backstep_roll_pivot = _get_body_visual_center()
+	_backstep_roll_direction = -signf(float(direction_x_root))
+
+
+func _update_backstep_roll_visual(progress:float) -> void:
+	## 翻滚中短暂压扁、挤宽，使高挑的仙人掌更接近一个滚动中的团块。
+	var squash_amount:= sin(PI * progress)
+	var squash:= Vector2(1.0 + 0.14 * squash_amount, 1.0 - 0.24 * squash_amount)
+	var roll_angle:= TAU * backstep_roll_turns * progress * _backstep_roll_direction
+	body.rotation = _backstep_body_rotation + roll_angle
+	body.scale = _backstep_body_scale * squash
+
+	## 用位置补偿把视觉包围盒中心固定为旋转轴，而不是使用 Body 位于脚底的原点。
+	var original_pivot_vector:= Vector2(
+		_backstep_roll_pivot.x * _backstep_body_scale.x,
+		_backstep_roll_pivot.y * _backstep_body_scale.y
+	).rotated(_backstep_body_rotation)
+	var transformed_pivot_vector:= Vector2(
+		_backstep_roll_pivot.x * body.scale.x,
+		_backstep_roll_pivot.y * body.scale.y
+	).rotated(body.rotation)
+	body.position = _backstep_body_position + original_pivot_vector - transformed_pivot_vector
+
+
+func _finish_backstep_roll() -> void:
+	body.position = _backstep_body_position
+	body.rotation = _backstep_body_rotation
+	body.scale = _backstep_body_scale
+	position = Vector2.ZERO
+
+
+func _get_body_visual_center() -> Vector2:
+	var has_visible_rect:= false
+	var visible_rect:= Rect2()
+	var body_inverse:= body.global_transform.affine_inverse()
+	for child in body.find_children("*", "Sprite2D", true, false):
+		var sprite:= child as Sprite2D
+		if not is_instance_valid(sprite) or sprite.texture == null or not sprite.is_visible_in_tree():
+			continue
+		var sprite_to_body:= body_inverse * sprite.global_transform
+		var sprite_rect:= sprite.get_rect()
+		var corners:= [
+			sprite_rect.position,
+			sprite_rect.position + Vector2(sprite_rect.size.x, 0.0),
+			sprite_rect.end,
+			sprite_rect.position + Vector2(0.0, sprite_rect.size.y),
+		]
+		for corner:Vector2 in corners:
+			var body_point:Vector2 = sprite_to_body * corner
+			if not has_visible_rect:
+				visible_rect = Rect2(body_point, Vector2.ZERO)
+				has_visible_rect = true
+			else:
+				visible_rect = visible_rect.expand(body_point)
+	if has_visible_rect:
+		return visible_rect.get_center()
+	return Vector2(0.0, -50.0)
 
 
 func _on_hp_loss_for_charge(curr_hp:int, _is_drop:bool) -> void:
@@ -163,7 +277,7 @@ func _start_charge_visuals() -> void:
 
 	_tumbleweed = Sprite2D.new()
 	_tumbleweed.texture = TUMBLEWEED_TEXTURE
-	_tumbleweed.position = Vector2(-75.0, 25.0)
+	_tumbleweed.position = Vector2(-75.0, 5.0)
 	_tumbleweed.z_index = 5
 	add_child(_tumbleweed)
 
@@ -172,8 +286,8 @@ func _start_charge_visuals() -> void:
 	_tumbleweed_move_tween.tween_property(_tumbleweed, "rotation", TAU * 3.0, charge_time)
 
 	_tumbleweed_bob_tween = create_tween().set_loops()
-	_tumbleweed_bob_tween.tween_property(_tumbleweed, "position:y", 17.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_tumbleweed_bob_tween.tween_property(_tumbleweed, "position:y", 25.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tumbleweed_bob_tween.tween_property(_tumbleweed, "position:y", -3.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_tumbleweed_bob_tween.tween_property(_tumbleweed, "position:y", 5.0, 0.35).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _stop_charge_visuals() -> void:

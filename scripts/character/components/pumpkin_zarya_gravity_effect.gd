@@ -61,9 +61,9 @@ func start(
 	_is_holding = false
 	set_process(false)
 	await _stop_float_visual(true)
-	_refresh_attack_detection()
 	_release_movement_lock()
 	_resume_ground_movement()
+	await _refresh_movement_after_physics()
 	queue_free()
 
 
@@ -156,6 +156,19 @@ func _refresh_attack_detection() -> void:
 		return
 	## 强制位移不会可靠触发旧 Area2D 的离开事件；主动重判，清掉已经不在范围内的攻击目标。
 	detect_component.judge_is_have_enemy()
+
+
+func _refresh_movement_after_physics() -> void:
+	if not is_inside_tree() or not is_instance_valid(_zombie) or _zombie.is_death:
+		return
+	## 强制位移结束的当帧，Area2D 的重叠列表仍可能保留位移前的植物。
+	## 等待一次完整物理步后再重判，否则 IsAttack 会残留，表现为走路动画播放但原地不动。
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	if not is_inside_tree() or not is_instance_valid(_zombie) or _zombie.is_death:
+		return
+	_refresh_attack_detection()
+	_resume_ground_movement()
 
 
 func _resume_ground_movement() -> void:

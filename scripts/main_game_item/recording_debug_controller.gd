@@ -2,10 +2,12 @@ extends Node
 
 ## 录制专用运行时调试面板。
 ## F2 完全隐藏/显示面板，F3 进入/退出录制暂停。
-## 暂停时新增的角色会作为正式场上角色保留，指定事件在恢复 1.5 秒后触发。
+## 暂停时新增的角色会作为正式场上角色保留，也可将植物延迟到恢复 2 秒后批量种下。
+## 指定事件在恢复 1.5 秒后触发。
 
 const PANEL_WIDTH := 390.0
 const EVENT_TRIGGER_DELAY := 1.5
+const DELAYED_PLANT_TRIGGER_DELAY := 2.0
 const EVENT_GARGANTUAR_THROW := &"gargantuar_throw"
 const EVENT_JACKBOX_EXPLODE := &"jackbox_explode"
 
@@ -13,6 +15,7 @@ var main_game: MainGameManager
 var is_recording_paused := false
 var target_characters: Array[Character000Base] = []
 var queued_events: Array[Dictionary] = []
+var queued_delayed_plants: Array[Dictionary] = []
 
 var recording_canvas: CanvasLayer
 var pause_button: Button
@@ -22,8 +25,11 @@ var plant_option: OptionButton
 var zombie_option: OptionButton
 var plant_lane_spin: SpinBox
 var plant_col_spin: SpinBox
+var plant_initial_hp_spin: SpinBox
+var delay_plant_option: CheckButton
 var zombie_lane_spin: SpinBox
 var zombie_col_spin: SpinBox
+var zombie_initial_hp_spin: SpinBox
 var target_option: OptionButton
 var event_option: OptionButton
 var queue_button: Button
@@ -99,6 +105,11 @@ func _build_panel() -> void:
 	root_box.add_child(plant_position_row)
 	plant_lane_spin = _add_labeled_spin(plant_position_row, "行", 1, 5, 1)
 	plant_col_spin = _add_labeled_spin(plant_position_row, "列", 1, 9, 1)
+	plant_initial_hp_spin = _add_labeled_spin(plant_position_row, "血量（0满）", 0, 999999, 0)
+	plant_initial_hp_spin.tooltip_text = "0 表示默认满血；超过该植物血量上限时按上限设置。"
+	delay_plant_option = CheckButton.new()
+	delay_plant_option.text = "恢复 2 秒后同时种下"
+	root_box.add_child(delay_plant_option)
 	var add_plant_button := Button.new()
 	add_plant_button.text = "放置植物"
 	add_plant_button.pressed.connect(_add_plant_during_pause)
@@ -113,6 +124,8 @@ func _build_panel() -> void:
 	root_box.add_child(zombie_position_row)
 	zombie_lane_spin = _add_labeled_spin(zombie_position_row, "行", 1, 5, 1)
 	zombie_col_spin = _add_labeled_spin(zombie_position_row, "列", 1, 9, 9)
+	zombie_initial_hp_spin = _add_labeled_spin(zombie_position_row, "血量（0满）", 0, 999999, 0)
+	zombie_initial_hp_spin.tooltip_text = "0 表示默认满血；只设置僵尸本体当前血量，不修改护甲和任何血量上限。"
 	var add_zombie_button := Button.new()
 	add_zombie_button.text = "放置僵尸"
 	add_zombie_button.pressed.connect(_add_zombie_during_pause)
@@ -187,13 +200,20 @@ func _toggle_recording_pause() -> void:
 
 func _resume_recording() -> void:
 	var events_to_trigger := queued_events.duplicate()
+	var delayed_plants_to_create := queued_delayed_plants.duplicate()
 	queued_events.clear()
+	queued_delayed_plants.clear()
 	is_recording_paused = false
 	TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.DebugRecording)
 	for event_data in events_to_trigger:
 		_trigger_queued_event_after_delay(event_data)
+	if not delayed_plants_to_create.is_empty():
+		_create_delayed_plants_after_delay(delayed_plants_to_create)
 	_refresh_targets()
-	_feedback("已恢复：暂停时放置的角色继续留场，%d 个事件将在 1.5 秒后触发。" % events_to_trigger.size())
+	_update_delayed_plant_option()
+	_feedback("已恢复：%d 株植物将在 2 秒后同时种下，%d 个事件将在 1.5 秒后触发。" % [
+		delayed_plants_to_create.size(), events_to_trigger.size()
+	])
 
 
 func _add_plant_during_pause() -> void:
@@ -213,6 +233,16 @@ func _add_plant_during_pause() -> void:
 	if not is_instance_valid(plant_condition):
 		_feedback("该植物没有可直接种植的条件资源。")
 		return
+	if delay_plant_option.button_pressed:
+		queued_delayed_plants.append({
+			"plant_type": plant_type,
+			"row": row,
+			"col": col,
+			"initial_hp": int(plant_initial_hp_spin.value),
+		})
+		_update_delayed_plant_option()
+		_feedback("已排队 %s；将在恢复 2 秒后与其他延迟植物同时种下。" % plant_option.get_item_text(plant_option.selected))
+		return
 	if not plant_condition.judge_is_can_plant(plant_cell, plant_type):
 		_feedback("第 %d 行第 %d 列不满足该植物的种植条件。" % [row + 1, col + 1])
 		return
@@ -220,8 +250,38 @@ func _add_plant_during_pause() -> void:
 	if not is_instance_valid(plant):
 		_feedback("植物创建失败。")
 		return
+	_apply_initial_hp(plant, int(plant_initial_hp_spin.value))
 	_refresh_targets(plant)
-	_feedback("已放置 %s；恢复后会继续留在场上。" % plant.name)
+	_feedback("已放置 %s，初始血量 %d/%d；恢复后会继续留在场上。" % [
+		plant.name, plant.hp_component.curr_hp, plant.hp_component.max_hp
+	])
+
+
+func _create_delayed_plants_after_delay(plant_data_list: Array[Dictionary]) -> void:
+	await get_tree().create_timer(DELAYED_PLANT_TRIGGER_DELAY, false).timeout
+	if not is_instance_valid(main_game):
+		return
+	var created_count := 0
+	for plant_data in plant_data_list:
+		var row: int = plant_data.get("row", -1)
+		var col: int = plant_data.get("col", -1)
+		var cells := main_game.plant_cell_manager.all_plant_cells
+		if row < 0 or row >= cells.size() or col < 0 or col >= cells[row].size():
+			continue
+		var plant_type: int = plant_data.get("plant_type", -1)
+		var plant_condition: ResourcePlantCondition = Global.character_registry.get_plant_info(
+			plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+		)
+		var plant_cell: PlantCell = cells[row][col]
+		if not is_instance_valid(plant_condition) or not plant_condition.judge_is_can_plant(plant_cell, plant_type):
+			continue
+		var plant: Plant000Base = plant_cell.create_plant(plant_type, false, false)
+		if not is_instance_valid(plant):
+			continue
+		_apply_initial_hp(plant, int(plant_data.get("initial_hp", 0)))
+		created_count += 1
+	_refresh_targets()
+	_feedback("延迟种植完成：%d/%d 株植物已同时种下。" % [created_count, plant_data_list.size()])
 
 
 func _add_zombie_during_pause() -> void:
@@ -264,8 +324,20 @@ func _add_zombie_during_pause() -> void:
 	if not is_instance_valid(zombie):
 		_feedback("僵尸创建失败。")
 		return
+	_apply_initial_hp(zombie, int(zombie_initial_hp_spin.value))
 	_refresh_targets(zombie)
-	_feedback("已放置 %s；恢复后会继续留在场上。" % zombie.name)
+	_feedback("已放置 %s，本体初始血量 %d/%d；恢复后会继续留在场上。" % [
+		zombie.name, zombie.hp_component.curr_hp, zombie.hp_component.max_hp
+	])
+
+
+func _apply_initial_hp(character: Character000Base, requested_hp: int) -> void:
+	if requested_hp <= 0 or not is_instance_valid(character) or not is_instance_valid(character.hp_component):
+		return
+	var hp_component := character.hp_component
+	var minimum_alive_hp := mini(maxi(hp_component.death_hp + 1, 1), hp_component.max_hp)
+	hp_component.curr_hp = clampi(requested_hp, minimum_alive_hp, hp_component.max_hp)
+	hp_component.signal_hp_loss.emit(hp_component.curr_hp, true)
 
 
 func _refresh_targets(prefer_target: Character000Base = null) -> void:
@@ -388,11 +460,17 @@ func _update_panel_state() -> void:
 	status_label.text = "● 已暂停，可布置" if is_recording_paused else "▶ 正在运行"
 	pause_button.text = "恢复并执行队列（F3）" if is_recording_paused else "进入录制暂停（F3）"
 	_update_queue_label()
+	_update_delayed_plant_option()
 
 
 func _update_queue_label() -> void:
 	if is_instance_valid(queue_label):
 		queue_label.text = "待触发事件：%d" % queued_events.size()
+
+
+func _update_delayed_plant_option() -> void:
+	if is_instance_valid(delay_plant_option):
+		delay_plant_option.text = "恢复 2 秒后同时种下（待种：%d）" % queued_delayed_plants.size()
 
 
 func _feedback(message: String) -> void:
