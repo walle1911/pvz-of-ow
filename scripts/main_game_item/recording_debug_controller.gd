@@ -68,8 +68,12 @@ var status_label: Label
 var group_freeze_label: Label
 var feedback_label: Label
 var snapshot_option: OptionButton
+var snapshot_name_edit: LineEdit
+var snapshot_rename_button: Button
 var snapshot_restore_button: Button
 var snapshot_delete_button: Button
+var snapshot_delete_confirmation: ConfirmationDialog
+var pending_snapshot_delete_id := ""
 var zombie_option: OptionButton
 var zombie_lane_spin: SpinBox
 var zombie_col_spin: SpinBox
@@ -298,22 +302,73 @@ func _refresh_layout_snapshot_options(preferred_index := -1) -> void:
 		snapshot_option.set_item_metadata(snapshot_option.item_count - 1, str(snapshot.get("id", "")))
 	var has_snapshots := not layout_snapshots.is_empty()
 	snapshot_option.disabled = not has_snapshots
+	snapshot_name_edit.editable = has_snapshots
+	snapshot_rename_button.disabled = not has_snapshots
 	snapshot_restore_button.disabled = not has_snapshots
 	snapshot_delete_button.disabled = not has_snapshots
 	if has_snapshots:
 		snapshot_option.select(clampi(preferred_index, 0, layout_snapshots.size() - 1) if preferred_index >= 0 else layout_snapshots.size() - 1)
 	else:
 		snapshot_option.add_item("（尚未保存布景）")
+	_sync_snapshot_name_edit()
+
+
+func _on_snapshot_option_selected(_index: int) -> void:
+	_sync_snapshot_name_edit()
+
+
+func _sync_snapshot_name_edit() -> void:
+	if not is_instance_valid(snapshot_name_edit):
+		return
+	var snapshot_index := _get_selected_layout_snapshot_index()
+	snapshot_name_edit.text = (
+		str(layout_snapshots[snapshot_index].get("name", "未命名布景"))
+		if snapshot_index >= 0
+		else ""
+	)
+
+
+func _find_layout_snapshot_index_by_id(snapshot_id: String) -> int:
+	if snapshot_id.is_empty():
+		return -1
+	for index in layout_snapshots.size():
+		if str(layout_snapshots[index].get("id", "")) == snapshot_id:
+			return index
+	return -1
 
 
 func _get_selected_layout_snapshot_index() -> int:
 	if not is_instance_valid(snapshot_option) or layout_snapshots.is_empty():
 		return -1
 	var selected_id := str(snapshot_option.get_item_metadata(snapshot_option.selected))
+	return _find_layout_snapshot_index_by_id(selected_id)
+
+
+func _rename_selected_layout_snapshot(_submitted_name := "") -> void:
+	var snapshot_index := _get_selected_layout_snapshot_index()
+	if snapshot_index < 0:
+		_feedback("没有可重命名的布景快照。")
+		return
+	var new_name := snapshot_name_edit.text.strip_edges()
+	if new_name.is_empty():
+		_feedback("快照名称不能为空。")
+		snapshot_name_edit.grab_focus()
+		return
 	for index in layout_snapshots.size():
-		if str(layout_snapshots[index].get("id", "")) == selected_id:
-			return index
-	return -1
+		if index != snapshot_index and str(layout_snapshots[index].get("name", "")) == new_name:
+			_feedback("已经存在同名快照：%s。" % new_name)
+			snapshot_name_edit.grab_focus()
+			return
+	var old_name := str(layout_snapshots[snapshot_index].get("name", "未命名布景"))
+	if old_name == new_name:
+		_feedback("快照名称没有变化。")
+		return
+	layout_snapshots[snapshot_index]["name"] = new_name
+	if not _write_layout_snapshot_library():
+		layout_snapshots[snapshot_index]["name"] = old_name
+		return
+	_refresh_layout_snapshot_options(snapshot_index)
+	_feedback("已将快照“%s”重命名为“%s”。" % [old_name, new_name])
 
 
 func _restore_selected_layout_snapshot() -> void:
@@ -450,6 +505,18 @@ func _delete_selected_layout_snapshot() -> void:
 	var snapshot_index := _get_selected_layout_snapshot_index()
 	if snapshot_index < 0:
 		_feedback("没有可删除的布景快照。")
+		return
+	pending_snapshot_delete_id = str(layout_snapshots[snapshot_index].get("id", ""))
+	var snapshot_name := str(layout_snapshots[snapshot_index].get("name", "布景"))
+	snapshot_delete_confirmation.dialog_text = "确定删除快照“%s”吗？\n\n删除后无法恢复。" % snapshot_name
+	snapshot_delete_confirmation.popup_centered(Vector2i(420, 190))
+
+
+func _confirm_delete_selected_layout_snapshot() -> void:
+	var snapshot_index := _find_layout_snapshot_index_by_id(pending_snapshot_delete_id)
+	pending_snapshot_delete_id = ""
+	if snapshot_index < 0:
+		_feedback("待删除的快照已经不存在。")
 		return
 	var deleted_name := str(layout_snapshots[snapshot_index].get("name", "布景"))
 	var deleted_snapshot := layout_snapshots[snapshot_index]
@@ -1416,7 +1483,20 @@ func _build_panel() -> void:
 	_add_section_label(root_box, "布景快照（S 保存当前布置）")
 	snapshot_option = OptionButton.new()
 	snapshot_option.fit_to_longest_item = false
+	snapshot_option.item_selected.connect(_on_snapshot_option_selected)
 	root_box.add_child(snapshot_option)
+	var snapshot_rename_row := HBoxContainer.new()
+	root_box.add_child(snapshot_rename_row)
+	snapshot_name_edit = LineEdit.new()
+	snapshot_name_edit.placeholder_text = "输入所选快照的新名称"
+	snapshot_name_edit.max_length = 80
+	snapshot_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	snapshot_name_edit.text_submitted.connect(_rename_selected_layout_snapshot)
+	snapshot_rename_row.add_child(snapshot_name_edit)
+	snapshot_rename_button = Button.new()
+	snapshot_rename_button.text = "重命名"
+	snapshot_rename_button.pressed.connect(_rename_selected_layout_snapshot)
+	snapshot_rename_row.add_child(snapshot_rename_button)
 	var snapshot_buttons := HBoxContainer.new()
 	root_box.add_child(snapshot_buttons)
 	snapshot_restore_button = Button.new()
@@ -1429,10 +1509,19 @@ func _build_panel() -> void:
 	snapshot_delete_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	snapshot_delete_button.pressed.connect(_delete_selected_layout_snapshot)
 	snapshot_buttons.add_child(snapshot_delete_button)
+	snapshot_delete_confirmation = ConfirmationDialog.new()
+	snapshot_delete_confirmation.title = "二次确认删除快照"
+	snapshot_delete_confirmation.ok_button_text = "确认删除"
+	snapshot_delete_confirmation.cancel_button_text = "取消"
+	snapshot_delete_confirmation.force_native = true
+	snapshot_delete_confirmation.exclusive = true
+	snapshot_delete_confirmation.theme = recording_panel_theme
+	snapshot_delete_confirmation.confirmed.connect(_confirm_delete_selected_layout_snapshot)
+	recording_window.add_child(snapshot_delete_confirmation)
 	_refresh_layout_snapshot_options()
 
 	_add_separator(root_box)
-	_add_section_label(root_box, "全部编组冻结时放置僵尸（未编组并保持运行）")
+	_add_section_label(root_box, "全部编组冻结时放置僵尸（自动加入当前组）")
 	zombie_option = OptionButton.new()
 	zombie_option.fit_to_longest_item = false
 	root_box.add_child(zombie_option)
