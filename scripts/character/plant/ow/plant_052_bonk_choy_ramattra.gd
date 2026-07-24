@@ -73,7 +73,7 @@ const PLANT_FOOD_HIT_FRAMES := [6, 12, 18, 24]
 @export var frame_time := 0.033
 @export var frame_scale := 0.55
 @export_group("动画平滑")
-@export var idle_frame_blend_enabled := true
+@export var idle_frame_blend_enabled := false
 @export_range(0.0, 1.0, 0.05) var idle_frame_blend_strength := 1.0
 @export_group("动画状态")
 @export var is_attack := false

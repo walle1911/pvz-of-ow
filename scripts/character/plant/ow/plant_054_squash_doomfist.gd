@@ -20,10 +20,23 @@ var is_attack_card := false
 var attack_card_target_screen_position := Vector2.ZERO
 var attack_card_target:Card
 var attack_card_parent:Node2D
+## 新种下时要等待物理区域完成首次同步，期间禁止抢先锁定安娜卡牌。
+var is_card_attack_detection_ready := false
 
 func ready_norm():
 	super()
 	animation_tree.active = true
+	_wait_for_card_attack_detection_ready()
+
+func _wait_for_card_attack_detection_ready() -> void:
+	## Area2D 的重叠列表在物理帧末更新；等待两帧覆盖“种进僵尸所在格”的情况。
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	if not is_inside_tree() or is_attack:
+		return
+	if detect_component.is_enabling and detect_component.judge_is_have_enemy():
+		return
+	is_card_attack_detection_ready = true
 
 func ready_norm_signal_connect():
 	super()
@@ -40,7 +53,11 @@ func attack_start():
 		hurt_box_component.disable_component(ComponentNormBase.E_IsEnableFactor.Character)
 
 func attack_card(card:Card) -> bool:
-	if is_attack or not is_instance_valid(card):
+	if is_attack or not is_card_attack_detection_ready or not is_instance_valid(card):
+		return false
+	## 卡槽检查和物理检测可能发生在同一帧；扑向安娜前主动刷新一次近身索敌，
+	## 确保只要附近存在可攻击僵尸，就立即走原有僵尸攻击流程。
+	if detect_component.is_enabling and detect_component.judge_is_have_enemy():
 		return false
 
 	attack_card_target = card

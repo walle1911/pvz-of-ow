@@ -249,6 +249,7 @@ func _spawn_skill_bullet(target:Zombie000Base, damage:int) -> void:
 	var bullet:= CASSIDY_SKILL_BULLET_SCENE.instantiate() as BulletLinear007Cactus
 	if not is_instance_valid(bullet):
 		return
+	mark_bullet_recording_source(bullet)
 	var marker:= attack_component.markers_2d_bullet[0]
 	var shot_direction:= marker.global_position.direction_to(target.hurt_box_component.global_position)
 	var bullet_paras:Dictionary[Bullet000NormBase.E_InitParasAttr, Variant] = {

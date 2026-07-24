@@ -91,6 +91,7 @@ func shoot_bullet():
 	is_attack = false
 
 	var bullet_cob_cannon :Bullet016CobCannon =  Global.bullet_registry.get_bullet_scenes(BulletRegistry.BulletType.Bullet016CobCannon).instantiate()
+	mark_bullet_recording_source(bullet_cob_cannon)
 	bullet_cob_cannon.init_cannon(attack_target_global_pos, cannon_attack_value, cannon_ground_effect_texture)
 	Global.main_game.bullets.add_child(bullet_cob_cannon)
 	bullet_cob_cannon.global_position = marker_2d_bullet.global_position

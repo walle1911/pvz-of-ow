@@ -55,6 +55,7 @@ func _create_bullte(await_time:float, i:int=1, change_y_target:bool=false, check
 	if check_attack_interval and not _can_create_bullet(i):
 		return
 	var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
+	_mark_bullet_source_for_recording(bullet)
 	# 三线射手子弹不升级类型，只叠加蓝光强化
 	bullet.is_glow_upgrade_only = true
 	var bullet_paras: Dictionary = _build_three_pea_bullet_paras(i, change_y_target)

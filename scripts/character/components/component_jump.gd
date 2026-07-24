@@ -104,6 +104,10 @@ func judge_jump_be_stop():
 ## 射线检测区域
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	var enemy = area.owner
+	if not is_instance_valid(enemy):
+		return
+	if enemy is Character000Base and not detect_component._is_recording_group_compatible(enemy):
+		return
 	if enemy is Plant000Base:
 		var enemy_plant:Plant000Base = enemy
 		## 如果当前植物可以被僵尸攻击到

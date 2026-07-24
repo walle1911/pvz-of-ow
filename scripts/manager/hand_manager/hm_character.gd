@@ -6,6 +6,11 @@ const VENDETTA_PLANT_TYPE := CharacterRegistry.PlantType.P021JalapenoVendetta
 const VENDETTA_CHARGE_TIME := 1.0
 const VENDETTA_FOLLOW_OFFSET := Vector2(24.0, 48.0)
 const VENDETTA_SLASH_EFFECT = preload("res://scripts/fx/plant_effect/plant_effect_vendetta_jalapeno_slash.gd")
+## OW 僵尸卡图来源不一：有的是实战尺寸骨骼，有的是已经缩过的整张合成图。
+## 手持时按实际可见高度兜底，保留巨人/旗帜等合理体型差异，同时修正极小和超大贴图。
+const OW_ZOMBIE_PREVIEW_MIN_HEIGHT := 120.0
+const OW_ZOMBIE_PREVIEW_MAX_HEIGHT := 220.0
+const OW_ZOMBIE_PREVIEW_GROUND_Y := 12.0
 
 @onready var hand_manager: HandManager = %HandManager
 
@@ -157,6 +162,7 @@ func click_card(card:Card) -> bool:
 		## 静态僵尸以及僵尸虚影
 		character_child.scale = Vector2.ONE
 		character_child.position = Vector2.ZERO
+		_normalize_ow_zombie_preview(character_child, curr_card.card_zombie_type)
 		characte_static_shadow = character_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
@@ -168,6 +174,52 @@ func click_card(card:Card) -> bool:
 			click_card_column()
 
 	return true
+
+
+func _normalize_ow_zombie_preview(character_root:Node2D, zombie_type:CharacterRegistry.ZombieType) -> void:
+	## 500 起是原版僵尸，其卡图本来就按实战尺寸制作；只校正 OW/Talon 卡图。
+	if zombie_type <= CharacterRegistry.ZombieType.Null or zombie_type >= CharacterRegistry.ZombieType.Z500Norm:
+		return
+
+	var sprite_bounds:Array[Rect2] = []
+	_collect_visible_sprite_bounds(character_root, Transform2D.IDENTITY, sprite_bounds)
+	if sprite_bounds.is_empty():
+		return
+
+	var visual_bounds := sprite_bounds[0]
+	for i in range(1, sprite_bounds.size()):
+		visual_bounds = visual_bounds.merge(sprite_bounds[i])
+	if visual_bounds.size.y <= 0.0:
+		return
+
+	var preview_scale := 1.0
+	if visual_bounds.size.y < OW_ZOMBIE_PREVIEW_MIN_HEIGHT:
+		preview_scale = OW_ZOMBIE_PREVIEW_MIN_HEIGHT / visual_bounds.size.y
+	elif visual_bounds.size.y > OW_ZOMBIE_PREVIEW_MAX_HEIGHT:
+		preview_scale = OW_ZOMBIE_PREVIEW_MAX_HEIGHT / visual_bounds.size.y
+
+	character_root.scale = Vector2.ONE * preview_scale
+	## 卡片内的合成图常以中心为原点；把可见底边重新落到鼠标/格子基准线附近。
+	character_root.position.y = OW_ZOMBIE_PREVIEW_GROUND_Y - visual_bounds.end.y * preview_scale
+
+
+func _collect_visible_sprite_bounds(
+		node:Node,
+		transform_from_root:Transform2D,
+		result:Array[Rect2]) -> void:
+	if node is CanvasItem and not (node as CanvasItem).visible:
+		return
+
+	if node is Sprite2D:
+		var sprite := node as Sprite2D
+		if is_instance_valid(sprite.texture):
+			result.append(transform_from_root * sprite.get_rect())
+
+	for child in node.get_children():
+		var child_transform := transform_from_root
+		if child is Node2D:
+			child_transform *= (child as Node2D).transform
+		_collect_visible_sprite_bounds(child, child_transform, result)
 
 
 ## 斩仇版火爆辣椒不是“种下去”的植物，而是鼠标旁悬空释放的整排技能。
@@ -618,6 +670,8 @@ func click_cell(plant_cell:PlantCell):
 				),
 				GlobalUtils.get_special_zombie_callable(curr_card.card_zombie_type, plant_cell)
 			)
+			if is_instance_valid(created_zombie):
+				created_zombie.set_meta(&"recording_manually_placed_zombie", true)
 			if curr_card.is_chessboard_hypno_reward and is_instance_valid(created_zombie):
 				created_zombie.be_hypno()
 
@@ -760,7 +814,7 @@ func _click_cell_column(plant_cell:PlantCell):
 					Zombie000Base.E_ZInitAttr.Lane:_plant_cell.row_col.x,
 				}
 
-				Global.main_game.zombie_manager.create_norm_zombie(
+				var created_zombie: Zombie000Base = Global.main_game.zombie_manager.create_norm_zombie(
 					curr_card.card_zombie_type,
 					Global.main_game.zombie_manager.all_zombie_rows[_plant_cell.row_col.x],
 					zombie_init_para,
@@ -770,6 +824,8 @@ func _click_cell_column(plant_cell:PlantCell):
 					),
 					GlobalUtils.get_special_zombie_callable(curr_card.card_zombie_type, _plant_cell)
 				)
+				if is_instance_valid(created_zombie):
+					created_zombie.set_meta(&"recording_manually_placed_zombie", true)
 
 ## 柱子模式 清除数据
 func _clear_curr_data_column():

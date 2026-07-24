@@ -62,6 +62,11 @@ func _click_card(card:Card) -> void:
 	if not is_instance_valid(card):
 		SoundManager.play_other_SFX("buzzer")
 		return
+	## 再次点击当前卡片时取消手持；鼠标点击与数字快捷键共用此入口。
+	if curr_hm_status == E_HandManagerStatus.Character and hm_character.curr_card == card:
+		SoundManager.play_other_SFX("tap2")
+		curr_hm_status = E_HandManagerStatus.Null
+		return
 	## 左键按住蓄力时可能用数字键切卡，避免松开后立即种下新卡。
 	if curr_hm_status == E_HandManagerStatus.Character\
 		and hm_character.is_vendetta_charging():

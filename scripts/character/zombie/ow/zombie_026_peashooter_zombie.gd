@@ -11,12 +11,9 @@ class_name Zombie026PeashooterZombie
 
 @onready var attack_bullet: AttackComponentBulletPeashooterZombie = %AttackComponentBullet
 @onready var peashooter_head: PeashooterHead = %PeashooterHead
-@onready var zombie_body: Node2D = $Body/BodyCorrect/Zombie_body
+@onready var head_drop_body: Node2D = $Body/NodeDrop/Node2D_Head_Drop/Head_Drop
 
-var _head_offset_in_body_scale := Vector2.ZERO
-var _head_scale_ratio_to_body := Vector2.ONE
-var _head_fixed_rotation := 0.0
-var _is_head_body_follow_enabled := false
+var _is_peashooter_head_dropped := false
 
 @export_group("索杰恩远程攻击")
 @export_range(0.1, 30.0, 0.05, "or_greater") var pea_shot_interval := 0.45
@@ -35,8 +32,6 @@ var _is_head_body_follow_enabled := false
 @export var death_status_max := 2
 
 func _ready() -> void:
-	## 在 AnimationTree 更新 Zombie_body 后再同步豌豆头。
-	process_priority = 100
 	super()
 	attack_bullet.configure_sojourn_attack(
 		pea_shot_interval,
@@ -45,40 +40,7 @@ func _ready() -> void:
 		laser_penetration_damage
 	)
 	_setup_markers_2d_bullet()
-	_setup_head_body_follow()
 	_random_anim_status()
-
-func _process(_delta: float) -> void:
-	if not _is_head_body_follow_enabled:
-		return
-	if not is_instance_valid(peashooter_head) or not is_instance_valid(zombie_body):
-		return
-	peashooter_head.position = zombie_body.position + Vector2(
-		_head_offset_in_body_scale.x * zombie_body.scale.x,
-		_head_offset_in_body_scale.y * zombie_body.scale.y
-	)
-	peashooter_head.scale = Vector2(
-		_head_scale_ratio_to_body.x * zombie_body.scale.x,
-		_head_scale_ratio_to_body.y * zombie_body.scale.y
-	)
-	peashooter_head.rotation = _head_fixed_rotation
-
-func _setup_head_body_follow() -> void:
-	if not is_instance_valid(peashooter_head) or not is_instance_valid(zombie_body):
-		return
-	if is_zero_approx(zombie_body.scale.x) or is_zero_approx(zombie_body.scale.y):
-		return
-	var initial_offset := peashooter_head.position - zombie_body.position
-	_head_offset_in_body_scale = Vector2(
-		initial_offset.x / zombie_body.scale.x,
-		initial_offset.y / zombie_body.scale.y
-	)
-	_head_scale_ratio_to_body = Vector2(
-		peashooter_head.scale.x / zombie_body.scale.x,
-		peashooter_head.scale.y / zombie_body.scale.y
-	)
-	_head_fixed_rotation = peashooter_head.rotation
-	_is_head_body_follow_enabled = true
 
 ## 尽早设置 markers_2d_bullet，防止任何时机 _shoot_bullet 被触发时数组为空
 func _setup_markers_2d_bullet():
@@ -114,11 +76,23 @@ func ready_norm_signal_connect():
 	## 近战啃食仍由基类 AttackComponent 的 signal_change_is_attack -> move_component 停下。
 	## 死亡时禁用子弹攻击
 	hp_component.signal_hp_component_death.connect(attack_bullet.disable_component.bind(ComponentNormBase.E_IsEnableFactor.Death))
+	## 沿用普通僵尸的掉头血量阶段，但把真正显示的 PeashooterHead 放进掉落节点。
+	hp_stage_change_component.signal_hp_stage_change.connect(_on_hp_stage_change_drop_peashooter_head)
+
+func _on_hp_stage_change_drop_peashooter_head(hp_stage: int) -> void:
+	if hp_stage < 1 or _is_peashooter_head_dropped:
+		return
+	if not is_instance_valid(peashooter_head) or not is_instance_valid(head_drop_body):
+		return
+	peashooter_head.stop_follow()
+	peashooter_head.reparent(head_drop_body, true)
+	_is_peashooter_head_dropped = true
 
 ## 死亡动画开始时停止头部动画
 func anim_death_start():
-	_is_head_body_follow_enabled = false
-	if is_instance_valid(peashooter_head):
+	## 已经进入掉落节点的头部继续由 ZombieDropBase 驱动，不能再隐藏。
+	if is_instance_valid(peashooter_head) and not _is_peashooter_head_dropped:
+		peashooter_head.stop_follow()
 		peashooter_head.stop()
 		peashooter_head.visible = false
 

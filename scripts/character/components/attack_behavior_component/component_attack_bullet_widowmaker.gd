@@ -12,6 +12,7 @@ func _shoot_bullet():
 
 	for marker:Marker2D in markers_2d_bullet:
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
+		_mark_bullet_source_for_recording(bullet)
 		var bullet_paras := get_bullet_paras(marker.global_position, Vector2.RIGHT)
 		bullet_paras[Bullet000NormBase.E_InitParasAttr.Enemy] = target
 		bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = _get_final_attack_value()

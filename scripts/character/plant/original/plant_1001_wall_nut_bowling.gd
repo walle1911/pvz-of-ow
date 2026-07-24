@@ -16,6 +16,7 @@ func ready_norm():
 func _launch_bowling():
 	## 发射保龄球子弹
 	var bullet:Bullet000Base = bowling_bullet_scene.instantiate()
+	mark_bullet_recording_source(bullet)
 	var bullet_paras = {
 			Bullet000NormBase.E_InitParasAttr.BulletLane : lane,
 			Bullet000NormBase.E_InitParasAttr.Position : bullets.to_local(global_position),

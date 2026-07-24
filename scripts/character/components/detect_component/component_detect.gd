@@ -2,6 +2,9 @@ extends ComponentNormBase
 ## 攻击射线检测组件,根据owner自动选择敌人层
 class_name DetectComponent
 
+const RECORDING_FREEZE_GROUP_META := &"recording_freeze_group"
+const RECORDING_IS_FROZEN_META := &"recording_is_frozen"
+
 ## 每帧判断是否检测当前敌人
 ## 敌人进入\离开\状态变化时检测
 ## 敌人进入时连接状态变化函数，离开时不断开
@@ -151,6 +154,8 @@ func disable_component(is_enable_factor:E_IsEnableFactor):
 ## 敌人进入当前区域，若为同一行，当前帧进行判断是否可以攻击
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	var enemy = area.owner
+	if not is_instance_valid(enemy):
+		return
 	if is_lane and owner.lane != enemy.lane:
 		return
 	if enemy is Plant000Base:
@@ -230,6 +235,8 @@ func _on_detect_character(enemy:Character000Base) -> bool:
 			enemy_can_be_attacked = get_first_be_hit_plant_in_cell(enemy)
 		elif enemy is Zombie000Base:
 			enemy_can_be_attacked = enemy
+		if not is_instance_valid(enemy_can_be_attacked):
+			return false
 		enemy_can_be_attacked.signal_character_death.connect(func():need_judge = true)
 		return true
 	else:
@@ -237,29 +244,30 @@ func _on_detect_character(enemy:Character000Base) -> bool:
 
 ## 获取应该被攻击的植物,在当前植物格子中
 func get_first_be_hit_plant_in_cell(plant:Plant000Base)->Plant000Base:
-	## shell
-	#prints("植物是否合法", is_instance_valid(plant), plant.name)
-	if is_instance_valid(plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Shell]):
-		return plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Shell]
-	elif is_instance_valid(plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]):
-		return plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
-	elif is_instance_valid(plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Imitater]):
-		return plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Imitater]
-	elif is_instance_valid(plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Down]):
-		return plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Down]
-	elif is_instance_valid(plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Float]):
-		if can_attack_plant_status & 2:
-			return plant.plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Float]
-		else:
-			printerr("当前位置有悬浮植物，但角色不攻击悬浮植物")
-			return null
-	else:
-		printerr("当前植物格子没有植物")
-		return null
+	var placement_order := [
+		CharacterRegistry.PlacePlantInCell.Shell,
+		CharacterRegistry.PlacePlantInCell.Norm,
+		CharacterRegistry.PlacePlantInCell.Imitater,
+		CharacterRegistry.PlacePlantInCell.Down,
+		CharacterRegistry.PlacePlantInCell.Float,
+	]
+	for placement in placement_order:
+		var candidate_value: Variant = plant.plant_cell.plant_in_cell[placement]
+		if not is_instance_valid(candidate_value) or not candidate_value is Plant000Base:
+			continue
+		var candidate: Plant000Base = candidate_value
+		if not _is_recording_group_compatible(candidate):
+			continue
+		if placement == CharacterRegistry.PlacePlantInCell.Float and (can_attack_plant_status & 2) == 0:
+			continue
+		return candidate
+	return null
 
 ## 判断敌人状态是否可以被攻击
 func _judge_enemy_is_can_be_attack(enemy:Character000Base)->bool:
 	if not is_instance_valid(enemy):
+		return false
+	if not _is_recording_group_compatible(enemy):
 		return false
 	## 先判断行属性
 	if is_lane and owner.lane != enemy.lane:
@@ -288,6 +296,26 @@ func _judge_enemy_is_can_be_attack(enemy:Character000Base)->bool:
 	else:
 		#print("检测到非角色类敌人")
 		return false
+
+## 导演关卡给每个角色写入冻结组与冻结状态元数据。
+## 分组不限制运行中角色互相索敌；这里只过滤被冻结、在场景逻辑中视为不存在的目标。
+## 普通关卡没有此元数据，因此完全沿用原检测行为。
+func _is_recording_group_compatible(enemy: Character000Base) -> bool:
+	if not is_instance_valid(enemy):
+		return false
+	if not is_instance_valid(owner) or not owner is Character000Base:
+		return true
+	var has_recording_metadata := (
+		owner.has_meta(RECORDING_FREEZE_GROUP_META)
+		or owner.has_meta(RECORDING_IS_FROZEN_META)
+		or enemy.has_meta(RECORDING_FREEZE_GROUP_META)
+		or enemy.has_meta(RECORDING_IS_FROZEN_META)
+	)
+	if not has_recording_metadata:
+		return true
+	if bool(owner.get_meta(RECORDING_IS_FROZEN_META, false)):
+		return false
+	return not bool(enemy.get_meta(RECORDING_IS_FROZEN_META, false))
 
 #endregion
 
@@ -318,6 +346,8 @@ func get_all_enemy_can_be_attacked()->Array[Character000Base]:
 		for enemy_area in all_enemy_area:
 			if enemy_area.owner is Character000Base:
 				var enemy:Character000Base = enemy_area.owner
+				if not _is_recording_group_compatible(enemy):
+					continue
 				## 如果敌人可以被攻击
 				if _judge_enemy_is_can_be_attack(enemy) and not all_enemy_can_be_attacked.has(enemy):
 					all_enemy_can_be_attacked.append(enemy)
@@ -341,6 +371,8 @@ func judge_zombie_in_sky() -> bool:
 		for enemy_area in all_enemy_area:
 			if enemy_area.owner is Character000Base:
 				var enemy:Character000Base = enemy_area.owner
+				if not _is_recording_group_compatible(enemy):
+					continue
 				## 先判断行属性
 				if is_lane and owner.lane != enemy.lane:
 					continue

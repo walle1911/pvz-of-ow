@@ -327,7 +327,6 @@ func ready_norm_signal_connect():
 
 	## 掉落战利品
 	hp_component.signal_hp_component_death.connect(drop_item_component.drop_coin)
-	hp_component.signal_hp_component_death.connect(drop_item_component.drop_garden_plant)
 
 	## 移动僵尸本体y位置,修改对应检测层面节点位置
 	move_component.signal_move_body_y.connect(move_y_zombie)

@@ -28,6 +28,7 @@ func _shoot_bullet():
 	signal_shoot_bullet.emit()
 	for i in range(markers_2d_bullet.size()):
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
+		_mark_bullet_source_for_recording(bullet)
 		var is_knockback_bullet: bool = (
 			_current_shot_is_close_burst
 			and not _has_fired_knockback_bullet

@@ -132,6 +132,7 @@ func _shoot_bullet():
 	signal_shoot_bullet.emit()
 	for i in range(markers_2d_bullet.size()):
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
+		_mark_bullet_source_for_recording(bullet)
 		configure_bullet_before_init(bullet)
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, detect_component.ray_area_direction[i])
 		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
@@ -139,6 +140,18 @@ func _shoot_bullet():
 		bullet.init_bullet(bullet_paras)
 		bullets.add_child(bullet)
 		play_throw_sfx()
+
+
+## 录制导演关卡用此弱引用让在途子弹跟随发射者的冻结归属。
+func _mark_bullet_source_for_recording(bullet: Bullet000Base) -> void:
+	var current_node: Node = self
+	while is_instance_valid(current_node):
+		if current_node is Character000Base:
+			(current_node as Character000Base).mark_bullet_recording_source(bullet)
+			return
+		current_node = current_node.get_parent()
+	if is_instance_valid(owner) and owner is Character000Base:
+		(owner as Character000Base).mark_bullet_recording_source(bullet)
 
 
 ## 子类可在标准初始化前向专属子弹注入发射者或状态。

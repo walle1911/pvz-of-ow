@@ -76,6 +76,7 @@ func _shoot_bullet():
 	for i in range(markers_2d_bullet.size()):
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
+		_mark_bullet_source_for_recording(bullet)
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, ZOMBIE_PEA_DIRECTION)
 		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
 		bullet.init_bullet(bullet_paras)

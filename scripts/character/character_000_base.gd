@@ -74,6 +74,15 @@ var is_can_death_language:=true
 ## 速度改变信号 speed_factor_product: 速度系数乘积
 signal signal_update_speed(speed_factor_product:float)
 
+
+## 录制导演关卡：角色发出的任何普通或技能子弹都继承角色的编组。
+## 同时保存弱引用与组号；即使角色随后死亡，子弹仍能保持原编组。
+func mark_bullet_recording_source(bullet: Node) -> void:
+	if not is_instance_valid(bullet):
+		return
+	bullet.set_meta(&"recording_source_character_ref", weakref(self))
+	bullet.set_meta(&"recording_freeze_group", int(get_meta(&"recording_freeze_group", -1)))
+
 @export_group("动画状态")
 @export var is_death:=false
 @export var is_idle := true

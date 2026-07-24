@@ -8,6 +8,8 @@ class_name DetectComponentSquash
 func _judge_enemy_is_can_be_attack(enemy:Character000Base)->bool:
 	if not is_instance_valid(enemy):
 		return false
+	if not _is_recording_group_compatible(enemy):
+		return false
 	## 先判断行属性
 	if is_lane and owner.lane != enemy.lane:
 		return false

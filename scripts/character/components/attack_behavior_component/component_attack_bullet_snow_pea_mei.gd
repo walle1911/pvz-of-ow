@@ -26,6 +26,7 @@ func _shoot_bullet():
 	for i in range(markers_2d_bullet.size()):
 		var bullet_type := close_spray_bullet_type if use_close_spray else attack_bullet_type
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(bullet_type).instantiate()
+		_mark_bullet_source_for_recording(bullet)
 		if bullet is Bullet017SnowFume:
 			bullet.max_distance = close_spray_max_distance
 			bullet.hits_to_freeze = close_spray_hits_to_freeze

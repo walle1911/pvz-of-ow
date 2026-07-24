@@ -27,6 +27,7 @@ func _launch_tire():
 	if not is_instance_valid(bullets):
 		return
 	var tire_bullet: Bullet000NormBase = tire_bullet_scene.instantiate()
+	mark_bullet_recording_source(tire_bullet)
 	var bullet_paras := {
 		Bullet000NormBase.E_InitParasAttr.BulletLane: lane,
 		Bullet000NormBase.E_InitParasAttr.Position: bullets.to_local(global_position + TIRE_LAUNCH_OFFSET),

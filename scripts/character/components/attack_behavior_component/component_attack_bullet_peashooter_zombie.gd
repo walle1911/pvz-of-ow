@@ -167,6 +167,7 @@ func _shoot_pea():
 			continue
 		var bullet: Bullet000Base = Global.bullet_registry.get_bullet_scenes(attack_bullet_type).instantiate()
 		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
+		_mark_bullet_source_for_recording(bullet)
 		var bullet_paras = get_bullet_paras(markers_2d_bullet[i].global_position, ZOMBIE_PEA_DIRECTION)
 		bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = pea_attack_damage
 		_apply_owner_damage_multiplier_to_bullet_paras(bullet, bullet_paras)
@@ -188,6 +189,7 @@ func _shoot_penetrating_laser():
 			continue
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(laser_bullet_type).instantiate()
 		bullet.bullet_camp = CharacterRegistry.CharacterType.Zombie
+		_mark_bullet_source_for_recording(bullet)
 		var bullet_paras := get_bullet_paras(marker.global_position, ZOMBIE_PEA_DIRECTION)
 		bullet_paras[Bullet000NormBase.E_InitParasAttr.Enemy] = targets
 		bullet_paras[Bullet000NormBase.E_InitParasAttr.AttackValue] = laser_penetration_damage

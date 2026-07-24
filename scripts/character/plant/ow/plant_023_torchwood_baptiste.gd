@@ -70,6 +70,7 @@ func _up_bullet(curr_bullet:Bullet000Base):
 func _up_bullet_ignite(curr_bullet: Bullet000Base) -> void:
 	var new_bullet_up_scenes = Global.bullet_registry.get_bullet_scenes(bullet_upgrade_data[curr_bullet.bullet_type])
 	var bullet_up :Bullet000Base = new_bullet_up_scenes.instantiate()
+	_copy_recording_freeze_metadata(curr_bullet, bullet_up)
 	bullet_up.init_bullet(curr_bullet.get_bullet_paras())
 	# 伤害倍率
 	if not is_equal_approx(bullet_damage_multiplier, 1.0) and bullet_up is Bullet000NormBase:
@@ -80,6 +81,12 @@ func _up_bullet_ignite(curr_bullet: Bullet000Base) -> void:
 	curr_bullet_up.append(bullet_up)
 	bullets.call_deferred("add_child", bullet_up)
 	curr_bullet.queue_free()
+
+
+func _copy_recording_freeze_metadata(source_bullet: Bullet000Base, target_bullet: Bullet000Base) -> void:
+	for meta_key in [&"recording_source_character_ref", &"recording_freeze_group"]:
+		if source_bullet.has_meta(meta_key):
+			target_bullet.set_meta(meta_key, source_bullet.get_meta(meta_key))
 
 
 ## 仅蓝光模式：不替换子弹类型，保留自定义贴图

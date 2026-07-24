@@ -26,6 +26,7 @@ func _shoot_bullet():
 	var marker_count := 1 if _is_giant_burst else markers_2d_bullet.size()
 	for i in range(marker_count):
 		var bullet:Bullet000Base = Global.bullet_registry.get_bullet_scenes(bullet_type).instantiate()
+		_mark_bullet_source_for_recording(bullet)
 		if _is_giant_burst and bullet is Bullet018GiantPea:
 			bullet.attack_value = giant_pea_attack_value
 			bullet.knockback_distance = giant_pea_knockback_distance
