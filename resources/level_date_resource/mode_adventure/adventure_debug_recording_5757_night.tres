@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ResourceLevelData" format=3]
+
+[ext_resource type="Script" uid="uid://bjt3l56exxmdw" path="res://scripts/resources/level/level_data.gd" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+game_BG = 1
+game_BGM = 1
+is_day = false
+is_day_sun = false
+is_zombie_can_home = false
+monster_mode = 0
+zombie_refresh_types = Array[int]([25, 24, 16, 500, 502, 504])
+max_choosed_card_num = 15
+start_sun = 5757

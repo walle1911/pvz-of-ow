@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/test/MainGameDebugRecording5757.tscn" id="1_recording"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757_night.tres" id="2_level"]
+
+[node name="MainGameDebugRecording5757Night" instance=ExtResource("1_recording")]
+game_para = ExtResource("2_level")
+
+[node name="RecordingDebugController" parent="." index="18"]
+enable_support_hotkeys = false

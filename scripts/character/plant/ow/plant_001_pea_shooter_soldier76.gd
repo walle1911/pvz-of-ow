@@ -14,6 +14,8 @@ class_name Plant001PeaShooterSoldier76
 @export var escape_hp_threshold:int = 100
 @export var heal_animation_name:StringName = &"Heal"
 
+const RECORDING_5757_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757.tscn"
+const RECORDING_5757_NIGHT_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757Night.tscn"
 const FRONT_CELL_OFFSET := Vector2i(0, 1)
 const BACK_CELL_OFFSET := Vector2i(0, -1)
 const SIDE_CELL_OFFSETS:Array[Vector2i] = [
@@ -144,6 +146,10 @@ func _get_facing_threat_direction(zombie:Zombie000Base) -> int:
 		return -1 if zombie.direction_x_root == -1 else 0
 
 func _get_random_escape_cell(threat_dir:int) -> PlantCell:
+	if _is_recording_5757_scene():
+		var downward_cell := _get_cell_by_offset(Vector2i(1, 0))
+		return downward_cell if is_instance_valid(downward_cell) and _can_escape_to_cell(downward_cell) else null
+
 	var candidate_offsets := SIDE_CELL_OFFSETS.duplicate()
 	candidate_offsets.shuffle()
 	for offset:Vector2i in candidate_offsets:
@@ -155,6 +161,14 @@ func _get_random_escape_cell(threat_dir:int) -> PlantCell:
 		if is_instance_valid(target_cell) and _can_escape_to_cell(target_cell):
 			return target_cell
 	return null
+
+func _is_recording_5757_scene() -> bool:
+	var current_scene := get_tree().current_scene
+	return is_instance_valid(current_scene) \
+		and current_scene.scene_file_path in [
+			RECORDING_5757_SCENE_PATH,
+			RECORDING_5757_NIGHT_SCENE_PATH,
+		]
 
 func _get_cell_by_offset(offset:Vector2i) -> PlantCell:
 	var all_plant_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells

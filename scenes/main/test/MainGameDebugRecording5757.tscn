@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cb2h3unhc5d14"]
 
 [ext_resource type="PackedScene" uid="uid://c1w2cmehilec8" path="res://scenes/main/MainGame01Front.tscn" id="1_front"]
-[ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757.tres" id="2_level"]
+[ext_resource type="Resource" uid="uid://cp1aapxwjw2h5" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757.tres" id="2_level"]
 [ext_resource type="Script" uid="uid://bbgd6awbe1dt1" path="res://scripts/main_game_item/recording_debug_controller.gd" id="3_controller"]
 
 [node name="MainGameDebugRecording5757" unique_id=1121518709 instance=ExtResource("1_front")]
