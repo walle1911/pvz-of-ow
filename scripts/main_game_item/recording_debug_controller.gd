@@ -2,10 +2,10 @@ extends Node
 
 ## 录制专用运行时调试面板。
 ## 进入导演场景时自动显示独立悬浮导演台，F4 显示/隐藏全僵尸卡片。
-## Q/W/E/R/T 分别切换第 1～5 组冻结，P 冻结全部已编组角色，F6 触发全部射手齐射，O 刷新黑爪波次。
+## Q/W/E/R/T 分别切换第 1～5 组冻结，P 冻结全部已编组角色，F6 触发全部射手齐射，O 全部放行并刷新黑爪波次。
 ## Z 在射手后方补种天使向日葵，X 在射手前方补种巴蒂斯特火炬。
 ## 组冻结时仍可使用正常卡槽和铲子布置植物；面板保留僵尸与导演事件功能。
-## 指定事件在 L 放行全部编组 1.5 秒后触发。
+## 指定事件在 O 放行全部编组并刷新黑爪波次 1.5 秒后触发。
 
 const EVENT_TRIGGER_DELAY := 1.5
 const DIRECTOR_SUN_VALUE := 5757
@@ -32,8 +32,10 @@ const GROUP_PICK_MEMBER := &"member"
 const GROUP_PICK_SUCCESS_SFX := &"chime"
 const RECORDING_IS_FROZEN_META := &"recording_is_frozen"
 const RECORDING_MANUAL_ZOMBIE_META := &"recording_manually_placed_zombie"
+const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"
 
 @export var enable_support_hotkeys := true
+@export_range(0.1, 2.0, 0.05) var director_placed_zombie_scale := 0.8
 
 var main_game: MainGameManager
 var was_bgm_bus_muted := false
@@ -262,6 +264,8 @@ func _save_current_layout_snapshot() -> void:
 			"position_x": zombie.global_position.x,
 			"position_y": zombie.global_position.y,
 			"curr_hp": int(zombie.hp_component.curr_hp),
+			"scale_x": zombie.scale.x,
+			"scale_y": zombie.scale.y,
 			"group_index": zombie_group_index,
 			"is_group_leader": false,
 		})
@@ -454,6 +458,10 @@ func _restore_selected_layout_snapshot() -> void:
 		) as Zombie000Base
 		if not is_instance_valid(zombie):
 			continue
+		zombie.scale = Vector2(
+			float(zombie_data.get("scale_x", zombie.scale.x)),
+			float(zombie_data.get("scale_y", zombie.scale.y))
+		)
 		_apply_initial_hp(zombie, int(zombie_data.get("curr_hp", 0)))
 		restored_character_entries.append({"character": zombie, "data": zombie_data})
 		restored_zombies += 1
@@ -570,7 +578,7 @@ func _toggle_all_groups_frozen() -> void:
 	_refresh_all_group_detection()
 	_update_group_freeze_label()
 	_update_panel_state()
-	_feedback("全部编组已冻结，运行队列已重置；Q～T 最多同时解冻两个组，L 放行全部组。")
+	_feedback("全部编组已冻结，运行队列已重置；Q～T 最多同时解冻两个组，O 放行全部组并刷新黑爪波次。")
 
 
 func _freeze_all_groups_except(active_group: int) -> void:
@@ -591,13 +599,13 @@ func _freeze_all_groups_except(active_group: int) -> void:
 	_feedback("仅第 %d 组保持运行，其余四组已冻结。" % (active_group + 1))
 
 
-func _clear_all_group_freezes() -> void:
+func _clear_all_group_freezes(show_feedback := true) -> int:
 	is_group_run_queue_limited = false
 	running_group_queue.clear()
-	_unfreeze_all_groups_and_execute_queue()
+	return _unfreeze_all_groups_and_execute_queue(show_feedback)
 
 
-func _unfreeze_all_groups_and_execute_queue() -> void:
+func _unfreeze_all_groups_and_execute_queue(show_feedback := true) -> int:
 	is_p_all_frozen = false
 	for group_index in frozen_groups.size():
 		frozen_groups[group_index] = false
@@ -610,7 +618,9 @@ func _unfreeze_all_groups_and_execute_queue() -> void:
 	_refresh_targets()
 	_update_group_freeze_label()
 	_update_panel_state()
-	_feedback("L 已放行全部编组并取消两组限制：%d 个事件将在 1.5 秒后触发。" % events_to_trigger.size())
+	if show_feedback:
+		_feedback("O 已放行全部编组并取消两组限制：%d 个事件将在 1.5 秒后触发。" % events_to_trigger.size())
+	return events_to_trigger.size()
 
 
 func _enforce_running_group_queue_limit() -> void:
@@ -745,17 +755,31 @@ func _on_director_zombie_created(zombie: Zombie000Base) -> void:
 	# 当前调用栈结束后再判断。关卡波次、O 波次和角色召唤物不会带此标记。
 	if is_director_panel_creating_zombie or not is_instance_valid(zombie):
 		return
-	_assign_manual_zombie_after_creation.call_deferred(weakref(zombie))
+	var is_f4_director_card := false
+	if is_instance_valid(main_game) and is_instance_valid(main_game.hand_manager):
+		var curr_card: Card = main_game.hand_manager.hm_character.curr_card
+		is_f4_director_card = is_instance_valid(curr_card) \
+			and bool(curr_card.get_meta(&"recording_director_zombie_card", false))
+	_assign_manual_zombie_after_creation.call_deferred(weakref(zombie), is_f4_director_card)
 
 
-func _assign_manual_zombie_after_creation(zombie_ref: WeakRef) -> void:
+func _assign_manual_zombie_after_creation(zombie_ref: WeakRef, apply_director_scale: bool) -> void:
 	var zombie_value: Variant = zombie_ref.get_ref() if is_instance_valid(zombie_ref) else null
 	if not is_instance_valid(zombie_value):
 		return
 	var zombie := zombie_value as Zombie000Base
 	if not is_instance_valid(zombie) or not bool(zombie.get_meta(RECORDING_MANUAL_ZOMBIE_META, false)):
 		return
+	if apply_director_scale:
+		_apply_director_placed_zombie_scale(zombie)
 	_assign_new_director_zombie_to_selected_group(zombie, true)
+
+
+func _apply_director_placed_zombie_scale(zombie: Zombie000Base) -> void:
+	if not is_instance_valid(zombie) or bool(zombie.get_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META, false)):
+		return
+	zombie.scale *= clampf(director_placed_zombie_scale, 0.1, 2.0)
+	zombie.set_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META, true)
 
 
 func _assign_new_director_zombie_to_selected_group(zombie: Zombie000Base, show_feedback: bool) -> int:
@@ -1274,7 +1298,7 @@ func _update_group_freeze_label() -> void:
 	var queue_status := (
 		"运行队列:%s" % ("→".join(queue_hotkeys) if not queue_hotkeys.is_empty() else "空")
 		if is_group_run_queue_limited
-		else "L状态:全部放行"
+		else "O状态:全部放行"
 	)
 	group_freeze_label.text = "%s  %s  %s  未编组:始终运行  %s" % [
 		"P状态:全部冻结" if is_p_all_frozen else "P状态:可重置全冻",
@@ -1326,9 +1350,6 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_O:
 		_start_talon_director_wave()
-		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_L:
-		_clear_all_group_freezes()
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_Z and enable_support_hotkeys:
 		_plant_support_next_to_shooters(
@@ -1613,7 +1634,7 @@ func _build_panel() -> void:
 	freeze_group_summary_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root_box.add_child(freeze_group_summary_label)
 
-	_add_section_label(root_box, "L 放行全部编组时触发事件")
+	_add_section_label(root_box, "O 放行全部编组并刷怪时触发事件")
 	event_option = OptionButton.new()
 	event_option.fit_to_longest_item = false
 	root_box.add_child(event_option)
@@ -1689,6 +1710,7 @@ func _build_all_zombie_card_palette() -> void:
 		card.cool_time = 0.0
 		card.set_card_cool_end()
 		card.card_ready()
+		card.set_meta(&"recording_director_zombie_card", true)
 		card.tooltip_text = str(Global.character_registry.get_zombie_info(
 			zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieName
 		))
@@ -1712,15 +1734,16 @@ func _toggle_force_all_shooters_fire() -> void:
 
 
 func _start_talon_director_wave() -> void:
-	if is_talon_wave_spawning:
-		_feedback("黑爪波次仍在进行，请等本波生成完成。")
-		return
 	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
 		_feedback("僵尸管理器尚未初始化。")
 		return
+	var queued_event_count := _clear_all_group_freezes(false)
+	if is_talon_wave_spawning:
+		_feedback("O 已放行全部编组并取消组别限制；当前黑爪波次仍在生成，不会重复启动。")
+		return
 	is_talon_wave_spawning = true
 	_spawn_talon_director_wave()
-	_feedback("黑爪波次已开始：五行将按节奏依次出现普通、路障、旗帜和铁桶僵尸。")
+	_feedback("O 已放行全部编组并取消组别限制；黑爪波次开始生成，%d 个排队事件将在 1.5 秒后触发。" % queued_event_count)
 
 
 func _plant_support_next_to_shooters(
@@ -1980,6 +2003,7 @@ func _add_zombie_during_freeze() -> void:
 	if not is_instance_valid(zombie):
 		_feedback("僵尸创建失败。")
 		return
+	_apply_director_placed_zombie_scale(zombie)
 	_apply_initial_hp(zombie, int(zombie_initial_hp_spin.value))
 	var assigned_group := _assign_new_director_zombie_to_selected_group(zombie, false)
 	if assigned_group >= 0:
@@ -2134,7 +2158,7 @@ func _queue_selected_event() -> void:
 	var event_key: StringName = event_option.get_item_metadata(event_option.selected)
 	queued_events.append({"target": target, "event": event_key})
 	_update_queue_label()
-	_feedback("事件已排队，将在 L 放行全部编组后 1.5 秒触发。")
+	_feedback("事件已排队，将在 O 放行全部编组并刷新黑爪波次后 1.5 秒触发。")
 
 
 func _trigger_queued_event_after_delay(event_data: Dictionary) -> void:

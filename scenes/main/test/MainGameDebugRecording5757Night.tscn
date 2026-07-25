@@ -8,3 +8,4 @@ game_para = ExtResource("2_level")
 
 [node name="RecordingDebugController" parent="." index="18"]
 enable_support_hotkeys = false
+director_placed_zombie_scale = 0.8

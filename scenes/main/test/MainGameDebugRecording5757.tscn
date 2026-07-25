@@ -415,3 +415,4 @@ plant_in_cell = {
 [node name="RecordingDebugController" type="Node" parent="." index="18" unique_id=1462498711]
 process_mode = 3
 script = ExtResource("3_controller")
+director_placed_zombie_scale = 0.8
