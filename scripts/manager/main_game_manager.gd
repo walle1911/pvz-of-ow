@@ -32,6 +32,14 @@ class_name MainGameManager
 ## 直接运行测试场景时显示植物和僵尸血量，便于观察调参结果
 @export var test_show_hp_label := true
 
+@export_group("5757导演设置")
+## F4 导演卡和导演台按钮放置的僵尸等比缩放比例；1.0 为原尺寸。
+@export_range(0.1, 2.0, 0.05) var director_placed_zombie_scale := 0.8
+## 启用后，D.Va 毁灭菇的幼体不再随机弹射，只尝试落在指定的斜前方格。
+@export var dva_baby_use_fixed_diagonal_cell := false
+## x 为行偏移，y 为列偏移；(-1, 1) 表示行 -1、列 +1 的斜前一格。
+@export var dva_baby_fixed_diagonal_offset := Vector2i(-1, 1)
+
 #endregion
 #region 游戏管理器
 @onready var manager: Node = %Manager

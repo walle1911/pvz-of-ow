@@ -115,7 +115,7 @@ size = Vector2(100, 100)
 script = ExtResource("2_y3aiw")
 plant_type = 25
 init_be_attack_status = 8
-is_sleep_in_day = true
+is_sleep_in_day = false
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
 [node name="BodyCorrect" parent="Body" index="0"]

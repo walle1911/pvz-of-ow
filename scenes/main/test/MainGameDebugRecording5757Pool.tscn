@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bllxjrb4u2cir" path="res://scenes/main/test/MainGameDebug9999Pool.tscn" id="1_pool"]
+[ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757_pool.tres" id="2_level"]
+[ext_resource type="Script" uid="uid://bbgd6awbe1dt1" path="res://scripts/main_game_item/recording_debug_controller.gd" id="3_controller"]
+
+[node name="MainGameDebugRecording5757Pool" instance=ExtResource("1_pool")]
+game_para = ExtResource("2_level")
+director_placed_zombie_scale = 0.8
+
+[node name="RecordingDebugController" type="Node" parent="." index="18"]
+process_mode = 3
+script = ExtResource("3_controller")

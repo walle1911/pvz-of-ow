@@ -16,6 +16,7 @@ class_name Plant001PeaShooterSoldier76
 
 const RECORDING_5757_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757.tscn"
 const RECORDING_5757_NIGHT_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757Night.tscn"
+const RECORDING_5757_POOL_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757Pool.tscn"
 const FRONT_CELL_OFFSET := Vector2i(0, 1)
 const BACK_CELL_OFFSET := Vector2i(0, -1)
 const SIDE_CELL_OFFSETS:Array[Vector2i] = [
@@ -168,6 +169,7 @@ func _is_recording_5757_scene() -> bool:
 		and current_scene.scene_file_path in [
 			RECORDING_5757_SCENE_PATH,
 			RECORDING_5757_NIGHT_SCENE_PATH,
+			RECORDING_5757_POOL_SCENE_PATH,
 		]
 
 func _get_cell_by_offset(offset:Vector2i) -> PlantCell:

@@ -250,25 +250,44 @@ func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:f
 
 	var target_cell:PlantCell = null
 	var candidate_cells:Array[PlantCell] = []
+	var use_fixed_diagonal_cell:bool = (
+		is_instance_valid(Global.main_game)
+		and Global.main_game.dva_baby_use_fixed_diagonal_cell
+	)
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
 		CharacterRegistry.PlantType.P016DoomShroomDVA,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
 	)
 	if is_instance_valid(Global.main_game) and is_instance_valid(Global.main_game.plant_cell_manager):
 		var all_plant_cells:Array[Array] = Global.main_game.plant_cell_manager.all_plant_cells
-		for row_offset in range(-1, 2):
-			var target_row := row_col.x + row_offset
-			if target_row < 0 or target_row >= all_plant_cells.size():
-				continue
-			for col_offset in range(1, 4):
-				var target_col := row_col.y - col_offset
-				if target_col < 0:
-					break
-				var candidate:PlantCell = all_plant_cells[target_row][target_col]
-				if plant_condition.judge_is_can_plant(candidate, CharacterRegistry.PlantType.P016DoomShroomDVA):
-					candidate_cells.append(candidate)
-	if not candidate_cells.is_empty():
+		if use_fixed_diagonal_cell:
+			var target_coords:Vector2i = row_col + Global.main_game.dva_baby_fixed_diagonal_offset
+			if (
+				target_coords.x >= 0
+				and target_coords.x < all_plant_cells.size()
+				and target_coords.y >= 0
+				and target_coords.y < all_plant_cells[target_coords.x].size()
+			):
+				var fixed_candidate:PlantCell = all_plant_cells[target_coords.x][target_coords.y]
+				if plant_condition.judge_is_can_plant(fixed_candidate, CharacterRegistry.PlantType.P016DoomShroomDVA):
+					target_cell = fixed_candidate
+		else:
+			for row_offset in range(-1, 2):
+				var target_row := row_col.x + row_offset
+				if target_row < 0 or target_row >= all_plant_cells.size():
+					continue
+				for col_offset in range(1, 4):
+					var target_col := row_col.y - col_offset
+					if target_col < 0:
+						break
+					var candidate:PlantCell = all_plant_cells[target_row][target_col]
+					if plant_condition.judge_is_can_plant(candidate, CharacterRegistry.PlantType.P016DoomShroomDVA):
+						candidate_cells.append(candidate)
+	if not use_fixed_diagonal_cell and not candidate_cells.is_empty():
 		target_cell = candidate_cells.pick_random()
+	## 夜晚 5757 的固定落点不合法时直接放弃生成，绝不回退到原格或其他格。
+	if use_fixed_diagonal_cell and not is_instance_valid(target_cell):
+		return
 
 	## 原格的旧毁灭菇已在上一帧离场；坑洞不阻止这次专属生成。
 	var is_fallback_to_source := not is_instance_valid(target_cell)

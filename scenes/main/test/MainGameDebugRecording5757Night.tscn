@@ -5,7 +5,9 @@
 
 [node name="MainGameDebugRecording5757Night" instance=ExtResource("1_recording")]
 game_para = ExtResource("2_level")
+director_placed_zombie_scale = 0.8
+dva_baby_use_fixed_diagonal_cell = true
+dva_baby_fixed_diagonal_offset = Vector2i(-1, 1)
 
 [node name="RecordingDebugController" parent="." index="18"]
 enable_support_hotkeys = false
-director_placed_zombie_scale = 0.8

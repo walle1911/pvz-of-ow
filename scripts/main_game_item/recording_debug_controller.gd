@@ -2,7 +2,7 @@ extends Node
 
 ## 录制专用运行时调试面板。
 ## 进入导演场景时自动显示独立悬浮导演台，F4 显示/隐藏全僵尸卡片。
-## Q/W/E/R/T 分别切换第 1～5 组冻结，P 冻结全部已编组角色，F6 触发全部射手齐射，O 全部放行并刷新黑爪波次。
+## Q/W/E/R/T 分别切换第 1～5 组冻结，P 切换全部冻结/解冻，F6 触发全部射手齐射，O 全部放行并刷新黑爪波次。
 ## Z 在射手后方补种天使向日葵，X 在射手前方补种巴蒂斯特火炬。
 ## 组冻结时仍可使用正常卡槽和铲子布置植物；面板保留僵尸与导演事件功能。
 ## 指定事件在 O 放行全部编组并刷新黑爪波次 1.5 秒后触发。
@@ -31,11 +31,9 @@ const GROUP_PICK_LEADER := &"leader"
 const GROUP_PICK_MEMBER := &"member"
 const GROUP_PICK_SUCCESS_SFX := &"chime"
 const RECORDING_IS_FROZEN_META := &"recording_is_frozen"
-const RECORDING_MANUAL_ZOMBIE_META := &"recording_manually_placed_zombie"
 const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"
 
 @export var enable_support_hotkeys := true
-@export_range(0.1, 2.0, 0.05) var director_placed_zombie_scale := 0.8
 
 var main_game: MainGameManager
 var was_bgm_bus_muted := false
@@ -64,7 +62,6 @@ var was_recording_window_f2_pressed := false
 var zombie_card_canvas: CanvasLayer
 var zombie_card_grid: GridContainer
 var director_zombie_cards: Array[Card] = []
-var is_director_panel_creating_zombie := false
 var freeze_all_button: Button
 var status_label: Label
 var group_freeze_label: Label
@@ -80,6 +77,7 @@ var zombie_option: OptionButton
 var zombie_lane_spin: SpinBox
 var zombie_col_spin: SpinBox
 var zombie_initial_hp_spin: SpinBox
+var placement_group_option: OptionButton
 var target_option: OptionButton
 var mouse_pick_action_option: OptionButton
 var target_hp_spin: SpinBox
@@ -109,7 +107,6 @@ func _ready() -> void:
 		was_bgm_bus_muted = AudioServer.is_bus_mute(bgm_bus_index)
 		AudioServer.set_bus_mute(bgm_bus_index, true)
 	main_game = Global.main_game
-	_connect_director_zombie_placement()
 	_load_layout_snapshot_library()
 	# 原生子窗口是在 show() 时才真正创建。导演场景存续期间必须一直关闭
 	# “嵌入子窗口”，否则编辑器内嵌运行时会把导演台吞回游戏视口。
@@ -119,6 +116,10 @@ func _ready() -> void:
 	_fill_character_options()
 	_update_panel_state()
 	await get_tree().process_frame
+	# HandManager 的 hm_character 是 @onready 子组件；必须等管理器树完成初始化后再连接，
+	# 否则 F4/卡牌放置不会发到导演控制器，而导台按钮仍会看似正常。
+	_update_director_lane_range()
+	_connect_director_hand_placement()
 	_refresh_targets()
 	_enforce_director_sun_value()
 
@@ -567,6 +568,11 @@ func _toggle_group_frozen(group_index: int) -> void:
 
 
 func _toggle_all_groups_frozen() -> void:
+	var are_all_groups_frozen := frozen_groups.all(func(is_frozen: bool): return is_frozen)
+	if are_all_groups_frozen:
+		var queued_event_count := _clear_all_group_freezes(false)
+		_feedback("P 已解冻全部编组并取消两组限制，不会刷新僵尸；%d 个排队事件将在 1.5 秒后触发。" % queued_event_count)
+		return
 	if is_force_all_shooters_firing:
 		_stop_force_all_shooters_fire()
 	is_p_all_frozen = true
@@ -578,7 +584,7 @@ func _toggle_all_groups_frozen() -> void:
 	_refresh_all_group_detection()
 	_update_group_freeze_label()
 	_update_panel_state()
-	_feedback("全部编组已冻结，运行队列已重置；Q～T 最多同时解冻两个组，O 放行全部组并刷新黑爪波次。")
+	_feedback("P 已冻结全部编组并重置运行队列；再次按 P 可全部解冻但不刷怪，按 O 则全部解冻并刷怪。")
 
 
 func _freeze_all_groups_except(active_group: int) -> void:
@@ -742,64 +748,119 @@ func _get_selected_freeze_group() -> int:
 	return freeze_group_option.selected
 
 
-func _connect_director_zombie_placement() -> void:
-	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
-		return
-	var callback := Callable(self, &"_on_director_zombie_created")
-	if not main_game.zombie_manager.signal_zombie_created.is_connected(callback):
-		main_game.zombie_manager.signal_zombie_created.connect(callback)
+func _get_selected_placement_group() -> int:
+	if not is_instance_valid(placement_group_option) or placement_group_option.item_count == 0:
+		return -1
+	return int(placement_group_option.get_item_metadata(placement_group_option.selected))
 
 
-func _on_director_zombie_created(zombie: Zombie000Base) -> void:
-	# 手持管理器会在 create_norm_zombie() 返回后标记手动放置结果，因此延迟到
-	# 当前调用栈结束后再判断。关卡波次、O 波次和角色召唤物不会带此标记。
-	if is_director_panel_creating_zombie or not is_instance_valid(zombie):
+func _update_director_lane_range() -> void:
+	if not is_instance_valid(zombie_lane_spin) or not is_instance_valid(main_game) \
+	 or not is_instance_valid(main_game.zombie_manager):
 		return
-	var is_f4_director_card := false
-	if is_instance_valid(main_game) and is_instance_valid(main_game.hand_manager):
-		var curr_card: Card = main_game.hand_manager.hm_character.curr_card
-		is_f4_director_card = is_instance_valid(curr_card) \
-			and bool(curr_card.get_meta(&"recording_director_zombie_card", false))
-	_assign_manual_zombie_after_creation.call_deferred(weakref(zombie), is_f4_director_card)
+	var lane_count := main_game.zombie_manager.all_zombie_rows.size()
+	if lane_count > 0:
+		zombie_lane_spin.max_value = lane_count
 
 
-func _assign_manual_zombie_after_creation(zombie_ref: WeakRef, apply_director_scale: bool) -> void:
-	var zombie_value: Variant = zombie_ref.get_ref() if is_instance_valid(zombie_ref) else null
-	if not is_instance_valid(zombie_value):
+func _connect_director_hand_placement() -> void:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.hand_manager) \
+	or not is_instance_valid(main_game.hand_manager.hm_character):
 		return
-	var zombie := zombie_value as Zombie000Base
-	if not is_instance_valid(zombie) or not bool(zombie.get_meta(RECORDING_MANUAL_ZOMBIE_META, false)):
+	var callback := Callable(self, &"_on_director_hand_character_placed")
+	if not main_game.hand_manager.hm_character.signal_manual_character_placed.is_connected(callback):
+		main_game.hand_manager.hm_character.signal_manual_character_placed.connect(callback)
+
+
+func _on_director_hand_character_placed(character: Character000Base, is_director_zombie: bool) -> void:
+	if not is_instance_valid(character):
 		return
-	if apply_director_scale:
-		_apply_director_placed_zombie_scale(zombie)
-	_assign_new_director_zombie_to_selected_group(zombie, true)
+	if character is Zombie000Base:
+		var zombie := character as Zombie000Base
+		if is_director_zombie:
+			_apply_director_placed_zombie_scale(zombie)
+		var assigned_group := _assign_new_director_zombie_to_selected_group(zombie, not is_director_zombie)
+		if is_director_zombie:
+			_feedback_director_zombie_placement(zombie, assigned_group)
+		return
+	if character is Plant000Base:
+		_assign_new_director_character_to_placement_group(character, true)
 
 
 func _apply_director_placed_zombie_scale(zombie: Zombie000Base) -> void:
 	if not is_instance_valid(zombie) or bool(zombie.get_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META, false)):
 		return
-	zombie.scale *= clampf(director_placed_zombie_scale, 0.1, 2.0)
+	var scale_ratio := clampf(main_game.director_placed_zombie_scale, 0.1, 2.0) if is_instance_valid(main_game) else 0.8
+	zombie.scale *= scale_ratio
 	zombie.set_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META, true)
 
 
+func _feedback_director_zombie_placement(zombie: Zombie000Base, assigned_group: int) -> void:
+	if not is_instance_valid(zombie):
+		return
+	var scale_percent := roundi(clampf(main_game.director_placed_zombie_scale, 0.1, 2.0) * 100.0) \
+		if is_instance_valid(main_game) else 80
+	var placement_group := _get_selected_placement_group()
+	if assigned_group >= 0:
+		_feedback("已放置 %s，缩放为 %d%%，并加入 %s 组；已同步为%s状态。" % [
+			zombie.name, scale_percent, _get_group_hotkey_label(assigned_group),
+			"冻结" if frozen_groups[assigned_group] else "运行",
+		])
+	elif placement_group < 0:
+		_feedback("已放置 %s，缩放为 %d%%，暂时无组别。" % [zombie.name, scale_percent])
+	else:
+		_feedback("已放置 %s，缩放为 %d%%；%s 组尚无植物组长，因此暂时无组别。" % [
+			zombie.name, scale_percent, _get_group_hotkey_label(placement_group)
+		])
+
+
 func _assign_new_director_zombie_to_selected_group(zombie: Zombie000Base, show_feedback: bool) -> int:
-	var group_index := _get_selected_freeze_group()
-	if not is_instance_valid(zombie) or group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+	return _assign_new_director_character_to_placement_group(zombie, show_feedback)
+
+
+func _assign_new_director_character_to_placement_group(character: Character000Base, show_feedback: bool) -> int:
+	var group_index := _get_selected_placement_group()
+	if not is_instance_valid(character):
+		return -1
+	if group_index < 0:
+		if show_feedback:
+			_feedback("已放置 %s，并按当前选择保持暂时无组别。" % character.name)
+		return -1
+	if group_index >= MAX_FREEZE_GROUPS:
 		return -1
 	if not _get_freeze_group_leader(group_index) is Plant000Base:
+		if character is Plant000Base:
+			_assign_character_to_freeze_group(character, group_index)
+			freeze_group_leaders[group_index] = weakref(character)
+			_refresh_group_detection(character)
+			_sync_frozen_groups()
+			_refresh_targets(character)
+			SoundManager.play_other_SFX(GROUP_PICK_SUCCESS_SFX)
+			if show_feedback:
+				_feedback("已放置 %s，并自动设为 %s 组的植物组长。" % [character.name, _get_group_hotkey_label(group_index)])
+			return group_index
 		if show_feedback:
-			_feedback("已放置 %s；第 %d 组还没有植物组长，因此暂时保持未编组。" % [
-				zombie.name, group_index + 1
+			_feedback("已放置 %s；%s 组还没有植物组长，因此暂时保持无组别。" % [
+				character.name, _get_group_hotkey_label(group_index)
 			])
 		return -1
-	_assign_character_to_freeze_group(zombie, group_index)
-	_refresh_group_detection(zombie)
+	_assign_character_to_freeze_group(character, group_index)
+	_refresh_group_detection(character)
 	_sync_frozen_groups()
-	_refresh_targets(zombie)
+	_refresh_targets(character)
 	SoundManager.play_other_SFX(GROUP_PICK_SUCCESS_SFX)
 	if show_feedback:
-		_feedback("已放置 %s，并自动加入当前选择的第 %d 组。" % [zombie.name, group_index + 1])
+		_feedback("已放置 %s，并加入 %s 组；已与组长同步为%s状态。" % [
+			character.name,
+			_get_group_hotkey_label(group_index),
+			"冻结" if frozen_groups[group_index] else "运行",
+		])
 	return group_index
+
+
+func _get_group_hotkey_label(group_index: int) -> String:
+	var labels := ["Q", "W", "E", "R", "T"]
+	return labels[group_index] if group_index >= 0 and group_index < labels.size() else "无"
 
 
 func _get_character_freeze_group_index(character: Character000Base) -> int:
@@ -1020,6 +1081,8 @@ func _get_current_characters() -> Array[Character000Base]:
 
 
 func _assign_character_to_freeze_group(character: Character000Base, group_index: int) -> void:
+	if not is_instance_valid(character) or group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+		return
 	var instance_id := character.get_instance_id()
 	if character_freeze_group_memberships.has(instance_id):
 		var old_group := int(character_freeze_group_memberships[instance_id].get("group_index", -1))
@@ -1030,6 +1093,9 @@ func _assign_character_to_freeze_group(character: Character000Base, group_index:
 		"group_index": group_index,
 	}
 	character.set_meta(&"recording_freeze_group", group_index)
+	# 入组必须与冻结状态成为同一个原子操作。不能等待 0.1 秒周期扫描，
+	# 否则新放置角色会短暂行动，也可能在创建链路末尾保留错误的 process_mode。
+	_apply_character_group_freeze(character)
 
 
 func _remove_character_from_freeze_group(instance_id: int) -> void:
@@ -1298,10 +1364,10 @@ func _update_group_freeze_label() -> void:
 	var queue_status := (
 		"运行队列:%s" % ("→".join(queue_hotkeys) if not queue_hotkeys.is_empty() else "空")
 		if is_group_run_queue_limited
-		else "O状态:全部放行"
+		else "全部放行:无两组限制"
 	)
 	group_freeze_label.text = "%s  %s  %s  未编组:始终运行  %s" % [
-		"P状态:全部冻结" if is_p_all_frozen else "P状态:可重置全冻",
+		"P:再次按下全部解冻" if is_p_all_frozen else "P:按下全部冻结",
 		"F6齐射:开" if is_force_all_shooters_firing else "F6齐射:关",
 		queue_status,
 		"  ".join(group_states),
@@ -1542,13 +1608,26 @@ func _build_panel() -> void:
 	_refresh_layout_snapshot_options()
 
 	_add_separator(root_box)
-	_add_section_label(root_box, "全部编组冻结时放置僵尸（自动加入当前组）")
+	_add_section_label(root_box, "新放置角色归属（F4 / 导台植物与僵尸共用）")
+	placement_group_option = OptionButton.new()
+	placement_group_option.add_item("暂时无组别")
+	placement_group_option.set_item_metadata(0, -1)
+	var placement_group_hotkeys := ["Q", "W", "E", "R", "T"]
+	for group_index in MAX_FREEZE_GROUPS:
+		placement_group_option.add_item("%s：第 %d 组" % [placement_group_hotkeys[group_index], group_index + 1])
+		placement_group_option.set_item_metadata(placement_group_option.item_count - 1, group_index)
+	placement_group_option.select(0)
+	root_box.add_child(placement_group_option)
+
+	_add_section_label(root_box, "全部编组冻结时放置僵尸（按上方归属选择）")
 	zombie_option = OptionButton.new()
 	zombie_option.fit_to_longest_item = false
 	root_box.add_child(zombie_option)
 	var zombie_position_row := HBoxContainer.new()
 	root_box.add_child(zombie_position_row)
-	zombie_lane_spin = _add_labeled_spin(zombie_position_row, "行", 1, 5, 1)
+	var director_lane_count := maxi(1, main_game.zombie_manager.all_zombie_rows.size()) \
+		if is_instance_valid(main_game) and is_instance_valid(main_game.zombie_manager) else 5
+	zombie_lane_spin = _add_labeled_spin(zombie_position_row, "行", 1, director_lane_count, 1)
 	zombie_col_spin = _add_labeled_spin(zombie_position_row, "列", 1, 9, 9)
 	zombie_initial_hp_spin = _add_labeled_spin(zombie_position_row, "血量（0满）", 0, 999999, 0)
 	zombie_initial_hp_spin.tooltip_text = "0 表示默认满血；只设置僵尸本体当前血量，不修改护甲和任何血量上限。"
@@ -1634,7 +1713,7 @@ func _build_panel() -> void:
 	freeze_group_summary_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	root_box.add_child(freeze_group_summary_label)
 
-	_add_section_label(root_box, "O 放行全部编组并刷怪时触发事件")
+	_add_section_label(root_box, "P 全部解冻或 O 放行刷怪时触发事件")
 	event_option = OptionButton.new()
 	event_option.fit_to_longest_item = false
 	root_box.add_child(event_option)
@@ -1648,7 +1727,7 @@ func _build_panel() -> void:
 
 	feedback_label = Label.new()
 	feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	feedback_label.text = "先指定植物组长，再加入植物或僵尸组员。不同组之间不会互相索敌。"
+	feedback_label.text = "先在“新放置角色归属”选择 Q～T 或暂时无组别；空组放入的第一株植物会自动成为组长。"
 	root_box.add_child(feedback_label)
 	_update_group_freeze_label()
 	_update_freeze_group_summary()
@@ -1995,26 +2074,18 @@ func _add_zombie_during_freeze() -> void:
 		Zombie000Base.E_ZInitAttr.CurrZombieRowType: zombie_row.zombie_row_type,
 		Zombie000Base.E_ZInitAttr.CurrWave: -1,
 	}
-	is_director_panel_creating_zombie = true
 	var zombie: Zombie000Base = main_game.zombie_manager.create_norm_zombie(
 		zombie_type, zombie_row, init_para, global_pos
 	)
-	is_director_panel_creating_zombie = false
 	if not is_instance_valid(zombie):
 		_feedback("僵尸创建失败。")
 		return
 	_apply_director_placed_zombie_scale(zombie)
 	_apply_initial_hp(zombie, int(zombie_initial_hp_spin.value))
 	var assigned_group := _assign_new_director_zombie_to_selected_group(zombie, false)
-	if assigned_group >= 0:
-		_feedback("已放置 %s，本体初始血量 %d/%d，并自动加入第 %d 组。" % [
-			zombie.name, zombie.hp_component.curr_hp, zombie.hp_component.max_hp, assigned_group + 1
-		])
-	else:
+	if assigned_group < 0:
 		_refresh_targets(zombie)
-		_feedback("已放置 %s，本体初始血量 %d/%d；当前组没有植物组长，暂时保持未编组。" % [
-			zombie.name, zombie.hp_component.curr_hp, zombie.hp_component.max_hp
-		])
+	_feedback_director_zombie_placement(zombie, assigned_group)
 
 
 func _apply_initial_hp(character: Character000Base, requested_hp: int) -> void:
@@ -2158,7 +2229,7 @@ func _queue_selected_event() -> void:
 	var event_key: StringName = event_option.get_item_metadata(event_option.selected)
 	queued_events.append({"target": target, "event": event_key})
 	_update_queue_label()
-	_feedback("事件已排队，将在 O 放行全部编组并刷新黑爪波次后 1.5 秒触发。")
+	_feedback("事件已排队，将在 P 全部解冻或 O 放行刷怪后 1.5 秒触发。")
 
 
 func _trigger_queued_event_after_delay(event_data: Dictionary) -> void:
@@ -2205,7 +2276,11 @@ func _update_panel_state() -> void:
 	status_label.text = "● 全部编组冻结（未编组运行）" if is_p_all_frozen else (
 		"● 已冻结 %d/5 组" % frozen_count if frozen_count > 0 else "▶ 全场时间正在运行"
 	)
-	freeze_all_button.text = "冻结全部编组并重置运行队列（P）"
+	freeze_all_button.text = (
+		"解冻全部编组（P，不刷怪）"
+		if frozen_groups.all(func(is_frozen: bool): return is_frozen)
+		else "冻结全部编组并重置运行队列（P）"
+	)
 	_update_queue_label()
 
 
