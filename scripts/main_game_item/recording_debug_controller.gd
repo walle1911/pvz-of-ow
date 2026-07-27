@@ -2,7 +2,7 @@ extends Node
 
 ## 录制专用运行时调试面板。
 ## 进入导演场景时自动显示独立悬浮导演台，F4 显示/隐藏全僵尸卡片。
-## Q/W/E/R/T 分别切换第 1～5 组冻结，P 切换全部冻结/解冻，F6 触发全部射手齐射，O 全部放行并刷新黑爪波次。
+## Q/W/E/R/T 分别切换第 1～5 组冻结，A 切换僵尸专属组，P 切换全部冻结/解冻。
 ## Z 在射手后方补种天使向日葵，X 在射手前方补种巴蒂斯特火炬。
 ## 组冻结时仍可使用正常卡槽和铲子布置植物；面板保留僵尸与导演事件功能。
 ## 指定事件在 O 放行全部编组并刷新黑爪波次 1.5 秒后触发。
@@ -13,6 +13,8 @@ const DIRECTOR_PANEL_FONT_SIZE := 18
 const SNAPSHOT_LIBRARY_PATH := "user://recording_5757_layout_snapshots.json"
 const FORCED_PULT_VIRTUAL_TARGET_DISTANCE := 650.0
 const MAX_FREEZE_GROUPS := 5
+const ZOMBIE_ONLY_GROUP_INDEX := 5
+const TOTAL_FREEZE_GROUPS := 6
 const GROUP_SYNC_INTERVAL := 0.1
 const TALON_WAVE_SPAWN_INTERVAL_RANGE := Vector2(0.3, 0.65)
 const TALON_WAVE_ZOMBIE_TYPES: Array[CharacterRegistry.ZombieType] = [
@@ -34,12 +36,16 @@ const RECORDING_IS_FROZEN_META := &"recording_is_frozen"
 const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"
 
 @export var enable_support_hotkeys := true
+@export var spawn_talon_wave_on_o := true
+@export var spawn_gargantuar_pair_on_o := false
+## 0 表示使用当前地图全部行；正数表示只使用从最上方开始的指定行数。
+@export_range(0, 6, 1) var talon_wave_lane_count := 0
 
 var main_game: MainGameManager
 var was_bgm_bus_muted := false
 var target_characters: Array[Character000Base] = []
 var queued_events: Array[Dictionary] = []
-var frozen_groups: Array[bool] = [true, true, true, true, true]
+var frozen_groups: Array[bool] = [true, true, true, true, true, true]
 var is_p_all_frozen := true
 var running_group_queue: Array[int] = []
 var is_group_run_queue_limited := true
@@ -476,7 +482,9 @@ func _restore_selected_layout_snapshot() -> void:
 		var character := character_value as Character000Base
 		var character_data := character_data_value as Dictionary
 		var group_index := int(character_data.get("group_index", -1))
-		if group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+		if group_index < 0 or group_index >= TOTAL_FREEZE_GROUPS:
+			continue
+		if group_index == ZOMBIE_ONLY_GROUP_INDEX and not character is Zombie000Base:
 			continue
 		_assign_character_to_freeze_group(character, group_index)
 		if bool(character_data.get("is_group_leader", false)) and character is Plant000Base:
@@ -487,7 +495,7 @@ func _restore_selected_layout_snapshot() -> void:
 	if saved_freeze_state is Dictionary:
 		var saved_group_states: Variant = saved_freeze_state.get("groups", [])
 		if saved_group_states is Array:
-			for group_index in mini(saved_group_states.size(), MAX_FREEZE_GROUPS):
+			for group_index in mini(saved_group_states.size(), TOTAL_FREEZE_GROUPS):
 				frozen_groups[group_index] = bool(saved_group_states[group_index])
 		is_p_all_frozen = bool(saved_freeze_state.get("p_all", false))
 		is_group_run_queue_limited = bool(saved_freeze_state.get("run_queue_limited", true))
@@ -567,6 +575,18 @@ func _toggle_group_frozen(group_index: int) -> void:
 		_feedback("第 %d 组已%s。" % [group_index + 1, "冻结" if frozen_groups[group_index] else "解冻"])
 
 
+func _toggle_zombie_only_group_frozen() -> void:
+	frozen_groups[ZOMBIE_ONLY_GROUP_INDEX] = not frozen_groups[ZOMBIE_ONLY_GROUP_INDEX]
+	is_p_all_frozen = frozen_groups.all(func(is_frozen: bool): return is_frozen)
+	_sync_frozen_groups()
+	_refresh_all_group_detection()
+	_update_group_freeze_label()
+	_update_panel_state()
+	_feedback("A 僵尸组已%s；本组不占 Q～T 的两组运行队列名额。" % (
+		"冻结" if frozen_groups[ZOMBIE_ONLY_GROUP_INDEX] else "解冻"
+	))
+
+
 func _toggle_all_groups_frozen() -> void:
 	var are_all_groups_frozen := frozen_groups.all(func(is_frozen: bool): return is_frozen)
 	if are_all_groups_frozen:
@@ -584,7 +604,11 @@ func _toggle_all_groups_frozen() -> void:
 	_refresh_all_group_detection()
 	_update_group_freeze_label()
 	_update_panel_state()
-	_feedback("P 已冻结全部编组并重置运行队列；再次按 P 可全部解冻但不刷怪，按 O 则全部解冻并刷怪。")
+	_feedback(
+		"P 已冻结全部编组并重置运行队列；再次按 P 可全部解冻但不刷怪，按 O 则全部解冻并刷怪。"
+		if spawn_talon_wave_on_o
+		else "P 已冻结全部编组并重置运行队列；本泳池导演关卡中，P 或 O 解冻都不会刷怪。"
+	)
 
 
 func _freeze_all_groups_except(active_group: int) -> void:
@@ -826,6 +850,22 @@ func _assign_new_director_character_to_placement_group(character: Character000Ba
 		if show_feedback:
 			_feedback("已放置 %s，并按当前选择保持暂时无组别。" % character.name)
 		return -1
+	if group_index == ZOMBIE_ONLY_GROUP_INDEX:
+		if not character is Zombie000Base:
+			if show_feedback:
+				_feedback("A 是僵尸专属组，植物 %s 保持暂时无组别。" % character.name)
+			return -1
+		_assign_character_to_freeze_group(character, group_index)
+		_refresh_group_detection(character)
+		_sync_frozen_groups()
+		_refresh_targets(character)
+		SoundManager.play_other_SFX(GROUP_PICK_SUCCESS_SFX)
+		if show_feedback:
+			_feedback("已放置 %s，并加入 A 僵尸组；已同步为%s状态。" % [
+				character.name,
+				"冻结" if frozen_groups[group_index] else "运行",
+			])
+		return group_index
 	if group_index >= MAX_FREEZE_GROUPS:
 		return -1
 	if not _get_freeze_group_leader(group_index) is Plant000Base:
@@ -860,6 +900,8 @@ func _assign_new_director_character_to_placement_group(character: Character000Ba
 
 func _get_group_hotkey_label(group_index: int) -> String:
 	var labels := ["Q", "W", "E", "R", "T"]
+	if group_index == ZOMBIE_ONLY_GROUP_INDEX:
+		return "A"
 	return labels[group_index] if group_index >= 0 and group_index < labels.size() else "无"
 
 
@@ -883,8 +925,25 @@ func _assign_character_to_selected_freeze_group(character: Character000Base, as_
 	if not is_instance_valid(character):
 		_feedback("请先在“当前角色”区域选择一个场上角色。")
 		return false
-	if group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+	if group_index < 0 or group_index >= TOTAL_FREEZE_GROUPS:
 		return false
+	if group_index == ZOMBIE_ONLY_GROUP_INDEX:
+		if as_leader:
+			_feedback("A 是僵尸专属组，不设置植物组长；请使用“当前角色加入组”。")
+			return false
+		if not character is Zombie000Base:
+			_feedback("A 是僵尸专属组，植物不能加入。")
+			return false
+		_assign_character_to_freeze_group(character, group_index)
+		_refresh_group_detection(character)
+		_sync_frozen_groups()
+		_refresh_targets(character)
+		SoundManager.play_other_SFX(GROUP_PICK_SUCCESS_SFX)
+		_feedback("已将 %s 加入 A 僵尸组，并同步为%s状态。" % [
+			character.name,
+			"冻结" if frozen_groups[group_index] else "运行",
+		])
+		return true
 	if as_leader and not character is Plant000Base:
 		_feedback("组长必须是场上的植物。")
 		return false
@@ -921,7 +980,7 @@ func _remove_selected_from_freeze_group() -> void:
 
 func _clear_selected_freeze_group() -> void:
 	var group_index := _get_selected_freeze_group()
-	if group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+	if group_index < 0 or group_index >= TOTAL_FREEZE_GROUPS:
 		return
 	var member_ids: Array[int] = []
 	for instance_id in character_freeze_group_memberships.keys():
@@ -929,21 +988,28 @@ func _clear_selected_freeze_group() -> void:
 			member_ids.append(instance_id)
 	for instance_id in member_ids:
 		_remove_character_from_freeze_group(instance_id)
-	freeze_group_leaders[group_index] = null
+	if group_index < freeze_group_leaders.size():
+		freeze_group_leaders[group_index] = null
 	frozen_groups[group_index] = false
 	_sync_frozen_groups()
 	_update_group_freeze_label()
 	_update_panel_state()
-	_feedback("第 %d 组已清空并解冻。" % (group_index + 1))
+	_feedback("%s已清空并解冻。" % (
+		"A 僵尸组" if group_index == ZOMBIE_ONLY_GROUP_INDEX else "第 %d 组" % (group_index + 1)
+	))
 
 
 func _start_group_mouse_pick(mode: StringName) -> void:
 	if mode != GROUP_PICK_TARGET:
 		var group_index := _get_selected_freeze_group()
-		if group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+		if group_index < 0 or group_index >= TOTAL_FREEZE_GROUPS:
+			return
+		if group_index == ZOMBIE_ONLY_GROUP_INDEX and mode == GROUP_PICK_LEADER:
+			_feedback("A 是僵尸专属组，不设置植物组长；请选择“连续加入所选组”。")
 			return
 		var leader := _get_freeze_group_leader(group_index)
-		if mode == GROUP_PICK_MEMBER and (not is_instance_valid(leader) or not leader is Plant000Base):
+		if group_index != ZOMBIE_ONLY_GROUP_INDEX and mode == GROUP_PICK_MEMBER \
+		and (not is_instance_valid(leader) or not leader is Plant000Base):
 			_feedback("请先直接点击一株植物作为第 %d 组组长。" % (group_index + 1))
 			return
 	group_pick_mode = mode
@@ -977,7 +1043,11 @@ func _update_group_pick_hint() -> void:
 	elif group_pick_mode == GROUP_PICK_LEADER:
 		group_pick_hint_label.text = "点场上的植物，直接设为第 %d 组组长（右键 / Esc 取消）" % (group_index + 1)
 	else:
-		group_pick_hint_label.text = "快速编组：连续点击角色加入第 %d 组（右键 / Esc 结束）" % (group_index + 1)
+		group_pick_hint_label.text = (
+			"快速编组：连续点击僵尸加入 A 僵尸组（右键 / Esc 结束）"
+			if group_index == ZOMBIE_ONLY_GROUP_INDEX
+			else "快速编组：连续点击角色加入第 %d 组（右键 / Esc 结束）" % (group_index + 1)
+		)
 
 
 func _handle_group_mouse_pick(event: InputEvent) -> bool:
@@ -1081,12 +1151,15 @@ func _get_current_characters() -> Array[Character000Base]:
 
 
 func _assign_character_to_freeze_group(character: Character000Base, group_index: int) -> void:
-	if not is_instance_valid(character) or group_index < 0 or group_index >= MAX_FREEZE_GROUPS:
+	if not is_instance_valid(character) or group_index < 0 or group_index >= TOTAL_FREEZE_GROUPS:
+		return
+	if group_index == ZOMBIE_ONLY_GROUP_INDEX and not character is Zombie000Base:
 		return
 	var instance_id := character.get_instance_id()
 	if character_freeze_group_memberships.has(instance_id):
 		var old_group := int(character_freeze_group_memberships[instance_id].get("group_index", -1))
-		if old_group != group_index and _get_freeze_group_leader(old_group) == character:
+		if old_group != group_index and old_group < freeze_group_leaders.size() \
+		and _get_freeze_group_leader(old_group) == character:
 			freeze_group_leaders[old_group] = null
 	character_freeze_group_memberships[instance_id] = {
 		"ref": weakref(character),
@@ -1166,16 +1239,33 @@ func _update_freeze_group_summary() -> void:
 			member_count,
 			"冻结" if frozen_groups[group_index] else "运行",
 		])
+	var zombie_only_member_count := 0
+	for membership in character_freeze_group_memberships.values():
+		if int(membership.get("group_index", -1)) != ZOMBIE_ONLY_GROUP_INDEX:
+			continue
+		var zombie_ref := membership.get("ref") as WeakRef
+		var zombie_value: Variant = zombie_ref.get_ref() if is_instance_valid(zombie_ref) else null
+		if is_instance_valid(zombie_value) and zombie_value is Zombie000Base:
+			zombie_only_member_count += 1
+	lines.append("A僵尸组  组员:%d  %s" % [
+		zombie_only_member_count,
+		"冻结" if frozen_groups[ZOMBIE_ONLY_GROUP_INDEX] else "运行",
+	])
 	var selected_group := _get_selected_freeze_group()
-	if selected_group >= 0 and selected_group < MAX_FREEZE_GROUPS:
+	if selected_group >= 0 and selected_group < TOTAL_FREEZE_GROUPS:
 		lines.append("")
-		lines.append("当前第 %d 组成员" % (selected_group + 1))
+		lines.append(
+			"当前 A 僵尸组成员"
+			if selected_group == ZOMBIE_ONLY_GROUP_INDEX
+			else "当前第 %d 组成员" % (selected_group + 1)
+		)
 		var selected_leader := _get_freeze_group_leader(selected_group)
-		lines.append("组长：%s" % (
-			_get_group_character_display_name(selected_leader)
-			if is_instance_valid(selected_leader)
-			else "未指定"
-		))
+		if selected_group != ZOMBIE_ONLY_GROUP_INDEX:
+			lines.append("组长：%s" % (
+				_get_group_character_display_name(selected_leader)
+				if is_instance_valid(selected_leader)
+				else "未指定"
+			))
 		var selected_member_names: Array[String] = []
 		for membership in character_freeze_group_memberships.values():
 			if int(membership.get("group_index", -1)) != selected_group:
@@ -1186,11 +1276,12 @@ func _update_freeze_group_summary() -> void:
 				continue
 			selected_member_names.append(_get_group_character_display_name(member_value as Character000Base))
 		selected_member_names.sort()
-		lines.append("组员：%s" % (
-			"、".join(selected_member_names)
-			if not selected_member_names.is_empty()
-			else "无"
-		))
+		lines.append("组员（%d）：" % selected_member_names.size())
+		if selected_member_names.is_empty():
+			lines.append("  无")
+		else:
+			for member_name in selected_member_names:
+				lines.append("  • %s" % member_name)
 	freeze_group_summary_label.text = "\n".join(lines)
 
 
@@ -1356,8 +1447,9 @@ func _update_group_freeze_label() -> void:
 		return
 	var group_states: Array[String] = []
 	var hotkeys := ["Q", "W", "E", "R", "T"]
-	for group_index in frozen_groups.size():
+	for group_index in MAX_FREEZE_GROUPS:
 		group_states.append("%s%d:%s" % [hotkeys[group_index], group_index + 1, "冻" if frozen_groups[group_index] else "动"])
+	group_states.append("A僵尸:%s" % ("冻" if frozen_groups[ZOMBIE_ONLY_GROUP_INDEX] else "动"))
 	var queue_hotkeys: Array[String] = []
 	for group_index in running_group_queue:
 		queue_hotkeys.append(hotkeys[group_index])
@@ -1438,6 +1530,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_Q:
 		_toggle_group_frozen(0)
+		get_viewport().set_input_as_handled()
+	elif event.keycode == KEY_A:
+		_toggle_zombie_only_group_frozen()
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_W:
 		_toggle_group_frozen(1)
@@ -1616,6 +1711,8 @@ func _build_panel() -> void:
 	for group_index in MAX_FREEZE_GROUPS:
 		placement_group_option.add_item("%s：第 %d 组" % [placement_group_hotkeys[group_index], group_index + 1])
 		placement_group_option.set_item_metadata(placement_group_option.item_count - 1, group_index)
+	placement_group_option.add_item("A：僵尸专属组")
+	placement_group_option.set_item_metadata(placement_group_option.item_count - 1, ZOMBIE_ONLY_GROUP_INDEX)
 	placement_group_option.select(0)
 	root_box.add_child(placement_group_option)
 
@@ -1683,6 +1780,7 @@ func _build_panel() -> void:
 	freeze_group_option = OptionButton.new()
 	for group_index in MAX_FREEZE_GROUPS:
 		freeze_group_option.add_item("第 %d 组（%s）" % [group_index + 1, ["Q", "W", "E", "R", "T"][group_index]])
+	freeze_group_option.add_item("A 僵尸专属组（无组长）")
 	freeze_group_option.item_selected.connect(_on_freeze_group_option_selected)
 	root_box.add_child(freeze_group_option)
 	var group_buttons_top := HBoxContainer.new()
@@ -1710,10 +1808,18 @@ func _build_panel() -> void:
 	clear_group_button.pressed.connect(_clear_selected_freeze_group)
 	group_buttons_bottom.add_child(clear_group_button)
 	freeze_group_summary_label = Label.new()
-	freeze_group_summary_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	freeze_group_summary_label.custom_minimum_size = Vector2.ZERO
+	freeze_group_summary_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	freeze_group_summary_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	freeze_group_summary_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	root_box.add_child(freeze_group_summary_label)
 
-	_add_section_label(root_box, "P 全部解冻或 O 放行刷怪时触发事件")
+	_add_section_label(
+		root_box,
+		"P 全部解冻或 O 放行刷怪时触发事件"
+		if spawn_talon_wave_on_o
+		else "P 或 O 全部解冻时触发事件（O 不刷怪）"
+	)
 	event_option = OptionButton.new()
 	event_option.fit_to_longest_item = false
 	root_box.add_child(event_option)
@@ -1817,12 +1923,24 @@ func _start_talon_director_wave() -> void:
 		_feedback("僵尸管理器尚未初始化。")
 		return
 	var queued_event_count := _clear_all_group_freezes(false)
+	if spawn_gargantuar_pair_on_o:
+		var spawned_count := _spawn_o_gargantuar_pair()
+		_feedback("O 已放行全部编组并取消组别限制；只生成莱因哈特巨人（第2行）和 Bob 巨人（第4行），%d/2 只进入 A 僵尸组；%d 个排队事件将在 1.5 秒后触发。" % [
+			spawned_count, queued_event_count
+		])
+		return
+	if not spawn_talon_wave_on_o:
+		_feedback("O 已解除全部编组冻结并取消两组限制；泳池导演关卡不会刷新僵尸，%d 个排队事件将在 1.5 秒后触发。" % queued_event_count)
+		return
 	if is_talon_wave_spawning:
 		_feedback("O 已放行全部编组并取消组别限制；当前黑爪波次仍在生成，不会重复启动。")
 		return
 	is_talon_wave_spawning = true
 	_spawn_talon_director_wave()
-	_feedback("O 已放行全部编组并取消组别限制；黑爪波次开始生成，%d 个排队事件将在 1.5 秒后触发。" % queued_event_count)
+	var active_lane_count := _get_talon_wave_lane_count()
+	_feedback("O 已放行全部编组并取消组别限制；黑爪波次开始在最上方 %d 行生成，%d 个排队事件将在 1.5 秒后触发。" % [
+		active_lane_count, queued_event_count
+	])
 
 
 func _plant_support_next_to_shooters(
@@ -1887,9 +2005,10 @@ func _plant_support_next_to_shooters(
 
 func _spawn_talon_director_wave() -> void:
 	var spawned_count := 0
+	var active_lane_count := _get_talon_wave_lane_count()
 	for zombie_type in TALON_WAVE_ZOMBIE_TYPES:
 		var lane_order: Array[int] = []
-		for lane in main_game.zombie_manager.all_zombie_rows.size():
+		for lane in active_lane_count:
 			lane_order.append(lane)
 		lane_order.shuffle()
 		for lane in lane_order:
@@ -1904,7 +2023,16 @@ func _spawn_talon_director_wave() -> void:
 			).timeout
 	is_talon_wave_spawning = false
 	_refresh_targets()
-	_feedback("黑爪波次生成完成：共 %d 只，每行 4 只。" % spawned_count)
+	_feedback("黑爪波次生成完成：最上方 %d 行共 %d 只，每行 4 只。" % [active_lane_count, spawned_count])
+
+
+func _get_talon_wave_lane_count() -> int:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return 0
+	var available_lane_count := main_game.zombie_manager.all_zombie_rows.size()
+	if talon_wave_lane_count <= 0:
+		return available_lane_count
+	return mini(talon_wave_lane_count, available_lane_count)
 
 
 func _spawn_talon_director_zombie(
@@ -1927,6 +2055,28 @@ func _spawn_talon_director_zombie(
 		init_para,
 		spawn_position
 	) as Zombie000Base
+
+
+func _spawn_o_gargantuar_pair() -> int:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return 0
+	var spawn_entries := [
+		{"type": CharacterRegistry.ZombieType.Z024GargantuarReinhardt, "lane": 1},
+		{"type": CharacterRegistry.ZombieType.Z025GargantuarBob, "lane": 3},
+	]
+	var spawned_count := 0
+	for spawn_entry in spawn_entries:
+		var zombie := _spawn_talon_director_zombie(
+			spawn_entry["type"] as CharacterRegistry.ZombieType,
+			int(spawn_entry["lane"])
+		)
+		if not is_instance_valid(zombie):
+			continue
+		_assign_character_to_freeze_group(zombie, ZOMBIE_ONLY_GROUP_INDEX)
+		spawned_count += 1
+	_sync_frozen_groups()
+	_refresh_targets()
+	return spawned_count
 
 
 func _start_force_all_shooters_fire() -> void:
@@ -2229,7 +2379,11 @@ func _queue_selected_event() -> void:
 	var event_key: StringName = event_option.get_item_metadata(event_option.selected)
 	queued_events.append({"target": target, "event": event_key})
 	_update_queue_label()
-	_feedback("事件已排队，将在 P 全部解冻或 O 放行刷怪后 1.5 秒触发。")
+	_feedback(
+		"事件已排队，将在 P 全部解冻或 O 放行刷怪后 1.5 秒触发。"
+		if spawn_talon_wave_on_o
+		else "事件已排队，将在 P 或 O 全部解冻后 1.5 秒触发；本场景 O 不刷怪。"
+	)
 
 
 func _trigger_queued_event_after_delay(event_data: Dictionary) -> void:
@@ -2274,7 +2428,7 @@ func _update_panel_state() -> void:
 		return
 	var frozen_count := frozen_groups.count(true)
 	status_label.text = "● 全部编组冻结（未编组运行）" if is_p_all_frozen else (
-		"● 已冻结 %d/5 组" % frozen_count if frozen_count > 0 else "▶ 全场时间正在运行"
+		"● 已冻结 %d/6 组（含 A 僵尸组）" % frozen_count if frozen_count > 0 else "▶ 全场时间正在运行"
 	)
 	freeze_all_button.text = (
 		"解冻全部编组（P，不刷怪）"

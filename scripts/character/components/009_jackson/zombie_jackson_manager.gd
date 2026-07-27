@@ -190,6 +190,12 @@ func call_zombie_dancer():
 	update_all_walk()
 
 func call_dancer_init(z:Zombie010Dancer, dancer_i:int):
+	var dancing_zombie: Zombie009Jackson = zombie_dancers.get(-1) as Zombie009Jackson
+	# 卢西奥伴舞继承召唤者的整体尺寸。导演卡将卢西奥缩放为 80% 时，
+	# 四只召唤伴舞也会保持相同的 80%，快照恢复后的自定义尺寸同样有效。
+	if is_instance_valid(dancing_zombie) \
+	and dancing_zombie.zombie_type == CharacterRegistry.ZombieType.Z009DancingZombieLucio:
+		z.scale = Vector2(absf(dancing_zombie.scale.x), absf(dancing_zombie.scale.y))
 	z.init_dancer_be_call(
 		dancer_i, animation_origin_speed, animation_curr_speed,
 		init_random_speed, self, is_hypnotized

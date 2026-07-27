@@ -11,3 +11,4 @@ director_placed_zombie_scale = 0.8
 [node name="RecordingDebugController" type="Node" parent="." index="18"]
 process_mode = 3
 script = ExtResource("3_controller")
+talon_wave_lane_count = 2

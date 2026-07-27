@@ -11,3 +11,4 @@ dva_baby_fixed_diagonal_offset = Vector2i(-1, 1)
 
 [node name="RecordingDebugController" parent="." index="18"]
 enable_support_hotkeys = false
+spawn_gargantuar_pair_on_o = false

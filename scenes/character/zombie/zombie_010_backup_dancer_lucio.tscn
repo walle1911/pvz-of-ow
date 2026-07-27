@@ -4271,8 +4271,8 @@ disco_green_weight = 0.9
 disco_white_weight = 1.8
 disco_gold_alpha = 0.7
 num_moon_walk = 2
-backup_dancer_type = 509
-zombie_type = 509
+backup_dancer_type = 10
+zombie_type = 10
 
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-54, -124)

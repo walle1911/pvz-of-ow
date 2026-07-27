@@ -1,4 +1,4 @@
-[gd_resource type="Animation" format=3]
+[gd_resource type="Animation" format=3 uid="uid://dsm4krqd6bv3u"]
 
 [ext_resource type="Texture2D" uid="uid://7fk2twwdkv84" path="res://assets/reanim/Zombie_zamboni_4.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://daus6gy6m0prq" path="res://assets/reanim/Zombie_zamboni_3.png" id="1_fuck"]
@@ -782,7 +782,7 @@ tracks/62/keys = {
 }
 tracks/63/type = "value"
 tracks/63/imported = false
-tracks/63/enabled = true
+tracks/63/enabled = false
 tracks/63/path = NodePath("Body/BodyCorrect/shion/Zombie_zambonidriver_body:visible")
 tracks/63/interp = 1
 tracks/63/loop_wrap = true
@@ -1370,7 +1370,7 @@ tracks/111/keys = {
 }
 tracks/112/type = "value"
 tracks/112/imported = false
-tracks/112/enabled = true
+tracks/112/enabled = false
 tracks/112/path = NodePath("Body/BodyCorrect/shion/Zombie_zambonidriver_mullet2:visible")
 tracks/112/interp = 1
 tracks/112/loop_wrap = true
@@ -1454,7 +1454,7 @@ tracks/118/keys = {
 }
 tracks/119/type = "value"
 tracks/119/imported = false
-tracks/119/enabled = true
+tracks/119/enabled = false
 tracks/119/path = NodePath("Body/BodyCorrect/shion/Zombie_zambonidriver_beanie:visible")
 tracks/119/interp = 1
 tracks/119/loop_wrap = true

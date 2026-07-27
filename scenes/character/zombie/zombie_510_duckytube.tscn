@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_500_norm.tscn" id="1_5dvt3"]
 
 [node name="Zombie510Duckytube" instance=ExtResource("1_5dvt3")]
+zombie_type = 510
 
 [node name="Anim_innerarm3" parent="Body/BodyCorrect/Anim_innerarm" index="0"]
 position = Vector2(26.432024, 84.960785)
