@@ -64,3 +64,9 @@ func update_prepare_speed(speed_factor:float):
 		else:
 			prepare_timer.paused = false
 			prepare_timer.start(prepare_timer.time_left / speed_factor)
+
+## 未成熟土豆雷只会毒死索杰恩豌豆射手僵尸；其他僵尸保持原有啃食行为。
+func _be_zombie_eat_once_special(attack_zombie:Zombie000Base):
+	if bomb_component.is_auto_bomb_in_death or not attack_zombie is Zombie026PeashooterZombie:
+		return
+	(attack_zombie as Zombie026PeashooterZombie).be_poisoned_by_raw_potato_mine()

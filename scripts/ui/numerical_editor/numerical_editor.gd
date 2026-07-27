@@ -23,6 +23,7 @@ const TITLE_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const ALMANAC_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 
 const CARDS_PER_PAGE := 24
+const REGISTRY_NODE_PATH := "@registry"
 ## 这些字段无论实际归属于角色根节点、血量组件还是攻击组件，
 ## 都统一提到角色详情最上方的“基础参数”中。
 const BASIC_PARAMETER_PROPERTIES := {
@@ -285,8 +286,10 @@ func _populate_almanac_panel(panel: AlmanacCharacterShowPanel, item: Dictionary)
 	panel.update_character_name(null, item["display_name"])
 	panel.get_node("AllBg/PlantEndPara").visible = is_plant
 	if is_plant:
-		panel.cost.get_node("Value").text = str(Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.SunCost))
-		panel.cool_time.get_node("Value").text = "%s（秒）" % str(Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.CoolTime))
+		var default_sun_cost = Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.SunCost)
+		var default_cool_time = Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.CoolTime)
+		panel.cost.get_node("Value").text = str(_effective_value(REGISTRY_NODE_PATH, "plant_sun_cost", default_sun_cost))
+		panel.cool_time.get_node("Value").text = "%s（秒）" % str(_effective_value(REGISTRY_NODE_PATH, "plant_cool_time", default_cool_time))
 
 
 func _build_character_fields(scene_path: String) -> void:
@@ -307,10 +310,14 @@ func _build_character_fields(scene_path: String) -> void:
 				basic_fields.append(field)
 			else:
 				normal_fields.append(field)
-	field_count = basic_fields.size() + normal_fields.size()
-	if not basic_fields.is_empty():
+	var registry_field_count := 2 if selected_item.get("kind", "") == "plant" else 0
+	field_count = registry_field_count + basic_fields.size() + normal_fields.size()
+	if registry_field_count > 0 or not basic_fields.is_empty():
 		basic_fields.sort_custom(_sort_basic_fields)
 		_add_section_header("◆ 基础参数")
+		if registry_field_count > 0:
+			_add_registry_property_editor("plant_sun_cost")
+			_add_registry_property_editor("plant_cool_time")
 		for field in basic_fields:
 			_add_property_editor(instance, field["node"], field["property_info"])
 	var last_node: Node
@@ -385,6 +392,38 @@ func _add_section_header(text_value: String) -> void:
 
 func _add_node_header(root: Node, node: Node) -> void:
 	_add_section_header("◆ 角色本体" if node == root else "◆ " + L10n.component_name(str(node.name)))
+
+
+func _add_registry_property_editor(property_name:String) -> void:
+	var is_sun_cost := property_name == "plant_sun_cost"
+	var attribute = CharacterRegistry.PlantInfoAttribute.SunCost if is_sun_cost else CharacterRegistry.PlantInfoAttribute.CoolTime
+	var original_value = Global.character_registry.get_plant_info(selected_item["id"], attribute)
+	var current_value = _effective_value(REGISTRY_NODE_PATH, property_name, original_value)
+	var row := HBoxContainer.new()
+	row.custom_minimum_size = Vector2(570, 34)
+	row.add_theme_constant_override("separation", 8)
+	var label := Label.new()
+	label.text = L10n.property_name(property_name)
+	label.custom_minimum_size.x = 330
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_override("font", ALMANAC_FONT)
+	label.add_theme_font_size_override("font_size", 14)
+	label.add_theme_color_override("font_color", Color("59270c"))
+	row.add_child(label)
+	var spin := SpinBox.new()
+	spin.custom_minimum_size.x = 220
+	spin.allow_greater = false
+	spin.allow_lesser = false
+	spin.min_value = 0.0 if is_sun_cost else 0.01
+	spin.max_value = 10000000.0 if is_sun_cost else 600.0
+	spin.step = 1.0 if is_sun_cost else 0.01
+	spin.value = float(current_value)
+	_style_line_edit(spin.get_line_edit())
+	spin.value_changed.connect(
+		func(value): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(value) if is_sun_cost else value)
+	)
+	row.add_child(spin)
+	field_box.add_child(row)
 
 
 func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> void:

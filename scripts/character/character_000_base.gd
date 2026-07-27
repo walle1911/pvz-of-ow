@@ -60,6 +60,7 @@ enum E_Influence_Speed_Factor{
 	EatGarlic,		## 啃食大蒜后短时间停止
 	OutBattlefield,	## 宽屏战场外僵尸移动加速
 	TallNutSigmaSlam,	## 被西格玛高坚果抬起时保持静止
+	RawPotatoPoison,	## 索杰恩啃到未成熟土豆雷后的中毒僵直
 }
 ## 是否被魅惑
 var is_hypno:bool = false

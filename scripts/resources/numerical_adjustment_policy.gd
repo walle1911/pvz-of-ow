@@ -51,6 +51,9 @@ const SCRIPT_RULES := {
 		"bullet_speeds": "speed_array", "middle_triple_shot_enabled": "bool",
 		"middle_triple_shot_interval": "seconds",
 	},
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_gatling_pea_bastion.gd": {
+		"giant_pea_attack_value": "damage",
+	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_zombie_norm.gd": {
 		"init_attack_value_per_min": "damage",
 	},
@@ -100,11 +103,13 @@ const SCRIPT_RULES := {
 		"first_ally_heal": "non_negative_int", "second_ally_heal": "non_negative_int",
 		"third_ally_heal": "non_negative_int",
 	},
+	"res://scripts/character/plant/ow/plant_022_caltrop_hazard.gd": {"downpour_damage": "damage"},
 	"res://scripts/character/plant/ow/plant_023_torchwood_baptiste.gd": {"bullet_damage_multiplier": "multiplier"},
 	"res://scripts/character/plant/ow/plant_051_pea_shooter_mccree.gd": {
 		"flashbang_every_shots": "positive_int", "flashbang_stun_time": "seconds",
 		"flashbang_front_range": "distance",
 	},
+	"res://scripts/character/plant/ow/plant_027_cactus_cassidy.gd": {"max_skill_damage": "damage"},
 	"res://scripts/character/plant/ow/plant_052_sunflower_mercy.gd": {
 		"damage_boost_multiplier": "multiplier", "damage_boost_target_check_interval": "seconds",
 		"damage_boost_target_cell_max_range": "non_negative_int",
@@ -114,10 +119,15 @@ const SCRIPT_RULES := {
 		"plant_food_attack_value": "damage", "frame_time": "seconds", "frame_scale": "multiplier",
 	},
 	"res://scripts/character/plant/ow/plant_054_squash_doomfist.gd": {"squash_attack_value": "damage"},
+	"res://scripts/character/plant/ow/plant_057_tall_nut_sigma.gd": {"slam_current_hp_ratio": "probability"},
 	"res://scripts/character/plant/ow/plant_062_doom_shroom_dva.gd": {"baby_launch_duration": "seconds"},
 	"res://scripts/character/plant/ow/plant_063_gloom_shroom_moira.gd": {"yellow_fume_heal_value": "non_negative_int"},
+	"res://scripts/character/plant/ow/plant_067_coffee_bean_ana.gd": {"damage_multiplier": "multiplier"},
 	"res://scripts/character/zombie/original/zombie_009_jackson.gd": {"num_moon_walk": "non_negative_int"},
 	"res://scripts/character/zombie/ow/zombie_025_gargantuar_bob.gd": {"boss_throw_thresholds": "threshold_array"},
+	"res://scripts/character/zombie/ow/zombie_026_peashooter_zombie.gd": {
+		"pea_attack_damage": "damage", "laser_penetration_damage": "damage",
+	},
 }
 
 

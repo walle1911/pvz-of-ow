@@ -1,6 +1,8 @@
 extends Node
 class_name CharacterRegistry
 
+const NUMERICAL_ADJUSTMENTS_PATH := "user://numerical_adjustments.json"
+
 
 # 定义枚举
 enum CharacterType {Null, Plant, Zombie}
@@ -824,7 +826,48 @@ func get_plant_info(plant_type:PlantType, info_attribute:PlantInfoAttribute):
 		print("warning:获取空植物信息")
 		return null
 	var curr_plant_info = PlantInfo[plant_type]
-	return curr_plant_info[info_attribute]
+	var default_value = curr_plant_info[info_attribute]
+	if info_attribute not in [PlantInfoAttribute.CoolTime, PlantInfoAttribute.SunCost]:
+		return default_value
+	var plant_scene := curr_plant_info[PlantInfoAttribute.PlantScenes] as PackedScene
+	if plant_scene == null:
+		return default_value
+	var property_name := "plant_cool_time" if info_attribute == PlantInfoAttribute.CoolTime else "plant_sun_cost"
+	return _get_developer_plant_registry_value(plant_scene.resource_path, property_name, default_value)
+
+
+## 注册表是 Global 的组成部分，不能依赖数值存储脚本新增的静态接口，否则
+## Godot 编辑器热重载时可能用旧 class_name 方法表解析这里。这里只读取相同存档中的
+## 两个注册字段；角色节点字段仍由 NumericalAdjustmentStore 统一应用。
+func _get_developer_plant_registry_value(scene_path:String, property_name:String, fallback):
+	if not Global.developer_level_adjustments_active or not FileAccess.file_exists(NUMERICAL_ADJUSTMENTS_PATH):
+		return fallback
+	var file := FileAccess.open(NUMERICAL_ADJUSTMENTS_PATH, FileAccess.READ)
+	if file == null:
+		return fallback
+	var parsed = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return fallback
+	var characters = parsed.get("characters", {})
+	if not characters is Dictionary:
+		return fallback
+	var character_data = characters.get(scene_path, {})
+	if not character_data is Dictionary:
+		return fallback
+	var registry_data = character_data.get("@registry", {})
+	if not registry_data is Dictionary or not registry_data.has(property_name):
+		return fallback
+	var saved_value = registry_data[property_name]
+	if typeof(saved_value) not in [TYPE_INT, TYPE_FLOAT]:
+		return fallback
+	var number := float(saved_value)
+	if not is_finite(number):
+		return fallback
+	if property_name == "plant_sun_cost":
+		return int(number) if number >= 0.0 and number <= 10000000.0 else fallback
+	if property_name == "plant_cool_time":
+		return number if number >= 0.01 and number <= 600.0 else fallback
+	return fallback
 
 #endregion
 

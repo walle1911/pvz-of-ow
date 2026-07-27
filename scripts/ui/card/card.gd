@@ -46,6 +46,7 @@ var is_chessboard_hypno_reward := false
 
 func _ready() -> void:
 	super()
+	_apply_developer_plant_card_values()
 	_original_cool_time = cool_time
 	_cool_mask.value = 0
 	if is_imitater:
@@ -56,6 +57,12 @@ func _ready() -> void:
 		character_static.material = mat
 		for child in character_static.get_children():
 			GlobalUtils.node_use_parent_material(child)
+
+func _apply_developer_plant_card_values() -> void:
+	if not Global.developer_level_adjustments_active or card_plant_type == CharacterRegistry.PlantType.Null:
+		return
+	cool_time = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime)
+	sun_cost = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)
 
 ## 设置卡片为图鉴卡片
 func set_almanac_card():
