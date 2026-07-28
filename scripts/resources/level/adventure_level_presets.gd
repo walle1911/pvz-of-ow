@@ -9,7 +9,7 @@ const WORLD_NAMES := ["白天", "夜晚", "泳池", "雾夜", "屋顶"]
 const WORLD_MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const WORLD_ROWS := [5, 5, 6, 6, 5]
 const WORLD_WAVE_COUNTS := [
-	[5, 6, 8, 10, 8, 10, 20, 10, 20, 20],
+	[10, 6, 8, 10, 8, 10, 20, 10, 20, 20],
 	[10, 10, 10, 10, 12, 12, 15, 15, 20, 20],
 	[10, 10, 10, 10, 12, 12, 15, 15, 20, 20],
 	[10, 10, 10, 10, 12, 12, 15, 15, 20, 20],
@@ -143,7 +143,7 @@ const ORIGINAL_BUCKET := 504
 const ORIGINAL_ZOMBIE_INTRO_LEVEL := {
 	500: 1,
 	501: 2,
-	502: 3,
+	502: 2,
 	503: 6,
 	504: 8,
 	505: 11,
@@ -259,9 +259,10 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 	var is_chessboard := workshop_mode == "chessboard"
 	var map_type := "front_lawn" if is_chessboard else str(WORLD_MAP_TYPES[world - 1])
 	var logical_rows := 5 if is_chessboard else int(WORLD_ROWS[world - 1])
-	var active_rows: Array = range(logical_rows)
+	var active_rows: Array = [1, 2, 3] if not is_chessboard and world == 1 and level_number == 1 else range(logical_rows)
 	var available_plants := _available_plants(world, level_number, workshop_mode)
 	var wave_count := int(WORLD_WAVE_COUNTS[0 if is_chessboard else world - 1][level_number - 1])
+	var simple_flag_count := maxi(1, ceili(float(wave_count) / 10.0))
 	var waves: Array = []
 	var global_level := _global_level_number(world, level_number)
 	var rng_state := {"value": 1103515245 + global_level * 104729}
@@ -271,6 +272,7 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		waves.append(_make_wave(preset_id, wave_index, zombie_list, map_type, logical_rows, is_flag, global_level))
 
 	var interval_start := maxf(21.0, 29.0 - float(global_level) * 0.14)
+	var is_first_76_showcase := not is_chessboard and world == 1 and level_number == 1
 	var environment_config := _environment_config(world, level_number, is_chessboard)
 	var chessboard_config := {
 		"mineCount": 0 if level_number < 6 else mini(12, 2 + level_number),
@@ -293,21 +295,25 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		},
 		"environmentConfig": environment_config,
 		"workshopMode": workshop_mode,
+		"editorMode": "simple",
+		"simpleFlagCount": simple_flag_count,
+		"simpleWaveCount": simple_flag_count * 10,
 		"chessboardConfig": chessboard_config,
 		"availablePlants": available_plants,
 		"plantSelectionEnabled": true,
 		"rewardPlant": _default_reward_plant(world, level_number, workshop_mode, available_plants),
 		"activeLawnRows": active_rows,
-		"sodLayoutRows": 5,
-		"sodRolloutRows": 0 if is_chessboard or world != 1 or level_number != 1 else 5,
+		"sodLayoutRows": 3 if not is_chessboard and world == 1 and level_number == 1 else 5,
+		"sodRolloutRows": 0,
 		"strictOriginalTiming": true,
-		"initialWaveDelay": 18.0 if global_level <= 10 else 15.0,
+		"initialWaveDelay": 0.1 if is_first_76_showcase else 10.0,
+		"openingFirstZombieAdvanceCells": 7.5 if is_first_76_showcase else 0.0,
 		"minimumWaveTime": maxf(4.0, 6.0 - float(global_level) * 0.035),
 		"earlyRefreshDelay": 1.5,
 		"waveIntervalRange": [interval_start, interval_start + 5.0],
 		"healthThresholdRange": [maxf(0.44, 0.56 - float(global_level) * 0.002), maxf(0.58, 0.68 - float(global_level) * 0.002)],
 		"hugeWaveWarningDelay": 6.0,
-		"allowNoFlag": world == 1 and level_number == 1,
+		"allowNoFlag": false,
 		"waves": waves,
 		"winConditions": [{"type": "all_waves_cleared"}],
 		"loseConditions": [{"type": "zombie_reaches_house"}],
@@ -372,8 +378,10 @@ static func _environment_config(world: int, level_number: int, is_chessboard: bo
 
 
 static func _initial_sun(world: int, level_number: int, is_chessboard: bool) -> int:
-	if is_chessboard or world == 1:
+	if is_chessboard:
 		return 150 if level_number == 1 else 50
+	if world == 1:
+		return 100 if level_number == 1 else 50
 	if world == 2 or world == 4:
 		return 75
 	return 75 if level_number <= 2 else 50
@@ -575,8 +583,6 @@ static func _ones(size: int) -> Array:
 
 
 static func _is_flag_wave(world: int, level_number: int, wave_index: int, wave_count: int) -> bool:
-	if world == 1 and level_number == 1:
-		return false
 	var waves_per_flag := wave_count if wave_count < 10 else 10
 	return wave_index % waves_per_flag == waves_per_flag - 1
 

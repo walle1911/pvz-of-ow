@@ -4,6 +4,8 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 
 func _ready() -> void:
+	## 1-1 只有中间三行草皮；刷怪权重必须同步屏蔽上下两条未铺草皮行。
+	assert(ZombieChooseRowSystem.mask_inactive_rows([1, 1, 1, 1, 1], [1, 2, 3]) == [0.0, 1.0, 1.0, 1.0, 0.0])
 	var example := Logic.example_level()
 	example["rewardPlant"] = int(CharacterRegistry.PlantType.P001PeaShooterSoldier76)
 	var built := Runtime.build_game_para(example)
@@ -25,35 +27,78 @@ func _ready() -> void:
 	assert(game_para.custom_flag_data.size() == 2)
 	var simple_level := Logic.example_level()
 	simple_level["editorMode"] = "simple"
+	simple_level["zombieRefreshSpeedMultiplier"] = 2.0
+	simple_level["initialWaveDelay"] = 0.25
+	simple_level["openingFirstZombieAdvanceCells"] = 7.5
 	var simple_built := Runtime.build_game_para(simple_level)
 	assert(simple_built["ok"], simple_built["error"])
 	var simple_para: ResourceLevelData = simple_built["game_para"]
-	## PvZ1 原版在开局前按点值/权重预生成全部波次名单。
+	## 简易关卡保留专属入场规则，但僵尸名单改为每波实时权重抽取。
 	assert(simple_para.custom_simple_original_mode)
-	assert(simple_para.custom_initial_wave_delay == 18.0)
+	assert(simple_para.custom_initial_wave_delay == 0.25)
+	assert(simple_para.opening_first_zombie_advance_cells == 7.5)
+	assert(simple_para.zombie_refresh_speed_multiplier == 2.0)
+	assert(ZombieWaveRefreshManager.scaled_refresh_duration(simple_para.custom_initial_wave_delay, simple_para.zombie_refresh_speed_multiplier) == 0.125)
+	assert(ZombieWaveRefreshManager.scaled_refresh_duration(25.0, simple_para.zombie_refresh_speed_multiplier) == 12.5)
+	assert(ZombieWaveRefreshManager.scaled_refresh_duration(6.0, simple_para.zombie_refresh_speed_multiplier) == 3.0)
 	assert(simple_para.max_wave == 20)
 	assert(simple_para.custom_spawn_schedule.is_empty())
 	assert(simple_para.custom_stage_schedule.is_empty())
 	assert(simple_para.custom_flag_data.is_empty())
-	assert(simple_para.custom_simple_wave_zombies.size() == 20)
-	assert(simple_para.custom_simple_wave_zombies[0] == [int(CharacterRegistry.ZombieType.Z500Norm)])
-	assert(simple_para.custom_simple_wave_zombies[9].has(int(CharacterRegistry.ZombieType.Z501Flag)))
-	assert(simple_para.custom_simple_wave_zombies[19].has(int(CharacterRegistry.ZombieType.Z501Flag)))
-	for allowed_type in simple_para.zombie_refresh_types:
-		assert(simple_para.custom_simple_wave_zombies[19].has(int(allowed_type)))
-	var twelve_wave_level := simple_level.duplicate(true)
-	twelve_wave_level["simpleWaveCount"] = 12
-	var twelve_wave_built := Runtime.build_game_para(twelve_wave_level)
-	assert(twelve_wave_built["ok"], twelve_wave_built["error"])
-	var twelve_wave_para: ResourceLevelData = twelve_wave_built["game_para"]
-	assert(twelve_wave_para.custom_simple_wave_zombies[9].has(int(CharacterRegistry.ZombieType.Z501Flag)))
-	assert(not twelve_wave_para.custom_simple_wave_zombies[11].has(int(CharacterRegistry.ZombieType.Z501Flag)))
+	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z000NormTalon] == 1)
+	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z000NormTalon] == 4000)
+	## 原版同帧创建整波，靠屏幕右侧出生距离错开入场；旗帜波再整体后移 40。
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(8, 20, 0) == 0.0)
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(8, 20, 39) == 39.0)
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(9, 20, 0) == 40.0)
+	## 第一面旗帜后的普通波必须恢复普通 0..39 偏移，不得继承旗帜波状态。
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(10, 20, 0) == 0.0)
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(10, 20, 39) == 39.0)
+	assert(ZombieWaveCreateManager.original_spawn_x_offset(19, 20, 39) == 79.0)
+	assert(ZombieWaveCreateManager.opening_spawn_x_offset(20.0, 7.5, 80.0) == -580.0)
+	## 选卡前只放置静止展示替身；它不计入实战僵尸，正式首波创建后才开始移动。
+	simple_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "opening_preview_test")
+	Global.game_para = simple_para
+	var opening_scene := (load(Global.main_scene_registry.MainScenesMap[simple_para.game_sences]) as PackedScene).instantiate()
+	await get_tree().process_frame
+	get_tree().root.add_child(opening_scene)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var opening_show := opening_scene.zombie_manager.zombie_show_in_start.opening_battlefield_zombie as Zombie000Base
+	assert(is_instance_valid(opening_show))
+	assert(opening_scene.zombie_manager.curr_zombie_num == 0)
+	var opening_show_position := opening_show.global_position
+	await get_tree().create_timer(0.2, false).timeout
+	assert(is_instance_valid(opening_show) and opening_show.global_position.is_equal_approx(opening_show_position))
+	opening_scene.zombie_manager.zombie_wave_manager.start_first_wave()
+	await get_tree().process_frame
+	assert(opening_scene.zombie_manager.zombie_show_in_start.opening_battlefield_zombie == null)
+	assert(opening_scene.zombie_manager.curr_zombie_num == 1)
+	var opening_real := opening_scene.zombie_manager.all_zombies_1d[0] as Zombie000Base
+	var opening_real_position := opening_real.global_position
+	await get_tree().create_timer(0.2, false).timeout
+	assert(opening_real.global_position.x < opening_real_position.x)
+	opening_scene.queue_free()
+	await get_tree().process_frame
+	var three_flag_level := simple_level.duplicate(true)
+	three_flag_level["simpleFlagCount"] = 3
+	three_flag_level["simpleWaveCount"] = 30
+	var three_flag_built := Runtime.build_game_para(three_flag_level)
+	assert(three_flag_built["ok"], three_flag_built["error"])
+	var three_flag_para: ResourceLevelData = three_flag_built["game_para"]
+	assert(three_flag_para.max_wave == 30)
+	var legacy_simple_level := simple_level.duplicate(true)
+	legacy_simple_level.erase("simpleFlagCount")
+	legacy_simple_level["simpleWaveCount"] = 30
+	var normalized_legacy := Logic.normalize_level(legacy_simple_level)
+	assert(int(normalized_legacy["simpleFlagCount"]) == 3)
+	assert(int(normalized_legacy["simpleWaveCount"]) == 30)
 	var normal_only_level := simple_level.duplicate(true)
 	for stage in normal_only_level["waves"]:
 		stage["spawnGroups"] = []
 	var normal_only_built := Runtime.build_game_para(normal_only_level)
 	assert(normal_only_built["ok"], normal_only_built["error"])
-	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z500Norm])
+	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z000NormTalon])
 	var grass_cell := PlantCell.new()
 	var pool_cell := PlantCell.new()
 	pool_cell.plant_cell_type = PlantCell.PlantCellType.Pool
@@ -124,9 +169,7 @@ func _ready() -> void:
 	workshop.call("_refresh_wave")
 	var expected_normal_zombies: Array = AllCards.all_zombie_card_prefabs.keys().filter(func(value):
 		var zombie_id := int(value)
-		return zombie_id != int(CharacterRegistry.ZombieType.Z520Bungi) and zombie_id > 0 \
-			and (zombie_id < 500 or AdventureLevelPresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id)) \
-			and bool(workshop.call("_has_original_pick_weight", zombie_id))
+		return zombie_id != int(CharacterRegistry.ZombieType.Null) and CharacterRegistry.ZombieInfo.has(zombie_id)
 	)
 	assert(workshop.zombie_card_order.size() == expected_normal_zombies.size())
 	workshop.call("_create_next_wave")

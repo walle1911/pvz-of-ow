@@ -41,7 +41,10 @@ static func example_level() -> Dictionary:
 		"playerConfig": {"initialSun": 150, "sunDropSpeed": 1.0, "cooldownMultiplier": 1.0},
 		"workshopMode": "normal",
 		"editorMode": "advanced",
+		"simpleFlagCount": 2,
 		"simpleWaveCount": 20,
+		"zombieRefreshSpeedMultiplier": 1.0,
+		"openingFirstZombieAdvanceCells": 0.0,
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
 		"availablePlants": [1, 2, 4, 6, 3],
 		"plantSelectionEnabled": true,
@@ -114,7 +117,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -129,7 +132,17 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["playerConfig"] = player
 	result["workshopMode"] = str(result.get("workshopMode", "normal"))
 	result["editorMode"] = str(result.get("editorMode", "advanced"))
-	result["simpleWaveCount"] = clampi(int(result.get("simpleWaveCount", 20)), 1, 100)
+	var legacy_simple_wave_count := clampi(int(result.get("simpleWaveCount", 20)), 1, 100)
+	var simple_flag_count := clampi(int(result.get("simpleFlagCount", ceili(float(legacy_simple_wave_count) / 10.0))), 1, 10)
+	result["simpleFlagCount"] = simple_flag_count
+	## 简易普通关严格按原版常规关卡的一旗十波生成；保留旧字段只为兼容已有草稿。
+	result["simpleWaveCount"] = simple_flag_count * 10
+	result["zombieRefreshSpeedMultiplier"] = float(result.get("zombieRefreshSpeedMultiplier", 1.0))
+	result["openingFirstZombieAdvanceCells"] = clampf(
+		float(result.get("openingFirstZombieAdvanceCells", 0.0)),
+		0.0,
+		float(map["columns"])
+	)
 	var chessboard: Dictionary = result.get("chessboardConfig", {})
 	var chessboard_defaults: Dictionary = defaults["chessboardConfig"]
 	for key in chessboard_defaults:
@@ -224,6 +237,9 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "蹦极大波只能用于屋顶地图", "environmentConfig/bungee"))
 	if int((level.get("playerConfig", {}) as Dictionary).get("initialSun", -1)) < 0:
 		issues.append(issue("error", "初始阳光不能为负数", "playerConfig/initialSun"))
+	var refresh_speed := float(level.get("zombieRefreshSpeedMultiplier", 1.0))
+	if refresh_speed < 0.1 or refresh_speed > 5.0:
+		issues.append(issue("error", "僵尸刷新速度倍率应在 0.1～5.0 之间", "zombieRefreshSpeedMultiplier"))
 	if (level.get("winConditions", []) as Array).is_empty():
 		issues.append(issue("error", "至少需要一个胜利条件", "winConditions"))
 	if (level.get("loseConditions", []) as Array).is_empty():

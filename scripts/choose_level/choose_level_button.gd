@@ -34,6 +34,21 @@ func activate_runtime_level(level_data: ResourceLevelData) -> void:
 	set_mouse_filter_recursive(self, Control.MOUSE_FILTER_IGNORE)
 	texture_button.mouse_filter = Control.MOUSE_FILTER_STOP
 
+
+func configure_level_label(level_name: String) -> void:
+	var label := texture_button.get_node("Label") as Label
+	label.text = level_name
+	label.tooltip_text = level_name
+	label.offset_top = -38.5
+	label.offset_bottom = -15.5
+	label.clip_text = true
+	var font := label.get_theme_font("font")
+	var font_size := 13
+	while font_size > 10 and font.get_string_size(level_name, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > 104.0:
+		font_size -= 1
+	label.add_theme_font_size_override("font_size", font_size)
+	label.remove_theme_constant_override("line_spacing")
+
 func set_mouse_filter_recursive(root: Node, filter_value: int) -> void:
 	# root 是你想从这个节点开始，递归设置 mouse_filter 的根节点
 	for child in root.get_children():

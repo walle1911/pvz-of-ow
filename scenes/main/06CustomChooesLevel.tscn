@@ -97,14 +97,14 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -365.0
-offset_top = 99.0
-offset_right = 367.0
-offset_bottom = 568.0
+offset_left = -333.0
+offset_top = 123.0
+offset_right = 338.0
+offset_bottom = 508.0
 grow_horizontal = 2
-theme_override_constants/h_separation = 53
-theme_override_constants/v_separation = 3
-columns = 5
+theme_override_constants/h_separation = 85
+theme_override_constants/v_separation = 20
+columns = 4
 
 [node name="MainMenu" type="TextureButton" parent="." unique_id=58773360]
 layout_mode = 1

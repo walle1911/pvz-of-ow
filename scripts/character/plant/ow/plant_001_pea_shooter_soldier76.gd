@@ -12,6 +12,7 @@ class_name Plant001PeaShooterSoldier76
 @export var heal_amount_per_second:int = 240
 @export var escape_move_time:float = 0.15
 @export var escape_hp_threshold:int = 100
+@export var smart_escape_route_enabled := true
 @export var heal_animation_name:StringName = &"Heal"
 
 const RECORDING_5757_SCENE_PATH := "res://scenes/main/test/MainGameDebugRecording5757.tscn"
@@ -150,6 +151,8 @@ func _get_random_escape_cell(threat_dir:int) -> PlantCell:
 	if _is_recording_5757_scene():
 		var downward_cell := _get_cell_by_offset(Vector2i(1, 0))
 		return downward_cell if is_instance_valid(downward_cell) and _can_escape_to_cell(downward_cell) else null
+	if smart_escape_route_enabled:
+		return _get_smart_escape_cell(threat_dir)
 
 	var candidate_offsets := SIDE_CELL_OFFSETS.duplicate()
 	candidate_offsets.shuffle()
@@ -162,6 +165,65 @@ func _get_random_escape_cell(threat_dir:int) -> PlantCell:
 		if is_instance_valid(target_cell) and _can_escape_to_cell(target_cell):
 			return target_cell
 	return null
+
+## 智能逃跑只把“远离威胁一格”和“上下有最近僵尸的一行”放进首选池。
+## 两个首选会随机决定先后，并在其中一个被占时自动尝试另一个；都不可用后
+## 才检查剩余侧向格，且仍不会朝正在啃咬自己的威胁方向移动。
+func _get_smart_escape_cell(threat_dir:int) -> PlantCell:
+	var retreat_offset := BACK_CELL_OFFSET if threat_dir == 1 else FRONT_CELL_OFFSET
+	var nearest_zombie_side_offset := _get_nearest_zombie_side_offset()
+	var preferred_offsets:Array[Vector2i] = [retreat_offset]
+	if nearest_zombie_side_offset != Vector2i.ZERO:
+		preferred_offsets.append(nearest_zombie_side_offset)
+	preferred_offsets.shuffle()
+
+	for offset:Vector2i in preferred_offsets:
+		var preferred_cell := _get_cell_by_offset(offset)
+		if is_instance_valid(preferred_cell) and _can_escape_to_cell(preferred_cell):
+			return preferred_cell
+
+	var fallback_offsets:Array[Vector2i] = [Vector2i(-1, 0), Vector2i(1, 0)]
+	fallback_offsets.shuffle()
+	for offset:Vector2i in fallback_offsets:
+		if preferred_offsets.has(offset):
+			continue
+		var fallback_cell := _get_cell_by_offset(offset)
+		if is_instance_valid(fallback_cell) and _can_escape_to_cell(fallback_cell):
+			return fallback_cell
+	return null
+
+## 只在可落脚的上下相邻格中，比较两行距离 76 最近的存活僵尸。
+func _get_nearest_zombie_side_offset() -> Vector2i:
+	var best_offset := Vector2i.ZERO
+	var best_distance := INF
+	var tied_offsets:Array[Vector2i] = []
+	for offset:Vector2i in [Vector2i(-1, 0), Vector2i(1, 0)]:
+		var target_cell := _get_cell_by_offset(offset)
+		if not is_instance_valid(target_cell) or not _can_escape_to_cell(target_cell):
+			continue
+		var distance := _nearest_zombie_distance_in_lane(target_cell.row_col.x)
+		if not is_finite(distance):
+			continue
+		if distance < best_distance:
+			best_distance = distance
+			best_offset = offset
+			tied_offsets.assign([offset])
+		elif is_equal_approx(distance, best_distance):
+			tied_offsets.append(offset)
+	if tied_offsets.size() > 1:
+		best_offset = tied_offsets.pick_random()
+	return best_offset
+
+func _nearest_zombie_distance_in_lane(target_lane:int) -> float:
+	var all_zombies_2d:Array = Global.main_game.zombie_manager.all_zombies_2d
+	if target_lane < 0 or target_lane >= all_zombies_2d.size():
+		return INF
+	var nearest_distance := INF
+	for zombie:Zombie000Base in all_zombies_2d[target_lane]:
+		if not is_instance_valid(zombie) or zombie.is_death:
+			continue
+		nearest_distance = minf(nearest_distance, absf(zombie.global_position.x - global_position.x))
+	return nearest_distance
 
 func _is_recording_5757_scene() -> bool:
 	var current_scene := get_tree().current_scene

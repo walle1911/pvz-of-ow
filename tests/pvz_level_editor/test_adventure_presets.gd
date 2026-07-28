@@ -36,6 +36,7 @@ func _test_all_normal_levels_build() -> void:
 		for level_number in range(1, 11):
 			var preset_id := "adventure_%d_%d" % [world, level_number]
 			var source: Dictionary = Presets.build_level(preset_id)
+			_expect(str(source.get("editorMode", "")) == "simple", "%s 默认应使用简易原版模式" % preset_id)
 			_expect(str((source.get("mapConfig", {}) as Dictionary).get("type", "")) == MAP_TYPES[world - 1], "%s 地图类型错误" % preset_id)
 			var built: Dictionary = Runtime.build_game_para(source)
 			_expect(bool(built.get("ok", false)), "%s 无法转换为正式运行时资源：%s" % [preset_id, str(built.get("error", ""))])
@@ -74,7 +75,11 @@ func _test_zombie_pool_resolution() -> void:
 	var all_seen: Array[int] = []
 	for world in range(1, 6):
 		for level_number in range(1, 11):
-			var level_types := _level_zombie_types(Presets.build_level("adventure_%d_%d" % [world, level_number]))
+			var source := Presets.build_level("adventure_%d_%d" % [world, level_number])
+			var level_types := _level_zombie_types(source)
+			var runtime_types: Array[CharacterRegistry.ZombieType] = (Runtime.build_game_para(source)["game_para"] as ResourceLevelData).zombie_refresh_types
+			var is_cone_unlocked := world > 1 or level_number >= 2
+			_expect(runtime_types.has(CharacterRegistry.ZombieType.Z002ConeTalon) == is_cone_unlocked, "%d-%d 的路障僵尸常驻状态错误" % [world, level_number])
 			for zombie_type in level_types:
 				if not all_seen.has(zombie_type):
 					all_seen.append(zombie_type)
@@ -150,6 +155,15 @@ func _test_map_runtime_assignments() -> void:
 	var fog := (Runtime.build_game_para(Presets.build_level("adventure_4_1"))["game_para"] as ResourceLevelData)
 	var roof := (Runtime.build_game_para(Presets.build_level("adventure_5_1"))["game_para"] as ResourceLevelData)
 	_expect(day.game_BG == ConstLevelData.GameBg.FrontDay and day.game_sences == MainSceneRegistry.MainScenes.MainGameFront, "第一世界应进入白天前院")
+	_expect(day.active_lawn_rows == [1, 2, 3], "1-1 应只开放中间三行")
+	_expect(day.sod_layout_rows == 3 and day.sod_rollout_rows == 0, "1-1 应直接显示三行草皮，不播放教学铺草")
+	_expect(day.start_sun == 100, "1-1 应只提供种植第一株 76 的 100 初始阳光")
+	_expect(day.custom_initial_wave_delay == 0.1, "1-1 的中场开局僵尸应在战斗开始后立即入场")
+	_expect(day.opening_first_zombie_advance_cells == 7.5, "1-1 第一只僵尸应从草坪中段偏左两格开始推进")
+	_expect(not day.force_second_zombie_same_lane_as_first, "1-1 不应额外锁定第 2 只僵尸的行")
+	var day_two := (Runtime.build_game_para(Presets.build_level("adventure_1_2"))["game_para"] as ResourceLevelData)
+	_expect(day_two.active_lawn_rows == [0, 1, 2, 3, 4], "1-2 起白天关卡应恢复全部五行")
+	_expect(not day_two.force_second_zombie_same_lane_as_first, "后续关卡不应锁定前两只僵尸同行")
 	_expect(night.game_BG == ConstLevelData.GameBg.FrontNight and not night.is_day_sun, "第二世界应进入无天降阳光的夜晚前院")
 	_expect(pool.game_BG == ConstLevelData.GameBg.Pool and pool.game_sences == MainSceneRegistry.MainScenes.MainGameBack, "第三世界应进入泳池六路场景")
 	_expect(fog.game_BG == ConstLevelData.GameBg.Fog and fog.is_fog and not fog.is_day, "第四世界应进入雾夜泳池场景")
@@ -180,7 +194,7 @@ func _test_difficulty_growth() -> void:
 	var late: Dictionary = Runtime.build_game_para(Presets.build_level("adventure_5_10"))
 	var early_count := (early["game_para"] as ResourceLevelData).custom_spawn_schedule.size()
 	var late_count := (late["game_para"] as ResourceLevelData).custom_spawn_schedule.size()
-	_expect((early["game_para"] as ResourceLevelData).custom_flag_data.is_empty(), "只有真正的 1-1 教程关可以没有大波")
+	_expect(not (early["game_para"] as ResourceLevelData).custom_flag_data.is_empty(), "1-1 已取消教程特例，应作为普通一旗关")
 	_expect(not (night_first["game_para"] as ResourceLevelData).custom_flag_data.is_empty(), "2-1 起每个世界首关都应恢复大波机制")
 	_expect(late_count >= early_count * 5, "最终关的敌人规模应明显高于 1-1")
 	_expect((late["game_para"] as ResourceLevelData).custom_flag_data.size() >= 2, "最终关应包含多次大波")
@@ -227,9 +241,10 @@ func _test_choose_level_pages() -> void:
 	var fog_cover := fog_first_button.get_node_or_null("Panel/MapBackground") as TextureRect
 	_expect(fog_cover != null and fog_cover.texture == ChooseLevel.WORLD_COVER_TEXTURES[3], "第四世界封面应使用雾夜泳池底图")
 	_expect(fog_first_button.get_node_or_null("Panel/Badge") == null and fog_first_button.get_node_or_null("Panel/BadgeBackground") == null, "正式关卡封面不应再显示新卡/新敌徽标")
+	var cone_cover := all_page.get_child(0).get_child(1) as ChooseLevelButton
+	_expect(cone_cover.get_node_or_null("Panel/ZombiePreview") != null, "1-2 应展示首次登场的路障僵尸")
 	var mixed_cover := all_page.get_child(0).get_child(2) as ChooseLevelButton
-	_expect(mixed_cover.get_node_or_null("Panel/PlantPreview") != null, "1-3 同时有新植物时应展示改版植物")
-	_expect(mixed_cover.get_node_or_null("Panel/ZombiePreview") != null, "1-3 同时有新僵尸时应一并展示")
+	_expect(mixed_cover.get_node_or_null("Panel/PlantPreview") != null, "1-3 有新植物时应展示改版植物")
 	var fallback_cover := all_page.get_child(0).get_child(5) as ChooseLevelButton
 	_expect(fallback_cover.get_node_or_null("Panel/PlantPreview") != null, "1-6 应在封面展示原版回退植物")
 	_expect(fallback_cover.get_node_or_null("Panel/ZombiePreview") != null, "1-6 应在封面展示原版回退僵尸")

@@ -10,4 +10,4 @@ func init_choose_level_button_customize(new_level_data_game_para:ResourceLevelDa
 
 func _ready() -> void:
 	super()
-	label.text = level_name
+	configure_level_label(level_name)

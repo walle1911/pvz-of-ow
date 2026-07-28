@@ -26,7 +26,6 @@ var map_type_input: OptionButton
 var rows_input: SpinBox
 var columns_input: SpinBox
 var sun_input: SpinBox
-var seed_input: SpinBox
 var _ignore_ui := false
 
 
@@ -130,13 +129,12 @@ func _build_map() -> Control:
 	rows_input = _spin(row_two, "行", 1, 8, 5, 1)
 	columns_input = _spin(row_two, "列", 1, 12, 9, 1)
 	sun_input = _spin(row_two, "初始阳光", 0, 99999, 150, 25)
-	seed_input = _spin(row_two, "随机种子", 1, 2147483647, 1, 1)
 	id_input.text_submitted.connect(func(_value): _config_changed())
 	name_input.text_submitted.connect(func(_value): _config_changed())
 	id_input.focus_exited.connect(_config_changed)
 	name_input.focus_exited.connect(_config_changed)
 	map_type_input.item_selected.connect(func(_index): _config_changed())
-	for control in [rows_input, columns_input, sun_input, seed_input]:
+	for control in [rows_input, columns_input, sun_input]:
 		control.value_changed.connect(func(_value): _config_changed())
 	map_caption = Label.new()
 	map_caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -284,7 +282,6 @@ func _refresh() -> void:
 	rows_input.value = int(map["rows"])
 	columns_input.value = int(map["columns"])
 	sun_input.value = int((level["playerConfig"] as Dictionary)["initialSun"])
-	seed_input.value = int(level["randomSeed"])
 	_refresh_resources()
 	_refresh_map()
 	_refresh_waves()
@@ -514,7 +511,6 @@ func _config_changed() -> void:
 	map["rows"] = int(rows_input.value)
 	map["columns"] = int(columns_input.value)
 	(level["playerConfig"] as Dictionary)["initialSun"] = int(sun_input.value)
-	level["randomSeed"] = int(seed_input.value)
 	for wave in level["waves"]:
 		for group in wave["spawnGroups"]:
 			group["laneWeights"] = Logic.fit_lane_weights(group.get("laneWeights", []), int(map["rows"]))

@@ -2,6 +2,11 @@ extends Node
 ## 僵尸波次生成管理器
 class_name ZombieWaveCreateManager
 
+## PvZ1 Zombie::ZombieInitialize 的普通出生偏移：Rand(40)。
+const ORIGINAL_START_RANDOM_OFFSET := 40
+## PvZ1 旗帜波的所有常规入场僵尸会额外向右移动 40 像素。
+const ORIGINAL_FLAG_WAVE_OFFSET := 40
+
 #region 波次生成僵尸管理器参数
 ## 出怪倍率
 var zombie_multy := 1
@@ -15,8 +20,12 @@ var range_num_bungi:Vector2i = Vector2i(3,5)
 
 ## 定义每个僵尸的战力值
 const zombie_power = {
+	CharacterRegistry.ZombieType.Z000NormTalon: 1,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 5,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 7,
+	CharacterRegistry.ZombieType.Z001FlagTalon: 1,	# 黑爪旗帜战力
+	CharacterRegistry.ZombieType.Z002ConeTalon: 2,
+	CharacterRegistry.ZombieType.Z004BucketTalon: 4,
 	CharacterRegistry.ZombieType.Z500Norm: 1,		# 普僵战力
 	CharacterRegistry.ZombieType.Z501Flag: 1,		# 旗帜战力
 	CharacterRegistry.ZombieType.Z502Cone: 2,		# 路障战力
@@ -55,8 +64,11 @@ const zombie_power = {
 ## 创建 zombie_weights 字典，存储初始权重,普僵权重会修改，
 var zombie_weights:Dictionary = zombie_weights_ori.duplicate_deep()
 const zombie_weights_ori = {
+	CharacterRegistry.ZombieType.Z000NormTalon: 4000,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 1000,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 2000,
+	CharacterRegistry.ZombieType.Z002ConeTalon: 4000,
+	CharacterRegistry.ZombieType.Z004BucketTalon: 3000,
 	CharacterRegistry.ZombieType.Z500Norm: 4000,			# 普僵权重
 	#CharacterRegistry.ZombieType.Z501Flag: 0,			# 旗帜权重
 	CharacterRegistry.ZombieType.Z502Cone: 4000,			# 路障权重
@@ -103,13 +115,23 @@ var min_power:=100
 var curr_zombie_weight_upper_limit :int
 ## 当前波次生成的僵尸
 var wave_all_zombies:Array[Zombie000Base]
+## 关卡限定所需的自然波次出场顺序；不参与波次计时和数量计算。
+var natural_spawn_count := 0
+var first_natural_spawn_lane := -1
+var natural_created_count := 0
+## 选卡前放在草坪上的开场替身所在行；真实首只僵尸复用该行完成无缝接替。
+var opening_first_zombie_lane := -1
 
 ## 初始化创建波次僵尸管理器
 func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	zombie_multy = game_para.zombie_multy
 	range_num_bungi = game_para.range_num_bungi
+	natural_spawn_count = 0
+	first_natural_spawn_lane = -1
+	natural_created_count = 0
+	opening_first_zombie_lane = -1
 	zombie_choose_row_system.init_zombie_choose_row_system()
-	if game_para.custom_spawn_schedule.is_empty() and not game_para.custom_simple_original_mode:
+	if game_para.custom_spawn_schedule.is_empty():
 		update_zombie_refresh_types()
 
 ## 更新可以刷新的僵尸列表
@@ -139,8 +161,21 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 	for i in range(wave_spawn.size()):
 		var zombie_type : CharacterRegistry.ZombieType = wave_spawn[i]
 		var lane :int = -1
+		var force_opening_lane := natural_spawn_count == 0 and opening_first_zombie_lane >= 0
+		var force_first_lane := (
+			zombie_manager.game_para.force_second_zombie_same_lane_as_first
+			and natural_spawn_count == 1
+			and first_natural_spawn_lane >= 0
+		)
+		if force_opening_lane:
+			lane = opening_first_zombie_lane
+			zombie_choose_row_system.on_zombie_spawned(lane)
+		elif force_first_lane:
+			lane = first_natural_spawn_lane
+			## 强制选行仍记入历史，让第 3 只起继续使用原平滑随机算法。
+			zombie_choose_row_system.on_zombie_spawned(lane)
 		## 雪橇车僵尸
-		if zombie_type == CharacterRegistry.ZombieType.Z513Bobsled:
+		elif zombie_type == CharacterRegistry.ZombieType.Z513Bobsled:
 			## 计算冰道权重
 			if special_base_weight.is_empty():
 				for row_ice_road:Array[IceRoad] in zombie_manager.all_ice_roads:
@@ -157,6 +192,9 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 				lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType], special_base_weight)
 		else:
 			lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType])
+		if natural_spawn_count == 0:
+			first_natural_spawn_lane = lane
+		natural_spawn_count += 1
 		curr_wave_zombie_date.append(
 			{
 				"zombie_type":zombie_type,
@@ -176,6 +214,8 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 
 func create_custom_timeline_zombie(event: Dictionary) -> Zombie000Base:
 	var lane := clampi(int(event.get("lane", 0)), 0, zombie_manager.all_zombie_rows.size() - 1)
+	if natural_created_count == 0 and opening_first_zombie_lane >= 0:
+		lane = opening_first_zombie_lane
 	var zombie_type: CharacterRegistry.ZombieType = int(event.get("zombie_type", CharacterRegistry.ZombieType.Z500Norm)) as CharacterRegistry.ZombieType
 	return wave_create_zombie(zombie_type, lane, int(event.get("stage_index", 0)))
 
@@ -193,22 +233,68 @@ func wave_create_zombie(
 		Zombie000Base.E_ZInitAttr.CurrWave:curr_wave,
 	}
 	var zombie_parent = zombie_manager.all_zombie_rows[lane]
-	var zombie_glo_pos = zombie_manager.all_zombie_rows[lane].zombie_create_position.global_position + Vector2(randf_range(-10, 10), 0)
+	var spawn_x_offset := randf_range(-10.0, 10.0)
+	if zombie_manager.game_para.custom_simple_original_mode:
+		## 原版会在同一帧建立整波僵尸，但用 0..39 的出生距离和
+		## 旗帜波额外 40 的偏移错开入场，而不是逐只延时生成。
+		var start_random_offset := 0 if natural_created_count == 0 \
+		and zombie_manager.game_para.opening_first_zombie_advance_cells > 0.0 \
+		else randi_range(0, ORIGINAL_START_RANDOM_OFFSET - 1)
+		spawn_x_offset = original_spawn_x_offset(
+			curr_wave,
+			zombie_manager.game_para.max_wave,
+			start_random_offset
+		)
+	if natural_created_count == 0:
+		spawn_x_offset = opening_spawn_x_offset(
+			spawn_x_offset,
+			zombie_manager.game_para.opening_first_zombie_advance_cells,
+			_opening_cell_stride(lane)
+		)
+	natural_created_count += 1
+	var zombie_glo_pos = zombie_manager.all_zombie_rows[lane].zombie_create_position.global_position + Vector2(spawn_x_offset, 0)
 
 	var zombie = zombie_manager.create_norm_zombie(zombie_type,zombie_parent,zombie_init_para, zombie_glo_pos, init_zombie_special)
 
 	return zombie
 
+
+static func original_spawn_x_offset(curr_wave: int, wave_count: int, random_offset: int) -> float:
+	var offset := clampi(random_offset, 0, ORIGINAL_START_RANDOM_OFFSET - 1)
+	var waves_per_flag := wave_count if wave_count < 10 else 10
+	if curr_wave >= 0 and curr_wave % maxi(1, waves_per_flag) == maxi(1, waves_per_flag) - 1:
+		offset += ORIGINAL_FLAG_WAVE_OFFSET
+	return float(offset)
+
+
+static func opening_spawn_x_offset(base_offset: float, advance_cells: float, cell_stride: float) -> float:
+	return base_offset - maxf(0.0, advance_cells) * maxf(0.0, cell_stride)
+
+
+func _opening_cell_stride(lane: int) -> float:
+	var rows: Array = zombie_manager.main_game.plant_cell_manager.all_plant_cells
+	if lane < 0 or lane >= rows.size():
+		return 0.0
+	var cells: Array = rows[lane]
+	if cells.size() >= 2:
+		return absf((cells[1] as PlantCell).global_position.x - (cells[0] as PlantCell).global_position.x)
+	if cells.size() == 1:
+		return (cells[0] as PlantCell).size.x
+	return 0.0
+
+
+func opening_first_zombie_global_position(lane: int) -> Vector2:
+	var safe_lane := clampi(lane, 0, zombie_manager.all_zombie_rows.size() - 1)
+	var spawn_offset := opening_spawn_x_offset(
+		0.0,
+		zombie_manager.game_para.opening_first_zombie_advance_cells,
+		_opening_cell_stride(safe_lane)
+	)
+	return zombie_manager.all_zombie_rows[safe_lane].zombie_create_position.global_position + Vector2(spawn_offset, 0.0)
+
 #region 创建当前波僵尸生成列表
 ## 创建当前波僵尸生成列表
 func create_curr_wave_zombie_list(wave:int, is_big_wave:bool):
-	if zombie_manager.game_para.custom_simple_original_mode:
-		var picked_waves: Array[Array] = zombie_manager.game_para.custom_simple_wave_zombies
-		var picked: Array[CharacterRegistry.ZombieType] = []
-		if wave >= 0 and wave < picked_waves.size():
-			for zombie_type in picked_waves[wave]:
-				picked.append(int(zombie_type) as CharacterRegistry.ZombieType)
-		return picked
 	## 计算当前波僵尸战力上限
 	var curr_wave_power_limit = calculate_wave_power_limit(wave, is_big_wave)
 	## 更新僵尸权重上限
@@ -261,13 +347,15 @@ func _update_weights(wave: int):
 			wave = 25
 
 		var norm_weight = 4000 - (wave - 5) * 180
-		zombie_weights[CharacterRegistry.ZombieType.Z500Norm] = norm_weight
-		if CharacterRegistry.ZombieType.Z500Norm in zombie_manager.zombie_refresh_types:
-			zombie_choose_random_pool.update_item_weight(CharacterRegistry.ZombieType.Z500Norm, norm_weight, false)
+		for norm_type in [CharacterRegistry.ZombieType.Z000NormTalon, CharacterRegistry.ZombieType.Z500Norm]:
+			zombie_weights[norm_type] = norm_weight
+			if norm_type in zombie_manager.zombie_refresh_types:
+				zombie_choose_random_pool.update_item_weight(norm_type, norm_weight, false)
 		var cone_weight = 4000 - (wave - 5) * 150
-		zombie_weights[CharacterRegistry.ZombieType.Z502Cone] = cone_weight
-		if CharacterRegistry.ZombieType.Z502Cone in zombie_manager.zombie_refresh_types:
-			zombie_choose_random_pool.update_item_weight(CharacterRegistry.ZombieType.Z502Cone, cone_weight, false)
+		for cone_type in [CharacterRegistry.ZombieType.Z002ConeTalon, CharacterRegistry.ZombieType.Z502Cone]:
+			zombie_weights[cone_type] = cone_weight
+			if cone_type in zombie_manager.zombie_refresh_types:
+				zombie_choose_random_pool.update_item_weight(cone_type, cone_weight, false)
 
 		zombie_choose_random_pool.rebuild_alias_table()
 
@@ -282,23 +370,18 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 
 	## 如果是大波，先刷新特殊僵尸
 	if is_big_wave:
-		## 第一个旗帜僵尸
-		wave_spawn.append(CharacterRegistry.ZombieType.Z501Flag)
-		total_power += zombie_power[CharacterRegistry.ZombieType.Z501Flag]
+		## 旗帜波由黑爪旗帜僵尸带领。
+		wave_spawn.append(CharacterRegistry.ZombieType.Z001FlagTalon)
+		total_power += zombie_power[CharacterRegistry.ZombieType.Z001FlagTalon]
 		curr_spare_slot -= 1
 
-		# 第一次大波（第10波），刷新4个普通僵尸
-		if wave == 9:
-			for i in range(4):
-				wave_spawn.append(CharacterRegistry.ZombieType.Z500Norm)
-				total_power += zombie_power[CharacterRegistry.ZombieType.Z500Norm]
-				curr_spare_slot -= 1
-		# 之后的大波（第20波、30波...），刷新8个普通僵尸
-		else:
-			for i in range(8):
-				wave_spawn.append(CharacterRegistry.ZombieType.Z500Norm)
-				total_power += zombie_power[CharacterRegistry.ZombieType.Z500Norm]
-				curr_spare_slot -= 1
+		var plain_zombie_type := _plain_zombie_type()
+		## 简易模式保留现有旗帜波数量规则；其余自然关卡继续使用旧规则。
+		var plain_count := mini(wave / 3 + 1, 8) if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
+		for _index in plain_count:
+			wave_spawn.append(plain_zombie_type)
+			total_power += zombie_power[plain_zombie_type]
+			curr_spare_slot -= 1
 
 	# 生成剩余僵尸，直到总战力符合当前战力上限
 	while curr_spare_slot > 0 and total_power < curr_wave_power_limit:
@@ -315,14 +398,21 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 			curr_spare_slot -= 1
 		elif curr_wave_power_limit - total_power < min_power:
 			for i in range(curr_wave_power_limit - total_power):
-				wave_spawn.append(CharacterRegistry.ZombieType.Z500Norm)
-				total_power += zombie_power[CharacterRegistry.ZombieType.Z500Norm]
+				var plain_zombie_type := _plain_zombie_type()
+				wave_spawn.append(plain_zombie_type)
+				total_power += zombie_power[plain_zombie_type]
 				curr_spare_slot -= 1
 			continue
 		else:
 			continue
 
 	return wave_spawn
+
+
+func _plain_zombie_type() -> CharacterRegistry.ZombieType:
+	if zombie_manager.game_para.custom_simple_original_mode:
+		return CharacterRegistry.ZombieType.Z000NormTalon
+	return CharacterRegistry.ZombieType.Z500Norm
 
 #endregion
 

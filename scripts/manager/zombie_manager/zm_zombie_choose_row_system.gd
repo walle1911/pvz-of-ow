@@ -19,7 +19,9 @@ func init_zombie_choose_row_system():
 	var ori_weight_land:Array[float] = []
 	var ori_weight_pool:Array[float] = []
 	var ori_weight_both:Array[float] = []
-	for zombie_row_node: ZombieRow in Global.main_game.zombie_manager.all_zombie_rows:
+	var active_rows: Array[int] = Global.main_game.zombie_manager.game_para.active_lawn_rows
+	for row_index in Global.main_game.zombie_manager.all_zombie_rows.size():
+		var zombie_row_node: ZombieRow = Global.main_game.zombie_manager.all_zombie_rows[row_index]
 		match zombie_row_node.zombie_row_type:
 			CharacterRegistry.ZombieRowType.Land:
 				ori_weight_land.append(1)
@@ -33,9 +35,9 @@ func init_zombie_choose_row_system():
 		ori_weight_both.append(1.0)
 
 	base_weigth_all_type = {
-		CharacterRegistry.ZombieRowType.Land:ori_weight_land,
-		CharacterRegistry.ZombieRowType.Pool:ori_weight_pool,
-		CharacterRegistry.ZombieRowType.Both:ori_weight_both
+		CharacterRegistry.ZombieRowType.Land:mask_inactive_rows(ori_weight_land, active_rows),
+		CharacterRegistry.ZombieRowType.Pool:mask_inactive_rows(ori_weight_pool, active_rows),
+		CharacterRegistry.ZombieRowType.Both:mask_inactive_rows(ori_weight_both, active_rows)
 	}
 
 	last_picked = [0,0,0,0,0,0]
@@ -60,7 +62,8 @@ func calculate_smooth_weights(zombie_row_type: CharacterRegistry.ZombieRowType, 
 	var smooth_weights: Array[float] = []
 	if not special_base_weight.is_empty():
 		print("使用临时特殊基础权重")
-		base_weight = special_base_weight
+		var active_rows: Array[int] = Global.main_game.zombie_manager.game_para.active_lawn_rows
+		base_weight = mask_inactive_rows(special_base_weight, active_rows)
 		total_base_weight = GlobalUtils.sum_arr(base_weight)
 	else:
 		base_weight = base_weigth_all_type[zombie_row_type]
@@ -93,19 +96,38 @@ func select_spawn_row(zombie_row_type: CharacterRegistry.ZombieRowType, special_
 
 	if total_smooth_weight <= 0:
 		push_warning("整体平滑权重小于等于0")
-		return 5
+		return _fallback_spawn_row(zombie_row_type)
 
 	var rand_num = randf_range(0.0, total_smooth_weight)
 	var cumulative_weight = 0.0
 
 	for i in range(smooth_weights.size()):
 		cumulative_weight += smooth_weights[i]
-		if cumulative_weight >= rand_num:
+		if smooth_weights[i] > 0.0 and cumulative_weight >= rand_num:
 			on_zombie_spawned(i)
 			return i
 
 	push_warning("权重出错")
-	return 5
+	return _fallback_spawn_row(zombie_row_type)
+
+
+func _fallback_spawn_row(zombie_row_type: CharacterRegistry.ZombieRowType) -> int:
+	var active_rows: Array[int] = Global.main_game.zombie_manager.game_para.active_lawn_rows
+	for row_index in Global.main_game.zombie_manager.all_zombie_rows.size():
+		if not active_rows.is_empty() and not active_rows.has(row_index):
+			continue
+		var row_type: CharacterRegistry.ZombieRowType = Global.main_game.zombie_manager.all_zombie_rows[row_index].zombie_row_type
+		if zombie_row_type == CharacterRegistry.ZombieRowType.Both or row_type == CharacterRegistry.ZombieRowType.Both or row_type == zombie_row_type:
+			return row_index
+	push_error("当前关卡没有可供该僵尸刷新的活动行")
+	return 0
+
+
+static func mask_inactive_rows(weights: Array, active_rows: Array[int]) -> Array[float]:
+	var result: Array[float] = []
+	for row_index in weights.size():
+		result.append(float(weights[row_index]) if active_rows.is_empty() or active_rows.has(row_index) else 0.0)
+	return result
 
 ### 获取概率
 #func get_row_probabilities() -> Array:

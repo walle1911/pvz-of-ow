@@ -57,6 +57,7 @@ func _ready() -> void:
 func init_zombie_wave_manager(game_para:ResourceLevelData):
 	is_have_tombston = game_para.is_have_tombston
 	max_wave_one_round = game_para.max_wave
+	zombie_wave_refresh_manager.init_zombie_wave_refresh_manager(game_para)
 	## 如果存在存档
 	if game_para.save_game_data_main_game:
 		curr_wave = game_para.save_game_data_main_game.curr_wave

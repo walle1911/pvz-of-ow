@@ -1,39 +1,40 @@
 {
 	"activeLawnRows": [
-		0,
 		1,
 		2,
-		3,
-		4
+		3
 	],
-	"allowNoFlag": true,
+	"allowNoFlag": false,
 	"availablePlants": [
 		1
 	],
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
-		"mineCount": 0,
+		"mineCount": 0.0,
 		"plantCardPool": [
-			1
+			1.0
 		],
 		"plantCardProbability": 0.25,
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
 	"earlyRefreshDelay": 1.5,
+	"editorMode": "simple",
 	"environmentConfig": {
 		"bungee": false,
 		"initialTombstones": 0,
 		"tombstoneSpawns": false
 	},
+	"forcedPlants": [],
 	"formalPresetId": "adventure_1_1",
+	"freePlantSelection": true,
 	"healthThresholdRange": [
 		0.558,
 		0.678
 	],
 	"hugeWaveWarningDelay": 6.0,
 	"id": "adventure_1_1",
-	"initialWaveDelay": 18.0,
+	"initialWaveDelay": 0.1,
 	"loseConditions": [
 		{
 			"type": "zombie_reaches_house"
@@ -45,17 +46,21 @@
 		"type": "front_lawn"
 	},
 	"minimumWaveTime": 5.965,
-	"name": "1-1 黑爪下乡",
+	"name": "1-1 我不是你的父亲",
+	"openingFirstZombieAdvanceCells": 7.5,
+	"plantSelectionEnabled": true,
 	"playerConfig": {
 		"cooldownMultiplier": 1.0,
-		"initialSun": 150,
+		"initialSun": 75,
 		"sunDropSpeed": 1.0
 	},
-	"randomSeed": 2026071501,
+	"randomSeed": 2026071501.0,
 	"rewardPlant": 2,
-	"schemaVersion": 1,
-	"sodLayoutRows": 5,
-	"sodRolloutRows": 5,
+	"schemaVersion": 1.0,
+	"simpleFlagCount": 1,
+	"simpleWaveCount": 10,
+	"sodLayoutRows": 3.0,
+	"sodRolloutRows": 0.0,
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		28.86,
@@ -65,24 +70,24 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_1_1_wave_01",
-			"name": "第 1 波",
+			"name": "第 1 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 2,
+					"count": 2.0,
 					"fixedInterval": 2.0,
-					"fixedLane": 1,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
 					"id": "group_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 8,
+					"maxAlive": 8.0,
 					"randomInterval": {
 						"max": 1.8,
 						"min": 0.8
@@ -98,27 +103,27 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_1_1_wave_02",
-			"name": "第 2 波",
+			"name": "第 2 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 2,
-					"fixedInterval": 0.63,
-					"fixedLane": 1,
+					"count": 2.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
-					"id": "adventure_1_1_wave_02_group_01",
+					"id": "simple_1_100_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 28,
+					"maxAlive": 8.0,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
@@ -129,29 +134,29 @@
 			"startTime": 28.0
 		},
 		{
-			"duration": 16.3805579275858,
+			"duration": 28.0,
 			"id": "adventure_1_1_wave_03",
-			"name": "第 3 波",
+			"name": "第 3 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 3,
-					"fixedInterval": 0.63,
-					"fixedLane": 1,
+					"count": 2.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
-					"id": "adventure_1_1_wave_03_group_01",
+					"id": "simple_2_100_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 28,
+					"maxAlive": 8.0,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
@@ -167,21 +172,21 @@
 			"name": "第 1 波",
 			"spawnGroups": [
 				{
-					"count": 4,
+					"count": 2.0,
 					"fixedInterval": 2.0,
-					"fixedLane": 1,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
-					"id": "group_2",
+					"id": "simple_3_100_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 8,
+					"maxAlive": 8.0,
 					"randomInterval": {
 						"max": 1.8,
 						"min": 0.8
@@ -192,65 +197,32 @@
 				}
 			],
 			"stageType": "flag",
-			"startTime": 72.3805579275858
-		},
-		{
-			"duration": 11.6194420724142,
-			"id": "interval_1",
-			"name": "新波间",
-			"spawnGroups": [
-				{
-					"count": 4,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "group_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "100"
-				}
-			],
-			"stageType": "interval",
-			"startTime": 82.3805579275858
+			"startTime": 84.0
 		},
 		{
 			"duration": 28.0,
-			"id": "adventure_1_1_wave_04",
-			"name": "第 4 波",
+			"id": "interval_1",
+			"name": "第 4 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 3,
-					"fixedInterval": 0.63,
-					"fixedLane": 1,
+					"count": 2.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
-					"id": "adventure_1_1_wave_04_group_01",
+					"id": "simple_4_100_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 28,
+					"maxAlive": 8.0,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
@@ -262,28 +234,28 @@
 		},
 		{
 			"duration": 28.0,
-			"id": "adventure_1_1_wave_05",
-			"name": "第 5 波",
+			"id": "adventure_1_1_wave_04",
+			"name": "第 5 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 5,
-					"fixedInterval": 0.63,
-					"fixedLane": 1,
+					"count": 2.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
 					"healthMultiplier": 1.0,
-					"id": "adventure_1_1_wave_05_group_01",
+					"id": "simple_5_100_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
 					],
-					"maxAlive": 28,
+					"maxAlive": 8.0,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
@@ -299,5 +271,6 @@
 			"type": "all_waves_cleared"
 		}
 	],
-	"workshopMode": "normal"
+	"workshopMode": "normal",
+	"zombieRefreshSpeedMultiplier": 1.0
 }

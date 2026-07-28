@@ -13,16 +13,6 @@ const ZOMBIE_TYPE_IDS := {
 	"gargantuar": 523,
 }
 
-## PvZ1 Zombie::ZombieInitialize/ZombiePickWeight 中的最早可抽取波次（从 1 开始）。
-## 鸭子救生圈、旗帜、伴舞、蹦极和小鬼都不是独立的普通权重候选，因此不列入。
-const ORIGINAL_FIRST_ALLOWED_WAVE := {
-	500: 1, 502: 1, 503: 5, 504: 1, 505: 1, 506: 5, 507: 5, 508: 5,
-	511: 10, 512: 10, 513: 10, 514: 10, 515: 10, 516: 10, 517: 10,
-	518: 10, 519: 1, 521: 10, 522: 10, 523: 15,
-}
-const ORIGINAL_MISSING_EXCLUDED_ZOMBIES := [519, 20]
-
-
 ## 把工坊 JSON 转为主游戏现有的 ResourceLevelData，并生成逐阶段的相对刷怪计划。
 static func build_game_para(source: Dictionary) -> Dictionary:
 	var prepared_source := source.duplicate(true)
@@ -31,6 +21,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	if not parsed["ok"]:
 		return {"ok": false, "game_para": null, "level": parsed["level"], "error": parsed["error"]}
 	var level: Dictionary = parsed["level"]
+	_apply_formal_map_constraints(level)
 	var workshop_mode := str(level.get("workshopMode", "normal"))
 	var waves: Array = level.get("waves", [])
 	if waves.is_empty():
@@ -95,6 +86,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.start_sun = int(player_config.get("initialSun", 50))
 	game_para.sun_drop_speed_multiplier = float(player_config.get("sunDropSpeed", 1.0))
 	game_para.card_cooldown_multiplier = float(player_config.get("cooldownMultiplier", 1.0))
+	game_para.zombie_refresh_speed_multiplier = clampf(float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.1, 5.0)
 	game_para.max_wave = stage_schedule.size()
 	game_para.look_show_zombie = true
 	game_para.custom_spawn_schedule = schedule
@@ -106,19 +98,24 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.sod_layout_rows = int(level.get("sodLayoutRows", 5))
 	game_para.sod_rollout_rows = int(level.get("sodRolloutRows", 0))
 	game_para.custom_initial_wave_delay = float(level.get("initialWaveDelay", 10.0))
+	game_para.opening_first_zombie_advance_cells = clampf(
+		float(level.get("openingFirstZombieAdvanceCells", 0.0)),
+		0.0,
+		float((level.get("mapConfig", {}) as Dictionary).get("columns", 9))
+	)
 	game_para.custom_original_timing = bool(level.get("strictOriginalTiming", false))
 	game_para.custom_minimum_wave_time = float(level.get("minimumWaveTime", 6.0))
 	game_para.custom_early_refresh_delay = float(level.get("earlyRefreshDelay", 0.0))
 	game_para.custom_wave_interval_range = _vector2_from_array(level.get("waveIntervalRange", [25.0, 31.0]), Vector2(25.0, 31.0))
 	game_para.custom_health_threshold_range = _vector2_from_array(level.get("healthThresholdRange", [0.5, 0.67]), Vector2(0.5, 0.67))
 	game_para.custom_huge_wave_warning_delay = float(level.get("hugeWaveWarningDelay", 6.0))
+	game_para.force_second_zombie_same_lane_as_first = false
 	if is_simple_mode:
-		## PvZ1 原版在开局前一次性调用 PickZombieWaves，而非运行时自创时间轴。
+		## 简易关卡沿用自然波次管理器，在每波开始时按实时权重抽取僵尸。
 		game_para.custom_simple_original_mode = true
-		game_para.custom_initial_wave_delay = 18.0
 		var allowed_types := _simple_allowed_zombie_types(level.get("waves", []), str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
-		game_para.max_wave = clampi(int(level.get("simpleWaveCount", 20)), 1, 100)
-		game_para.custom_simple_wave_zombies = _pick_original_zombie_waves(allowed_types, game_para.max_wave, int(level.get("randomSeed", 1)))
+		var simple_flag_count := clampi(int(level.get("simpleFlagCount", 2)), 1, 10)
+		game_para.max_wave = simple_flag_count * 10
 		game_para.custom_spawn_schedule.clear()
 		game_para.custom_stage_schedule.clear()
 		game_para.custom_flag_data.clear()
@@ -151,11 +148,12 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 
 
 static func _simple_allowed_zombie_types(stages: Array, map_type: String) -> Array[CharacterRegistry.ZombieType]:
-	var types: Array[CharacterRegistry.ZombieType] = [CharacterRegistry.ZombieType.Z500Norm]
+	## 普通冒险线以黑爪普通僵尸作为不可移除的基础敌人。
+	var types: Array[CharacterRegistry.ZombieType] = [CharacterRegistry.ZombieType.Z000NormTalon]
 	for stage in stages:
 		for entry in (stage as Dictionary).get("spawnGroups", []):
 			var zombie_type := _zombie_type_id((entry as Dictionary).get("zombieType", "500")) as CharacterRegistry.ZombieType
-			if int(zombie_type) != int(CharacterRegistry.ZombieType.Z500Norm) and _original_zombie_weight(int(zombie_type)) <= 0:
+			if int(zombie_type) != int(CharacterRegistry.ZombieType.Z000NormTalon) and _original_zombie_weight(int(zombie_type)) <= 0:
 				continue
 			if AdventurePresets.POOL_ONLY_ZOMBIES.has(int(zombie_type)) and not ["pool", "fog"].has(map_type):
 				continue
@@ -163,88 +161,8 @@ static func _simple_allowed_zombie_types(stages: Array, map_type: String) -> Arr
 				types.append(zombie_type)
 	return types
 
-
-## Board::PickZombieWaves 的普通冒险一周目等价实现。
-static func _pick_original_zombie_waves(allowed_types: Array[CharacterRegistry.ZombieType], wave_count: int, seed: int) -> Array[Array]:
-	var result: Array[Array] = []
-	var rng := RandomNumberGenerator.new()
-	rng.seed = seed
-	for wave_index in wave_count:
-		var wave: Array = []
-		@warning_ignore("integer_division")
-		var points := int(wave_index / 3) + 1
-		var is_flag := _is_original_flag_wave(wave_index, wave_count)
-		if is_flag:
-			var plain_count := mini(points, 8)
-			points = int(float(points) * 2.5)
-			for _index in plain_count:
-				_original_put_zombie(wave, int(CharacterRegistry.ZombieType.Z500Norm))
-				points -= 1
-			_original_put_zombie(wave, int(CharacterRegistry.ZombieType.Z501Flag))
-			points -= 1
-		## 原版 PutInMissingZombies 只补最终波名单中尚未出现的允许类型。
-		if wave_index == wave_count - 1:
-			for zombie_type in allowed_types:
-				if int(zombie_type) == int(CharacterRegistry.ZombieType.Z501Flag):
-					continue
-				if ORIGINAL_MISSING_EXCLUDED_ZOMBIES.has(int(zombie_type)):
-					continue
-				if not wave.has(int(zombie_type)):
-					_original_put_zombie(wave, int(zombie_type))
-					points -= _original_zombie_value(int(zombie_type))
-		var safety := 0
-		while points > 0 and wave.size() < 50 and safety < 1000:
-			safety += 1
-			var eligible: Array[Dictionary] = []
-			var total_weight := 0
-			for zombie_type in allowed_types:
-				var type_id := int(zombie_type)
-				var value := _original_zombie_value(type_id)
-				if wave_index + 1 < _original_first_allowed_wave(type_id) or points < value:
-					continue
-				var weight := _original_zombie_weight(type_id)
-				if weight <= 0:
-					continue
-				eligible.append({"type": type_id, "value": value, "weight": weight})
-				total_weight += weight
-			if eligible.is_empty():
-				break
-			var roll := rng.randi_range(1, total_weight)
-			var chosen: Dictionary = eligible[0]
-			for candidate in eligible:
-				roll -= int(candidate["weight"])
-				if roll <= 0:
-					chosen = candidate
-					break
-			wave.append(int(chosen["type"]))
-			points -= int(chosen["value"])
-		result.append(wave)
-	return result
-
-
-static func _original_put_zombie(wave: Array, zombie_type: int) -> void:
-	if wave.size() < 50:
-		wave.append(zombie_type)
-
-
-static func _is_original_flag_wave(wave_index: int, wave_count: int) -> bool:
-	var waves_per_flag := wave_count if wave_count < 10 else 10
-	return wave_index % waves_per_flag == waves_per_flag - 1
-
-
-static func _original_zombie_value(zombie_type: int) -> int:
-	return maxi(1, int(ZombieWaveCreateManager.zombie_power.get(zombie_type, AdventurePresets.ZOMBIE_VALUES.get(zombie_type, 1))))
-
-
 static func _original_zombie_weight(zombie_type: int) -> int:
-	## 冒险模式使用 ZombieDefinition.mPickWeight；普通/路障权重衰减仅属于生存模式。
 	return maxi(0, int(ZombieWaveCreateManager.zombie_weights_ori.get(zombie_type, AdventurePresets.ZOMBIE_WEIGHTS.get(zombie_type, 0))))
-
-
-static func _original_first_allowed_wave(zombie_type: int) -> int:
-	if ORIGINAL_FIRST_ALLOWED_WAVE.has(zombie_type):
-		return int(ORIGINAL_FIRST_ALLOWED_WAVE[zombie_type])
-	return maxi(1, int(AdventurePresets.FIRST_ALLOWED_WAVE.get(zombie_type, 1)))
 
 
 static func _apply_chessboard_config(game_para: ResourceLevelData, level: Dictionary) -> void:
@@ -290,6 +208,15 @@ static func _active_lawn_rows(level: Dictionary) -> Array[int]:
 		for row in logical_rows:
 			result.append(row)
 	return result
+
+
+static func _apply_formal_map_constraints(level: Dictionary) -> void:
+	if str(level.get("formalPresetId", "")) != "adventure_1_1":
+		return
+	## 1-1 的阳光、刷新速度和波次仍可调整；固定规则只有开场僵尸演出，
+	## 以及所有僵尸只能在中间三行刷新。
+	level["openingFirstZombieAdvanceCells"] = 7.5
+	level["activeLawnRows"] = [1, 2, 3]
 
 
 static func _vector2_from_array(value, fallback: Vector2) -> Vector2:

@@ -231,21 +231,9 @@ func _build_adventure_preset_buttons() -> void:
 			else:
 				button.curr_level_data_game_para = null
 				push_error("成品冒险关卡无法生成：%s，%s" % [button.preset_level_id, str(built["error"])])
-			_set_adventure_level_label(
-				button.get_node("TextureButton/Label") as Label,
-				str(level_source.get("name", preset["name"]))
-			)
+			button.configure_level_label(str(level_source.get("name", preset["name"])))
 			_configure_adventure_cover(button, preset, level_source, previous_level_source)
 			previous_level_source = level_source
-
-
-func _set_adventure_level_label(label: Label, level_name: String) -> void:
-	label.text = level_name
-	label.tooltip_text = level_name
-	label.offset_top = -38.5
-	label.offset_bottom = -15.5
-	label.add_theme_font_size_override("font_size", 11 if level_name.length() >= 12 else 13)
-	label.remove_theme_constant_override("line_spacing")
 
 
 func _choose_buttons_on_page(page: GridContainer) -> Array[ChooseLevelButton]:

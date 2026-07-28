@@ -840,7 +840,7 @@ func get_plant_info(plant_type:PlantType, info_attribute:PlantInfoAttribute):
 ## Godot 编辑器热重载时可能用旧 class_name 方法表解析这里。这里只读取相同存档中的
 ## 两个注册字段；角色节点字段仍由 NumericalAdjustmentStore 统一应用。
 func _get_developer_plant_registry_value(scene_path:String, property_name:String, fallback):
-	if not Global.developer_level_adjustments_active or not FileAccess.file_exists(NUMERICAL_ADJUSTMENTS_PATH):
+	if not FileAccess.file_exists(NUMERICAL_ADJUSTMENTS_PATH):
 		return fallback
 	var file := FileAccess.open(NUMERICAL_ADJUSTMENTS_PATH, FileAccess.READ)
 	if file == null:

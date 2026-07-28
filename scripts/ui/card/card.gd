@@ -59,7 +59,7 @@ func _ready() -> void:
 			GlobalUtils.node_use_parent_material(child)
 
 func _apply_developer_plant_card_values() -> void:
-	if not Global.developer_level_adjustments_active or card_plant_type == CharacterRegistry.PlantType.Null:
+	if card_plant_type == CharacterRegistry.PlantType.Null:
 		return
 	cool_time = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime)
 	sun_cost = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)

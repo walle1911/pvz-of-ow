@@ -68,6 +68,8 @@ func set_choose_level(curr_game_mode: MainSceneRegistry.MainScenes, curr_level_p
 @export_subgroup("正常出怪模式")
 ## 出怪倍率
 @export var zombie_multy := 1
+## 原版自然波次刷新速度倍率；1 为原速，数值越大换波越快。
+@export_range(0.1, 5.0, 0.05) var zombie_refresh_speed_multiplier := 1.0
 ## 每轮游戏出怪波次，每10波生成1旗帜
 @export var max_wave := 30
 ## 僵尸种类刷新列表 多轮游戏且自然出怪 自动更新自然出怪列表
@@ -84,9 +86,8 @@ var custom_spawn_schedule: Array[Dictionary] = []
 var custom_stage_schedule: Array[Dictionary] = []
 ## 旗帜波在时间轴上的位置，用于大波提示和右下角进度条。
 var custom_flag_data: Array[Dictionary] = []
-## PvZ1 原版会在开局前用 ZombiePicker 生成完整逐波列表。
+## 简易关卡使用自然波次实时权重抽取，同时保留其专属旗帜数量和出生偏移规则。
 var custom_simple_original_mode := false
-var custom_simple_wave_zombies: Array[Array] = []
 var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []
@@ -97,12 +98,16 @@ var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
 var sod_rollout_rows := 0
 var custom_initial_wave_delay := 10.0
+## 第一只自然波次僵尸从正常出生点向房屋方向提前的草坪格数；0 表示不调整。
+var opening_first_zombie_advance_cells := 0.0
 var custom_original_timing := false
 var custom_minimum_wave_time := 6.0
 var custom_early_refresh_delay := 0.0
 var custom_wave_interval_range := Vector2(25.0, 31.0)
 var custom_health_threshold_range := Vector2(0.5, 0.67)
 var custom_huge_wave_warning_delay := 6.0
+## 本关第 2 只自然波次僵尸强制复用第 1 只僵尸的出场行。
+var force_second_zombie_same_lane_as_first := false
 ## 是否有蹦极僵尸
 @export var is_bungi := false
 ## 大波时生成的蹦极僵尸数量范围

@@ -21,6 +21,13 @@ func _run() -> void:
 	assert(editor.theme.default_font.resource_path == "res://assets/fonts/方正少儿_GBK.ttf")
 	assert(editor.catalog.size() > 80)
 	assert(editor.card_grid.get_child_count() == 24)
+	Global.numerical_editor_context = {"origin": "level_workshop", "kind": "plant", "id": int(editor.catalog[0]["id"])}
+	editor.call("_open_requested_character")
+	assert(editor.return_to_workshop)
+	assert(editor.selected_item["id"] == editor.catalog[0]["id"])
+	assert((editor.detail_page.get_child(editor.detail_page.get_child_count() - 3).get_child(0) as Label).text == "返回选卡")
+	Global.numerical_editor_context = {}
+	editor.return_to_workshop = false
 	editor.call("_open_detail", editor.catalog[0])
 	await process_frame
 	assert((editor.detail_page.get_child(0) as TextureRect).texture.resource_path == "res://assets/image/Almanac/Almanac_PlantBack.jpg")
@@ -45,6 +52,7 @@ func _run() -> void:
 		character.free()
 	assert(total_tunable_fields > 100)
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "heal_amount_per_second")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "smart_escape_route_enabled")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_attack_values")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_speeds")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_002_sunflower_mercy.tscn", ".", "damage_boost_multiplier")
@@ -72,13 +80,14 @@ func _run() -> void:
 	var heal_rule := Policy.get_rule(policy_soldier, "heal_amount_per_second", soldier_path, ".")
 	assert(heal_rule["max"] == 900.0)
 	assert(not Policy.validate_value(policy_soldier, "heal_amount_per_second", 901, soldier_path, ".")["ok"])
+	assert(Policy.get_rule(policy_soldier, "smart_escape_route_enabled", soldier_path, ".")["kind"] == "bool")
 	policy_soldier.free()
 	Policy._scene_rules_loaded = policy_script_rules_loaded
 	Policy._scene_rules = policy_scene_rules
 	var data := {
 		"characters": {
 			soldier_path: {
-				".": {"heal_amount_per_second": 777, "is_attack": true},
+				".": {"heal_amount_per_second": 777, "smart_escape_route_enabled": false, "is_attack": true},
 				"HpComponent": {"max_hp": 888},
 				"AttackComponent": {"attack_cd": 0.77, "attack_para": "hacked"},
 			}
@@ -96,6 +105,7 @@ func _run() -> void:
 	var soldier := (load(soldier_path) as PackedScene).instantiate()
 	Store.apply_to_character(soldier, true)
 	assert(soldier.heal_amount_per_second == 777)
+	assert(not soldier.smart_escape_route_enabled)
 	assert(soldier.get_node("HpComponent").max_hp == 888)
 	assert(is_equal_approx(soldier.get_node("AttackComponent").attack_cd, 0.77))
 	soldier.free()

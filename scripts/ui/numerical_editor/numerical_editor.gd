@@ -62,6 +62,7 @@ var field_box: VBoxContainer
 var status_label: Label
 var plant_tab: TextureButton
 var zombie_tab: TextureButton
+var return_to_workshop := false
 
 
 func _ready() -> void:
@@ -74,6 +75,22 @@ func _ready() -> void:
 	_build_catalog()
 	_build_pages()
 	_refresh_card_page()
+	_open_requested_character()
+
+
+func _open_requested_character() -> void:
+	var context: Dictionary = Global.numerical_editor_context
+	if str(context.get("origin", "")) != "level_workshop":
+		return
+	return_to_workshop = true
+	var requested_kind := str(context.get("kind", ""))
+	var requested_id := int(context.get("id", -1))
+	for item in catalog:
+		if str(item.get("kind", "")) == requested_kind and int(item.get("id", -1)) == requested_id:
+			_open_detail(item)
+			return
+	return_to_workshop = false
+	Global.numerical_editor_context = {}
 
 
 func _build_pages() -> void:
@@ -255,12 +272,12 @@ func _build_detail_page() -> void:
 	status_label.add_theme_font_override("font", ALMANAC_FONT)
 	status_label.add_theme_font_size_override("font_size", 14)
 	status_label.add_theme_color_override("font_color", Color("6d310d"))
-	status_label.text = "修改仅在开发者模式关卡中生效"
+	status_label.text = "保存后将对所有后续对局全局生效"
 	detail_page.add_child(status_label)
 
-	detail_page.add_child(_index_texture_button("返回卡片", Vector2(16, 568), _back_to_card_list))
+	detail_page.add_child(_index_texture_button("返回选卡" if return_to_workshop else "返回卡片", Vector2(16, 568), _back_from_detail))
 	detail_page.add_child(_small_texture_button("恢复默认", Vector2(470, 568), _reset_current_character))
-	detail_page.add_child(_close_texture_button("保存", Vector2(955, 568), _save_changes))
+	detail_page.add_child(_close_texture_button("保存并返回" if return_to_workshop else "保存", Vector2(930 if return_to_workshop else 955, 568), _save_changes))
 
 
 func _populate_almanac_panel(panel: AlmanacCharacterShowPanel, item: Dictionary) -> void:
@@ -619,7 +636,10 @@ func _array_to_text(values: Array) -> String:
 
 func _save_changes() -> void:
 	if Store.save_data(pending_data):
-		status_label.text = "已保存，仅在开发者模式关卡中生效"
+		if return_to_workshop:
+			_return_to_level_workshop()
+		else:
+			status_label.text = "已保存，将对所有后续对局全局生效"
 	else:
 		status_label.text = "保存失败，请检查游戏存档目录"
 
@@ -642,7 +662,21 @@ func _back_to_card_list() -> void:
 	selected_item = {}
 
 
+func _back_from_detail() -> void:
+	if return_to_workshop:
+		_return_to_level_workshop()
+	else:
+		_back_to_card_list()
+
+
+func _return_to_level_workshop() -> void:
+	Global.numerical_editor_context = {}
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+
+
 func _back_to_developer_mode() -> void:
+	Global.numerical_editor_context = {}
+	Global.level_workshop_return_state = {}
 	Global.developer_level_adjustments_active = false
 	Global.return_to_developer_mode = true
 	get_tree().change_scene_to_file("res://scenes/main/01StartMenu.tscn")

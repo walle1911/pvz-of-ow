@@ -129,8 +129,8 @@ enum E_CharacterInitType{
 #endregion
 
 func _enter_tree() -> void:
-	## 在任何组件的 _ready() 之前应用开发者数值，保证血量、计时器和攻击初始化读取到新值。
-	NumericalStore.apply_to_character(self, Global.developer_level_adjustments_active)
+	## 数值工坊保存的是全局调整；在任何组件 _ready() 前应用，保证所有后续对局一致生效。
+	NumericalStore.apply_to_character(self, true)
 
 
 func _ready() -> void:

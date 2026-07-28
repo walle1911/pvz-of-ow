@@ -96,7 +96,7 @@ const SCRIPT_RULES := {
 	"res://scripts/character/plant/ow/plant_001_pea_shooter_soldier76.gd": {
 		"heal_delay_after_attack": "non_negative_seconds", "heal_duration": "seconds",
 		"heal_amount_per_second": "non_negative_int", "escape_move_time": "seconds",
-		"escape_hp_threshold": "non_negative_int",
+		"escape_hp_threshold": "non_negative_int", "smart_escape_route_enabled": "bool",
 	},
 	"res://scripts/character/plant/ow/plant_020_tanglekelp_mizuki.gd": {
 		"hat_cooldown": "seconds", "hat_flight_scale_percent": "percentage",

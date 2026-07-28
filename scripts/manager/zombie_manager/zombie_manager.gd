@@ -122,8 +122,14 @@ func start_game():
 			return
 
 		ConstLevelData.E_MonsterMode.Norm:
-			## 原版首次冒险首波为 18 秒；1-2 教学关为 50 秒。普通资源关卡仍用默认 10 秒。
-			await get_tree().create_timer(game_para.custom_initial_wave_delay).timeout
+			## 简易主线与普通资源关卡的首波默认等待 10 秒；关卡仍可通过刷新速度倍率统一缩放。
+			var initial_wave_delay := game_para.custom_initial_wave_delay
+			if game_para.custom_spawn_schedule.is_empty():
+				initial_wave_delay = ZombieWaveRefreshManager.scaled_refresh_duration(
+					initial_wave_delay,
+					game_para.zombie_refresh_speed_multiplier
+				)
+			await get_tree().create_timer(initial_wave_delay).timeout
 			if game_para.custom_spawn_schedule.is_empty():
 				zombie_wave_manager.start_first_wave()
 			else:

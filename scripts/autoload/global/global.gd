@@ -46,10 +46,13 @@ var game_para:ResourceLevelData
 
 ## 从开发者工具返回主菜单时，主菜单应继续停留在开发者模式。
 var return_to_developer_mode := false
-## 只有从开发者模式进入的自定义关卡或地图工坊试玩才允许应用数值调整。
+## 标记当前关卡是否来自开发者入口；用于开发者选关和“返回工坊”等界面，不再限制全局数值调整。
 var developer_level_adjustments_active := false
 ## 从开发者选关进入实战时保留关卡源数据，供右上角“编辑”直接交给关卡工坊。
 var developer_workshop_level_source: Dictionary = {}
+## 关卡工坊从卡片右键进入数值编辑器时，保存目标角色和返回后的选卡界面状态。
+var numerical_editor_context: Dictionary = {}
+var level_workshop_return_state: Dictionary = {}
 ## 地图工坊当前只开放普通关卡编辑；保留字段供现有编辑器内部判断。
 var level_workshop_edit_mode := "normal"
 ## 冒险预设选择状态；主菜单的“开始冒险吧”固定进入 normal。

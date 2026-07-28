@@ -206,7 +206,8 @@ func ready_norm():
 		printerr(name, "没有获取头节点")
 	curr_be_attack_status = init_be_attack_status
 	## 若生成位置在斜面中,生成时修正斜面位置
-	if is_instance_valid(Global.main_game.main_game_slope):
+	## 单独运行僵尸场景时不存在主游戏节点，先校验 main_game 再读取斜面。
+	if is_instance_valid(Global.main_game) and is_instance_valid(Global.main_game.main_game_slope):
 		## 获取对应位置的斜面y相对位置
 		var slope_y_first = Global.main_game.main_game_slope.get_all_slope_y(global_position.x)
 		move_y_zombie(slope_y_first)

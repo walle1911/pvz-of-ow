@@ -68,6 +68,7 @@ const PROPERTY_LABELS := {
 	"digger_target_pos_x": "矿工目标横坐标", "drop_coin_rate": "硬币掉落概率", "drop_coin_silver_glod_diamond_rate": "银币、金币、钻石掉落权重",
 	"drop_garden_plant_rate": "花园植物掉落概率", "eat_CD": "啃食间隔", "eat_attack": "啃食伤害",
 	"eat_brain_glo_pos_x_in_zombie_mode": "僵尸模式吃脑横坐标", "escape_hp_threshold": "触发逃生血量", "escape_move_time": "逃生位移耗时",
+	"smart_escape_route_enabled": "启用智能逃跑选位",
 	"exist_time": "持续时间", "flashbang_every_shots": "闪光弹触发射击数", "flashbang_front_range": "闪光弹前方范围",
 	"flashbang_stun_time": "闪光弹眩晕时间", "frame_scale": "帧缩放倍率", "frame_time": "帧持续时间", "global_pos_x_can_attack": "可攻击横坐标",
 	"glow_flow_speed": "发光流动速度", "glow_overlay_flow_speed": "发光叠层流动速度", "glow_overlay_pulse_amount": "发光叠层脉冲幅度",

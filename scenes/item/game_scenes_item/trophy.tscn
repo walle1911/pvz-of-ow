@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dpaa326ftym5a"]
+[gd_scene load_steps=14 format=3 uid="uid://dpaa326ftym5a"]
 
 [ext_resource type="Script" uid="uid://csqombr7s87dx" path="res://scripts/ui/main_game_ui/trophy.gd" id="1_46dpp"]
 [ext_resource type="Texture2D" uid="uid://dsx7x222200ae" path="res://assets/image/ui/ui_trophy/AwardGlow.png" id="2_qvwtp"]
@@ -10,6 +10,9 @@
 [ext_resource type="Texture2D" uid="uid://ck3qd7qu37g43" path="res://assets/image/ui/ui_trophy/AwardPickupGlow.png" id="8_mcse2"]
 [ext_resource type="Texture2D" uid="uid://c8kyjcgv2a6vr" path="res://assets/image/ui/ui_trophy/AwardRays_star.png" id="9_o13aw"]
 [ext_resource type="AudioStream" uid="uid://bouhg13qcaawh" path="res://assets/audio/SFX/progress/winmusic.ogg" id="10_qvwtp"]
+[ext_resource type="Texture2D" uid="uid://cebgrjamlxbme" path="res://assets/image/main_game_item/AwardScreen_Back.jpg" id="11_reward_bg"]
+[ext_resource type="Texture2D" uid="uid://bals73i7y4ksp" path="res://assets/image/particles/SeedPacketGlow.png" id="12_seed_glow"]
+[ext_resource type="Texture2D" uid="uid://c4en5812dngkx" path="res://assets/image/particles/SeedPacketFlash.png" id="13_seed_flash"]
 
 [node name="Trophy" type="Node2D"]
 z_index = 2000
@@ -65,6 +68,60 @@ visible = false
 modulate = Color(1, 1, 1, 0)
 scale = Vector2(100, 100)
 texture = ExtResource("2_qvwtp")
+
+[node name="RewardScreen" type="Node2D" parent="."]
+visible = false
+
+[node name="Background" type="Sprite2D" parent="RewardScreen"]
+z_index = -2
+texture = ExtResource("11_reward_bg")
+
+[node name="RewardGlow" type="Sprite2D" parent="RewardScreen"]
+z_index = -1
+position = Vector2(0, -105)
+scale = Vector2(1.25, 1.25)
+texture = ExtResource("12_seed_glow")
+
+[node name="RewardFlash" type="Sprite2D" parent="RewardScreen"]
+z_index = 2
+position = Vector2(0, -105)
+scale = Vector2(2, 2)
+texture = ExtResource("13_seed_flash")
+
+[node name="RewardCardHolder" type="Control" parent="RewardScreen"]
+z_index = 1
+layout_mode = 0
+offset_left = -50.0
+offset_top = -175.0
+offset_right = 50.0
+offset_bottom = -35.0
+scale = Vector2(2, 2)
+
+[node name="Title" type="Label" parent="RewardScreen"]
+z_index = 1
+offset_left = -310.0
+offset_top = -273.0
+offset_right = 310.0
+offset_bottom = -220.0
+theme_override_colors/font_color = Color(1, 0.92, 0.36, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.08, 0.01, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 34
+text = "获得新植物！"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hint" type="Label" parent="RewardScreen"]
+z_index = 1
+offset_left = -145.0
+offset_top = 72.0
+offset_right = 145.0
+offset_bottom = 148.0
+theme_override_colors/font_color = Color(0.25, 0.11, 0.035, 1)
+theme_override_font_sizes/font_size = 22
+text = "你获得了一张新植物卡！\n点击卡片继续"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Winmusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_qvwtp")

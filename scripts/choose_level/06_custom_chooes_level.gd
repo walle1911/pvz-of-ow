@@ -9,7 +9,7 @@ const AdventureStore := preload("res://scripts/resources/level/adventure_level_s
 @onready var grid_container: GridContainer = $AllPage/GridContainer
 
 ## 每一页的关卡数量
-var num_level_button_every_page:=20
+var num_level_button_every_page := 10
 var classic_entries: Array[Dictionary] = []
 var custom_entries: Array[Dictionary] = []
 var detached_grid_template: GridContainer

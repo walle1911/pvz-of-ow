@@ -8,6 +8,7 @@ const AdventurePresets := preload("res://scripts/resources/level/adventure_level
 const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
 const ALMANAC_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
+const PLANT_ALMANAC_BACKGROUND := preload("res://assets/image/ui/ui_card/all_card/SeedChooser_AlmanacBackground.png")
 const ALMANAC_CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
 const ALMANAC_CLOSE_BUTTON_HOVER := preload("res://assets/image/Almanac/Almanac_CloseButtonHighlight.png")
 const DIALOG_BACKGROUND := preload("res://assets/image/ui/ui_main_game_menu/option_dialog.png")
@@ -51,6 +52,10 @@ const FLAG_CENTER_LEFT := 8.0
 const FLAG_CENTER_RIGHT := 150.0
 const SIMPLE_MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const SIMPLE_MAP_NAMES := ["白天草坪", "夜晚草坪", "泳池", "雾夜", "屋顶"]
+const SIMPLE_REQUIRED_ZOMBIE := CharacterRegistry.ZombieType.Z000NormTalon
+const UNSELECTED_CARD_MODULATE := Color(0.55, 0.55, 0.55, 0.72)
+const ACTIVE_SOURCE_BUTTON_MODULATE := Color(0.67, 0.62, 0.56, 1.0)
+const ACTIVE_SOURCE_BUTTON_OFFSET_Y := 4.0
 
 enum TimelineMode { NORMAL, PLACE_FLAG }
 enum CatalogMode { SPAWN_ZOMBIES, REWARD_CARDS }
@@ -69,6 +74,8 @@ var preview_root: Control
 var road_hint: Label
 var road_title: Label
 var stage_heading: Label
+var stage_heading_editor: LineEdit
+var stage_heading_edit_original := ""
 var wave_title: Label
 var wave_summary: Label
 var status_label: Label
@@ -102,6 +109,7 @@ var catalog_mode := CatalogMode.SPAWN_ZOMBIES
 var reward_card_order: Array[Dictionary] = []
 var plant_card_prefabs: Dictionary = {}
 var background_sprite: Sprite2D
+var drawer_paper: TextureRect
 var reward_mode_button: TextureButton
 var background_normal_x := -334.0
 var formal_preset_id := ""
@@ -109,8 +117,8 @@ var formal_preset_id := ""
 var loaded_source_kind := ""
 var loaded_draft_path := ""
 var locked_available_plant_types: Array[int] = []
-var selected_plant_tray: PanelContainer
-var selected_plant_row: HBoxContainer
+var new_level_button: TextureButton
+var edit_level_button: TextureButton
 var workshop_menu_dialog: MainGameMenuOptionDialog
 var workshop_menu_fallback_dialog: Dialog
 var workshop_menu_canvas_layer: CanvasLayer
@@ -118,6 +126,9 @@ var workshop_menu_host: Control
 var editor_complexity := EditorComplexity.SIMPLE
 var advanced_mode_button: BaseButton
 var simple_pool_toggle_button: TextureButton
+var card_context_menu: PopupMenu
+var context_card_kind := ""
+var context_card_type := -1
 
 
 func _layout_control(path: String) -> Control:
@@ -128,6 +139,8 @@ func _ready() -> void:
 	## 工坊入口固定为普通编辑器，先设置模式再生成两类卡片目录。
 	var active_mode := "normal"
 	Global.level_workshop_edit_mode = active_mode
+	var return_state: Dictionary = Global.level_workshop_return_state.duplicate(true)
+	Global.level_workshop_return_state = {}
 	_apply_font()
 	_refresh_zombie_catalog()
 	_build_scene()
@@ -148,20 +161,31 @@ func _ready() -> void:
 			status_label.text = "已恢复上次编辑。点击左侧僵尸卡片即可继续添加。"
 	level = Logic.normalize_level(level)
 	level["workshopMode"] = active_mode
-	## 每次进入工坊都先展示原版式简易编辑；现有精确数量仍保留，切到进阶模式即可继续编辑。
-	editor_complexity = EditorComplexity.SIMPLE
-	level["editorMode"] = "simple"
+	level["forcedPlants"] = []
+	level["freePlantSelection"] = true
+	## 普通入口默认简易模式；从数值编辑器返回时恢复离开前的编辑状态。
+	editor_complexity = int(return_state.get("editor_complexity", EditorComplexity.SIMPLE))
+	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
+	if FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		_apply_formal_map_constraints()
+		_apply_formal_plant_progression()
+		reward_mode_button.visible = true
 	_refresh_locked_available_plants()
 	_ensure_locked_plants_selected()
 	_force_random_lane_rules()
 	_sanitize_simple_allowed_pool()
 	_refresh_zombie_catalog()
+	selected_wave = clampi(int(return_state.get("selected_wave", selected_wave)), 0, maxi(0, (level.get("waves", []) as Array).size() - 1))
+	catalog_mode = int(return_state.get("catalog_mode", CatalogMode.SPAWN_ZOMBIES))
+	current_card_page = maxi(0, int(return_state.get("card_page", 0)))
+	_update_editor_complexity_button()
+	_restore_catalog_view()
 	_refresh_card_page()
 	_recalculate_stage_times()
 	_snapshot(false)
 	_refresh_draft_picker()
 	_refresh_wave()
-	_refresh_selected_plant_tray()
+	_update_level_source_buttons()
 
 
 func _process(_delta: float) -> void:
@@ -187,15 +211,19 @@ func _build_scene() -> void:
 
 	_build_drawer()
 	_build_road_overlay()
-	_build_selected_plant_tray()
 	_animate_drawer_in()
 
 
 func _build_drawer() -> void:
 	drawer = get_node("AlmanacDrawer") as Control
 	drawer.position.x = -drawer.size.x
+	drawer_paper = drawer.get_node("Paper") as TextureRect
 	sidebar_content = drawer.get_node("Content") as Control
 	stage_heading = sidebar_content.get_node("StageHeading") as Label
+	stage_heading.mouse_filter = Control.MOUSE_FILTER_STOP
+	stage_heading.mouse_default_cursor_shape = Control.CURSOR_IBEAM
+	stage_heading.tooltip_text = "点击编辑关卡名称"
+	stage_heading.gui_input.connect(_on_stage_heading_gui_input)
 	wave_title = sidebar_content.get_node("WaveTitle") as Label
 	wave_summary = sidebar_content.get_node("WaveSummary") as Label
 	status_label = sidebar_content.get_node("StatusLabel") as Label
@@ -204,6 +232,7 @@ func _build_drawer() -> void:
 	reward_mode_button = sidebar_content.get_node("RewardModeButton") as TextureButton
 	reward_mode_button.visible = true
 	reward_mode_button.pressed.connect(_toggle_reward_catalog)
+	_build_stage_heading_editor()
 	_update_catalog_button_label()
 	card_scroll = sidebar_content.get_node("CardScroll") as ScrollContainer
 	card_grid = card_scroll.get_node("CardGridHolder/CardGrid") as GridContainer
@@ -211,9 +240,85 @@ func _build_drawer() -> void:
 	(sidebar_content.get_node("Pagination/PreviousButton") as TextureButton).pressed.connect(_change_card_page.bind(-1))
 	(sidebar_content.get_node("Pagination/NextButton") as TextureButton).pressed.connect(_change_card_page.bind(1))
 	_refresh_card_page()
-
 	_build_timeline()
 	_build_drawer_actions()
+
+
+func _build_stage_heading_editor() -> void:
+	stage_heading_editor = LineEdit.new()
+	stage_heading_editor.position = stage_heading.position
+	stage_heading_editor.size = Vector2(
+		maxf(160.0, reward_mode_button.position.x - stage_heading.position.x - 8.0),
+		stage_heading.size.y
+	)
+	stage_heading_editor.visible = false
+	stage_heading_editor.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stage_heading_editor.add_theme_font_override("font", WORKSHOP_FONT)
+	stage_heading_editor.add_theme_font_size_override("font_size", 27)
+	stage_heading_editor.add_theme_color_override("font_color", Color("e7e4d1"))
+	stage_heading_editor.add_theme_color_override("caret_color", Color("e7e4d1"))
+	stage_heading_editor.add_theme_color_override("selection_color", Color(0.35, 0.38, 0.55, 0.9))
+	stage_heading_editor.add_theme_stylebox_override("normal", _style(Color(0.09, 0.1, 0.17, 0.92), Color(0.52, 0.54, 0.68, 1.0), 6, 1))
+	stage_heading_editor.add_theme_stylebox_override("focus", _style(Color(0.09, 0.1, 0.17, 0.96), Color("e7e4d1"), 6, 2))
+	stage_heading_editor.text_submitted.connect(func(_text: String): _finish_stage_heading_edit(true))
+	stage_heading_editor.focus_exited.connect(_finish_stage_heading_edit.bind(true))
+	stage_heading_editor.gui_input.connect(_on_stage_heading_editor_gui_input)
+	sidebar_content.add_child(stage_heading_editor)
+	## 输入框应位于标题上方、卡片切换按钮下方，避免编辑时遮住按钮。
+	sidebar_content.move_child(stage_heading_editor, reward_mode_button.get_index())
+
+
+func _on_stage_heading_gui_input(event: InputEvent) -> void:
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event == null or mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
+		return
+	_begin_stage_heading_edit()
+	stage_heading.accept_event()
+
+
+func _begin_stage_heading_edit() -> void:
+	if not is_instance_valid(stage_heading_editor) or stage_heading_editor.visible:
+		return
+	stage_heading_edit_original = str(level.get("name", "")).strip_edges()
+	stage_heading_editor.text = stage_heading_edit_original
+	stage_heading.visible = false
+	stage_heading_editor.visible = true
+	stage_heading_editor.grab_focus()
+	stage_heading_editor.select_all()
+
+
+func _on_stage_heading_editor_gui_input(event: InputEvent) -> void:
+	var key_event := event as InputEventKey
+	if key_event == null or not key_event.pressed or key_event.echo:
+		return
+	if key_event.keycode == KEY_ESCAPE:
+		_finish_stage_heading_edit(false)
+		stage_heading_editor.accept_event()
+
+
+func _finish_stage_heading_edit(save_change: bool) -> void:
+	if not is_instance_valid(stage_heading_editor) or not stage_heading_editor.visible:
+		return
+	if not save_change:
+		stage_heading_editor.visible = false
+		stage_heading.visible = true
+		stage_heading_editor.release_focus()
+		_refresh_stage_heading()
+		return
+	var level_name := stage_heading_editor.text.strip_edges()
+	if level_name.is_empty():
+		status_label.text = "修改失败：关卡名称不能为空"
+		stage_heading_editor.call_deferred("grab_focus")
+		return
+	stage_heading_editor.visible = false
+	stage_heading.visible = true
+	stage_heading_editor.release_focus()
+	if level_name == stage_heading_edit_original:
+		_refresh_stage_heading()
+		return
+	level["name"] = level_name
+	_changed("关卡名称已更新")
+
 
 func _build_drawer_actions() -> void:
 	var actions := sidebar_content.get_node("BottomActions")
@@ -225,14 +330,44 @@ func _build_drawer_actions() -> void:
 		action_button.position.x = action_index * (action_width + action_gap)
 		action_button.size.x = action_width
 	(actions.get_node("SettingsButton") as TextureButton).pressed.connect(_open_level_settings)
-	(actions.get_node("NewButton") as TextureButton).pressed.connect(_create_new_level)
-	(actions.get_node("LoadButton") as TextureButton).pressed.connect(_open_preset_picker)
+	new_level_button = actions.get_node("NewButton") as TextureButton
+	edit_level_button = actions.get_node("LoadButton") as TextureButton
+	var source_button_group := ButtonGroup.new()
+	new_level_button.toggle_mode = true
+	new_level_button.button_group = source_button_group
+	edit_level_button.toggle_mode = true
+	edit_level_button.button_group = source_button_group
+	new_level_button.pressed.connect(_create_new_level)
+	edit_level_button.pressed.connect(_open_template_picker)
+	var formal_edit_label := edit_level_button.get_node_or_null("Label") as Label
+	if formal_edit_label != null:
+		formal_edit_label.text = "编辑正式关卡"
+		formal_edit_label.add_theme_font_size_override("font_size", 14)
 	(actions.get_node("SaveButton") as TextureButton).pressed.connect(_open_save_dialog)
 	(get_node("TopActions/PlaytestButton") as BaseButton).pressed.connect(_playtest)
 	advanced_mode_button = get_node("TopActions/AdvancedModeButton") as BaseButton
 	advanced_mode_button.pressed.connect(_toggle_editor_complexity)
 	(get_node("TopActions/MenuButton") as BaseButton).pressed.connect(_open_workshop_menu)
 	_update_editor_complexity_button()
+	_update_level_source_buttons()
+
+
+func _update_level_source_buttons() -> void:
+	if not is_instance_valid(new_level_button) or not is_instance_valid(edit_level_button):
+		return
+	var editing_existing := loaded_source_kind == "template" or loaded_source_kind == "custom"
+	new_level_button.set_pressed_no_signal(not editing_existing)
+	edit_level_button.set_pressed_no_signal(editing_existing)
+	_apply_source_button_visual(new_level_button, not editing_existing)
+	_apply_source_button_visual(edit_level_button, editing_existing)
+	new_level_button.tooltip_text = "当前正在新建关卡" if not editing_existing else "切换到新建关卡"
+	edit_level_button.tooltip_text = "当前正在编辑已有关卡" if editing_existing else "选择要编辑的正式关卡"
+
+
+func _apply_source_button_visual(button: TextureButton, selected: bool) -> void:
+	## 持续使用 pressed 贴图，并通过下沉和压暗表现实体按钮被按住。
+	button.position.y = ACTIVE_SOURCE_BUTTON_OFFSET_Y if selected else 0.0
+	button.self_modulate = ACTIVE_SOURCE_BUTTON_MODULATE if selected else Color.WHITE
 
 
 func _is_simple_mode() -> bool:
@@ -321,17 +456,19 @@ func _open_preset_picker() -> void:
 
 
 func _open_template_picker() -> void:
+	## 打开选择框不等于切换编辑来源；取消后仍应保持原来的模式按钮。
+	_update_level_source_buttons()
 	var presets := AdventurePresets.list_presets("normal")
 	var dialog := ConfirmationDialog.new()
-	dialog.title = "载入关卡模板"
+	dialog.title = "编辑正式冒险关卡"
 	dialog.ok_button_text = "载入编辑"
-	dialog.cancel_button_text = "返回上一级"
+	dialog.cancel_button_text = "取消"
 	dialog.min_size = Vector2i(480, 190)
 	var box := VBoxContainer.new()
 	dialog.add_child(box)
 	var picker := OptionButton.new()
 	for preset: Dictionary in presets:
-		picker.add_item(str(preset["name"]))
+		picker.add_item(_formal_preset_display_name(preset))
 	box.add_child(picker)
 	dialog.confirmed.connect(func():
 		if picker.selected < 0 or picker.selected >= presets.size():
@@ -339,10 +476,21 @@ func _open_template_picker() -> void:
 		_load_preset_for_edit(str(presets[picker.selected]["id"]))
 		dialog.queue_free()
 	)
-	dialog.canceled.connect(_return_to_load_category.bind(dialog))
+	dialog.canceled.connect(func(): dialog.queue_free())
 	add_child(dialog)
 	_force_font_recursive(dialog)
 	dialog.popup_centered()
+
+
+func _formal_preset_display_name(preset: Dictionary) -> String:
+	var preset_id := str(preset.get("id", ""))
+	## 当前关卡尚未保存时也立即同步名称；其余关卡读取已经落盘的开发者覆盖。
+	if loaded_source_kind == "template" and preset_id == formal_preset_id:
+		var current_name := str(level.get("name", "")).strip_edges()
+		if not current_name.is_empty():
+			return current_name
+	var developer_level := AdventurePresets.build_level(preset_id, true)
+	return str(developer_level.get("name", preset.get("name", preset_id)))
 
 
 func _open_custom_level_picker() -> void:
@@ -384,14 +532,21 @@ func _load_preset_for_edit(preset_id: String) -> void:
 		status_label.text = "关卡不存在：%s" % preset_id
 		return
 	level = Logic.normalize_level(preset)
+	## 正式关卡切换后要继承当前编辑器模式。预设/旧覆盖文件可能没有 editorMode，
+	## 若保留 normalize_level 的默认 advanced，界面虽然显示简易模式，试玩却会走进阶时间轴。
+	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
 	formal_preset_id = preset_id
 	loaded_source_kind = "template"
 	loaded_draft_path = ""
 	level["formalPresetId"] = preset_id
 	level["id"] = "%s_edit" % preset_id
+	_apply_formal_map_constraints()
+	_apply_formal_plant_progression()
 	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
+	## 正式关卡始终通过植物卡界面选择本关奖励。
 	reward_mode_button.visible = true
 	catalog_mode = CatalogMode.SPAWN_ZOMBIES
+	_update_catalog_background(false)
 	background_sprite.position.x = background_normal_x
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
@@ -409,8 +564,59 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	DraftStore.save_autosave(level)
 	_update_timeline_catalog_visibility()
 	_refresh_wave()
-	_refresh_selected_plant_tray()
-	status_label.text = "已载入“%s”，可直接修改波次、数量和出怪间隔。" % str(level["name"])
+	_update_level_source_buttons()
+	status_label.text = "已载入“%s”；已有植物已锁定，在“可选卡片”中点击一张新卡作为本关通关奖励。" % str(level["name"])
+
+
+func _formal_preset_index(preset_id: String = formal_preset_id) -> int:
+	var presets := AdventurePresets.list_presets("normal")
+	for index in presets.size():
+		if str((presets[index] as Dictionary).get("id", "")) == preset_id:
+			return index
+	return -1
+
+
+func _is_first_formal_level() -> bool:
+	return _formal_preset_index() == 0
+
+
+func _apply_formal_map_constraints() -> void:
+	## 正式 1-1 只固定开场僵尸演出和中间三行，其余关卡参数仍可编辑。
+	if formal_preset_id != "adventure_1_1":
+		return
+	level["openingFirstZombieAdvanceCells"] = 7.5
+	level["activeLawnRows"] = [1, 2, 3]
+
+
+func _formal_progression_available_plants() -> Array[int]:
+	var presets := AdventurePresets.list_presets("normal")
+	var target_index := _formal_preset_index()
+	var result: Array[int] = []
+	if target_index < 0:
+		return result
+	if target_index == 0:
+		return _selected_available_plants()
+	var first_level := AdventurePresets.build_level(str((presets[0] as Dictionary)["id"]), true)
+	for value in first_level.get("availablePlants", []):
+		var plant_type := int(value)
+		if CharacterRegistry.PlantInfo.has(plant_type) and not result.has(plant_type):
+			result.append(plant_type)
+	for prior_index in target_index:
+		var prior_level := AdventurePresets.build_level(str((presets[prior_index] as Dictionary)["id"]), true)
+		var reward_plant := int(prior_level.get("rewardPlant", -1))
+		if reward_plant >= 0 and CharacterRegistry.PlantInfo.has(reward_plant) and not result.has(reward_plant):
+			result.append(reward_plant)
+	return result
+
+
+func _apply_formal_plant_progression() -> void:
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id) or _formal_preset_index() < 0 or _is_first_formal_level():
+		return
+	var inherited_plants := _formal_progression_available_plants()
+	level["availablePlants"] = inherited_plants
+	level["plantSelectionEnabled"] = true
+	level["forcedPlants"] = []
+	level["freePlantSelection"] = true
 
 
 func _load_custom_level_for_edit(path: String) -> void:
@@ -442,8 +648,11 @@ func _create_new_level() -> void:
 func _refresh_after_level_replaced() -> void:
 	Global.level_workshop_edit_mode = "normal"
 	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
+	level["forcedPlants"] = []
+	level["freePlantSelection"] = true
 	reward_mode_button.visible = true
 	catalog_mode = CatalogMode.SPAWN_ZOMBIES
+	_update_catalog_background(false)
 	background_sprite.position.x = background_normal_x
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
@@ -458,89 +667,23 @@ func _refresh_after_level_replaced() -> void:
 	_snapshot(false)
 	DraftStore.save_autosave(level)
 	_refresh_wave()
-	_refresh_selected_plant_tray()
-
-
-func _build_selected_plant_tray() -> void:
-	selected_plant_tray = PanelContainer.new()
-	selected_plant_tray.position = Vector2(530, 18)
-	selected_plant_tray.size = Vector2(310, 108)
-	selected_plant_tray.z_index = 80
-	selected_plant_tray.visible = false
-	var panel_style := StyleBoxFlat.new()
-	panel_style.bg_color = Color(0.12, 0.075, 0.025, 0.88)
-	panel_style.border_color = Color(0.63, 0.43, 0.16, 0.95)
-	panel_style.set_border_width_all(3)
-	panel_style.set_corner_radius_all(9)
-	selected_plant_tray.add_theme_stylebox_override("panel", panel_style)
-	add_child(selected_plant_tray)
-	var tray_content := VBoxContainer.new()
-	tray_content.add_theme_constant_override("separation", 2)
-	selected_plant_tray.add_child(tray_content)
-	var title := Label.new()
-	title.text = "本关可用植物"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", WORKSHOP_FONT)
-	title.add_theme_font_size_override("font_size", 16)
-	title.add_theme_color_override("font_color", Color("f3e7ba"))
-	tray_content.add_child(title)
-	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(294, 76)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	tray_content.add_child(scroll)
-	selected_plant_row = HBoxContainer.new()
-	selected_plant_row.add_theme_constant_override("separation", 4)
-	scroll.add_child(selected_plant_row)
-
-
-func _refresh_selected_plant_tray() -> void:
-	if not is_instance_valid(selected_plant_tray) or not is_instance_valid(selected_plant_row):
-		return
-	var show_tray: bool = catalog_mode == CatalogMode.REWARD_CARDS \
-		and Global.level_workshop_edit_mode == "normal"
-	selected_plant_tray.visible = show_tray
-	_clear(selected_plant_row)
-	if not show_tray:
-		return
-	var selected_types := _selected_available_plants()
-	if selected_types.is_empty():
-		var empty_label := Label.new()
-		empty_label.text = "还没有选择植物卡"
-		empty_label.custom_minimum_size = Vector2(286, 62)
-		empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		empty_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		empty_label.add_theme_font_override("font", WORKSHOP_FONT)
-		empty_label.add_theme_color_override("font_color", Color("e9d28a"))
-		selected_plant_row.add_child(empty_label)
-		return
-	for plant_type in selected_types:
-		var prefab: Card = plant_card_prefabs.get(plant_type)
-		if prefab == null:
-			continue
-		var holder := Control.new()
-		holder.custom_minimum_size = Vector2(45, 64)
-		var card := prefab.duplicate() as Card
-		card.scale = Vector2.ONE * 0.86
-		card.set_process(false)
-		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var card_button := card.get_node_or_null("Button") as Button
-		if card_button != null:
-			card_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		if (level.get("forcedPlants", []) as Array).has(plant_type):
-			card.tooltip_text = "本关必须携带"
-		else:
-			card.tooltip_text = "冒险基础卡池，不能删除" if locked_available_plant_types.has(plant_type) else "本关可用植物"
-		holder.add_child(card)
-		selected_plant_row.add_child(holder)
+	_update_level_source_buttons()
 
 
 func _refresh_locked_available_plants() -> void:
 	locked_available_plant_types.clear()
 	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
 		return
-	var official_level := AdventurePresets.build_level(formal_preset_id, false)
-	for value in official_level.get("availablePlants", []):
+	if _formal_preset_index() < 0:
+		return
+	## 第一关的预设初始卡和后续关卡的前序奖励都属于已有卡，必定可选且不能取消。
+	if _is_first_formal_level():
+		for value in _selected_available_plants():
+			var initial_plant_type := int(value)
+			if not locked_available_plant_types.has(initial_plant_type):
+				locked_available_plant_types.append(initial_plant_type)
+		return
+	for value in _formal_progression_available_plants():
 		var plant_type := int(value)
 		if CharacterRegistry.PlantInfo.has(plant_type) and not locked_available_plant_types.has(plant_type):
 			locked_available_plant_types.append(plant_type)
@@ -667,17 +810,17 @@ func _update_timeline_editability() -> void:
 		_hide_interval_preview()
 		_set_timeline_hover_flag(-1)
 	if is_instance_valid(delete_timeline_button):
-		delete_timeline_button.disabled = simple
-		delete_timeline_button.tooltip_text = "简易模式在设置中编辑原版总波数" if simple else "删除当前阶段"
+		delete_timeline_button.disabled = false
+		delete_timeline_button.tooltip_text = "设置旗帜数量；每面旗帜固定包含 10 波" if simple else "删除当前阶段"
 		var delete_label := delete_timeline_button.get_node_or_null("Label") as Label
 		if delete_label != null:
-			delete_label.text = "总波数" if simple else "删除"
+			delete_label.text = "旗帜数" if simple else "删除"
 	if is_instance_valid(reset_timeline_button):
 		reset_timeline_button.disabled = simple
 		reset_timeline_button.tooltip_text = "简易模式不单独编辑旗帜" if simple else "重置时间轴"
 	if is_instance_valid(add_flag_button):
 		add_flag_button.disabled = simple
-		add_flag_button.tooltip_text = "旗帜位置由原版 IsFlagWave 从总波数派生" if simple else "在时间轴上放置旗帜"
+		add_flag_button.tooltip_text = "" if simple else "在时间轴上放置旗帜"
 	_update_timeline_catalog_visibility()
 
 
@@ -687,21 +830,60 @@ func _update_timeline_catalog_visibility() -> void:
 		timeline_meter.visible = not showing_cards
 	for button in [undo_timeline_button, reset_timeline_button, delete_timeline_button, add_flag_button]:
 		if is_instance_valid(button):
-			button.visible = not showing_cards
+			button.visible = not showing_cards and (button != add_flag_button or not _is_simple_mode())
 	if is_instance_valid(clear_cards_button):
 		clear_cards_button.visible = showing_cards
 
 
 func _on_remove_or_delete_timeline_pressed() -> void:
 	if _is_simple_mode():
-		status_label.text = "简易模式的旗帜由原版波号规则自动决定"
+		_open_simple_flag_count_dialog()
 	else:
 		_open_delete_stage_dialog()
 
 
+func _open_simple_flag_count_dialog() -> void:
+	_close_quantity_dialog()
+	quantity_dialog_layer = Control.new()
+	quantity_dialog_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	quantity_dialog_layer.z_index = 500
+	add_child(quantity_dialog_layer)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0, 0, 0, 0.5)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	quantity_dialog_layer.add_child(shade)
+	var dialog := TextureRect.new()
+	dialog.position = Vector2(327, 138)
+	dialog.size = Vector2(412, 324)
+	dialog.texture = DIALOG_BACKGROUND
+	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	dialog.stretch_mode = TextureRect.STRETCH_SCALE
+	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
+	quantity_dialog_layer.add_child(dialog)
+	var title := _paper_label("设置旗帜数量", Vector2(48, 58), Vector2(316, 44), 25, Color("e7e4d1"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(title)
+	var flag_count := _settings_spin(dialog, "旗帜数量（每旗 10 波）", Vector2(101, 118), 1, 10, int(level.get("simpleFlagCount", 2)), 1)
+	dialog.add_child(_texture_button("取消", Vector2(63, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
+	dialog.add_child(_texture_button("确认", Vector2(217, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, func():
+		_apply_simple_flag_count(int(flag_count.value))
+		_close_quantity_dialog()
+	, 17))
+
+
+func _apply_simple_flag_count(flag_count: int) -> void:
+	flag_count = clampi(flag_count, 1, 10)
+	level["simpleFlagCount"] = flag_count
+	level["simpleWaveCount"] = flag_count * 10
+	_set_simple_flag_count(flag_count)
+	_changed("旗帜数量已设为 %d（共 %d 波）" % [flag_count, flag_count * 10])
+	_refresh_wave()
+
+
 func _on_remove_flag_pressed() -> void:
 	if _is_simple_mode():
-		status_label.text = "简易模式没有独立旗帜数量参数，请在设置中编辑总波数"
+		_open_simple_flag_count_dialog()
 		return
 	var flag_count := _count_stage_type("flag")
 	if flag_count <= 1:
@@ -719,7 +901,6 @@ func _on_remove_flag_pressed() -> void:
 
 func _on_add_flag_pressed() -> void:
 	if _is_simple_mode():
-		status_label.text = "简易模式没有独立旗帜数量参数，请在设置中编辑总波数"
 		return
 	_begin_flag_placement()
 
@@ -728,6 +909,20 @@ func _refresh_timeline() -> void:
 	_clear(timeline_stages)
 	timeline_flag_visuals.clear()
 	timeline_hovered_flag_index = -1
+	if _is_simple_mode():
+		var simple_flag_count := clampi(int(level.get("simpleFlagCount", 1)), 1, 10)
+		for flag_number in range(1, simple_flag_count + 1):
+			var flag_ratio := simple_flag_progress_ratio(flag_number, simple_flag_count)
+			var flag_position := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, flag_ratio)
+			var flag_button := _flag_stage_button(flag_number, false)
+			flag_button.position = Vector2(flag_position * timeline_width_ratio - 8.0, 0)
+			flag_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			timeline_stages.add_child(flag_button)
+			timeline_flag_visuals[flag_number - 1] = flag_button.get_node("Flag")
+		if timeline_progress_bar != null:
+			timeline_progress_bar.visible = false
+			timeline_progress_bar.texture = null
+		return
 	var stages: Array = level.get("waves", [])
 	var total_interval_duration := 0.0
 	for stage in stages:
@@ -769,10 +964,6 @@ func _refresh_timeline() -> void:
 				selected_segment_left = minf(segment_start, segment_end)
 				selected_segment_right = maxf(segment_start, segment_end)
 	if timeline_progress_bar != null:
-		if _is_simple_mode():
-			timeline_progress_bar.visible = false
-			timeline_progress_bar.texture = null
-			return
 		timeline_progress_bar.visible = true
 		selected_segment_left = clampf(selected_segment_left, 0.0, 158.0)
 		selected_segment_right = clampf(selected_segment_right, selected_segment_left, 158.0)
@@ -786,6 +977,12 @@ func _refresh_timeline() -> void:
 		timeline_progress_bar.position.x = selected_segment_left * timeline_width_ratio
 		timeline_progress_bar.size.x = (selected_segment_right - selected_segment_left) * timeline_width_ratio
 		timeline_progress_bar.texture = selected_progress_texture
+
+
+static func simple_flag_progress_ratio(flag_number: int, flag_count: int) -> float:
+	## 与游戏内 FlagProgressBar.create_flag 一致：旗帜对应每个 10 波段的最后一波。
+	flag_count = maxi(1, flag_count)
+	return clampf(float(flag_number * 10 - 1) / float(flag_count * 10 - 1), 0.0, 1.0)
 
 
 func _select_stage(stage_index: int) -> void:
@@ -1121,7 +1318,7 @@ func _is_interval_between_flags(stage_index: int) -> bool:
 
 func _open_delete_stage_dialog() -> void:
 	if _is_simple_mode():
-		status_label.text = "简易模式下请在设置中编辑原版总波数"
+		_open_simple_flag_count_dialog()
 		return
 	var stages: Array = level.get("waves", [])
 	if stages.is_empty() or selected_wave < 0 or selected_wave >= stages.size():
@@ -1183,17 +1380,37 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	card.position = Vector2.ZERO
 	card.scale = Vector2.ONE * 1.235
 	card.is_imitater = false
-	card.tooltip_text = ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type))
+	var cost_label := card.get_node_or_null("CardBg/Cost") as Label
+	if cost_label != null:
+		cost_label.visible = false
+	var required_simple_zombie := _is_simple_mode() and zombie_type == int(SIMPLE_REQUIRED_ZOMBIE)
+	card.tooltip_text = ("固定出现，不能取消" if required_simple_zombie else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type)))
 	card.set_process(false)
-	var selected := _is_simple_mode() and not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
-	card.modulate = Color(0.55, 0.55, 0.55, 0.72) if selected else Color.WHITE
+	var selected := not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
+	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
 	if button != null:
 		for connection in button.pressed.get_connections():
 			button.pressed.disconnect(connection.callable)
 		button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
+		button.gui_input.connect(_on_workshop_card_gui_input.bind("zombie", zombie_type))
 	holder.add_child(card)
+	if required_simple_zombie:
+		var lock_label := Label.new()
+		lock_label.position = Vector2(39, 2)
+		lock_label.size = Vector2(22, 22)
+		lock_label.z_index = 20
+		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lock_label.text = "锁"
+		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lock_label.add_theme_font_override("font", WORKSHOP_FONT)
+		lock_label.add_theme_font_size_override("font_size", 13)
+		lock_label.add_theme_color_override("font_color", Color("fff2a1"))
+		lock_label.add_theme_color_override("font_outline_color", Color("493011"))
+		lock_label.add_theme_constant_override("outline_size", 3)
+		holder.add_child(lock_label)
 	return holder
 
 
@@ -1211,17 +1428,20 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	card.is_imitater = false
 	card.set_process(false)
 	var normal_available_mode: bool = Global.level_workshop_edit_mode == "normal"
-	var selected := _selected_available_plants().has(type_id) if normal_available_mode else \
+	var formal_reward_mode := normal_available_mode and FormalLevelStore.is_formal_preset_id(formal_preset_id)
+	var is_current_reward := formal_reward_mode and int(level.get("rewardPlant", -1)) == type_id
+	var selected := (_selected_available_plants().has(type_id) or is_current_reward) if normal_available_mode else \
 		(level["chessboardConfig"].get("plantCardPool" if is_plant else "zombieCardPool", []) as Array).has(type_id)
 	var locked: bool = normal_available_mode and locked_available_plant_types.has(type_id)
-	var forced: bool = normal_available_mode and (level.get("forcedPlants", []) as Array).has(type_id)
-	card.modulate = Color(0.55, 0.55, 0.55, 0.72) if selected else Color.WHITE
-	if forced:
-		card.tooltip_text = "必须携带；点击修改"
-	elif locked:
-		card.tooltip_text = "冒险进度基础卡；点击设置是否必须携带"
+	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
+	if locked:
+		card.tooltip_text = "此前已获得的植物；本关必定可选且不能取消"
+	elif is_current_reward:
+		card.tooltip_text = "本关通关奖励；点击取消"
+	elif formal_reward_mode:
+		card.tooltip_text = "设为本关通关奖励"
 	elif normal_available_mode:
-		card.tooltip_text = ("点击设置本关卡片" if selected and _is_simple_mode() else "%s本关可选卡片" % ("移出" if selected else "加入"))
+		card.tooltip_text = "%s本关可选卡片" % ("移出" if selected else "加入")
 	else:
 		card.tooltip_text = "%s奖励%s" % ["移除" if selected else "加入", "植物卡槽" if is_plant else "友军僵尸卡槽"]
 	_force_font_recursive(card)
@@ -1230,14 +1450,15 @@ func _make_reward_card(entry: Dictionary) -> Control:
 		for connection in button.pressed.get_connections():
 			button.pressed.disconnect(connection.callable)
 		button.pressed.connect(_toggle_reward_card.bind(type_id, is_plant))
+		button.gui_input.connect(_on_workshop_card_gui_input.bind("plant" if is_plant else "zombie", type_id))
 	holder.add_child(card)
-	if locked or forced:
+	if locked or is_current_reward:
 		var lock_label := Label.new()
 		lock_label.position = Vector2(39, 2)
 		lock_label.size = Vector2(22, 22)
 		lock_label.z_index = 20
 		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lock_label.text = "必" if forced else "锁"
+		lock_label.text = "锁" if locked else "奖"
 		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		lock_label.add_theme_font_override("font", WORKSHOP_FONT)
@@ -1249,13 +1470,58 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	return holder
 
 
+func _on_workshop_card_gui_input(event: InputEvent, kind: String, type_id: int) -> void:
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event == null or mouse_event.button_index != MOUSE_BUTTON_RIGHT or not mouse_event.pressed:
+		return
+	context_card_kind = kind
+	context_card_type = type_id
+	if not is_instance_valid(card_context_menu):
+		card_context_menu = PopupMenu.new()
+		card_context_menu.add_item("编辑全局数值", 0)
+		card_context_menu.id_pressed.connect(_on_card_context_menu_pressed)
+		add_child(card_context_menu)
+		_force_font_recursive(card_context_menu)
+	card_context_menu.position = Vector2i(get_viewport().get_mouse_position())
+	card_context_menu.popup()
+	get_viewport().set_input_as_handled()
+
+
+func _on_card_context_menu_pressed(item_id: int) -> void:
+	if item_id != 0 or context_card_type < 0:
+		return
+	DraftStore.save_autosave(level)
+	Global.developer_workshop_level_source = level.duplicate(true)
+	Global.level_workshop_return_state = {
+		"catalog_mode": catalog_mode,
+		"card_page": current_card_page,
+		"selected_wave": selected_wave,
+		"editor_complexity": editor_complexity,
+	}
+	Global.numerical_editor_context = {
+		"origin": "level_workshop",
+		"kind": context_card_kind,
+		"id": context_card_type,
+	}
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.NumericalEditor])
+
+
 func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	if Global.level_workshop_edit_mode == "normal":
+		if FormalLevelStore.is_formal_preset_id(formal_preset_id):
+			if locked_available_plant_types.has(type_id):
+				status_label.text = "这张卡此前已获得，本关必定可选，不能取消"
+				return
+			if int(level.get("rewardPlant", -1)) == type_id:
+				level["rewardPlant"] = -1
+				_changed("已取消本关通关奖励")
+			else:
+				level["rewardPlant"] = type_id
+				_changed("本关通关奖励：%s" % _plant_name(type_id))
+			_refresh_card_page()
+			return
 		var selected := _selected_available_plants()
 		if selected.has(type_id):
-			if _is_simple_mode():
-				_open_simple_plant_dialog(type_id)
-				return
 			if locked_available_plant_types.has(type_id):
 				status_label.text = "这张卡来自冒险进度基础卡池，不能取消"
 				return
@@ -1269,7 +1535,6 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 		level["plantSelectionEnabled"] = true
 		_changed("本关可选植物 %d 张" % selected.size())
 		_refresh_card_page()
-		_refresh_selected_plant_tray()
 		return
 	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
 	var pool: Array = level["chessboardConfig"].get(pool_key, [])
@@ -1294,88 +1559,21 @@ func _clear_all_cards() -> void:
 		level["availablePlants"] = retained
 		level["forcedPlants"] = retained_forced
 		level["plantSelectionEnabled"] = true
+		if FormalLevelStore.is_formal_preset_id(formal_preset_id):
+			level["rewardPlant"] = -1
 		_changed("已清空所有可移除的植物卡" if not retained.is_empty() else "已清空所有植物卡")
 	else:
 		level["chessboardConfig"]["plantCardPool"] = []
 		_changed("已清空奖励植物卡槽")
 	_refresh_card_page()
-	_refresh_selected_plant_tray()
-
-
-func _open_simple_plant_dialog(plant_type: int) -> void:
-	_close_quantity_dialog()
-	quantity_dialog_layer = Control.new()
-	quantity_dialog_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	quantity_dialog_layer.z_index = 500
-	add_child(quantity_dialog_layer)
-	var shade := ColorRect.new()
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.color = Color(0, 0, 0, 0.5)
-	shade.mouse_filter = Control.MOUSE_FILTER_STOP
-	quantity_dialog_layer.add_child(shade)
-	var dialog := TextureRect.new()
-	dialog.position = Vector2(327, 138)
-	dialog.size = Vector2(412, 324)
-	dialog.texture = DIALOG_BACKGROUND
-	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	dialog.stretch_mode = TextureRect.STRETCH_SCALE
-	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
-	quantity_dialog_layer.add_child(dialog)
-	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
-	var plant_name := "植物 %d" % plant_type
-	if registry != null:
-		plant_name = str(registry.get_plant_info(plant_type as CharacterRegistry.PlantType, CharacterRegistry.PlantInfoAttribute.PlantName))
-	var title := _paper_label(plant_name, Vector2(48, 58), Vector2(316, 44), 25, Color("e7e4d1"))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_color_override("font_outline_color", Color("25263b"))
-	title.add_theme_constant_override("outline_size", 4)
-	dialog.add_child(title)
-	var forced: Array = level.get("forcedPlants", [])
-	var must_carry := forced.has(plant_type)
-	var checkbox := _settings_checkbox(dialog, "必须携带", Vector2(85, 118), must_carry)
-	checkbox.toggled.connect(func(checked: bool):
-		must_carry = checked
-		_set_checkbox_texture(checkbox, checked)
-	)
-	var delete_button := _texture_button("删除植物", Vector2(135, 174), Vector2(142, 38), DIALOG_BUTTON, DIALOG_BUTTON, func():
-		if locked_available_plant_types.has(plant_type):
-			status_label.text = "这张卡来自冒险进度基础卡池，不能删除"
-			_close_quantity_dialog()
-			return
-		var selected := _selected_available_plants()
-		selected.erase(plant_type)
-		level["availablePlants"] = selected
-		var current_forced: Array = level.get("forcedPlants", [])
-		current_forced.erase(plant_type)
-		level["forcedPlants"] = current_forced
-		_close_quantity_dialog()
-		_changed("已从本关植物池删除%s" % plant_name)
-		_refresh_card_page()
-		_refresh_selected_plant_tray()
-	, 16)
-	delete_button.disabled = locked_available_plant_types.has(plant_type)
-	(delete_button.get_child(0) as Label).add_theme_color_override("font_color", Color("6f2118"))
-	dialog.add_child(delete_button)
-	dialog.add_child(_texture_button("取消", Vector2(63, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("确认", Vector2(217, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, func():
-		var current_forced: Array = level.get("forcedPlants", [])
-		if must_carry and not current_forced.has(plant_type):
-			current_forced.append(plant_type)
-		elif not must_carry:
-			current_forced.erase(plant_type)
-		level["forcedPlants"] = current_forced
-		_close_quantity_dialog()
-		_changed("%s%s" % [plant_name, "设为必须携带" if must_carry else "允许自由选择"])
-		_refresh_card_page()
-		_refresh_selected_plant_tray()
-	, 17))
 
 
 func _toggle_reward_catalog() -> void:
 	catalog_mode = CatalogMode.REWARD_CARDS if catalog_mode == CatalogMode.SPAWN_ZOMBIES else CatalogMode.SPAWN_ZOMBIES
 	current_card_page = 0
 	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
-	stage_heading.text = ("奖励原版植物卡" if Global.level_workshop_edit_mode == "chessboard" else "本关可选植物卡") if show_rewards else "旗帜波僵尸"
+	_update_catalog_background(show_rewards)
+	_refresh_stage_heading()
 	_update_catalog_button_label()
 	wave_title.visible = not show_rewards
 	wave_summary.visible = not show_rewards and not _is_simple_mode()
@@ -1388,11 +1586,35 @@ func _toggle_reward_catalog() -> void:
 	var target_x := background_normal_x + 334.0 if show_rewards else background_normal_x
 	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
 	if show_rewards:
-		status_label.text = ("点击植物加入本关卡池；暗色为已选，再次点击可设置“必须携带”" if _is_simple_mode() else "点击植物卡设置本关卡池；暗色为已选，冒险基础卡不可取消") if Global.level_workshop_edit_mode == "normal" else "点击原版植物卡加入或移出奖励卡槽；暗色为已选择"
+		if Global.level_workshop_edit_mode == "normal" and FormalLevelStore.is_formal_preset_id(formal_preset_id):
+			status_label.text = "带“锁”的植物是此前已有卡片，必定选择且不能取消；点击一张新卡设为本关奖励"
+		else:
+			status_label.text = ("点击植物加入本关卡池；亮色为已选，再次点击取消" if _is_simple_mode() else "点击植物卡设置本关卡池；亮色为已选，冒险基础卡不可取消") if Global.level_workshop_edit_mode == "normal" else "点击原版植物卡加入或移出奖励卡槽；亮色为已选择"
 	else:
-		status_label.text = "点击卡片选择本阶段允许出现的僵尸" if _is_simple_mode() else "点击卡片，设置本阶段出场数量"
+		status_label.text = "点击卡片选择本阶段允许出现的僵尸；亮色为已选" if _is_simple_mode() else "点击卡片，设置本阶段出场数量；亮色为已设置"
 	_refresh_card_page()
-	_refresh_selected_plant_tray()
+
+
+func _restore_catalog_view() -> void:
+	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
+	_update_catalog_background(show_rewards)
+	_refresh_stage_heading()
+	_update_catalog_button_label()
+	wave_title.visible = not show_rewards
+	wave_summary.visible = not show_rewards and not _is_simple_mode()
+	_refresh_simple_pool_toggle()
+	road_title.visible = not show_rewards
+	road_hint.visible = not show_rewards
+	preview_root.visible = not show_rewards
+	background_sprite.position.x = background_normal_x + 334.0 if show_rewards else background_normal_x
+	_update_timeline_editability()
+	_update_timeline_catalog_visibility()
+
+
+func _update_catalog_background(show_plant_cards: bool) -> void:
+	if not is_instance_valid(drawer_paper):
+		return
+	drawer_paper.texture = PLANT_ALMANAC_BACKGROUND if show_plant_cards else ALMANAC_BACKGROUND
 
 
 func _change_card_page(offset: int) -> void:
@@ -1488,9 +1710,12 @@ func _open_zombie_quantity_dialog(zombie_key: String) -> void:
 
 
 func _select_simple_zombie(zombie_key: String) -> void:
+	if _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE):
+		status_label.text = "黑爪普通僵尸是每关固定基础敌人，不能取消"
+		return
 	var wave: Dictionary = level["waves"][selected_wave]
 	if not _find_group(wave, zombie_key).is_empty():
-		status_label.text = "%s已在本关允许僵尸表中" % _zombie_name(zombie_key)
+		_delete_simple_zombie(zombie_key)
 		return
 	var group_id := Logic.make_unique_id("group", _all_ids())
 	var group := Logic.make_group(group_id, str(_zombie_type_id(zombie_key)), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5))
@@ -1537,6 +1762,8 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 		_close_quantity_dialog()
 		_delete_simple_zombie(zombie_key)
 	, 16)
+	delete_button.disabled = _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE)
+	delete_button.tooltip_text = "黑爪普通僵尸固定出现，不能删除" if delete_button.disabled else ""
 	(delete_button.get_child(0) as Label).add_theme_color_override("font_color", Color("6f2118"))
 	dialog.add_child(delete_button)
 	dialog.add_child(_texture_button("取消", Vector2(63, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
@@ -1544,6 +1771,9 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 
 
 func _delete_simple_zombie(zombie_key: String) -> void:
+	if _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE):
+		status_label.text = "黑爪普通僵尸是每关固定基础敌人，不能删除"
+		return
 	var wave: Dictionary = level["waves"][selected_wave]
 	var group := _find_group(wave, zombie_key)
 	if group.is_empty():
@@ -1611,17 +1841,23 @@ func _refresh_wave() -> void:
 	var is_flag := str(wave.get("stageType", "flag")) == "flag"
 	var stage_number := _stage_number(selected_wave, str(wave.get("stageType", "flag")))
 	wave_title.text = "本关允许僵尸" if _is_simple_mode() else (("第 %d 面旗帜" if is_flag else "旗帜间隔 %d") % stage_number)
+	_refresh_stage_heading()
 	if catalog_mode == CatalogMode.REWARD_CARDS:
-		stage_heading.text = "奖励原版植物卡" if Global.level_workshop_edit_mode == "chessboard" else "本关可选植物卡"
 		_refresh_timeline()
 		return
-	stage_heading.text = "本关允许僵尸" if _is_simple_mode() else ("旗帜波僵尸" if is_flag else "波间阶段僵尸")
 	road_title.text = ("本关允许僵尸" if _is_simple_mode() else (("旗帜第 %d 波" if is_flag else "波间间隔 %d") % stage_number)) + " · 道路预览"
 	road_hint.text = "这个阶段还没有僵尸\n请点击左侧卡片"
 	wave_summary.text = ("PvZ1 原版权重抽取　%d 种" if _is_simple_mode() else "%s　共 %d 只") % ([_wave_zombie_type_count(wave)] if _is_simple_mode() else ["旗帜前动态推进" if not is_flag else "旗帜波动态推进", _wave_total_count(wave)])
 	_refresh_road_zombies()
 	_refresh_timeline()
 	_refresh_simple_pool_toggle()
+
+
+func _refresh_stage_heading() -> void:
+	if not is_instance_valid(stage_heading):
+		return
+	var level_name := str(level.get("name", "")).strip_edges()
+	stage_heading.text = level_name if not level_name.is_empty() else "未命名关卡"
 
 
 func _refresh_road_zombies() -> void:
@@ -1858,11 +2094,9 @@ func _open_level_settings() -> void:
 	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 150), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
 	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 150), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
 	var cooldown := _settings_spin(dialog, "冷却时长倍率", Vector2(76, 222), 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
-	var seed := _settings_spin(dialog, "随机种子", Vector2(322, 222), 1, 2147483647, int(level["randomSeed"]), 1)
 	var chessboard: Dictionary = level.get("chessboardConfig", {})
 	var mine_count: SpinBox
 	var plant_probability: SpinBox
-	var zombie_card_probability: SpinBox
 	var enemy_probability: SpinBox
 	if str(level.get("workshopMode", "normal")) == "chessboard":
 		var chess_title := _paper_label("棋盘格专属", Vector2(76, 294), Vector2(468, 30), 20, Color("e9d28a"))
@@ -1872,7 +2106,7 @@ func _open_level_settings() -> void:
 		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 330), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
 		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 402), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
 	var save_callback := func():
-		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, seed, chessboard, mine_count, plant_probability, zombie_card_probability, enemy_probability)
+		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, chessboard, mine_count, plant_probability, enemy_probability)
 	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
 	dialog.add_child(_texture_button("保存设置", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
@@ -1883,26 +2117,9 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 		map_picker.add_item(map_name)
 	var current_map := str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn"))
 	map_picker.select(maxi(0, SIMPLE_MAP_TYPES.find(current_map)))
-	var waves := _settings_spin(dialog, "总波数", Vector2(322, 150), 1, 100, int(level.get("simpleWaveCount", 20)), 1)
+	var refresh_speed := _settings_spin(dialog, "僵尸刷新速度倍率", Vector2(322, 150), 0.1, 5.0, float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.05)
 	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 222), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
-	var reward_picker := _settings_option(dialog, "通关奖励植物", Vector2(322, 222))
-	var reward_ids: Array[int] = [-1]
-	reward_picker.add_item("无奖励")
-	for entry: Dictionary in reward_card_order:
-		if not bool(entry.get("is_plant", false)):
-			continue
-		var plant_type := int(entry["id"])
-		reward_ids.append(plant_type)
-		reward_picker.add_item(_plant_name(plant_type))
-	var reward_index := reward_ids.find(int(level.get("rewardPlant", -1)))
-	reward_picker.select(maxi(0, reward_index))
-	var free_selection := bool(level.get("freePlantSelection", true))
-	var free_checkbox := _settings_checkbox(dialog, "允许玩家自由选卡", Vector2(76, 310), free_selection)
-	free_checkbox.toggled.connect(func(checked: bool):
-		free_selection = checked
-		_set_checkbox_texture(free_checkbox, checked)
-	)
-	var plant_hint := _paper_label("植物池和“必须携带”请在左侧“可选卡片”中设置", Vector2(76, 344), Vector2(468, 28), 14, Color("d7bd80"))
+	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(76, 238), Vector2(468, 72), 14, Color("d7bd80"))
 	plant_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dialog.add_child(plant_hint)
 	var special_title := _paper_label("地图特殊设定", Vector2(76, 374), Vector2(468, 28), 20, Color("e9d28a"))
@@ -1915,12 +2132,10 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 	var bungee_enabled := bool(environment.get("bungee", false))
 	var bungee_checkbox := _settings_checkbox(dialog, "启用蹦极大波", Vector2(76, 410), bungee_enabled)
 	tombstone_checkbox.toggled.connect(func(checked: bool):
-		tombstones_enabled = checked
 		_set_checkbox_texture(tombstone_checkbox, checked)
-		tombstone_count.editable = tombstones_enabled
+		tombstone_count.editable = checked
 	)
 	bungee_checkbox.toggled.connect(func(checked: bool):
-		bungee_enabled = checked
 		_set_checkbox_texture(bungee_checkbox, checked)
 	)
 	var no_special := _paper_label("该地图没有需要手动启用的原版特殊机制", Vector2(76, 410), Vector2(468, 34), 15, Color("d7bd80"))
@@ -1934,7 +2149,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 		_set_settings_field_visible(tombstone_count, is_night)
 		bungee_checkbox.visible = is_roof
 		no_special.visible = not is_night and not is_roof
-		tombstone_count.editable = tombstones_enabled
+		tombstone_count.editable = tombstone_checkbox.button_pressed
 	map_picker.item_selected.connect(refresh_special_visibility)
 	refresh_special_visibility.call(map_picker.selected)
 	var save_callback := func():
@@ -1943,10 +2158,6 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 			status_label.text = "设置失败：关卡名称不能为空"
 			return
 		var map_type: String = SIMPLE_MAP_TYPES[clampi(map_picker.selected, 0, SIMPLE_MAP_TYPES.size() - 1)]
-		var forced_plants: Array = level.get("forcedPlants", [])
-		if not free_selection and forced_plants.is_empty():
-			status_label.text = "设置失败：关闭自由选卡前，请至少设置一张必须携带的植物"
-			return
 		level["name"] = level_name
 		level["id"] = id_input.text.strip_edges()
 		level["mapConfig"] = {"type": map_type, "rows": 6 if map_type == "pool" or map_type == "fog" else 5, "columns": 9}
@@ -1954,17 +2165,16 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 		level["playerConfig"]["initialSun"] = int(sun.value)
 		level["playerConfig"]["sunDropSpeed"] = 1.0
 		level["playerConfig"]["cooldownMultiplier"] = 1.0
+		level["zombieRefreshSpeedMultiplier"] = float(refresh_speed.value)
 		level["plantSelectionEnabled"] = true
-		level["freePlantSelection"] = free_selection
-		level["rewardPlant"] = reward_ids[clampi(reward_picker.selected, 0, reward_ids.size() - 1)]
+		level["forcedPlants"] = []
+		level["freePlantSelection"] = true
 		level["environmentConfig"] = {
-			"initialTombstones": int(tombstone_count.value) if map_type == "night_lawn" and tombstones_enabled else 0,
-			"tombstoneSpawns": map_type == "night_lawn" and tombstones_enabled,
-			"bungee": map_type == "roof" and bungee_enabled,
+			"initialTombstones": int(tombstone_count.value) if map_type == "night_lawn" and tombstone_checkbox.button_pressed else 0,
+			"tombstoneSpawns": map_type == "night_lawn" and tombstone_checkbox.button_pressed,
+			"bungee": map_type == "roof" and bungee_checkbox.button_pressed,
 		}
-		level["simpleWaveCount"] = int(waves.value)
-		## 旗帜数是原版 IsFlagWave 从总波数派生的展示结果，不是独立参数。
-		_set_simple_flag_count(1 if int(waves.value) < 10 else int(int(waves.value) / 10))
+		_apply_formal_map_constraints()
 		_sanitize_simple_allowed_pool()
 		_refresh_zombie_catalog()
 		_refresh_card_page()
@@ -1975,7 +2185,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 	dialog.add_child(_texture_button("保存设置", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
-func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, seed: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, zombie_card_probability: SpinBox, enemy_probability: SpinBox) -> void:
+func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, enemy_probability: SpinBox) -> void:
 	var level_name := name_input.text.strip_edges()
 	if level_name.is_empty():
 		status_label.text = "设置失败：关卡名称不能为空"
@@ -1995,7 +2205,6 @@ func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox
 	level["playerConfig"]["initialSun"] = int(sun.value)
 	level["playerConfig"]["sunDropSpeed"] = float(sun_speed.value)
 	level["playerConfig"]["cooldownMultiplier"] = float(cooldown.value)
-	level["randomSeed"] = int(seed.value)
 	_close_quantity_dialog()
 	_changed("关卡设置已保存")
 
@@ -2068,8 +2277,9 @@ func _settings_spin(parent: Control, label_text: String, pos: Vector2, min_value
 	input.size = Vector2(210, 34)
 	input.min_value = min_value
 	input.max_value = max_value
-	input.value = value
 	input.step = step
+	## 先设定小数步长再赋值，避免按 SpinBox 默认的整数步长吸附。
+	input.value = value
 	input.add_theme_font_override("font", WORKSHOP_FONT)
 	input.add_theme_font_size_override("font_size", 16)
 	input.add_theme_color_override("font_color", Color("f5edcf"))
@@ -2078,11 +2288,11 @@ func _settings_spin(parent: Control, label_text: String, pos: Vector2, min_value
 	return input
 
 
-func _set_settings_field_visible(input: Control, visible: bool) -> void:
-	input.visible = visible
+func _set_settings_field_visible(input: Control, is_visible: bool) -> void:
+	input.visible = is_visible
 	var label = input.get_meta("settings_label", null)
 	if label is Control:
-		(label as Control).visible = visible
+		(label as Control).visible = is_visible
 
 
 func _line_field(parent: Control, label_text: String, value: String) -> LineEdit:
@@ -2278,12 +2488,9 @@ func _refresh_zombie_catalog() -> void:
 	zombie_card_prefabs = all_cards.all_zombie_card_prefabs.duplicate()
 	for zombie_type in zombie_card_prefabs.keys():
 		var zombie_id := int(zombie_type)
-		## 蹦极僵尸由屋顶“蹦极大波”机制生成，不能作为普通道路刷怪卡加入。
-		if Global.level_workshop_edit_mode == "normal" and zombie_id == int(CharacterRegistry.ZombieType.Z520Bungi):
-			continue
-		if Global.level_workshop_edit_mode == "normal" and zombie_id > 0 \
-		and (zombie_id < 500 or AdventurePresets.NORMAL_SUPPORT_ZOMBIES.has(zombie_id)) \
-		and (not _is_simple_mode() or _has_original_pick_weight(zombie_id)):
+		## 普通工坊与植物卡池一致：所有已制作且已注册的僵尸卡都可见。
+		if Global.level_workshop_edit_mode == "normal" and zombie_id != int(CharacterRegistry.ZombieType.Null) \
+		and CharacterRegistry.ZombieInfo.has(zombie_id):
 			zombie_card_order.append(zombie_id)
 		elif Global.level_workshop_edit_mode == "chessboard" and zombie_id >= 500 and zombie_id < 1000:
 			zombie_card_order.append(zombie_id)
@@ -2322,8 +2529,13 @@ func _sanitize_simple_allowed_pool() -> void:
 		var filtered_groups: Array = []
 		for group in (stage as Dictionary).get("spawnGroups", []):
 			var zombie_type := _zombie_type_id((group as Dictionary).get("zombieType", "500"))
-			if zombie_type == int(CharacterRegistry.ZombieType.Z500Norm) or _has_original_pick_weight(zombie_type):
+			if zombie_type == int(SIMPLE_REQUIRED_ZOMBIE) or _has_original_pick_weight(zombie_type):
 				filtered_groups.append(group)
+		if not filtered_groups.any(func(group): return _zombie_type_id((group as Dictionary).get("zombieType", "500")) == int(SIMPLE_REQUIRED_ZOMBIE)):
+			filtered_groups.push_front(Logic.make_group(
+				"simple_required_%s" % str((stage as Dictionary).get("id", "stage")),
+				str(int(SIMPLE_REQUIRED_ZOMBIE)), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5)
+			))
 		stage["spawnGroups"] = filtered_groups
 
 
@@ -2442,6 +2654,7 @@ func _normalize_timeline_structure() -> void:
 func _changed(message := "修改已自动保存") -> void:
 	_snapshot()
 	DraftStore.save_autosave(level)
+	_refresh_stage_heading()
 	status_label.text = message
 
 
@@ -2472,7 +2685,6 @@ func _undo() -> void:
 	selected_zombie_key = ""
 	DraftStore.save_autosave(level)
 	_refresh_wave()
-	_refresh_selected_plant_tray()
 	status_label.text = "已撤销"
 
 
@@ -2488,7 +2700,6 @@ func _redo() -> void:
 	selected_zombie_key = ""
 	DraftStore.save_autosave(level)
 	_refresh_wave()
-	_refresh_selected_plant_tray()
 	status_label.text = "已重做"
 
 
@@ -2502,10 +2713,28 @@ func _sync_editor_complexity_from_level() -> void:
 
 
 func _open_save_dialog() -> void:
-	if loaded_source_kind == "template" or loaded_source_kind == "custom":
+	if loaded_source_kind == "template":
+		_open_formal_save_dialog()
+		return
+	if loaded_source_kind == "custom":
 		_open_loaded_level_save_dialog()
 		return
 	_open_custom_name_dialog(false)
+
+
+func _open_formal_save_dialog() -> void:
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "保存正式关卡"
+	dialog.ok_button_text = "覆盖正式关卡"
+	dialog.cancel_button_text = "取消"
+	dialog.dialog_text = "确认覆盖当前开发者正式冒险关卡？"
+	dialog.confirmed.connect(func():
+		_save_formal_level()
+		dialog.queue_free()
+	)
+	add_child(dialog)
+	_force_font_recursive(dialog)
+	dialog.popup_centered(Vector2i(480, 180))
 
 
 func _open_loaded_level_save_dialog() -> void:
@@ -2563,6 +2792,7 @@ func _open_custom_name_dialog(force_new_copy: bool) -> void:
 
 
 func _save_formal_level() -> void:
+	_apply_formal_plant_progression()
 	_recalculate_stage_times()
 	level["formalPresetId"] = formal_preset_id
 	var result := FormalLevelStore.save_developer_level(level, formal_preset_id)
@@ -2609,6 +2839,8 @@ func _save_custom_level(custom_level: Dictionary) -> void:
 
 func _playtest() -> void:
 	_end_timeline_mode()
+	## 以当前界面模式为权威，避免旧草稿或正式关卡覆盖中的 editorMode 与按钮状态不同步。
+	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
 	DraftStore.save_autosave(level)
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
