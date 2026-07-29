@@ -696,6 +696,10 @@ func exit_status():
 
 ## 从游戏场景获取正确的 BodyCorrect 及其子节点结构，应用到卡片预览节点上
 func _fix_body_correct_from_game_scene(plant_child: Node2D, plant_type: CharacterRegistry.PlantType) -> void:
+	## Echo 的实战 Anim_idle 初始缩放由 AnimationTree 从近零值驱动；把该初始值
+	## 覆盖到卡牌静态图后，会让鼠标手持贴图看起来完全消失。
+	if plant_type == CharacterRegistry.PlantType.P053ImitaterEcho:
+		return
 	if not _game_body_correct_cache.has(plant_type):
 		_game_body_correct_cache[plant_type] = _make_game_body_correct_snapshot(plant_type)
 
