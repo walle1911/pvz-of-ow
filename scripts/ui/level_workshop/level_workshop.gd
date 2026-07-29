@@ -994,13 +994,10 @@ func _update_catalog_button_label() -> void:
 	var button_label := reward_mode_button.get_child(0) as Label
 	if button_label == null:
 		return
-	var formal_reward_mode := FormalLevelStore.is_formal_preset_id(formal_preset_id)
-	var reward_count := _formal_reward_plants().size() if formal_reward_mode else 0
-	var reward_count_text := "  奖✖️%d" % reward_count if formal_reward_mode else ""
 	if catalog_mode == CatalogMode.REWARD_CARDS:
-		button_label.text = "登场僵尸%s" % reward_count_text
+		button_label.text = "登场僵尸"
 	else:
-		button_label.text = "奖励卡槽" if Global.level_workshop_edit_mode == "chessboard" else "植物卡片%s" % reward_count_text
+		button_label.text = "奖励卡槽" if Global.level_workshop_edit_mode == "chessboard" else "植物卡片"
 
 
 func _animate_drawer_in() -> void:
@@ -2509,7 +2506,8 @@ func _open_level_settings() -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP
 	quantity_dialog_layer.add_child(shade)
 	var dialog := TextureRect.new()
-	dialog.position = Vector2(223, 10)
+	## 顶部标题与主界面的“菜单”基线对齐，同时仍让弹窗完整落在 600 高的画布内。
+	dialog.position = Vector2(223, 20)
 	dialog.size = Vector2(620, 580)
 	dialog.texture = DIALOG_BACKGROUND
 	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -2522,10 +2520,10 @@ func _open_level_settings() -> void:
 	title.add_theme_constant_override("outline_size", 4)
 	dialog.add_child(title)
 	var name_input := _settings_line(dialog, "关卡名称", Vector2(76, 78), str(level["name"]))
-	var id_input := _settings_line(dialog, "草稿编号", Vector2(322, 78), str(level["id"]))
+	name_input.size.x = 456
 	_add_cover_settings_button(dialog)
 	if _is_simple_mode():
-		_build_simple_level_settings(dialog, name_input, id_input)
+		_build_simple_level_settings(dialog, name_input)
 		return
 	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 150), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
 	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 150), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
@@ -2542,12 +2540,12 @@ func _open_level_settings() -> void:
 		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 330), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
 		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 402), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
 	var save_callback := func():
-		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, chessboard, mine_count, plant_probability, enemy_probability)
+		_save_level_settings(name_input, sun, sun_speed, cooldown, chessboard, mine_count, plant_probability, enemy_probability)
 	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
 	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
-func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_input: LineEdit) -> void:
+func _build_simple_level_settings(dialog: Control, name_input: LineEdit) -> void:
 	var map_picker := _settings_option(dialog, "地图", Vector2(76, 150))
 	for map_name in SIMPLE_MAP_NAMES:
 		map_picker.add_item(map_name)
@@ -2595,7 +2593,6 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 			return
 		var map_type: String = SIMPLE_MAP_TYPES[clampi(map_picker.selected, 0, SIMPLE_MAP_TYPES.size() - 1)]
 		level["name"] = level_name
-		level["id"] = id_input.text.strip_edges()
 		level["mapConfig"] = {"type": map_type, "rows": 6 if map_type == "pool" or map_type == "fog" else 5, "columns": 9}
 		level["activeLawnRows"] = range(6 if map_type == "pool" or map_type == "fog" else 5)
 		level["playerConfig"]["initialSun"] = int(sun.value)
@@ -2622,7 +2619,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
-func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, enemy_probability: SpinBox) -> void:
+func _save_level_settings(name_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, enemy_probability: SpinBox) -> void:
 	var level_name := name_input.text.strip_edges()
 	if level_name.is_empty():
 		status_label.text = "设置失败：关卡名称不能为空"
@@ -2638,7 +2635,6 @@ func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox
 		chessboard["enemyZombieProbability"] = float(enemy_probability.value)
 		level["chessboardConfig"] = chessboard
 	level["name"] = level_name
-	level["id"] = id_input.text.strip_edges()
 	level["playerConfig"]["initialSun"] = int(sun.value)
 	level["playerConfig"]["sunDropSpeed"] = float(sun_speed.value)
 	level["playerConfig"]["cooldownMultiplier"] = float(cooldown.value)

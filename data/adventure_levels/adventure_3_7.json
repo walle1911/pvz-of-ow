@@ -1,11 +1,11 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0,
-		5.0
+		0,
+		1,
+		2,
+		3,
+		4,
+		5
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -71,6 +71,12 @@
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 37
+		}
+	],
 	"earlyRefreshDelay": 1.5,
 	"editorMode": "simple",
 	"environmentConfig": {
@@ -99,7 +105,7 @@
 		"type": "pool"
 	},
 	"minimumWaveTime": 5.055,
-	"name": "3-7 阿贡",
+	"name": "3-7 SSVGG",
 	"openingFirstZombieAdvanceCells": 0.0,
 	"plantSelectionEnabled": true,
 	"playerConfig": {

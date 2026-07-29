@@ -1,11 +1,11 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0,
-		5.0
+		0,
+		1,
+		2,
+		3,
+		4,
+		5
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -18,14 +18,17 @@
 		36,
 		18,
 		504,
+		23,
 		14,
 		11,
 		43,
 		13,
+		40,
 		32,
-		41,
+		24,
 		27,
 		16,
+		21,
 		516,
 		25
 	],
@@ -56,6 +59,12 @@
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 25
+		}
+	],
 	"earlyRefreshDelay": 1.5,
 	"editorMode": "simple",
 	"environmentConfig": {

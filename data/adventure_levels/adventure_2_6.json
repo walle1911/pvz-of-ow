@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0
+		0,
+		1,
+		2,
+		3,
+		4
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -49,12 +49,18 @@
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 32
+		}
+	],
 	"earlyRefreshDelay": 1.5,
 	"editorMode": "simple",
 	"environmentConfig": {
 		"bungee": false,
-		"initialTombstones": 6,
-		"tombstoneSpawns": true
+		"initialTombstones": 0,
+		"tombstoneSpawns": false
 	},
 	"forcedPlants": [],
 	"formalPresetId": "adventure_2_6",

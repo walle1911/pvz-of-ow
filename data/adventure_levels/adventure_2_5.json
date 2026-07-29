@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0
+		0,
+		1,
+		2,
+		3,
+		4
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -17,6 +17,7 @@
 		36,
 		18,
 		504,
+		23,
 		14,
 		11,
 		43,
@@ -50,8 +51,8 @@
 	"editorMode": "simple",
 	"environmentConfig": {
 		"bungee": false,
-		"initialTombstones": 5,
-		"tombstoneSpawns": true
+		"initialTombstones": 0,
+		"tombstoneSpawns": false
 	},
 	"forcedPlants": [],
 	"formalPresetId": "adventure_2_5",

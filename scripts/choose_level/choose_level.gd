@@ -11,6 +11,8 @@ const WORLD_COVER_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/image/Almanac/Almanac_GroundNightPool.jpg"),
 	preload("res://assets/image/Almanac/Almanac_GroundRoof.jpg"),
 ]
+## 第三世界只有这些关卡的封面角色站在水面，其余关卡发生在泳池旁草地。
+const POOL_SURFACE_COVER_LEVELS := [&"adventure_3_1", &"adventure_3_2", &"adventure_3_4"]
 const MOVED_CHESSBOARD_LEVELS: Array[ResourceLevelData] = [
 	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_01_ten_flags.tres"),
 	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_02_ten_rounds.tres"),
@@ -265,10 +267,13 @@ func _configure_adventure_cover(
 		old_child.queue_free()
 
 	var world := int(preset.get("world", 1))
+	var cover_world := world
+	if world == 3 and not POOL_SURFACE_COVER_LEVELS.has(StringName(str(preset.get("id", "")))):
+		cover_world = 1
 	var cover_bg := TextureRect.new()
 	cover_bg.name = "MapBackground"
 	cover_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	cover_bg.texture = WORLD_COVER_TEXTURES[clampi(world - 1, 0, WORLD_COVER_TEXTURES.size() - 1)]
+	cover_bg.texture = WORLD_COVER_TEXTURES[clampi(cover_world - 1, 0, WORLD_COVER_TEXTURES.size() - 1)]
 	cover_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	cover_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	cover_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -291,9 +296,10 @@ func _configure_adventure_cover(
 
 	var shown_count := mini(3, features.size())
 	for feature_index in shown_count:
-		var x_position := 48.0
+		## 奖杯角标会压住封面左上角，单角色视觉中心略向左补偿会更居中。
+		var x_position := 46.0
 		if shown_count == 2:
-			x_position = 27.0 if feature_index == 0 else 69.0
+			x_position = 34.0 if feature_index == 0 else 60.0
 		elif shown_count == 3:
 			x_position = [18.0, 48.0, 78.0][feature_index]
 		var feature := features[feature_index]
@@ -377,12 +383,36 @@ func _collect_cover_sprite_bounds(
 		var sprite := node as Sprite2D
 		var lower_name := str(sprite.name).to_lower()
 		if sprite.texture != null and not lower_name.contains("shadow") and not lower_name.contains("ground"):
-			result.append(transform_from_character * sprite.get_rect())
+			result.append(transform_from_character * _cover_sprite_visual_rect(sprite))
 	for child in node.get_children():
 		var child_transform := transform_from_character
 		if child is Node2D:
 			child_transform *= (child as Node2D).transform
 		_collect_cover_sprite_bounds(child, child_transform, result)
+
+
+func _cover_sprite_visual_rect(sprite: Sprite2D) -> Rect2:
+	var fallback_rect := sprite.get_rect()
+	## 多帧或自定义 region 的映射方式不同，保留 Godot 给出的绘制边界更安全。
+	if sprite.region_enabled or sprite.hframes != 1 or sprite.vframes != 1:
+		return fallback_rect
+	var image := sprite.texture.get_image()
+	if image == null or image.is_empty():
+		return fallback_rect
+	var used_rect := image.get_used_rect()
+	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
+		return fallback_rect
+	var image_size := Vector2(image.get_size())
+	var used_position := Vector2(used_rect.position)
+	if sprite.flip_h:
+		used_position.x = image_size.x - float(used_rect.end.x)
+	if sprite.flip_v:
+		used_position.y = image_size.y - float(used_rect.end.y)
+	var pixel_scale := fallback_rect.size / image_size
+	return Rect2(
+		fallback_rect.position + used_position * pixel_scale,
+		Vector2(used_rect.size) * pixel_scale
+	)
 
 
 ## 进入游戏关卡
