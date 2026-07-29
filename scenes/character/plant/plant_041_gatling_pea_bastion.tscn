@@ -267,7 +267,8 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1089846292 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("21_k2f5v")
-shots_per_round = 4
+# 射击间隔（秒）；Inspector 中可直接调整，数值越小射击越快。
+attack_cd = 1.5
 giant_pea_attack_value = 80
 giant_pea_knockback_distance = 30.0
 giant_pea_bullet_type = 18
