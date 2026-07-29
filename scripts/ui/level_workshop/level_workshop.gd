@@ -109,6 +109,7 @@ var timeline_hover_bar: TextureRect
 var timeline_width_ratio := 1.0
 var preview_hit_layer: Control
 var quantity_dialog_layer: Control
+var cover_dialog_layer: Control
 var card_page_label: Label
 var current_card_page := 0
 var timeline_mode := TimelineMode.NORMAL
@@ -458,6 +459,149 @@ func _build_drawer_actions() -> void:
 	(get_node("TopActions/MenuButton") as BaseButton).pressed.connect(_open_workshop_menu)
 	_update_editor_complexity_button()
 	_update_level_source_buttons()
+
+
+func _open_cover_characters_dialog(settings_button: TextureButton = null) -> void:
+	_close_cover_characters_dialog()
+	cover_dialog_layer = Control.new()
+	cover_dialog_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cover_dialog_layer.z_index = 700
+	add_child(cover_dialog_layer)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0, 0, 0, 0.62)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	cover_dialog_layer.add_child(shade)
+	var dialog := TextureRect.new()
+	dialog.position = Vector2(259, 75)
+	dialog.size = Vector2(548, 450)
+	dialog.texture = DIALOG_BACKGROUND
+	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	dialog.stretch_mode = TextureRect.STRETCH_SCALE
+	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
+	cover_dialog_layer.add_child(dialog)
+	var title := _paper_label("自定义选关封面角色", Vector2(44, 28), Vector2(460, 42), 27, Color("f3e7ba"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_outline_color", Color("25263b"))
+	title.add_theme_constant_override("outline_size", 4)
+	dialog.add_child(title)
+	var hint := _paper_label("依次选择最多 3 个角色；位置顺序对应封面从左到右。", Vector2(44, 76), Vector2(460, 32), 15, Color("d7bd80"))
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(hint)
+	var recommended := _recommended_cover_characters()
+	var current: Array = level.get("coverCharacters", []) if level.has("coverCharacters") else recommended
+	var pickers: Array[OptionButton] = []
+	for slot in 3:
+		var row_y := 120.0 + slot * 58.0
+		var label := _paper_label("位置 %d" % (slot + 1), Vector2(46, row_y), Vector2(82, 40), 18, Color("e9d28a"))
+		dialog.add_child(label)
+		var picker := OptionButton.new()
+		picker.position = Vector2(128, row_y)
+		picker.size = Vector2(372, 40)
+		picker.add_theme_font_override("font", WORKSHOP_FONT)
+		picker.add_theme_font_size_override("font_size", 16)
+		picker.add_item("空位（不显示）")
+		picker.set_item_metadata(0, {})
+		_add_cover_character_options(picker)
+		if slot < current.size() and current[slot] is Dictionary:
+			_select_cover_character_option(picker, current[slot] as Dictionary)
+		dialog.add_child(picker)
+		pickers.append(picker)
+	var mode_hint := _paper_label(
+		"当前：%s" % ("自定义" if level.has("coverCharacters") else "自动推荐"),
+		Vector2(46, 300), Vector2(454, 30), 16, Color("d7bd80")
+	)
+	mode_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(mode_hint)
+	for picker in pickers:
+		picker.item_selected.connect(func(_index: int): mode_hint.text = "当前：自定义（点击“应用封面”写入）")
+	var auto_callback := func():
+		_apply_cover_entries_to_pickers(pickers, recommended)
+		mode_hint.text = "当前：自动推荐结果（可继续修改）"
+	var save_callback := func():
+		var selected: Array = []
+		for picker in pickers:
+			var entry = picker.get_item_metadata(picker.selected)
+			if entry is Dictionary and not (entry as Dictionary).is_empty() and not selected.has(entry):
+				selected.append((entry as Dictionary).duplicate())
+		level["coverCharacters"] = selected
+		_changed("选关封面已设置 %d 个角色" % selected.size())
+		_update_cover_settings_button(settings_button)
+		_close_cover_characters_dialog()
+	dialog.add_child(_texture_button("恢复自动", Vector2(38, 360), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, auto_callback, 16))
+	dialog.add_child(_texture_button("取消", Vector2(203, 360), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_cover_characters_dialog, 17))
+	dialog.add_child(_texture_button("应用封面", Vector2(368, 360), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+
+
+func _recommended_cover_characters() -> Array[Dictionary]:
+	var previous_level: Dictionary = {}
+	var preset_index := _formal_preset_index()
+	if preset_index > 0:
+		var presets := AdventurePresets.list_presets("normal")
+		var previous_id := str((presets[preset_index - 1] as Dictionary).get("id", ""))
+		previous_level = AdventurePresets.build_level(previous_id, true)
+	return Logic.recommended_cover_characters(level, previous_level)
+
+
+func _apply_cover_entries_to_pickers(pickers: Array[OptionButton], entries: Array) -> void:
+	for slot in pickers.size():
+		pickers[slot].select(0)
+		if slot < entries.size() and entries[slot] is Dictionary:
+			_select_cover_character_option(pickers[slot], entries[slot] as Dictionary)
+
+
+func _close_cover_characters_dialog() -> void:
+	if is_instance_valid(cover_dialog_layer):
+		cover_dialog_layer.queue_free()
+	cover_dialog_layer = null
+
+
+func _add_cover_settings_button(dialog: Control) -> void:
+	var button := _texture_button("", Vector2(76, 464), Vector2(468, 38), DIALOG_BUTTON, DIALOG_BUTTON, func(): pass, 16)
+	button.pressed.connect(_open_cover_characters_dialog.bind(button))
+	dialog.add_child(button)
+	_update_cover_settings_button(button)
+
+
+func _update_cover_settings_button(button: TextureButton) -> void:
+	if not is_instance_valid(button):
+		return
+	var label := button.get_child(0) as Label if button.get_child_count() > 0 else null
+	if label == null:
+		return
+	var mode_text := "自动推荐"
+	if level.has("coverCharacters"):
+		mode_text = "自定义 %d 个" % (level.get("coverCharacters", []) as Array).size()
+	label.text = "选关封面角色 · %s" % mode_text
+
+
+func _add_cover_character_options(picker: OptionButton) -> void:
+	picker.add_separator("植物")
+	var plant_types: Array = CharacterRegistry.PlantInfo.keys()
+	plant_types.sort()
+	for value in plant_types:
+		var type_id := int(value)
+		if type_id <= 0:
+			continue
+		picker.add_item("植物 · %s（%d）" % [_plant_name(type_id), type_id])
+		picker.set_item_metadata(picker.item_count - 1, {"kind": "plant", "type": type_id})
+	picker.add_separator("僵尸")
+	var zombie_types: Array = CharacterRegistry.ZombieInfo.keys()
+	zombie_types.sort()
+	for value in zombie_types:
+		var type_id := int(value)
+		if type_id <= 0:
+			continue
+		picker.add_item("僵尸 · %s（%d）" % [_zombie_name(str(type_id)), type_id])
+		picker.set_item_metadata(picker.item_count - 1, {"kind": "zombie", "type": type_id})
+
+
+func _select_cover_character_option(picker: OptionButton, selected_entry: Dictionary) -> void:
+	for index in picker.item_count:
+		var metadata = picker.get_item_metadata(index)
+		if metadata is Dictionary and metadata == selected_entry:
+			picker.select(index)
+			return
 
 
 func _update_level_source_buttons() -> void:
@@ -2117,6 +2261,7 @@ func _set_zombie_quantity(zombie_key: String, quantity: int) -> void:
 
 
 func _close_quantity_dialog() -> void:
+	_close_cover_characters_dialog()
 	if is_instance_valid(quantity_dialog_layer):
 		quantity_dialog_layer.queue_free()
 	quantity_dialog_layer = null
@@ -2378,6 +2523,7 @@ func _open_level_settings() -> void:
 	dialog.add_child(title)
 	var name_input := _settings_line(dialog, "关卡名称", Vector2(76, 78), str(level["name"]))
 	var id_input := _settings_line(dialog, "草稿编号", Vector2(322, 78), str(level["id"]))
+	_add_cover_settings_button(dialog)
 	if _is_simple_mode():
 		_build_simple_level_settings(dialog, name_input, id_input)
 		return
@@ -2398,7 +2544,7 @@ func _open_level_settings() -> void:
 	var save_callback := func():
 		_save_level_settings(name_input, id_input, sun, sun_speed, cooldown, chessboard, mine_count, plant_probability, enemy_probability)
 	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("保存设置", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
 func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_input: LineEdit) -> void:
@@ -2409,7 +2555,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 	map_picker.select(maxi(0, SIMPLE_MAP_TYPES.find(current_map)))
 	var refresh_speed := _settings_spin(dialog, "僵尸刷新速度倍率", Vector2(322, 150), 0.1, 5.0, float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.05)
 	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 222), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
-	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(76, 238), Vector2(468, 72), 14, Color("d7bd80"))
+	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(76, 292), Vector2(468, 72), 14, Color("d7bd80"))
 	plant_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dialog.add_child(plant_hint)
 	var special_title := _paper_label("地图特殊设定", Vector2(76, 374), Vector2(468, 28), 20, Color("e9d28a"))
@@ -2473,7 +2619,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 		_changed("简易关卡设置已保存")
 		_refresh_wave()
 	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("保存设置", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
 func _save_level_settings(name_input: LineEdit, id_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, enemy_probability: SpinBox) -> void:

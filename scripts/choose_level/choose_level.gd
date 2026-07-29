@@ -281,62 +281,29 @@ func _configure_adventure_cover(
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(shade)
 
-	var new_plants := _new_types(
-		level_source.get("availablePlants", []) as Array,
-		previous_level_source.get("availablePlants", []) as Array
-	)
-	var current_zombies := _level_zombie_types(level_source)
-	var new_zombies := _new_types(current_zombies, _level_zombie_types(previous_level_source))
-	new_zombies.erase(int(CharacterRegistry.ZombieType.Z001FlagTalon))
-	new_zombies.erase(int(CharacterRegistry.ZombieType.Z501Flag))
-
 	var features: Array[Dictionary] = []
-	var reward_plants := Logic.reward_plant_types(level_source)
-	for reward_plant in reward_plants:
-		features.append({"kind": "plant", "type": reward_plant})
-	for plant_type in new_plants:
-		if not reward_plants.has(int(plant_type)):
-			features.append({"kind": "plant", "type": int(plant_type)})
-	for zombie_type in new_zombies:
-		features.append({"kind": "zombie", "type": int(zombie_type)})
-	## 没有新角色的过渡关仍放一个本关真实出现的敌人，不再用手写表伪造“新角色”。
-	if features.is_empty() and not current_zombies.is_empty():
-		features.append({"kind": "zombie", "type": int(current_zombies.back())})
+	if level_source.has("coverCharacters"):
+		for value in level_source.get("coverCharacters", []) as Array:
+			if value is Dictionary and features.size() < 3:
+				features.append((value as Dictionary).duplicate())
+	else:
+		features = Logic.recommended_cover_characters(level_source, previous_level_source)
 
 	var shown_count := mini(3, features.size())
 	for feature_index in shown_count:
 		var x_position := 48.0
 		if shown_count == 2:
-			x_position = 31.0 if feature_index == 0 else 67.0
+			x_position = 27.0 if feature_index == 0 else 69.0
 		elif shown_count == 3:
-			x_position = [22.0, 48.0, 74.0][feature_index]
+			x_position = [18.0, 48.0, 78.0][feature_index]
 		var feature := features[feature_index]
 		_add_dynamic_character_preview(
 			panel,
 			str(feature["kind"]),
 			int(feature["type"]),
-			Vector2(x_position, 61),
+			Vector2(x_position, 35),
 			shown_count
 		)
-
-
-func _new_types(current_types: Array, previous_types: Array) -> Array:
-	var result: Array = []
-	for character_type in current_types:
-		var typed_value := int(character_type)
-		if not previous_types.has(typed_value) and not result.has(typed_value):
-			result.append(typed_value)
-	return result
-
-
-func _level_zombie_types(level_source: Dictionary) -> Array:
-	var result: Array = []
-	for wave in level_source.get("waves", []) as Array:
-		for group in (wave as Dictionary).get("spawnGroups", []) as Array:
-			var zombie_type := int((group as Dictionary).get("zombieType", 0))
-			if zombie_type != 0 and not result.has(zombie_type):
-				result.append(zombie_type)
-	return result
 
 
 func _add_dynamic_character_preview(
@@ -363,11 +330,59 @@ func _add_dynamic_character_preview(
 	character_preview.name = "PlantPreview" if feature_kind == "plant" else "ZombiePreview"
 	character_preview.character_init_type = Character000Base.E_CharacterInitType.IsShow
 	character_preview.position = target_position
-	var preview_scale := 0.52 if shown_count == 1 else (0.42 if shown_count == 2 else 0.34)
-	if feature_kind == "zombie":
-		preview_scale *= 0.88
-	character_preview.scale = Vector2(preview_scale, preview_scale)
 	panel.add_child(character_preview)
+	_fit_cover_character_preview(character_preview, feature_kind, target_position, shown_count)
+
+
+func _fit_cover_character_preview(
+	character_preview: Character000Base,
+	feature_kind: String,
+	target_center: Vector2,
+	shown_count: int
+) -> void:
+	var body_root := character_preview.get_node_or_null(^"Body") as Node2D
+	if body_root == null:
+		return
+	var sprite_bounds: Array[Rect2] = []
+	_collect_cover_sprite_bounds(body_root, body_root.transform, sprite_bounds)
+	if sprite_bounds.is_empty():
+		return
+	var visual_bounds := sprite_bounds[0]
+	for index in range(1, sprite_bounds.size()):
+		visual_bounds = visual_bounds.merge(sprite_bounds[index])
+	if visual_bounds.size.x <= 0.0 or visual_bounds.size.y <= 0.0:
+		return
+
+	## 每个角色独占一个横向槽位，并留出边缘安全区；巨人等超大角色会自动缩小。
+	var slot_width := float({1: 82.0, 2: 38.0, 3: 26.0}.get(shown_count, 26.0))
+	var slot_height := 62.0
+	var fit_scale := minf(slot_width / visual_bounds.size.x, slot_height / visual_bounds.size.y)
+	var desired_scale := 0.58 if shown_count == 1 else (0.43 if shown_count == 2 else 0.35)
+	if feature_kind == "zombie":
+		desired_scale *= 0.9
+	var preview_scale := minf(desired_scale, fit_scale)
+	character_preview.scale = Vector2.ONE * preview_scale
+	## 不依赖各角色不同的脚底原点，直接用可见内容的中心对齐槽位中心。
+	character_preview.position = target_center - visual_bounds.get_center() * preview_scale
+
+
+func _collect_cover_sprite_bounds(
+	node: Node,
+	transform_from_character: Transform2D,
+	result: Array[Rect2]
+) -> void:
+	if node is CanvasItem and not (node as CanvasItem).visible:
+		return
+	if node is Sprite2D:
+		var sprite := node as Sprite2D
+		var lower_name := str(sprite.name).to_lower()
+		if sprite.texture != null and not lower_name.contains("shadow") and not lower_name.contains("ground"):
+			result.append(transform_from_character * sprite.get_rect())
+	for child in node.get_children():
+		var child_transform := transform_from_character
+		if child is Node2D:
+			child_transform *= (child as Node2D).transform
+		_collect_cover_sprite_bounds(child, child_transform, result)
 
 
 ## 进入游戏关卡

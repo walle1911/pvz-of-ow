@@ -162,6 +162,19 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 		if plant_type > 0 and not normalized_plants.has(plant_type):
 			normalized_plants.append(plant_type)
 	result["availablePlants"] = normalized_plants
+	## 选关封面角色是可选字段：字段缺失表示继续使用自动推荐，空数组表示不显示角色。
+	if result.has("coverCharacters"):
+		var normalized_cover_characters: Array = []
+		for value in result.get("coverCharacters", []):
+			if value is not Dictionary or normalized_cover_characters.size() >= 3:
+				continue
+			var entry := value as Dictionary
+			var kind := str(entry.get("kind", ""))
+			var type_id := int(entry.get("type", 0))
+			if not ["plant", "zombie"].has(kind) or type_id <= 0:
+				continue
+			normalized_cover_characters.append({"kind": kind, "type": type_id})
+		result["coverCharacters"] = normalized_cover_characters
 	var normalized_forced_plants: Array = []
 	for plant_value in result.get("forcedPlants", []):
 		var plant_type := int(LEGACY_PLANT_TYPE_IDS.get(str(plant_value).to_lower(), plant_value))
@@ -222,6 +235,23 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "关卡名称不能为空", "name"))
 	if not ["simple", "advanced"].has(str(level.get("editorMode", "advanced"))):
 		issues.append(issue("error", "编辑模式必须是简易模式或进阶模式", "editorMode"))
+	if level.has("coverCharacters"):
+		var cover_characters: Array = level.get("coverCharacters", [])
+		if cover_characters.size() > 3:
+			issues.append(issue("error", "选关封面最多显示 3 个角色", "coverCharacters"))
+		for value in cover_characters:
+			if value is not Dictionary:
+				issues.append(issue("error", "选关封面角色配置格式错误", "coverCharacters"))
+				break
+			var entry := value as Dictionary
+			var kind := str(entry.get("kind", ""))
+			var type_id := int(entry.get("type", 0))
+			if kind == "plant" and CharacterRegistry.PlantInfo.has(type_id):
+				continue
+			if kind == "zombie" and CharacterRegistry.ZombieInfo.has(type_id):
+				continue
+			issues.append(issue("error", "选关封面角色未在角色注册表中登记", "coverCharacters"))
+			break
 	for reward_plant in reward_plant_types(level):
 		if not CharacterRegistry.PlantInfo.has(reward_plant):
 			issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlants"))
@@ -320,6 +350,38 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 				issues.append(issue("error", "同屏上限必须大于 0", path + "/maxAlive"))
 			## 动态波次会等待本阶段配置的僵尸全部出场，阶段 duration 不再作为推进截止时间。
 	return issues
+
+
+## 选关封面自动推荐：只取相较上一关首次进入卡池的植物和首次出场的僵尸。
+## 返回值同时供关卡工坊和选关界面使用，确保编辑器所见即所得。
+static func recommended_cover_characters(level: Dictionary, previous_level: Dictionary = {}) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var previous_plants: Array = previous_level.get("availablePlants", [])
+	for value in level.get("availablePlants", []):
+		var plant_type := int(value)
+		if plant_type > 0 and not previous_plants.has(plant_type):
+			result.append({"kind": "plant", "type": plant_type})
+			if result.size() >= 3:
+				return result
+	var previous_zombies := _cover_zombie_types(previous_level)
+	for zombie_type in _cover_zombie_types(level):
+		## 旗帜僵尸由大波机制附带，不作为关卡新登场角色。
+		if [101, 501].has(zombie_type) or previous_zombies.has(zombie_type):
+			continue
+		result.append({"kind": "zombie", "type": zombie_type})
+		if result.size() >= 3:
+			break
+	return result
+
+
+static func _cover_zombie_types(level: Dictionary) -> Array[int]:
+	var result: Array[int] = []
+	for wave in level.get("waves", []):
+		for group in (wave as Dictionary).get("spawnGroups", []):
+			var zombie_type := int((group as Dictionary).get("zombieType", 0))
+			if zombie_type > 0 and not result.has(zombie_type):
+				result.append(zombie_type)
+	return result
 
 
 static func reward_plant_types(level: Dictionary) -> Array[int]:

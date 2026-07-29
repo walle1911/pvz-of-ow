@@ -12,7 +12,6 @@ class_name Trophy
 @onready var reward_card_holder: Control = $RewardScreen/RewardCardHolder
 @onready var reward_glow: Sprite2D = $RewardScreen/RewardGlow
 @onready var reward_flash: Sprite2D = $RewardScreen/RewardFlash
-@onready var reward_count_label: Label = $RewardScreen/RewardCount
 @onready var reward_hint: Label = $RewardScreen/Hint
 
 var reward_cards: Array[Card] = []
@@ -84,7 +83,6 @@ func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 	reward_screen.scale = Vector2(0.94, 0.94)
 
 	var card_count := plant_types.size()
-	reward_count_label.text = "奖✖️%d" % card_count
 	reward_hint.text = "你获得了 %d 张新植物卡！\n点击卡片继续" % card_count
 	var card_spacing := 62.0
 	var holder_scale := minf(2.0, 5.5 / float(card_count))

@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0
+		0,
+		1,
+		2,
+		3,
+		4
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -33,6 +33,12 @@
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 36
+		}
+	],
 	"earlyRefreshDelay": 1.5,
 	"editorMode": "simple",
 	"environmentConfig": {
@@ -71,8 +77,13 @@
 	},
 	"randomSeed": 2026071508.0,
 	"rewardPlant": 18,
+	"rewardPlants": [
+		18
+	],
 	"schemaVersion": 1.0,
+	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 1,
+	"simpleFlagZombieType": 101,
 	"simpleWaveCount": 10,
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,

@@ -89,7 +89,10 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071519.0,
-	"rewardPlant": -1.0,
+	"rewardPlant": 21,
+	"rewardPlants": [
+		21
+	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 2,

@@ -8,6 +8,7 @@ const OPTION_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/Sele
 const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png")
 const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png")
 const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
+const STORE_LABEL_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const DeveloperPackageStore := preload("res://scripts/resources/developer_package_store.gd")
 
 @onready var dialog: Dialog = $Dialog
@@ -27,6 +28,7 @@ const DeveloperPackageStore := preload("res://scripts/resources/developer_packag
 @onready var adventure_mode_dialog = $AdventureModeDialog
 @onready var option_button: TextureButton = $BG_Right/Option/TextureButton
 @onready var help_button: TextureButton = $BG_Right/Option/TextureButton2
+@onready var store_button: TextureButton = $BG_Right/Item/TextureButton3
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
@@ -163,6 +165,8 @@ func _apply_developer_mode(enabled: bool) -> void:
 	for button in [menu_button_1, menu_button_2, menu_button_3, menu_button_4]:
 		button.visible = not developer_mode
 	developer_menu.visible = developer_mode
+	_apply_normal_option_buttons()
+	_apply_developer_store_button(developer_mode)
 	if developer_mode:
 		level_workshop_button.texture_normal = RETURN_NORMAL_TEXTURE
 		level_workshop_button.tooltip_text = "返回正常模式"
@@ -171,48 +175,37 @@ func _apply_developer_mode(enabled: bool) -> void:
 		developer_button_2.tooltip_text = "打开地图工坊"
 		developer_button_3.tooltip_text = "调整植物与僵尸数值"
 		developer_button_4.tooltip_text = "保存当前开发者数据并导出开发者包"
-		_apply_developer_option_buttons()
 	else:
 		level_workshop_button.texture_normal = normal_level_workshop_texture
 		level_workshop_button.tooltip_text = "进入开发者模式"
 		developer_mode_label.visible = false
-		_apply_normal_option_buttons()
 
 
-func _apply_developer_option_buttons() -> void:
-	## 复用原有布袋素材；左侧按钮覆盖“导入”文字，中间按钮恢复原“选项”。
-	option_button.texture_normal = OPTION_NORMAL_TEXTURE
-	option_button.texture_pressed = OPTION_HOVER_TEXTURE
-	option_button.texture_hover = OPTION_HOVER_TEXTURE
-	option_button.tooltip_text = "导入开发者包"
-	var import_label := option_button.get_node_or_null("DeveloperImportLabel") as Label
+func _apply_developer_store_button(enabled: bool) -> void:
+	var import_label := store_button.get_node_or_null("DeveloperImportLabel") as Label
 	if import_label == null:
 		import_label = Label.new()
 		import_label.name = "DeveloperImportLabel"
-		import_label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		import_label.position = Vector2(80, 17)
+		import_label.size = Vector2(50, 31)
+		import_label.rotation_degrees = -10.0
+		import_label.pivot_offset = import_label.size * 0.5
 		import_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		import_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		import_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		import_label.add_theme_font_size_override("font_size", 15)
-		import_label.add_theme_color_override("font_color", Color(0.05, 0.035, 0.02, 1))
-		import_label.add_theme_color_override("font_outline_color", Color(0.73, 0.69, 0.48, 1))
-		import_label.add_theme_constant_override("outline_size", 5)
-		option_button.add_child(import_label)
-	import_label.text = "导入"
-	import_label.visible = true
-
-	help_button.position = Vector2(94, 98)
-	help_button.size = Vector2(68, 31)
-	help_button.texture_normal = OPTION_NORMAL_TEXTURE
-	help_button.texture_pressed = OPTION_HOVER_TEXTURE
-	help_button.texture_hover = OPTION_HOVER_TEXTURE
-	help_button.tooltip_text = "选项"
+		import_label.add_theme_font_override("font", STORE_LABEL_FONT)
+		import_label.add_theme_font_size_override("font_size", 22)
+		import_label.add_theme_color_override("font_color", Color(0.035, 0.025, 0.02, 1))
+		var paper_style := StyleBoxFlat.new()
+		paper_style.bg_color = Color(0.89, 0.87, 0.74, 1)
+		import_label.add_theme_stylebox_override("normal", paper_style)
+		import_label.text = "导入"
+		store_button.add_child(import_label)
+	import_label.visible = enabled
+	store_button.tooltip_text = "导入开发者包" if enabled else ""
 
 
 func _apply_normal_option_buttons() -> void:
-	var import_label := option_button.get_node_or_null("DeveloperImportLabel") as Label
-	if import_label != null:
-		import_label.visible = false
 	option_button.texture_normal = OPTION_NORMAL_TEXTURE
 	option_button.texture_pressed = OPTION_HOVER_TEXTURE
 	option_button.texture_hover = OPTION_HOVER_TEXTURE
@@ -291,16 +284,10 @@ func _on_level_workshop_button_pressed() -> void:
 
 #region 选项
 func _on_option_button_1_pressed() -> void:
-	if developer_mode:
-		_open_developer_package_import()
-		return
 	$StartMenuOptionDialog.appear_menu()
 
 
 func _on_option_button_2_pressed() -> void:
-	if developer_mode:
-		$StartMenuOptionDialog.appear_menu()
-		return
 	$Dialog_Help.appear_dialog()
 
 
@@ -367,6 +354,9 @@ func _on_item_button_2_pressed() -> void:
 
 ## 商店
 func _on_item_button_3_pressed() -> void:
+	if developer_mode:
+		_open_developer_package_import()
+		return
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.Store])
 
 ## 点击用户更新时

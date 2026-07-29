@@ -130,7 +130,7 @@ func _run() -> void:
 		if not button is TextureButton:
 			continue
 		var button_label := (button as TextureButton).get_child(0) as Label if (button as TextureButton).get_child_count() > 0 else null
-		if button_label != null and button_label.text == "保存设置":
+		if button_label != null and button_label.text == "确认":
 			(button as TextureButton).pressed.emit()
 			saved_refresh_speed_setting = true
 			break

@@ -39,7 +39,6 @@ func _build_level_entries() -> void:
 		for preset in AdventurePresets.list_presets("normal"):
 			var preset_id := str(preset["id"])
 			var source := AdventurePresets.build_level(preset_id, true)
-			var cover_source := AdventurePresets.build_level(preset_id, false)
 			var preset_built := CustomRuntime.build_game_para(source)
 			if preset_built["ok"]:
 				classic_entries.append({
@@ -47,8 +46,8 @@ func _build_level_entries() -> void:
 					"id": preset_id,
 					"name": str(source.get("name", preset["name"])),
 					"preset": preset,
-					## 关卡模板封面始终取普通模式原始数据；编辑内容只影响实际游玩。
-					"cover_source": cover_source,
+					## 封面角色属于关卡编辑数据；未配置时仍由 ChooseLevel 自动推荐。
+					"cover_source": source,
 					"editor_source": source,
 					"modified": AdventureStore.load_developer_level(preset_id)["ok"],
 				})

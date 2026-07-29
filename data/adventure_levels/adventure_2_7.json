@@ -17,12 +17,14 @@
 		36,
 		18,
 		504,
+		23,
 		14,
 		11,
 		43,
 		13,
+		40,
 		32,
-		41
+		24
 	],
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
@@ -77,7 +79,7 @@
 		"type": "night_lawn"
 	},
 	"minimumWaveTime": 5.405,
-	"name": "2-7 堡垒说的对",
+	"name": "2-7 宇宙在向我歌唱",
 	"openingFirstZombieAdvanceCells": 0.0,
 	"plantSelectionEnabled": true,
 	"playerConfig": {
@@ -87,6 +89,9 @@
 	},
 	"randomSeed": 2026071517.0,
 	"rewardPlant": 27,
+	"rewardPlants": [
+		27
+	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 2,
