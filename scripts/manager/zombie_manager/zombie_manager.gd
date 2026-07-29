@@ -363,13 +363,13 @@ func jalapeno_bomb_item_lane(lane:int):
 		var ice_road:IceRoad = all_ice_roads[lane][i]
 		ice_road.ice_road_disappear()
 
-## 火爆辣椒爆炸整行僵尸
-func jalapeno_bomb_lane_zombie(lane:int):
+## 火爆辣椒爆炸整行僵尸；伤害可由斩仇的中心排/边缘排分别传入。
+func jalapeno_bomb_lane_zombie(lane:int, damage:int = 1800):
 	#print(all_zombies_2d[lane])
 	for i in range(all_zombies_2d[lane].size()-1,-1,-1) :
 		if is_instance_valid(all_zombies_2d[lane][i]):
 			var zombie:Zombie000Base = all_zombies_2d[lane][i]
-			zombie.be_bomb(1800, true)
+			zombie.be_bomb(damage, true)
 
 ## 三叶草吹走空中僵尸
 func blover_blow_away_in_sky_zombie():

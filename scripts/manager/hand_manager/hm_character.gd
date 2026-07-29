@@ -481,14 +481,22 @@ func _release_vendetta(is_charged:bool, suppress_following_cell_click:bool) -> v
 
 	SoundManager.play_other_SFX(&"swing")
 	SoundManager.play_character_SFX(&"Jalapeno")
+	var center_lane_damage := 1800
+	var edge_lane_damage := 900
+	if airborne_actor is Plant059JalapenoVendetta:
+		center_lane_damage = airborne_actor.center_lane_damage
+		edge_lane_damage = airborne_actor.edge_lane_damage
 	var first_lane := _vendetta_target_lane
 	var end_lane := _vendetta_target_lane + 1
 	if is_charged:
 		first_lane = maxi(0, _vendetta_target_lane - 1)
 		end_lane = mini(all_lane_cells.size(), _vendetta_target_lane + 2)
 	for lane_index in range(first_lane, end_lane):
+		var lane_damage := center_lane_damage
+		if is_charged and lane_index != _vendetta_target_lane:
+			lane_damage = edge_lane_damage
 		EventBus.push_event("jalapeno_bomb_effect", [lane_index])
-		EventBus.push_event("jalapeno_bomb_lane_zombie", [lane_index])
+		EventBus.push_event("jalapeno_bomb_lane_zombie", [lane_index, lane_damage])
 		EventBus.push_event("jalapeno_bomb_item_lane", [lane_index])
 
 	var used_card := curr_card
