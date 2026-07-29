@@ -243,8 +243,8 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 	return plant
 
 
-## D.Va 毁灭菇爆炸后，检测后方三列、当前行及相邻行组成的九格区域。
-## 后方没有合法空位时，无视刚生成的坑洞，回到爆炸原格落地。
+## D.Va 毁灭菇爆炸后，检测以自身为中心的 3×3 九格区域。
+## 九格内没有合法空位时，无视刚生成的坑洞，回到爆炸原格落地。
 func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:float, baby_scale:float, launch_duration:float, launch_height:float):
 	await get_tree().process_frame
 
@@ -276,10 +276,10 @@ func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:f
 				var target_row := row_col.x + row_offset
 				if target_row < 0 or target_row >= all_plant_cells.size():
 					continue
-				for col_offset in range(1, 4):
-					var target_col := row_col.y - col_offset
-					if target_col < 0:
-						break
+				for col_offset in range(-1, 2):
+					var target_col := row_col.y + col_offset
+					if target_col < 0 or target_col >= all_plant_cells[target_row].size():
+						continue
 					var candidate:PlantCell = all_plant_cells[target_row][target_col]
 					if plant_condition.judge_is_can_plant(candidate, CharacterRegistry.PlantType.P016DoomShroomDVA):
 						candidate_cells.append(candidate)
