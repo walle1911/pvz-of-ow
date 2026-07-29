@@ -6,9 +6,6 @@
 [node name="Bullet021SeaShroomWuyang" unique_id=1943444788 instance=ExtResource("1_puff")]
 script = ExtResource("2_script")
 max_lifetime = 8.0
-guidance_duration = 10.0
-guidance_cooldown = 25.0
-guidance_attack_speed_multiplier = 1.0
 mouse_move_threshold = 0.5
 max_distance = 2000.0
 bullet_type = 21

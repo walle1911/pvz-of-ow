@@ -9,14 +9,6 @@ var travelled_distance := 0.0
 var lifetime := 0.0
 var guidance_source: Node
 
-@export_group("制导状态")
-## 点击无恙后的制导持续时间。
-@export_range(0.1, 60.0, 0.1, "or_greater") var guidance_duration := 10.0
-## 制导激活冷却，默认为玉米加农炮 35 秒的三分之二。
-@export_range(0.1, 60.0, 0.1, "or_greater") var guidance_cooldown := 35.0 * 2.0 / 3.0
-## 制导状态下的子弹发射频率倍率。
-@export_range(0.1, 5.0, 0.1, "or_greater") var guidance_attack_speed_multiplier := 1.5
-
 @export_group("鼠标制导")
 ## 过滤鼠标的细微抖动，位移超过此值才修正子弹方向。
 @export var mouse_move_threshold := 0.5
@@ -33,20 +25,26 @@ func init_bullet(bullet_paras: Dictionary):
 	super(bullet_paras)
 	## 鼠标可以跨行移动，因此该子弹不使用发射者的行限制。
 	is_activate_lane = false
+	if _is_guidance_active():
+		scale *= 2.0
 
 
 func set_guidance_source(source: Node) -> void:
 	guidance_source = source
 
 
-func _physics_process(delta: float) -> void:
-	lifetime += delta
-	var mouse_position := get_global_mouse_position()
-	var is_guidance_active: bool = (
+func _is_guidance_active() -> bool:
+	return (
 		is_instance_valid(guidance_source)
 		and guidance_source.has_method("is_bullet_guidance_active")
 		and bool(guidance_source.call("is_bullet_guidance_active"))
 	)
+
+
+func _physics_process(delta: float) -> void:
+	lifetime += delta
+	var mouse_position := get_global_mouse_position()
+	var is_guidance_active := _is_guidance_active()
 	var movement_distance := speed * delta
 	if is_guidance_active:
 		var mouse_move_distance_squared := mouse_position.distance_squared_to(last_mouse_position)
