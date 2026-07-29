@@ -39,6 +39,17 @@ func _run() -> void:
 	assert(active_source_button.self_modulate == workshop.ACTIVE_SOURCE_BUTTON_MODULATE)
 	assert(idle_source_button.position.y == 0.0)
 	assert(idle_source_button.self_modulate == Color.WHITE)
+	assert((workshop.new_level_button.get_node("Label") as Label).text == "自制关卡")
+	assert((workshop.reward_mode_button.get_child(0) as Label).text == "植物卡片")
+	workshop.call("_load_preset_for_edit", "adventure_2_1")
+	assert(workshop.background_sprite.texture == workshop.NIGHT_LAWN)
+	assert((workshop.reward_mode_button.get_child(0) as Label).text.contains("奖✖️"))
+	workshop.call("_toggle_reward_catalog")
+	assert((workshop.reward_mode_button.get_child(0) as Label).text.begins_with("登场僵尸"))
+	workshop.call("_load_preset_for_edit", "adventure_3_1")
+	assert(workshop.catalog_mode == LevelWorkshop.CatalogMode.REWARD_CARDS)
+	assert(workshop.background_sprite.texture == workshop.POOL_LAWN)
+	workshop.call("_create_new_level")
 	var first_zombie_holder := workshop.card_grid.get_child(0) as Control
 	var first_zombie_card := first_zombie_holder.get_child(0) as Card
 	var first_zombie_button := first_zombie_card.get_node("Button") as Button
@@ -136,6 +147,19 @@ func _run() -> void:
 	workshop.call("_sanitize_simple_allowed_pool")
 	var required_zombie := int(CharacterRegistry.ZombieType.Z000NormTalon)
 	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(required_zombie)).is_empty())
+	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z500Norm), "base")
+	assert(int(workshop.level["simpleBaseZombieType"]) == int(CharacterRegistry.ZombieType.Z500Norm))
+	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(CharacterRegistry.ZombieType.Z500Norm)).is_empty())
+	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z501Flag), "flag")
+	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z501Flag))
+	var fixed_flag_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z501Flag)) as Control
+	assert((fixed_flag_holder.get_child(0) as Card).modulate == Color.WHITE)
+	workshop.call("_select_simple_zombie", str(CharacterRegistry.ZombieType.Z501Flag))
+	var fixed_flag_after_click := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z501Flag)) as Control
+	assert((fixed_flag_after_click.get_child(0) as Card).modulate == Color.WHITE)
+	workshop.call("_delete_simple_zombie", str(CharacterRegistry.ZombieType.Z501Flag))
+	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z501Flag))
+	workshop.call("_set_simple_zombie_role", required_zombie, "base")
 	workshop.call("_delete_simple_zombie", str(required_zombie))
 	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(required_zombie)).is_empty())
 	workshop.call("_on_remove_flag_pressed")
@@ -144,9 +168,60 @@ func _run() -> void:
 	assert(workshop.call("_count_stage_type", "flag") == simple_flag_count)
 
 	workshop.call("_load_preset_for_edit", "adventure_1_1")
+	assert(workshop.previous_formal_level_button.visible)
+	assert(workshop.next_formal_level_button.visible)
+	assert(workshop.previous_formal_level_button.disabled)
+	assert(not workshop.next_formal_level_button.disabled)
+	assert(workshop.previous_formal_level_button.tooltip_text == "上一关")
+	assert(workshop.next_formal_level_button.tooltip_text == "下一关")
+	var fixed_card_id := int(workshop.locked_available_plant_types[0])
+	var fixed_card_holder := workshop.call("_make_reward_card", {"id": fixed_card_id, "is_plant": true}) as Control
+	assert(fixed_card_holder.get_node_or_null("CardStateGlow") != null)
+	assert(fixed_card_holder.get_node_or_null("CardStateBadge") == null)
+	fixed_card_holder.free()
+	var reward_card_id := -1
+	for entry in workshop.reward_card_order:
+		var candidate_id := int((entry as Dictionary)["id"])
+		if not workshop.locked_available_plant_types.has(candidate_id):
+			reward_card_id = candidate_id
+			break
+	assert(reward_card_id >= 0)
+	workshop.level["rewardPlants"] = [reward_card_id]
+	workshop.level["rewardPlant"] = reward_card_id
+	var reward_card_holder := workshop.call("_make_reward_card", {"id": reward_card_id, "is_plant": true}) as Control
+	var reward_glow := reward_card_holder.get_node("CardStateGlow") as TextureRect
+	var reward_badge := reward_card_holder.get_node("CardStateBadge") as TextureRect
+	assert(reward_glow.z_index == 0)
+	assert((reward_card_holder.get_child(0) as Card).z_index == 1)
+	assert(is_equal_approx(reward_glow.modulate.a, 0.95))
+	assert((reward_badge.get_child(0) as Label).text == "奖")
+	reward_card_holder.free()
+	workshop.level["name"] = "%s（未保存）" % str(workshop.level["name"])
+	workshop.call("_changed", "测试未保存修改")
+	workshop.next_formal_level_button.pressed.emit()
+	assert(workshop.formal_preset_id == "adventure_1_1")
+	assert(workshop.unsaved_changes_dialog != null)
+	assert(workshop.unsaved_changes_dialog.dialog_text.contains("尚未保存"))
+	workshop.unsaved_changes_dialog.custom_action.emit(&"discard_changes")
+	await get_tree().process_frame
+	assert(workshop.formal_preset_id == "adventure_1_2")
+	workshop.previous_formal_level_button.pressed.emit()
+	assert(workshop.formal_preset_id == "adventure_1_1")
+	workshop.call("_load_preset_for_edit", "adventure_1_7")
+	var later_reward_conflicts: Array = workshop.call("_later_formal_reward_conflicts", 18)
+	assert(not later_reward_conflicts.is_empty())
+	workshop.call("_set_formal_reward_plants", [])
+	workshop.call("_toggle_reward_card", 18, true)
+	assert(workshop.reward_conflict_dialog != null)
+	assert(workshop.reward_conflict_dialog.dialog_text.contains("后续关卡将需要新增奖励植物"))
+	workshop.reward_conflict_dialog.confirmed.emit()
+	await get_tree().process_frame
+	assert(workshop.level["rewardPlants"] == [18])
+	workshop.call("_load_preset_for_edit", "adventure_1_1")
 	var opening_playtest := Runtime.build_game_para(workshop.level)
 	assert(opening_playtest["ok"])
 	var opening_para := opening_playtest["game_para"] as ResourceLevelData
+	assert(opening_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
 	assert(opening_para.start_sun == 100)
 	assert(is_equal_approx(opening_para.custom_initial_wave_delay, 0.1))
 	assert(is_equal_approx(opening_para.opening_first_zombie_advance_cells, 7.5))
@@ -174,6 +249,8 @@ func _run() -> void:
 
 	workshop.call("_load_preset_for_edit", "adventure_1_2")
 	assert(workshop.formal_preset_id == "adventure_1_2")
+	assert(not workshop.previous_formal_level_button.disabled)
+	assert(not workshop.next_formal_level_button.disabled)
 	assert(str(workshop.level.get("editorMode", "")) == "simple")
 	var formal_simple_built := Runtime.build_game_para(workshop.level)
 	assert(formal_simple_built["ok"])
@@ -199,9 +276,9 @@ func _run() -> void:
 			if new_reward_types.size() == 2:
 				break
 	assert(new_reward_types.size() == 2)
-	workshop.level["rewardPlant"] = -1
+	workshop.call("_set_formal_reward_plants", [])
 	workshop.call("_toggle_reward_card", new_reward_types[0], true)
-	assert(int(workshop.level["rewardPlant"]) == new_reward_types[0])
+	assert(workshop.level["rewardPlants"] == [new_reward_types[0]])
 	assert(not (workshop.level["availablePlants"] as Array).has(new_reward_types[0]))
 	var reward_card_entry: Dictionary = {}
 	for reward_entry: Dictionary in workshop.reward_card_order:
@@ -216,15 +293,18 @@ func _run() -> void:
 			found_reward_badge = true
 	assert(found_reward_badge)
 	workshop.call("_toggle_reward_card", new_reward_types[1], true)
-	assert(int(workshop.level["rewardPlant"]) == new_reward_types[1])
+	assert(workshop.level["rewardPlants"] == new_reward_types)
+	assert((workshop.reward_mode_button.get_child(0) as Label).text.contains("奖✖️2"))
 	assert(not (workshop.level["availablePlants"] as Array).has(new_reward_types[1]))
 	workshop.call("_toggle_reward_card", new_reward_types[1], true)
-	assert(int(workshop.level["rewardPlant"]) == -1)
+	assert(workshop.level["rewardPlants"] == [new_reward_types[0]])
 	assert(workshop.level["availablePlants"] == inherited_plants_before)
 	workshop.call("_toggle_reward_catalog")
 	assert(workshop.catalog_mode == LevelWorkshop.CatalogMode.SPAWN_ZOMBIES)
 	workshop.call("_create_new_level")
 	assert(workshop.reward_mode_button.visible)
+	assert(not workshop.previous_formal_level_button.visible)
+	assert(not workshop.next_formal_level_button.visible)
 	assert(workshop.new_level_button.button_pressed)
 	assert(not workshop.edit_level_button.button_pressed)
 	assert(workshop.new_level_button.position.y == workshop.ACTIVE_SOURCE_BUTTON_OFFSET_Y)

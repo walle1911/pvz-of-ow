@@ -9,6 +9,7 @@ const REGISTRY_NODE_PATH := "@registry"
 const REGISTRY_RULES := {
 	"plant_sun_cost": {"min": 0.0, "max": 10000000.0, "integer": true},
 	"plant_cool_time": {"min": 0.01, "max": 600.0, "integer": false},
+	"zombie_spawn_weight": {"min": 1.0, "max": 10000000.0, "integer": true},
 }
 
 static var _cache: Dictionary = {}

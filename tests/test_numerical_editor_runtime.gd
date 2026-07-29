@@ -109,6 +109,36 @@ func _run() -> void:
 	assert(soldier.get_node("HpComponent").max_hp == 888)
 	assert(is_equal_approx(soldier.get_node("AttackComponent").attack_cd, 0.77))
 	soldier.free()
+
+	var normal_zombie_path := "res://scenes/character/zombie/zombie_500_norm.tscn"
+	var zombie_data := {
+		"characters": {
+			normal_zombie_path: {
+				"@registry": {"zombie_spawn_weight": 6789},
+			}
+		}
+	}
+	assert(Store.save_data(zombie_data))
+	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 4000, true) == 6789)
+	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 4000, false) == 4000)
+	var wave_create_manager := ZombieWaveCreateManager.new()
+	wave_create_manager.call("_reset_zombie_weights_from_adjustments")
+	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z500Norm] == 6789)
+	wave_create_manager.free()
+	var normal_zombie_item: Dictionary
+	for item in editor.catalog:
+		if item["kind"] == "zombie" and int(item["id"]) == int(CharacterRegistry.ZombieType.Z500Norm):
+			normal_zombie_item = item
+			break
+	assert(not normal_zombie_item.is_empty())
+	editor.call("_open_detail", normal_zombie_item)
+	var has_spawn_weight_field := false
+	for child in editor.field_box.get_children():
+		if child is HBoxContainer and child.get_child_count() > 0 and child.get_child(0) is Label:
+			if (child.get_child(0) as Label).text == "刷怪权重":
+				has_spawn_weight_field = true
+				break
+	assert(has_spawn_weight_field)
 	Store.save_data(original_adjustments)
 	editor.queue_free()
 	print("Numerical editor runtime test: passed (%d characters, %d tunable fields)" % [editor.catalog.size(), total_tunable_fields])

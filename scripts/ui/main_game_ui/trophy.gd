@@ -12,8 +12,10 @@ class_name Trophy
 @onready var reward_card_holder: Control = $RewardScreen/RewardCardHolder
 @onready var reward_glow: Sprite2D = $RewardScreen/RewardGlow
 @onready var reward_flash: Sprite2D = $RewardScreen/RewardFlash
+@onready var reward_count_label: Label = $RewardScreen/RewardCount
+@onready var reward_hint: Label = $RewardScreen/Hint
 
-var reward_card: Card
+var reward_cards: Array[Card] = []
 var reward_is_being_collected := false
 
 func _ready():
@@ -50,21 +52,29 @@ func _on_trophy_button_pressed() -> void:
 	tween_glow.tween_property(glow, "modulate:a", 1, 5.0)
 
 	await tween.finished
-	var reward_plant_type := _reward_plant_type()
-	if reward_plant_type >= 0 and AllCards.all_plant_card_prefabs.has(reward_plant_type):
-		_show_reward_plant(reward_plant_type)
+	var reward_plant_types := _reward_plant_types()
+	if not reward_plant_types.is_empty():
+		_show_reward_plants(reward_plant_types)
 		return
 	await get_tree().create_timer(3.5).timeout
 	EventBus.push_event("win_main_game")
 
 
-func _reward_plant_type() -> int:
+func _reward_plant_types() -> Array[CharacterRegistry.PlantType]:
+	var result: Array[CharacterRegistry.PlantType] = []
 	if not is_instance_valid(main_game) or main_game.game_para == null:
-		return -1
-	return int(main_game.game_para.reward_plant_type)
+		return result
+	for plant_type in main_game.game_para.reward_plant_types:
+		if AllCards.all_plant_card_prefabs.has(plant_type) and not result.has(plant_type):
+			result.append(plant_type)
+	if result.is_empty():
+		var legacy_reward := int(main_game.game_para.reward_plant_type)
+		if legacy_reward >= 0 and AllCards.all_plant_card_prefabs.has(legacy_reward):
+			result.append(legacy_reward as CharacterRegistry.PlantType)
+	return result
 
 
-func _show_reward_plant(plant_type: int) -> void:
+func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> void:
 	trophy_button.visible = false
 	pick_up_glow.visible = false
 	all_rays.visible = false
@@ -73,29 +83,42 @@ func _show_reward_plant(plant_type: int) -> void:
 	reward_screen.modulate.a = 0.0
 	reward_screen.scale = Vector2(0.94, 0.94)
 
-	reward_card = (AllCards.all_plant_card_prefabs[plant_type] as Card).duplicate() as Card
-	reward_card.name = "RewardPlantCard"
-	reward_card.position = Vector2(0, 70)
-	reward_card.pivot_offset = Vector2(25, 35)
-	reward_card.scale = Vector2(0.25, 0.25)
-	reward_card.tooltip_text = "点击领取通关奖励"
-	reward_card_holder.add_child(reward_card)
-	var cost_label := reward_card.get_node_or_null("CardBg/Cost") as Label
-	if cost_label != null:
-		cost_label.visible = false
-	var card_button := reward_card.get_node_or_null("Button") as Button
-	if card_button != null:
-		card_button.pressed.connect(_on_reward_card_pressed, CONNECT_ONE_SHOT)
+	var card_count := plant_types.size()
+	reward_count_label.text = "奖✖️%d" % card_count
+	reward_hint.text = "你获得了 %d 张新植物卡！\n点击卡片继续" % card_count
+	var card_spacing := 62.0
+	var holder_scale := minf(2.0, 5.5 / float(card_count))
+	reward_card_holder.scale = Vector2.ONE * holder_scale
+	reward_card_holder.position = Vector2(-25.0 * holder_scale, -105.0 - 35.0 * holder_scale)
+	for card_index in card_count:
+		var plant_type := plant_types[card_index]
+		var reward_card := (AllCards.all_plant_card_prefabs[plant_type] as Card).duplicate() as Card
+		reward_card.name = "RewardPlantCard%d" % (card_index + 1)
+		var target_x := (float(card_index) - float(card_count - 1) * 0.5) * card_spacing
+		reward_card.position = Vector2(target_x, 70)
+		reward_card.set_meta("reward_target_x", target_x)
+		reward_card.pivot_offset = Vector2(25, 35)
+		reward_card.scale = Vector2(0.25, 0.25)
+		reward_card.tooltip_text = "点击领取全部通关奖励"
+		reward_card_holder.add_child(reward_card)
+		reward_cards.append(reward_card)
+		var cost_label := reward_card.get_node_or_null("CardBg/Cost") as Label
+		if cost_label != null:
+			cost_label.visible = false
+		var card_button := reward_card.get_node_or_null("Button") as Button
+		if card_button != null:
+			card_button.pressed.connect(_on_reward_card_pressed, CONNECT_ONE_SHOT)
 
 	SoundManager.play_other_SFX("prize")
 	var reveal := create_tween().set_parallel(true)
 	reveal.tween_property(reward_screen, "modulate:a", 1.0, 0.35)
 	reveal.tween_property(reward_screen, "scale", Vector2.ONE, 0.35) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	reveal.tween_property(reward_card, "position", Vector2.ZERO, 0.65) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	reveal.tween_property(reward_card, "scale", Vector2.ONE, 0.65) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	for reward_card in reward_cards:
+		reveal.tween_property(reward_card, "position", Vector2(float(reward_card.get_meta("reward_target_x")), 0), 0.65) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		reveal.tween_property(reward_card, "scale", Vector2.ONE, 0.65) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	var flash_tween := create_tween().set_parallel(true)
 	flash_tween.tween_property(reward_flash, "scale", Vector2(4.5, 4.5), 0.55)
 	flash_tween.tween_property(reward_flash, "modulate:a", 0.0, 0.55)
@@ -105,19 +128,19 @@ func _show_reward_plant(plant_type: int) -> void:
 
 
 func _on_reward_card_pressed() -> void:
-	if reward_is_being_collected or not is_instance_valid(reward_card):
+	if reward_is_being_collected or reward_cards.is_empty():
 		return
 	reward_is_being_collected = true
-	var card_button := reward_card.get_node_or_null("Button") as Button
-	if card_button != null:
-		card_button.disabled = true
+	for reward_card in reward_cards:
+		var card_button := reward_card.get_node_or_null("Button") as Button
+		if card_button != null:
+			card_button.disabled = true
 	SoundManager.play_other_SFX("seedlift")
-	var collect := create_tween()
-	collect.tween_property(reward_card, "scale", Vector2(1.18, 1.18), 0.2) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	collect.tween_property(reward_card, "position:y", -45.0, 0.35) \
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	collect.parallel().tween_property(reward_card, "modulate:a", 0.0, 0.35)
+	var collect := create_tween().set_parallel(true)
+	for reward_card in reward_cards:
+		collect.tween_property(reward_card, "position:y", -45.0, 0.45) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+		collect.tween_property(reward_card, "modulate:a", 0.0, 0.45)
 	await collect.finished
 	EventBus.push_event("win_main_game")
 

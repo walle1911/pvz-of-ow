@@ -7,6 +7,10 @@ const CustomRuntime := preload("res://scripts/resources/level/level_custom_runti
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
+const NIGHT_LAWN := preload("res://assets/image/background/background2.jpg")
+const POOL_LAWN := preload("res://assets/image/background/background3.jpg")
+const FOG_LAWN := preload("res://assets/image/background/background4.jpg")
+const ROOF_LAWN := preload("res://assets/image/background/background5.jpg")
 const ALMANAC_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
 const PLANT_ALMANAC_BACKGROUND := preload("res://assets/image/ui/ui_card/all_card/SeedChooser_AlmanacBackground.png")
 const ALMANAC_CLOSE_BUTTON := preload("res://assets/image/Almanac/Almanac_CloseButton.png")
@@ -17,6 +21,8 @@ const CHECKBOX_OFF := preload("res://assets/image/ui/ui_main_game_menu/options_c
 const CHECKBOX_ON := preload("res://assets/image/ui/ui_main_game_menu/options_checkbox1.png")
 const PAGE_BUTTON := preload("res://assets/image/ui/ui_level/SeedChooser_Button2.png")
 const PAGE_BUTTON_HOVER := preload("res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png")
+const SEED_PACKET_GLOW := preload("res://assets/image/particles/SeedPacketGlow.png")
+const LEVEL_NAVIGATION_ARROW := preload("res://assets/image/garden/Zen_NextGarden.png")
 const FLAG_METER := preload("res://assets/image/ui/ui_progress_bar/FlagMeter.png")
 const FLAG_PARTS := preload("res://assets/image/ui/ui_progress_bar/FlagMeterParts.png")
 const WORKSHOP_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
@@ -52,7 +58,14 @@ const FLAG_CENTER_LEFT := 8.0
 const FLAG_CENTER_RIGHT := 150.0
 const SIMPLE_MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const SIMPLE_MAP_NAMES := ["白天草坪", "夜晚草坪", "泳池", "雾夜", "屋顶"]
-const SIMPLE_REQUIRED_ZOMBIE := CharacterRegistry.ZombieType.Z000NormTalon
+const SIMPLE_BASE_ZOMBIE_CANDIDATES := [
+	CharacterRegistry.ZombieType.Z000NormTalon,
+	CharacterRegistry.ZombieType.Z500Norm,
+]
+const SIMPLE_FLAG_ZOMBIE_CANDIDATES := [
+	CharacterRegistry.ZombieType.Z001FlagTalon,
+	CharacterRegistry.ZombieType.Z501Flag,
+]
 const UNSELECTED_CARD_MODULATE := Color(0.55, 0.55, 0.55, 0.72)
 const ACTIVE_SOURCE_BUTTON_MODULATE := Color(0.67, 0.62, 0.56, 1.0)
 const ACTIVE_SOURCE_BUTTON_OFFSET_Y := 4.0
@@ -76,6 +89,8 @@ var road_title: Label
 var stage_heading: Label
 var stage_heading_editor: LineEdit
 var stage_heading_edit_original := ""
+var previous_formal_level_button: Button
+var next_formal_level_button: Button
 var wave_title: Label
 var wave_summary: Label
 var status_label: Label
@@ -129,6 +144,10 @@ var simple_pool_toggle_button: TextureButton
 var card_context_menu: PopupMenu
 var context_card_kind := ""
 var context_card_type := -1
+var saved_level_snapshot := ""
+var pending_unsaved_action := Callable()
+var unsaved_changes_dialog: ConfirmationDialog
+var reward_conflict_dialog: ConfirmationDialog
 
 
 func _layout_control(path: String) -> Control:
@@ -186,6 +205,7 @@ func _ready() -> void:
 	_refresh_draft_picker()
 	_refresh_wave()
 	_update_level_source_buttons()
+	_mark_current_level_saved()
 
 
 func _process(_delta: float) -> void:
@@ -214,6 +234,18 @@ func _build_scene() -> void:
 	_animate_drawer_in()
 
 
+func _refresh_map_preview() -> void:
+	if not is_instance_valid(background_sprite):
+		return
+	var map_type := str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn"))
+	background_sprite.texture = {
+		"night_lawn": NIGHT_LAWN,
+		"pool": POOL_LAWN,
+		"fog": FOG_LAWN,
+		"roof": ROOF_LAWN,
+	}.get(map_type, FRONT_LAWN)
+
+
 func _build_drawer() -> void:
 	drawer = get_node("AlmanacDrawer") as Control
 	drawer.position.x = -drawer.size.x
@@ -232,6 +264,7 @@ func _build_drawer() -> void:
 	reward_mode_button = sidebar_content.get_node("RewardModeButton") as TextureButton
 	reward_mode_button.visible = true
 	reward_mode_button.pressed.connect(_toggle_reward_catalog)
+	_build_formal_level_navigation()
 	_build_stage_heading_editor()
 	_update_catalog_button_label()
 	card_scroll = sidebar_content.get_node("CardScroll") as ScrollContainer
@@ -242,6 +275,78 @@ func _build_drawer() -> void:
 	_refresh_card_page()
 	_build_timeline()
 	_build_drawer_actions()
+
+
+func _build_formal_level_navigation() -> void:
+	previous_formal_level_button = _formal_level_navigation_button(true, "上一关")
+	previous_formal_level_button.position = Vector2(32, 28)
+	previous_formal_level_button.pressed.connect(_switch_formal_level.bind(-1))
+	sidebar_content.add_child(previous_formal_level_button)
+
+	next_formal_level_button = _formal_level_navigation_button(false, "下一关")
+	next_formal_level_button.position = Vector2(331, 28)
+	next_formal_level_button.pressed.connect(_switch_formal_level.bind(1))
+	sidebar_content.add_child(next_formal_level_button)
+
+
+func _formal_level_navigation_button(flip_h: bool, tooltip: String) -> Button:
+	var button := Button.new()
+	button.size = Vector2(40, 34)
+	button.flat = true
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.tooltip_text = tooltip
+	var arrow := TextureRect.new()
+	arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arrow.texture = LEVEL_NAVIGATION_ARROW
+	arrow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arrow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	arrow.flip_h = flip_h
+	button.add_child(arrow)
+	button.mouse_entered.connect(func():
+		if not button.disabled:
+			arrow.self_modulate = Color(1.18, 1.18, 1.18, 1.0)
+	)
+	button.mouse_exited.connect(func(): arrow.self_modulate = Color.WHITE)
+	return button
+
+
+func _switch_formal_level(offset: int) -> void:
+	if loaded_source_kind != "template" or not FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		return
+	if is_instance_valid(stage_heading_editor) and stage_heading_editor.visible:
+		_finish_stage_heading_edit(true)
+		if stage_heading_editor.visible:
+			return
+	var presets := AdventurePresets.list_presets("normal")
+	var target_index := _formal_preset_index() + offset
+	if target_index < 0 or target_index >= presets.size():
+		return
+	_request_leave_with_unsaved_check(_load_preset_for_edit.bind(str((presets[target_index] as Dictionary).get("id", ""))))
+
+
+func _update_formal_level_navigation() -> void:
+	if not is_instance_valid(previous_formal_level_button) or not is_instance_valid(next_formal_level_button):
+		return
+	var preset_index := _formal_preset_index()
+	var formal_editing := loaded_source_kind == "template" and preset_index >= 0
+	previous_formal_level_button.visible = formal_editing
+	next_formal_level_button.visible = formal_editing
+	if formal_editing:
+		var preset_count := AdventurePresets.list_presets("normal").size()
+		previous_formal_level_button.disabled = preset_index == 0
+		next_formal_level_button.disabled = preset_index >= preset_count - 1
+		previous_formal_level_button.modulate = Color(0.42, 0.42, 0.42, 0.7) if previous_formal_level_button.disabled else Color.WHITE
+		next_formal_level_button.modulate = Color(0.42, 0.42, 0.42, 0.7) if next_formal_level_button.disabled else Color.WHITE
+		stage_heading.position.x = 76.0
+		stage_heading.size.x = 253.0
+	else:
+		stage_heading.position.x = 53.0
+		stage_heading.size.x = 380.0
+	if is_instance_valid(stage_heading_editor) and not stage_heading_editor.visible:
+		stage_heading_editor.position = stage_heading.position
+		stage_heading_editor.size.x = maxf(160.0, reward_mode_button.position.x - stage_heading.position.x - 8.0)
 
 
 func _build_stage_heading_editor() -> void:
@@ -337,12 +442,15 @@ func _build_drawer_actions() -> void:
 	new_level_button.button_group = source_button_group
 	edit_level_button.toggle_mode = true
 	edit_level_button.button_group = source_button_group
-	new_level_button.pressed.connect(_create_new_level)
+	new_level_button.pressed.connect(_request_create_new_level)
 	edit_level_button.pressed.connect(_open_template_picker)
 	var formal_edit_label := edit_level_button.get_node_or_null("Label") as Label
 	if formal_edit_label != null:
 		formal_edit_label.text = "编辑正式关卡"
 		formal_edit_label.add_theme_font_size_override("font_size", 14)
+	var custom_level_label := new_level_button.get_node_or_null("Label") as Label
+	if custom_level_label != null:
+		custom_level_label.text = "自制关卡"
 	(actions.get_node("SaveButton") as TextureButton).pressed.connect(_open_save_dialog)
 	(get_node("TopActions/PlaytestButton") as BaseButton).pressed.connect(_playtest)
 	advanced_mode_button = get_node("TopActions/AdvancedModeButton") as BaseButton
@@ -360,7 +468,7 @@ func _update_level_source_buttons() -> void:
 	edit_level_button.set_pressed_no_signal(editing_existing)
 	_apply_source_button_visual(new_level_button, not editing_existing)
 	_apply_source_button_visual(edit_level_button, editing_existing)
-	new_level_button.tooltip_text = "当前正在新建关卡" if not editing_existing else "切换到新建关卡"
+	new_level_button.tooltip_text = "当前正在编辑自制关卡" if not editing_existing else "新建自制关卡并选择地图"
 	edit_level_button.tooltip_text = "当前正在编辑已有关卡" if editing_existing else "选择要编辑的正式关卡"
 
 
@@ -473,8 +581,8 @@ func _open_template_picker() -> void:
 	dialog.confirmed.connect(func():
 		if picker.selected < 0 or picker.selected >= presets.size():
 			return
-		_load_preset_for_edit(str(presets[picker.selected]["id"]))
 		dialog.queue_free()
+		_request_leave_with_unsaved_check(_load_preset_for_edit.bind(str(presets[picker.selected]["id"])))
 	)
 	dialog.canceled.connect(func(): dialog.queue_free())
 	add_child(dialog)
@@ -512,8 +620,8 @@ func _open_custom_level_picker() -> void:
 	dialog.confirmed.connect(func():
 		if picker.selected < 0 or picker.selected >= drafts.size():
 			return
-		_load_custom_level_for_edit(str(drafts[picker.selected]["path"]))
 		dialog.queue_free()
+		_request_leave_with_unsaved_check(_load_custom_level_for_edit.bind(str(drafts[picker.selected]["path"])))
 	)
 	dialog.canceled.connect(_return_to_load_category.bind(dialog))
 	add_child(dialog)
@@ -527,6 +635,7 @@ func _return_to_load_category(dialog: ConfirmationDialog) -> void:
 
 
 func _load_preset_for_edit(preset_id: String) -> void:
+	var previous_catalog_mode := catalog_mode
 	var preset := AdventurePresets.build_level(preset_id, true)
 	if preset.is_empty():
 		status_label.text = "关卡不存在：%s" % preset_id
@@ -542,12 +651,14 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	level["id"] = "%s_edit" % preset_id
 	_apply_formal_map_constraints()
 	_apply_formal_plant_progression()
+	var inherited_reward_cleared := _clear_inherited_formal_reward()
 	Global.level_workshop_edit_mode = str(level.get("workshopMode", "normal"))
 	## 正式关卡始终通过植物卡界面选择本关奖励。
 	reward_mode_button.visible = true
-	catalog_mode = CatalogMode.SPAWN_ZOMBIES
-	_update_catalog_background(false)
-	background_sprite.position.x = background_normal_x
+	catalog_mode = previous_catalog_mode
+	_update_catalog_background(catalog_mode == CatalogMode.REWARD_CARDS)
+	_refresh_map_preview()
+	background_sprite.position.x = background_normal_x + 334.0 if catalog_mode == CatalogMode.REWARD_CARDS else background_normal_x
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
 	_ensure_locked_plants_selected()
@@ -565,7 +676,8 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	_update_timeline_catalog_visibility()
 	_refresh_wave()
 	_update_level_source_buttons()
-	status_label.text = "已载入“%s”；已有植物已锁定，在“可选卡片”中点击一张新卡作为本关通关奖励。" % str(level["name"])
+	_mark_current_level_saved()
+	status_label.text = ("已载入“%s”。原奖励已提前获得，请新增本关奖励。" if inherited_reward_cleared else "已载入“%s”。此前已有卡不能取消；点击新卡添加奖励。") % str(level["name"])
 
 
 func _formal_preset_index(preset_id: String = formal_preset_id) -> int:
@@ -603,9 +715,9 @@ func _formal_progression_available_plants() -> Array[int]:
 			result.append(plant_type)
 	for prior_index in target_index:
 		var prior_level := AdventurePresets.build_level(str((presets[prior_index] as Dictionary)["id"]), true)
-		var reward_plant := int(prior_level.get("rewardPlant", -1))
-		if reward_plant >= 0 and CharacterRegistry.PlantInfo.has(reward_plant) and not result.has(reward_plant):
-			result.append(reward_plant)
+		for reward_plant in Logic.reward_plant_types(prior_level):
+			if CharacterRegistry.PlantInfo.has(reward_plant) and not result.has(reward_plant):
+				result.append(reward_plant)
 	return result
 
 
@@ -619,6 +731,18 @@ func _apply_formal_plant_progression() -> void:
 	level["freePlantSelection"] = true
 
 
+func _clear_inherited_formal_reward() -> bool:
+	var rewards := _formal_reward_plants()
+	var retained: Array[int] = []
+	for reward_plant in rewards:
+		if not (level.get("availablePlants", []) as Array).has(reward_plant):
+			retained.append(reward_plant)
+	if retained.size() == rewards.size():
+		return false
+	_set_formal_reward_plants(retained)
+	return true
+
+
 func _load_custom_level_for_edit(path: String) -> void:
 	var loaded := DraftStore.load_draft(path)
 	if not loaded["ok"]:
@@ -630,7 +754,17 @@ func _load_custom_level_for_edit(path: String) -> void:
 	loaded_source_kind = "custom"
 	loaded_draft_path = path
 	_refresh_after_level_replaced()
+	_mark_current_level_saved()
 	status_label.text = "已载入自制关卡“%s”，可直接继续修改。" % str(level["name"])
+
+
+func _request_create_new_level() -> void:
+	_request_leave_with_unsaved_check(_create_new_level_and_open_settings)
+
+
+func _create_new_level_and_open_settings() -> void:
+	_create_new_level()
+	call_deferred("_open_level_settings")
 
 
 func _create_new_level() -> void:
@@ -642,6 +776,7 @@ func _create_new_level() -> void:
 	loaded_source_kind = ""
 	loaded_draft_path = ""
 	_refresh_after_level_replaced()
+	_mark_current_level_saved()
 	status_label.text = "已新建关卡。编辑完成后点击“保存”并命名。"
 
 
@@ -653,6 +788,7 @@ func _refresh_after_level_replaced() -> void:
 	reward_mode_button.visible = true
 	catalog_mode = CatalogMode.SPAWN_ZOMBIES
 	_update_catalog_background(false)
+	_refresh_map_preview()
 	background_sprite.position.x = background_normal_x
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
@@ -714,10 +850,13 @@ func _update_catalog_button_label() -> void:
 	var button_label := reward_mode_button.get_child(0) as Label
 	if button_label == null:
 		return
+	var formal_reward_mode := FormalLevelStore.is_formal_preset_id(formal_preset_id)
+	var reward_count := _formal_reward_plants().size() if formal_reward_mode else 0
+	var reward_count_text := "  奖✖️%d" % reward_count if formal_reward_mode else ""
 	if catalog_mode == CatalogMode.REWARD_CARDS:
-		button_label.text = "返回刷怪"
+		button_label.text = "登场僵尸%s" % reward_count_text
 	else:
-		button_label.text = "奖励卡槽" if Global.level_workshop_edit_mode == "chessboard" else "可选卡片"
+		button_label.text = "奖励卡槽" if Global.level_workshop_edit_mode == "chessboard" else "植物卡片%s" % reward_count_text
 
 
 func _animate_drawer_in() -> void:
@@ -1383,10 +1522,13 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	var cost_label := card.get_node_or_null("CardBg/Cost") as Label
 	if cost_label != null:
 		cost_label.visible = false
-	var required_simple_zombie := _is_simple_mode() and zombie_type == int(SIMPLE_REQUIRED_ZOMBIE)
-	card.tooltip_text = ("固定出现，不能取消" if required_simple_zombie else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type)))
+	var required_simple_zombie := _is_simple_mode() and (
+		zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type()
+	)
+	var simple_role := _simple_zombie_role(zombie_type) if _is_simple_mode() else ""
+	card.tooltip_text = ("当前基础僵尸，固定参与刷怪" if required_simple_zombie else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type)))
 	card.set_process(false)
-	var selected := not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
+	var selected := required_simple_zombie or not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
@@ -1396,22 +1538,27 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("zombie", zombie_type))
 	holder.add_child(card)
+	if not simple_role.is_empty():
+		_add_simple_role_checkbox(holder, zombie_type, simple_role)
 	if required_simple_zombie:
-		var lock_label := Label.new()
-		lock_label.position = Vector2(39, 2)
-		lock_label.size = Vector2(22, 22)
-		lock_label.z_index = 20
-		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lock_label.text = "锁"
-		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		lock_label.add_theme_font_override("font", WORKSHOP_FONT)
-		lock_label.add_theme_font_size_override("font_size", 13)
-		lock_label.add_theme_color_override("font_color", Color("fff2a1"))
-		lock_label.add_theme_color_override("font_outline_color", Color("493011"))
-		lock_label.add_theme_constant_override("outline_size", 3)
-		holder.add_child(lock_label)
+		_add_card_state_glow(holder, Color("d77835"))
 	return holder
+
+
+func _add_simple_role_checkbox(holder: Control, zombie_type: int, role: String) -> void:
+	var checked := zombie_type == (_simple_base_zombie_type() if role == "base" else _simple_flag_zombie_type())
+	var checkbox := TextureButton.new()
+	checkbox.position = Vector2(36, 2)
+	checkbox.size = Vector2(24, 24)
+	checkbox.z_index = 40
+	checkbox.ignore_texture_size = true
+	checkbox.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	checkbox.texture_normal = CHECKBOX_ON if checked else CHECKBOX_OFF
+	checkbox.texture_hover = CHECKBOX_ON
+	checkbox.tooltip_text = ("当前基础僵尸单位" if role == "base" else "当前旗帜波固定僵尸") if checked else \
+		("设为基础僵尸单位" if role == "base" else "设为旗帜波固定僵尸")
+	checkbox.pressed.connect(_set_simple_zombie_role.bind(zombie_type, role))
+	holder.add_child(checkbox)
 
 
 func _make_reward_card(entry: Dictionary) -> Control:
@@ -1429,7 +1576,7 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	card.set_process(false)
 	var normal_available_mode: bool = Global.level_workshop_edit_mode == "normal"
 	var formal_reward_mode := normal_available_mode and FormalLevelStore.is_formal_preset_id(formal_preset_id)
-	var is_current_reward := formal_reward_mode and int(level.get("rewardPlant", -1)) == type_id
+	var is_current_reward := formal_reward_mode and _formal_reward_plants().has(type_id)
 	var selected := (_selected_available_plants().has(type_id) or is_current_reward) if normal_available_mode else \
 		(level["chessboardConfig"].get("plantCardPool" if is_plant else "zombieCardPool", []) as Array).has(type_id)
 	var locked: bool = normal_available_mode and locked_available_plant_types.has(type_id)
@@ -1439,7 +1586,7 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	elif is_current_reward:
 		card.tooltip_text = "本关通关奖励；点击取消"
 	elif formal_reward_mode:
-		card.tooltip_text = "设为本关通关奖励"
+		card.tooltip_text = "添加为本关通关奖励"
 	elif normal_available_mode:
 		card.tooltip_text = "%s本关可选卡片" % ("移出" if selected else "加入")
 	else:
@@ -1452,22 +1599,61 @@ func _make_reward_card(entry: Dictionary) -> Control:
 		button.pressed.connect(_toggle_reward_card.bind(type_id, is_plant))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("plant" if is_plant else "zombie", type_id))
 	holder.add_child(card)
-	if locked or is_current_reward:
-		var lock_label := Label.new()
-		lock_label.position = Vector2(39, 2)
-		lock_label.size = Vector2(22, 22)
-		lock_label.z_index = 20
-		lock_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lock_label.text = "锁" if locked else "奖"
-		lock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lock_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		lock_label.add_theme_font_override("font", WORKSHOP_FONT)
-		lock_label.add_theme_font_size_override("font_size", 13)
-		lock_label.add_theme_color_override("font_color", Color("fff2a1"))
-		lock_label.add_theme_color_override("font_outline_color", Color("493011"))
-		lock_label.add_theme_constant_override("outline_size", 3)
-		holder.add_child(lock_label)
+	if is_current_reward:
+		_add_card_state_glow(holder, Color("ffd34e"), 0.95)
+	elif locked:
+		_add_card_state_glow(holder, Color("69a956"))
+	if is_current_reward:
+		_add_card_state_badge(holder, "奖", Color("e69a16"))
 	return holder
+
+
+func _add_card_state_glow(holder: Control, color: Color, opacity: float = 0.72) -> void:
+	var glow := TextureRect.new()
+	glow.name = "CardStateGlow"
+	glow.position = Vector2(-5, -4)
+	glow.size = Vector2(72, 95)
+	glow.texture = SEED_PACKET_GLOW
+	glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	glow.stretch_mode = TextureRect.STRETCH_SCALE
+	glow.modulate = Color(color.r, color.g, color.b, opacity)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	## 负 z_index 会把光效压到卡片列表背景之后。让卡片自身高一层，
+	## 光效留在当前画布层，才能稳定显示在卡片背后。
+	glow.z_index = 0
+	holder.add_child(glow)
+	if opacity > 0.72:
+		var pulse := glow.create_tween().set_loops()
+		pulse.tween_property(glow, "modulate:a", 0.62, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		pulse.tween_property(glow, "modulate:a", opacity, 0.8).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var card := holder.get_child(0) as Control
+	if card != null:
+		card.z_index = 1
+
+
+func _add_card_state_badge(holder: Control, text: String, color: Color) -> void:
+	var badge := TextureRect.new()
+	badge.name = "CardStateBadge"
+	badge.position = Vector2(20, 0)
+	badge.size = Vector2(42, 25)
+	badge.texture = PAGE_BUTTON
+	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	badge.stretch_mode = TextureRect.STRETCH_SCALE
+	badge.modulate = color
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	badge.z_index = 20
+	holder.add_child(badge)
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_font_override("font", WORKSHOP_FONT)
+	label.add_theme_font_size_override("font_size", 14)
+	label.add_theme_color_override("font_color", Color("fffbd1"))
+	label.add_theme_color_override("font_outline_color", Color("6c3600"))
+	label.add_theme_constant_override("outline_size", 3)
+	badge.add_child(label)
 
 
 func _on_workshop_card_gui_input(event: InputEvent, kind: String, type_id: int) -> void:
@@ -1512,13 +1698,19 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 			if locked_available_plant_types.has(type_id):
 				status_label.text = "这张卡此前已获得，本关必定可选，不能取消"
 				return
-			if int(level.get("rewardPlant", -1)) == type_id:
-				level["rewardPlant"] = -1
+			if _formal_reward_plants().has(type_id):
+				var rewards := _formal_reward_plants()
+				rewards.erase(type_id)
+				_set_formal_reward_plants(rewards)
 				_changed("已取消本关通关奖励")
 			else:
-				level["rewardPlant"] = type_id
-				_changed("本关通关奖励：%s" % _plant_name(type_id))
+				var conflicts := _later_formal_reward_conflicts(type_id)
+				if not conflicts.is_empty():
+					_open_reward_conflict_dialog(type_id, conflicts)
+					return
+				_set_formal_reward_plant(type_id)
 			_refresh_card_page()
+			_update_catalog_button_label()
 			return
 		var selected := _selected_available_plants()
 		if selected.has(type_id):
@@ -1547,6 +1739,89 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	_refresh_card_page()
 
 
+func _set_formal_reward_plant(type_id: int) -> void:
+	var rewards := _formal_reward_plants()
+	if not rewards.has(type_id):
+		rewards.append(type_id)
+	_set_formal_reward_plants(rewards)
+	_changed("本关通关奖励：%s（共 %d 张）" % [_plant_name(type_id), rewards.size()])
+	_refresh_card_page()
+	_update_catalog_button_label()
+
+
+func _formal_reward_plants() -> Array[int]:
+	return Logic.reward_plant_types(level)
+
+
+func _set_formal_reward_plants(rewards: Array[int]) -> void:
+	level["rewardPlants"] = rewards.duplicate()
+	level["rewardPlant"] = rewards[0] if not rewards.is_empty() else -1
+
+
+func _later_formal_reward_conflicts(type_id: int) -> Array[Dictionary]:
+	var conflicts: Array[Dictionary] = []
+	var presets := AdventurePresets.list_presets("normal")
+	var current_index := _formal_preset_index()
+	if current_index < 0:
+		return conflicts
+	for index in range(current_index + 1, presets.size()):
+		var preset: Dictionary = presets[index]
+		var preset_id := str(preset.get("id", ""))
+		var later_level := AdventurePresets.build_level(preset_id, true)
+		if Logic.reward_plant_types(later_level).has(type_id):
+			conflicts.append({"id": preset_id, "name": str(later_level.get("name", preset_id))})
+	return conflicts
+
+
+func _clear_later_duplicate_formal_rewards(type_id: int) -> Dictionary:
+	var cleared_names: Array[String] = []
+	var failed_names: Array[String] = []
+	if type_id < 0:
+		return {"cleared": cleared_names, "failed": failed_names}
+	for conflict in _later_formal_reward_conflicts(type_id):
+		var preset_id := str(conflict.get("id", ""))
+		var later_level := AdventurePresets.build_level(preset_id, true)
+		if later_level.is_empty():
+			failed_names.append(str(conflict.get("name", preset_id)))
+			continue
+		var later_rewards := Logic.reward_plant_types(later_level)
+		later_rewards.erase(type_id)
+		later_level["rewardPlants"] = later_rewards
+		later_level["rewardPlant"] = later_rewards[0] if not later_rewards.is_empty() else -1
+		var result := FormalLevelStore.save_developer_level(later_level, preset_id)
+		if result["ok"]:
+			cleared_names.append(str(conflict.get("name", preset_id)))
+		else:
+			failed_names.append(str(conflict.get("name", preset_id)))
+	return {"cleared": cleared_names, "failed": failed_names}
+
+
+func _open_reward_conflict_dialog(type_id: int, conflicts: Array[Dictionary]) -> void:
+	if is_instance_valid(reward_conflict_dialog):
+		reward_conflict_dialog.queue_free()
+	var conflict_names: Array[String] = []
+	for conflict in conflicts:
+		conflict_names.append(str(conflict.get("name", conflict.get("id", "后续关卡"))))
+	reward_conflict_dialog = ConfirmationDialog.new()
+	reward_conflict_dialog.title = "奖励植物重复"
+	reward_conflict_dialog.ok_button_text = "仍添加为本关奖励"
+	reward_conflict_dialog.cancel_button_text = "取消"
+	reward_conflict_dialog.dialog_text = "%s 已是后续关卡（%s）的奖励。\n仍要提前奖励吗？后续关卡将需要新增奖励植物。" % [
+		_plant_name(type_id),
+		"、".join(conflict_names),
+	]
+	reward_conflict_dialog.min_size = Vector2i(560, 210)
+	reward_conflict_dialog.confirmed.connect(func():
+		_set_formal_reward_plant(type_id)
+		reward_conflict_dialog.queue_free()
+	)
+	reward_conflict_dialog.canceled.connect(func(): reward_conflict_dialog.queue_free())
+	reward_conflict_dialog.tree_exited.connect(func(): reward_conflict_dialog = null)
+	add_child(reward_conflict_dialog)
+	_force_font_recursive(reward_conflict_dialog)
+	reward_conflict_dialog.popup_centered(Vector2i(560, 210))
+
+
 func _clear_all_cards() -> void:
 	if catalog_mode != CatalogMode.REWARD_CARDS:
 		return
@@ -1560,8 +1835,9 @@ func _clear_all_cards() -> void:
 		level["forcedPlants"] = retained_forced
 		level["plantSelectionEnabled"] = true
 		if FormalLevelStore.is_formal_preset_id(formal_preset_id):
-			level["rewardPlant"] = -1
+			_set_formal_reward_plants([])
 		_changed("已清空所有可移除的植物卡" if not retained.is_empty() else "已清空所有植物卡")
+		_update_catalog_button_label()
 	else:
 		level["chessboardConfig"]["plantCardPool"] = []
 		_changed("已清空奖励植物卡槽")
@@ -1587,7 +1863,7 @@ func _toggle_reward_catalog() -> void:
 	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
 	if show_rewards:
 		if Global.level_workshop_edit_mode == "normal" and FormalLevelStore.is_formal_preset_id(formal_preset_id):
-			status_label.text = "带“锁”的植物是此前已有卡片，必定选择且不能取消；点击一张新卡设为本关奖励"
+			status_label.text = "此前已有的植物必定选择且不能取消；可点击多张新卡添加本关奖励"
 		else:
 			status_label.text = ("点击植物加入本关卡池；亮色为已选，再次点击取消" if _is_simple_mode() else "点击植物卡设置本关卡池；亮色为已选，冒险基础卡不可取消") if Global.level_workshop_edit_mode == "normal" else "点击原版植物卡加入或移出奖励卡槽；亮色为已选择"
 	else:
@@ -1597,6 +1873,7 @@ func _toggle_reward_catalog() -> void:
 
 func _restore_catalog_view() -> void:
 	var show_rewards := catalog_mode == CatalogMode.REWARD_CARDS
+	_refresh_map_preview()
 	_update_catalog_background(show_rewards)
 	_refresh_stage_heading()
 	_update_catalog_button_label()
@@ -1710,8 +1987,13 @@ func _open_zombie_quantity_dialog(zombie_key: String) -> void:
 
 
 func _select_simple_zombie(zombie_key: String) -> void:
-	if _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE):
-		status_label.text = "黑爪普通僵尸是每关固定基础敌人，不能取消"
+	var zombie_type := _zombie_type_id(zombie_key)
+	if zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type():
+		_sanitize_simple_allowed_pool()
+		_sync_all_simple_stage_type_pools()
+		status_label.text = "%s是本关固定僵尸；请先勾选另一个同类单位再取消" % _zombie_name(zombie_key)
+		_refresh_card_page()
+		_refresh_wave()
 		return
 	var wave: Dictionary = level["waves"][selected_wave]
 	if not _find_group(wave, zombie_key).is_empty():
@@ -1762,8 +2044,10 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 		_close_quantity_dialog()
 		_delete_simple_zombie(zombie_key)
 	, 16)
-	delete_button.disabled = _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE)
-	delete_button.tooltip_text = "黑爪普通僵尸固定出现，不能删除" if delete_button.disabled else ""
+	var fixed_zombie := _zombie_type_id(zombie_key) == _simple_base_zombie_type() \
+		or _zombie_type_id(zombie_key) == _simple_flag_zombie_type()
+	delete_button.disabled = fixed_zombie
+	delete_button.tooltip_text = "本关固定僵尸必然登场；请先勾选另一个同类单位" if fixed_zombie else ""
 	(delete_button.get_child(0) as Label).add_theme_color_override("font_color", Color("6f2118"))
 	dialog.add_child(delete_button)
 	dialog.add_child(_texture_button("取消", Vector2(63, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
@@ -1771,8 +2055,13 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 
 
 func _delete_simple_zombie(zombie_key: String) -> void:
-	if _zombie_type_id(zombie_key) == int(SIMPLE_REQUIRED_ZOMBIE):
-		status_label.text = "黑爪普通僵尸是每关固定基础敌人，不能删除"
+	var zombie_type := _zombie_type_id(zombie_key)
+	if zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type():
+		_sanitize_simple_allowed_pool()
+		_sync_all_simple_stage_type_pools()
+		status_label.text = "%s是本关固定僵尸；请先勾选另一个同类单位再删除" % _zombie_name(zombie_key)
+		_refresh_card_page()
+		_refresh_wave()
 		return
 	var wave: Dictionary = level["waves"][selected_wave]
 	var group := _find_group(wave, zombie_key)
@@ -1856,6 +2145,7 @@ func _refresh_wave() -> void:
 func _refresh_stage_heading() -> void:
 	if not is_instance_valid(stage_heading):
 		return
+	_update_formal_level_navigation()
 	var level_name := str(level.get("name", "")).strip_edges()
 	stage_heading.text = level_name if not level_name.is_empty() else "未命名关卡"
 
@@ -2175,6 +2465,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, id_inpu
 			"bungee": map_type == "roof" and bungee_checkbox.button_pressed,
 		}
 		_apply_formal_map_constraints()
+		_refresh_map_preview()
 		_sanitize_simple_allowed_pool()
 		_refresh_zombie_catalog()
 		_refresh_card_page()
@@ -2525,18 +2816,54 @@ func _has_original_pick_weight(zombie_type: int) -> bool:
 func _sanitize_simple_allowed_pool() -> void:
 	if not _is_simple_mode():
 		return
+	var required_zombie := _simple_base_zombie_type()
 	for stage in level.get("waves", []):
 		var filtered_groups: Array = []
 		for group in (stage as Dictionary).get("spawnGroups", []):
 			var zombie_type := _zombie_type_id((group as Dictionary).get("zombieType", "500"))
-			if zombie_type == int(SIMPLE_REQUIRED_ZOMBIE) or _has_original_pick_weight(zombie_type):
+			if zombie_type == required_zombie or _has_original_pick_weight(zombie_type):
 				filtered_groups.append(group)
-		if not filtered_groups.any(func(group): return _zombie_type_id((group as Dictionary).get("zombieType", "500")) == int(SIMPLE_REQUIRED_ZOMBIE)):
+		if not filtered_groups.any(func(group): return _zombie_type_id((group as Dictionary).get("zombieType", "500")) == required_zombie):
 			filtered_groups.push_front(Logic.make_group(
 				"simple_required_%s" % str((stage as Dictionary).get("id", "stage")),
-				str(int(SIMPLE_REQUIRED_ZOMBIE)), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5)
+				str(required_zombie), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5)
 			))
 		stage["spawnGroups"] = filtered_groups
+
+
+func _simple_base_zombie_type() -> int:
+	var zombie_type := int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon))
+	return zombie_type if SIMPLE_BASE_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z000NormTalon)
+
+
+func _simple_flag_zombie_type() -> int:
+	var zombie_type := int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon))
+	return zombie_type if SIMPLE_FLAG_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z001FlagTalon)
+
+
+func _simple_zombie_role(zombie_type: int) -> String:
+	if SIMPLE_BASE_ZOMBIE_CANDIDATES.has(zombie_type):
+		return "base"
+	if SIMPLE_FLAG_ZOMBIE_CANDIDATES.has(zombie_type):
+		return "flag"
+	return ""
+
+
+func _set_simple_zombie_role(zombie_type: int, role: String) -> void:
+	if role == "base" and SIMPLE_BASE_ZOMBIE_CANDIDATES.has(zombie_type):
+		level["simpleBaseZombieType"] = zombie_type
+		_sanitize_simple_allowed_pool()
+		_sync_all_simple_stage_type_pools()
+		_changed("已将%s设为本关基础僵尸单位" % _zombie_name(str(zombie_type)))
+	elif role == "flag" and SIMPLE_FLAG_ZOMBIE_CANDIDATES.has(zombie_type):
+		level["simpleFlagZombieType"] = zombie_type
+		_sanitize_simple_allowed_pool()
+		_sync_all_simple_stage_type_pools()
+		_changed("已将%s设为旗帜波固定僵尸" % _zombie_name(str(zombie_type)))
+	else:
+		return
+	_refresh_card_page()
+	_refresh_wave()
 
 
 func _zombie_type_id(value) -> int:
@@ -2712,6 +3039,86 @@ func _sync_editor_complexity_from_level() -> void:
 	_refresh_card_page()
 
 
+func _mark_current_level_saved() -> void:
+	saved_level_snapshot = JSON.stringify(level)
+
+
+func _has_unsaved_changes() -> bool:
+	return not saved_level_snapshot.is_empty() and JSON.stringify(level) != saved_level_snapshot
+
+
+func _request_leave_with_unsaved_check(action: Callable) -> void:
+	if not action.is_valid():
+		return
+	if is_instance_valid(stage_heading_editor) and stage_heading_editor.visible:
+		_finish_stage_heading_edit(true)
+		if stage_heading_editor.visible:
+			_update_level_source_buttons()
+			return
+	if not _has_unsaved_changes():
+		action.call()
+		return
+	pending_unsaved_action = action
+	if is_instance_valid(unsaved_changes_dialog):
+		unsaved_changes_dialog.popup_centered(Vector2i(540, 200))
+		return
+	unsaved_changes_dialog = ConfirmationDialog.new()
+	unsaved_changes_dialog.title = "未保存的关卡修改"
+	unsaved_changes_dialog.ok_button_text = "保存并继续"
+	unsaved_changes_dialog.cancel_button_text = "取消"
+	unsaved_changes_dialog.dialog_text = "当前关卡有尚未保存的修改。是否先保存，再离开当前关卡？"
+	unsaved_changes_dialog.min_size = Vector2i(540, 200)
+	unsaved_changes_dialog.process_mode = Node.PROCESS_MODE_ALWAYS
+	unsaved_changes_dialog.add_button("不保存", true, "discard_changes")
+	unsaved_changes_dialog.confirmed.connect(_save_before_pending_action)
+	unsaved_changes_dialog.custom_action.connect(_on_unsaved_dialog_custom_action)
+	unsaved_changes_dialog.canceled.connect(_cancel_pending_unsaved_action)
+	unsaved_changes_dialog.tree_exited.connect(func(): unsaved_changes_dialog = null)
+	add_child(unsaved_changes_dialog)
+	_force_font_recursive(unsaved_changes_dialog)
+	unsaved_changes_dialog.popup_centered(Vector2i(540, 200))
+
+
+func _on_unsaved_dialog_custom_action(action: StringName) -> void:
+	if action != &"discard_changes":
+		return
+	if is_instance_valid(unsaved_changes_dialog):
+		unsaved_changes_dialog.queue_free()
+	_continue_pending_unsaved_action()
+
+
+func _cancel_pending_unsaved_action() -> void:
+	pending_unsaved_action = Callable()
+	_update_level_source_buttons()
+	if is_instance_valid(unsaved_changes_dialog):
+		unsaved_changes_dialog.queue_free()
+
+
+func _save_before_pending_action() -> void:
+	if is_instance_valid(unsaved_changes_dialog):
+		unsaved_changes_dialog.queue_free()
+	if loaded_source_kind == "template":
+		if _save_formal_level():
+			_continue_pending_unsaved_action()
+		else:
+			pending_unsaved_action = Callable()
+		return
+	if loaded_source_kind == "custom":
+		if _save_loaded_custom_level():
+			_continue_pending_unsaved_action()
+		else:
+			pending_unsaved_action = Callable()
+		return
+	_open_custom_name_dialog(false, _continue_pending_unsaved_action)
+
+
+func _continue_pending_unsaved_action() -> void:
+	var action := pending_unsaved_action
+	pending_unsaved_action = Callable()
+	if action.is_valid():
+		action.call()
+
+
 func _open_save_dialog() -> void:
 	if loaded_source_kind == "template":
 		_open_formal_save_dialog()
@@ -2763,7 +3170,7 @@ func _open_loaded_level_save_dialog() -> void:
 	dialog.popup_centered(Vector2i(560, 190))
 
 
-func _open_custom_name_dialog(force_new_copy: bool) -> void:
+func _open_custom_name_dialog(force_new_copy: bool, after_save: Callable = Callable()) -> void:
 	var dialog := ConfirmationDialog.new()
 	dialog.title = "保存自定义关卡"
 	dialog.ok_button_text = "保存"
@@ -2776,53 +3183,83 @@ func _open_custom_name_dialog(force_new_copy: bool) -> void:
 		if new_name.is_empty():
 			status_label.text = "保存失败：关卡名称不能为空"
 			dialog.queue_free()
+			if after_save.is_valid():
+				_cancel_pending_unsaved_action()
 			return
 		var custom_level := level.duplicate(true)
 		custom_level["name"] = new_name
 		if force_new_copy or str(custom_level.get("id", "")).is_empty() or str(custom_level.get("id", "")) == "example_front_lawn":
 			custom_level["id"] = "custom_%d" % int(Time.get_unix_time_from_system() * 1000.0)
 		custom_level.erase("formalPresetId")
-		_save_custom_level(custom_level)
+		var saved := _save_custom_level(custom_level)
 		dialog.queue_free()
+		if saved and after_save.is_valid():
+			after_save.call()
+		elif not saved and after_save.is_valid():
+			_cancel_pending_unsaved_action()
 	)
+	dialog.canceled.connect(func():
+		if after_save.is_valid():
+			_cancel_pending_unsaved_action()
+	)
+	dialog.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(dialog)
 	dialog.popup_centered()
 	name_input.grab_focus()
 	name_input.select_all()
 
 
-func _save_formal_level() -> void:
+func _save_formal_level() -> bool:
 	_apply_formal_plant_progression()
 	_recalculate_stage_times()
 	level["formalPresetId"] = formal_preset_id
 	var result := FormalLevelStore.save_developer_level(level, formal_preset_id)
 	if result["ok"]:
+		var cleared_cleanup: Array[String] = []
+		var failed_cleanup: Array[String] = []
+		for reward_plant in _formal_reward_plants():
+			var duplicate_cleanup := _clear_later_duplicate_formal_rewards(reward_plant)
+			for cleared_name in duplicate_cleanup["cleared"]:
+				if not cleared_cleanup.has(str(cleared_name)):
+					cleared_cleanup.append(str(cleared_name))
+			for failed_name in duplicate_cleanup["failed"]:
+				if not failed_cleanup.has(str(failed_name)):
+					failed_cleanup.append(str(failed_name))
+		if not failed_cleanup.is_empty():
+			status_label.text = "本关已保存，但未能清空后续重复奖励：%s" % "、".join(failed_cleanup)
+			return false
 		DraftStore.save_autosave(level)
-		status_label.text = "已覆盖关卡模板 %s；普通模式不受影响。" % formal_preset_id
+		_mark_current_level_saved()
+		status_label.text = ("已保存；%s 需要新增奖励植物。" % "、".join(cleared_cleanup)) if not cleared_cleanup.is_empty() else "已覆盖关卡模板 %s；普通模式不受影响。" % formal_preset_id
+		return true
 	else:
 		status_label.text = "保存关卡模板失败：%s" % str(result["error"])
+		return false
 
 
-func _save_loaded_custom_level() -> void:
+func _save_loaded_custom_level() -> bool:
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
 		status_label.text = "保存失败：%s" % str(built["error"])
-		return
+		return false
 	var result := DraftStore.save_draft(level)
 	if result["ok"]:
 		loaded_draft_path = str(result["path"])
 		DraftStore.save_autosave(level)
+		_mark_current_level_saved()
 		status_label.text = "已覆盖自制关卡“%s”。" % str(level["name"])
 		_refresh_draft_picker()
+		return true
 	else:
 		status_label.text = "保存失败：%s" % str(result["error"])
+		return false
 
 
-func _save_custom_level(custom_level: Dictionary) -> void:
+func _save_custom_level(custom_level: Dictionary) -> bool:
 	var built := CustomRuntime.build_game_para(custom_level)
 	if not built["ok"]:
 		status_label.text = "保存失败：%s" % built["error"]
-		return
+		return false
 	var result := DraftStore.save_draft(custom_level)
 	if result["ok"]:
 		level = Logic.normalize_level(custom_level)
@@ -2831,10 +3268,13 @@ func _save_custom_level(custom_level: Dictionary) -> void:
 		loaded_draft_path = str(result["path"])
 		_snapshot()
 		DraftStore.save_autosave(level)
+		_mark_current_level_saved()
 		status_label.text = "已保存“%s”，可从“开始冒险吧”中的“自制关卡”游玩。" % str(level["name"])
 		_refresh_draft_picker()
+		return true
 	else:
 		status_label.text = "保存失败：%s" % result["error"]
+		return false
 
 
 func _playtest() -> void:
@@ -2962,6 +3402,10 @@ func _restart_workshop() -> void:
 
 
 func _back_to_menu() -> void:
+	_request_leave_with_unsaved_check(_perform_back_to_menu)
+
+
+func _perform_back_to_menu() -> void:
 	_end_timeline_mode()
 	DraftStore.save_autosave(level)
 	_clear_preview_zombies()

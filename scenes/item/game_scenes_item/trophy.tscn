@@ -123,6 +123,20 @@ text = "你获得了一张新植物卡！\n点击卡片继续"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="RewardCount" type="Label" parent="RewardScreen"]
+z_index = 3
+offset_left = 150.0
+offset_top = -188.0
+offset_right = 285.0
+offset_bottom = -143.0
+theme_override_colors/font_color = Color(1, 0.92, 0.36, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.08, 0.01, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 26
+text = "奖✖️1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="Winmusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_qvwtp")
 bus = &"SFX"

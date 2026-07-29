@@ -302,6 +302,7 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"availablePlants": available_plants,
 		"plantSelectionEnabled": true,
 		"rewardPlant": _default_reward_plant(world, level_number, workshop_mode, available_plants),
+		"rewardPlants": _default_reward_plants(world, level_number, workshop_mode, available_plants),
 		"activeLawnRows": active_rows,
 		"sodLayoutRows": 3 if not is_chessboard and world == 1 and level_number == 1 else 5,
 		"sodRolloutRows": 0,
@@ -349,19 +350,24 @@ static func _resolve_plant_slot(original_type: int) -> Array[int]:
 
 
 static func _default_reward_plant(world: int, level_number: int, workshop_mode: String, current_plants: Array) -> int:
+	var rewards := _default_reward_plants(world, level_number, workshop_mode, current_plants)
+	return int(rewards[0]) if not rewards.is_empty() else -1
+
+
+static func _default_reward_plants(world: int, level_number: int, workshop_mode: String, current_plants: Array) -> Array[int]:
 	var next_world := world
 	var next_level := level_number + 1
 	if next_level > LEVELS_PER_WORLD:
 		next_world += 1
 		next_level = 1
 	if workshop_mode == "chessboard" and next_world > 1:
-		return -1
+		return []
 	if workshop_mode == "normal" and next_world > NORMAL_WORLD_COUNT:
-		return -1
+		return []
 	for plant_type in _available_plants(next_world, next_level, workshop_mode):
 		if not current_plants.has(int(plant_type)):
-			return int(plant_type)
-	return -1
+			return [int(plant_type)]
+	return []
 
 
 static func _environment_config(world: int, level_number: int, is_chessboard: bool) -> Dictionary:

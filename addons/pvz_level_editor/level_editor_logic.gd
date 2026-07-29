@@ -43,6 +43,8 @@ static func example_level() -> Dictionary:
 		"editorMode": "advanced",
 		"simpleFlagCount": 2,
 		"simpleWaveCount": 20,
+		"simpleBaseZombieType": 100,
+		"simpleFlagZombieType": 101,
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
@@ -51,6 +53,7 @@ static func example_level() -> Dictionary:
 		"freePlantSelection": true,
 		"forcedPlants": [],
 		"rewardPlant": -1,
+		"rewardPlants": [],
 		"environmentConfig": {
 			"initialTombstones": 0,
 			"tombstoneSpawns": false,
@@ -117,7 +120,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -137,6 +140,10 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["simpleFlagCount"] = simple_flag_count
 	## 简易普通关严格按原版常规关卡的一旗十波生成；保留旧字段只为兼容已有草稿。
 	result["simpleWaveCount"] = simple_flag_count * 10
+	var simple_base_zombie_type := int(result.get("simpleBaseZombieType", 100))
+	result["simpleBaseZombieType"] = simple_base_zombie_type if [100, 500].has(simple_base_zombie_type) else 100
+	var simple_flag_zombie_type := int(result.get("simpleFlagZombieType", 101))
+	result["simpleFlagZombieType"] = simple_flag_zombie_type if [101, 501].has(simple_flag_zombie_type) else 101
 	result["zombieRefreshSpeedMultiplier"] = float(result.get("zombieRefreshSpeedMultiplier", 1.0))
 	result["openingFirstZombieAdvanceCells"] = clampf(
 		float(result.get("openingFirstZombieAdvanceCells", 0.0)),
@@ -161,6 +168,19 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 		if plant_type > 0 and normalized_plants.has(plant_type) and not normalized_forced_plants.has(plant_type):
 			normalized_forced_plants.append(plant_type)
 	result["forcedPlants"] = normalized_forced_plants
+	var normalized_reward_plants: Array[int] = []
+	var source_reward_plants: Array = result.get("rewardPlants", [])
+	if not source.has("rewardPlants"):
+		var legacy_reward_plant := int(result.get("rewardPlant", -1))
+		if legacy_reward_plant >= 0:
+			source_reward_plants = [legacy_reward_plant]
+	for plant_value in source_reward_plants:
+		var plant_type := int(LEGACY_PLANT_TYPE_IDS.get(str(plant_value).to_lower(), plant_value))
+		if plant_type > 0 and not normalized_reward_plants.has(plant_type):
+			normalized_reward_plants.append(plant_type)
+	result["rewardPlants"] = normalized_reward_plants
+	## 保留首张奖励的旧字段，供尚未迁移的外部关卡工具读取。
+	result["rewardPlant"] = normalized_reward_plants[0] if not normalized_reward_plants.is_empty() else -1
 	result["freePlantSelection"] = bool(result.get("freePlantSelection", true))
 	var environment: Dictionary = result.get("environmentConfig", {})
 	environment["initialTombstones"] = maxi(0, int(environment.get("initialTombstones", 0)))
@@ -202,9 +222,10 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "关卡名称不能为空", "name"))
 	if not ["simple", "advanced"].has(str(level.get("editorMode", "advanced"))):
 		issues.append(issue("error", "编辑模式必须是简易模式或进阶模式", "editorMode"))
-	var reward_plant := int(level.get("rewardPlant", -1))
-	if reward_plant >= 0 and not CharacterRegistry.PlantInfo.has(reward_plant):
-		issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlant"))
+	for reward_plant in reward_plant_types(level):
+		if not CharacterRegistry.PlantInfo.has(reward_plant):
+			issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlants"))
+			break
 	if bool(level.get("plantSelectionEnabled", false)):
 		var available_plants: Array = level.get("availablePlants", [])
 		if available_plants.is_empty():
@@ -299,6 +320,20 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 				issues.append(issue("error", "同屏上限必须大于 0", path + "/maxAlive"))
 			## 动态波次会等待本阶段配置的僵尸全部出场，阶段 duration 不再作为推进截止时间。
 	return issues
+
+
+static func reward_plant_types(level: Dictionary) -> Array[int]:
+	var result: Array[int] = []
+	var values: Array = level.get("rewardPlants", [])
+	if not level.has("rewardPlants"):
+		var legacy_reward := int(level.get("rewardPlant", -1))
+		if legacy_reward >= 0:
+			values = [legacy_reward]
+	for value in values:
+		var plant_type := int(value)
+		if plant_type >= 0 and not result.has(plant_type):
+			result.append(plant_type)
+	return result
 
 
 static func threat_for_group(group: Dictionary) -> float:

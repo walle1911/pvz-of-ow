@@ -639,11 +639,15 @@ func update_level_state_data_success():
 	## 更新全局关卡数据
 	var curr_level_state_data:Dictionary = Global.global_game_state.curr_all_level_state_data.get(game_para.save_game_name, {})
 	curr_level_state_data["IsSuccess"] = true
-	var reward_plant := int(game_para.reward_plant_type)
-	if reward_plant >= 0:
-		curr_level_state_data["RewardPlant"] = reward_plant
+	var reward_plants: Array[CharacterRegistry.PlantType] = game_para.reward_plant_types.duplicate()
+	if reward_plants.is_empty() and int(game_para.reward_plant_type) >= 0:
+		reward_plants.append(int(game_para.reward_plant_type) as CharacterRegistry.PlantType)
+	if not reward_plants.is_empty():
+		curr_level_state_data["RewardPlants"] = reward_plants
+		curr_level_state_data["RewardPlant"] = int(reward_plants[0])
+	for reward_plant in reward_plants:
 		if not Global.global_game_state.curr_plant.has(reward_plant):
-			Global.global_game_state.curr_plant.append(reward_plant as CharacterRegistry.PlantType)
+			Global.global_game_state.curr_plant.append(reward_plant)
 	Global.global_game_state.curr_all_level_state_data[game_para.save_game_name] = curr_level_state_data
 	Global.save_service.save_now()
 

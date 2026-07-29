@@ -66,8 +66,11 @@ func _create_opening_battlefield_zombie() -> void:
 	lane = clampi(lane, 0, zombie_manager.all_zombie_rows.size() - 1)
 	var create_manager := zombie_manager.zombie_wave_manager.zombie_wave_create_manager
 	create_manager.opening_first_zombie_lane = lane
-	var zombie_type := CharacterRegistry.ZombieType.Z000NormTalon
-	if not zombie_manager.zombie_refresh_types.has(zombie_type) and not zombie_manager.zombie_refresh_types.is_empty():
+	var zombie_type := zombie_manager.game_para.opening_battlefield_zombie_type
+	if zombie_type == CharacterRegistry.ZombieType.Null:
+		zombie_type = CharacterRegistry.ZombieType.Z000NormTalon
+	if zombie_manager.game_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Null \
+	and not zombie_manager.zombie_refresh_types.has(zombie_type) and not zombie_manager.zombie_refresh_types.is_empty():
 		zombie_type = zombie_manager.zombie_refresh_types[0]
 	opening_battlefield_zombie = Global.character_registry.get_zombie_info(
 		zombie_type,

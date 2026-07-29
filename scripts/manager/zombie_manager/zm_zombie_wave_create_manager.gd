@@ -2,6 +2,8 @@ extends Node
 ## 僵尸波次生成管理器
 class_name ZombieWaveCreateManager
 
+const NumericalStore := preload("res://scripts/resources/numerical_adjustment_store.gd")
+
 ## PvZ1 Zombie::ZombieInitialize 的普通出生偏移：Rand(40)。
 const ORIGINAL_START_RANDOM_OFFSET := 40
 ## PvZ1 旗帜波的所有常规入场僵尸会额外向右移动 40 像素。
@@ -62,7 +64,8 @@ const zombie_power = {
 }
 
 ## 创建 zombie_weights 字典，存储初始权重,普僵权重会修改，
-var zombie_weights:Dictionary = zombie_weights_ori.duplicate_deep()
+var zombie_weights_base: Dictionary = zombie_weights_ori.duplicate_deep()
+var zombie_weights:Dictionary = zombie_weights_base.duplicate_deep()
 const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z000NormTalon: 4000,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 1000,
@@ -126,6 +129,7 @@ var opening_first_zombie_lane := -1
 func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	zombie_multy = game_para.zombie_multy
 	range_num_bungi = game_para.range_num_bungi
+	_reset_zombie_weights_from_adjustments()
 	natural_spawn_count = 0
 	first_natural_spawn_lane = -1
 	natural_created_count = 0
@@ -133,6 +137,26 @@ func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	zombie_choose_row_system.init_zombie_choose_row_system()
 	if game_para.custom_spawn_schedule.is_empty():
 		update_zombie_refresh_types()
+
+
+func _reset_zombie_weights_from_adjustments() -> void:
+	zombie_weights_base = zombie_weights_ori.duplicate_deep()
+	for zombie_type_value in zombie_weights_base.keys():
+		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
+		var scene: PackedScene = Global.character_registry.get_zombie_info(
+			zombie_type,
+			CharacterRegistry.ZombieInfoAttribute.ZombieScenes
+		)
+		if scene == null:
+			continue
+		zombie_weights_base[zombie_type] = NumericalStore.get_registry_override(
+			scene.resource_path,
+			"zombie_spawn_weight",
+			zombie_weights_base[zombie_type],
+			true
+		)
+	zombie_weights = zombie_weights_base.duplicate_deep()
+	is_update_weight_on_limit = false
 
 ## 更新可以刷新的僵尸列表
 func update_zombie_refresh_types():
@@ -346,13 +370,13 @@ func _update_weights(wave: int):
 			print("更新权重")
 			wave = 25
 
-		var norm_weight = 4000 - (wave - 5) * 180
 		for norm_type in [CharacterRegistry.ZombieType.Z000NormTalon, CharacterRegistry.ZombieType.Z500Norm]:
+			var norm_weight = maxi(1, int(zombie_weights_base[norm_type]) - (wave - 5) * 180)
 			zombie_weights[norm_type] = norm_weight
 			if norm_type in zombie_manager.zombie_refresh_types:
 				zombie_choose_random_pool.update_item_weight(norm_type, norm_weight, false)
-		var cone_weight = 4000 - (wave - 5) * 150
 		for cone_type in [CharacterRegistry.ZombieType.Z002ConeTalon, CharacterRegistry.ZombieType.Z502Cone]:
+			var cone_weight = maxi(1, int(zombie_weights_base[cone_type]) - (wave - 5) * 150)
 			zombie_weights[cone_type] = cone_weight
 			if cone_type in zombie_manager.zombie_refresh_types:
 				zombie_choose_random_pool.update_item_weight(cone_type, cone_weight, false)
@@ -370,9 +394,9 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 
 	## 如果是大波，先刷新特殊僵尸
 	if is_big_wave:
-		## 旗帜波由黑爪旗帜僵尸带领。
-		wave_spawn.append(CharacterRegistry.ZombieType.Z001FlagTalon)
-		total_power += zombie_power[CharacterRegistry.ZombieType.Z001FlagTalon]
+		var flag_zombie_type := _flag_zombie_type()
+		wave_spawn.append(flag_zombie_type)
+		total_power += zombie_power[flag_zombie_type]
 		curr_spare_slot -= 1
 
 		var plain_zombie_type := _plain_zombie_type()
@@ -411,8 +435,14 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 
 func _plain_zombie_type() -> CharacterRegistry.ZombieType:
 	if zombie_manager.game_para.custom_simple_original_mode:
-		return CharacterRegistry.ZombieType.Z000NormTalon
+		return zombie_manager.game_para.simple_base_zombie_type
 	return CharacterRegistry.ZombieType.Z500Norm
+
+
+func _flag_zombie_type() -> CharacterRegistry.ZombieType:
+	if zombie_manager.game_para.custom_simple_original_mode:
+		return zombie_manager.game_para.simple_flag_zombie_type
+	return CharacterRegistry.ZombieType.Z001FlagTalon
 
 #endregion
 

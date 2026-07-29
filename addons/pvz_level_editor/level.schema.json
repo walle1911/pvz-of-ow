@@ -21,6 +21,7 @@
     "freePlantSelection": {"type": "boolean"},
     "forcedPlants": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
     "rewardPlant": {"type": "integer", "minimum": -1},
+    "rewardPlants": {"type": "array", "items": {"type": "integer", "minimum": 0}, "uniqueItems": true},
     "environmentConfig": {"$ref": "#/$defs/environmentConfig"},
     "waves": {"type": "array", "items": {"$ref": "#/$defs/wave"}},
     "winConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}, "minItems": 1},

@@ -3,6 +3,7 @@ class_name ChooseLevel
 
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const WORLD_COVER_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/image/Almanac/Almanac_GroundDay.jpg"),
 	preload("res://assets/image/Almanac/Almanac_GroundNight.jpg"),
@@ -290,11 +291,11 @@ func _configure_adventure_cover(
 	new_zombies.erase(int(CharacterRegistry.ZombieType.Z501Flag))
 
 	var features: Array[Dictionary] = []
-	var reward_plant := int(level_source.get("rewardPlant", -1))
-	if reward_plant >= 0:
+	var reward_plants := Logic.reward_plant_types(level_source)
+	for reward_plant in reward_plants:
 		features.append({"kind": "plant", "type": reward_plant})
 	for plant_type in new_plants:
-		if int(plant_type) != reward_plant:
+		if not reward_plants.has(int(plant_type)):
 			features.append({"kind": "plant", "type": int(plant_type)})
 	for zombie_type in new_zombies:
 		features.append({"kind": "zombie", "type": int(zombie_type)})

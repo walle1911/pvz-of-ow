@@ -3,6 +3,7 @@ class_name LevelCustomRuntime
 
 const LevelJsonRuntimeScript := preload("res://scripts/resources/level/level_json_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
+const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 
 const ZOMBIE_TYPE_IDS := {
 	"normal": 500,
@@ -103,6 +104,8 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		0.0,
 		float((level.get("mapConfig", {}) as Dictionary).get("columns", 9))
 	)
+	if str(level.get("formalPresetId", "")) == "adventure_1_1":
+		game_para.opening_battlefield_zombie_type = CharacterRegistry.ZombieType.Z500Norm
 	game_para.custom_original_timing = bool(level.get("strictOriginalTiming", false))
 	game_para.custom_minimum_wave_time = float(level.get("minimumWaveTime", 6.0))
 	game_para.custom_early_refresh_delay = float(level.get("earlyRefreshDelay", 0.0))
@@ -113,7 +116,13 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	if is_simple_mode:
 		## 简易关卡沿用自然波次管理器，在每波开始时按实时权重抽取僵尸。
 		game_para.custom_simple_original_mode = true
-		var allowed_types := _simple_allowed_zombie_types(level.get("waves", []), str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
+		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon)) as CharacterRegistry.ZombieType
+		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon)) as CharacterRegistry.ZombieType
+		var allowed_types := _simple_allowed_zombie_types(
+			level.get("waves", []),
+			str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")),
+			game_para.simple_base_zombie_type
+		)
 		var simple_flag_count := clampi(int(level.get("simpleFlagCount", 2)), 1, 10)
 		game_para.max_wave = simple_flag_count * 10
 		game_para.custom_spawn_schedule.clear()
@@ -123,7 +132,10 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	## 预设冒险关和启用了“可选卡片”的自制关都只展示编辑器选中的植物池。
 	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false)) \
 		or bool(level.get("plantSelectionEnabled", false))
-	game_para.reward_plant_type = int(level.get("rewardPlant", -1))
+	for reward_plant in Logic.reward_plant_types(level):
+		if CharacterRegistry.PlantInfo.has(reward_plant):
+			game_para.reward_plant_types.append(reward_plant as CharacterRegistry.PlantType)
+	game_para.reward_plant_type = int(game_para.reward_plant_types[0]) if not game_para.reward_plant_types.is_empty() else -1
 	if game_para.adventure_card_lock_active:
 		for value in level.get("availablePlants", []):
 			var plant_type := int(value) as CharacterRegistry.PlantType
@@ -147,13 +159,16 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
 
 
-static func _simple_allowed_zombie_types(stages: Array, map_type: String) -> Array[CharacterRegistry.ZombieType]:
-	## 普通冒险线以黑爪普通僵尸作为不可移除的基础敌人。
-	var types: Array[CharacterRegistry.ZombieType] = [CharacterRegistry.ZombieType.Z000NormTalon]
+static func _simple_allowed_zombie_types(
+	stages: Array,
+	map_type: String,
+	base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
+) -> Array[CharacterRegistry.ZombieType]:
+	var types: Array[CharacterRegistry.ZombieType] = [base_zombie_type]
 	for stage in stages:
 		for entry in (stage as Dictionary).get("spawnGroups", []):
 			var zombie_type := _zombie_type_id((entry as Dictionary).get("zombieType", "500")) as CharacterRegistry.ZombieType
-			if int(zombie_type) != int(CharacterRegistry.ZombieType.Z000NormTalon) and _original_zombie_weight(int(zombie_type)) <= 0:
+			if zombie_type != base_zombie_type and _original_zombie_weight(int(zombie_type)) <= 0:
 				continue
 			if AdventurePresets.POOL_ONLY_ZOMBIES.has(int(zombie_type)) and not ["pool", "fog"].has(map_type):
 				continue

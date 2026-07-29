@@ -88,18 +88,24 @@ var custom_stage_schedule: Array[Dictionary] = []
 var custom_flag_data: Array[Dictionary] = []
 ## 简易关卡使用自然波次实时权重抽取，同时保留其专属旗帜数量和出生偏移规则。
 var custom_simple_original_mode := false
+## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
+var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
+var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001FlagTalon
 var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []
 var adventure_card_lock_active := false
-## 通关后掉落并解锁的新卡；-1 表示本关没有卡牌奖励。
+## 通关后掉落并解锁的新卡；reward_plant_type 保留首张奖励以兼容旧逻辑。
 var reward_plant_type := -1
+var reward_plant_types: Array[CharacterRegistry.PlantType] = []
 var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
 var sod_rollout_rows := 0
 var custom_initial_wave_delay := 10.0
 ## 第一只自然波次僵尸从正常出生点向房屋方向提前的草坪格数；0 表示不调整。
 var opening_first_zombie_advance_cells := 0.0
+## 选卡前放在草坪上的静止演出僵尸类型；不改变正式首波的刷怪类型。
+var opening_battlefield_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Null
 var custom_original_timing := false
 var custom_minimum_wave_time := 6.0
 var custom_early_refresh_delay := 0.0

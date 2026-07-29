@@ -7,11 +7,22 @@ func _ready() -> void:
 	## 1-1 只有中间三行草皮；刷怪权重必须同步屏蔽上下两条未铺草皮行。
 	assert(ZombieChooseRowSystem.mask_inactive_rows([1, 1, 1, 1, 1], [1, 2, 3]) == [0.0, 1.0, 1.0, 1.0, 0.0])
 	var example := Logic.example_level()
-	example["rewardPlant"] = int(CharacterRegistry.PlantType.P001PeaShooterSoldier76)
+	example["rewardPlants"] = [
+		int(CharacterRegistry.PlantType.P001PeaShooterSoldier76),
+		int(CharacterRegistry.PlantType.P002SunflowerMercy),
+	]
 	var built := Runtime.build_game_para(example)
 	assert(built["ok"], built["error"])
 	var game_para: ResourceLevelData = built["game_para"]
 	assert(game_para.reward_plant_type == int(CharacterRegistry.PlantType.P001PeaShooterSoldier76))
+	assert(game_para.reward_plant_types == [
+		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
+		CharacterRegistry.PlantType.P002SunflowerMercy,
+	])
+	var legacy_reward_level := Logic.example_level()
+	legacy_reward_level["rewardPlant"] = int(CharacterRegistry.PlantType.P003CherryBombJunkrat)
+	legacy_reward_level.erase("rewardPlants")
+	assert(Logic.normalize_level(legacy_reward_level)["rewardPlants"] == [int(CharacterRegistry.PlantType.P003CherryBombJunkrat)])
 	var forced_level := Logic.example_level()
 	forced_level["freePlantSelection"] = false
 	forced_level["forcedPlants"] = [int(CharacterRegistry.PlantType.P001PeaShooterSoldier76)]
@@ -30,6 +41,7 @@ func _ready() -> void:
 	simple_level["zombieRefreshSpeedMultiplier"] = 2.0
 	simple_level["initialWaveDelay"] = 0.25
 	simple_level["openingFirstZombieAdvanceCells"] = 7.5
+	simple_level["formalPresetId"] = "adventure_1_1"
 	var simple_built := Runtime.build_game_para(simple_level)
 	assert(simple_built["ok"], simple_built["error"])
 	var simple_para: ResourceLevelData = simple_built["game_para"]
@@ -37,6 +49,7 @@ func _ready() -> void:
 	assert(simple_para.custom_simple_original_mode)
 	assert(simple_para.custom_initial_wave_delay == 0.25)
 	assert(simple_para.opening_first_zombie_advance_cells == 7.5)
+	assert(simple_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
 	assert(simple_para.zombie_refresh_speed_multiplier == 2.0)
 	assert(ZombieWaveRefreshManager.scaled_refresh_duration(simple_para.custom_initial_wave_delay, simple_para.zombie_refresh_speed_multiplier) == 0.125)
 	assert(ZombieWaveRefreshManager.scaled_refresh_duration(25.0, simple_para.zombie_refresh_speed_multiplier) == 12.5)
@@ -45,6 +58,17 @@ func _ready() -> void:
 	assert(simple_para.custom_spawn_schedule.is_empty())
 	assert(simple_para.custom_stage_schedule.is_empty())
 	assert(simple_para.custom_flag_data.is_empty())
+	assert(simple_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z000NormTalon)
+	assert(simple_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z001FlagTalon)
+	var alternate_roles := simple_level.duplicate(true)
+	alternate_roles["simpleBaseZombieType"] = int(CharacterRegistry.ZombieType.Z500Norm)
+	alternate_roles["simpleFlagZombieType"] = int(CharacterRegistry.ZombieType.Z501Flag)
+	var alternate_built := Runtime.build_game_para(alternate_roles)
+	assert(alternate_built["ok"], alternate_built["error"])
+	var alternate_para := alternate_built["game_para"] as ResourceLevelData
+	assert(alternate_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
+	assert(alternate_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z501Flag)
+	assert(alternate_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z500Norm))
 	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z000NormTalon] == 1)
 	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z000NormTalon] == 4000)
 	## 原版同帧创建整波，靠屏幕右侧出生距离错开入场；旗帜波再整体后移 40。
@@ -66,6 +90,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var opening_show := opening_scene.zombie_manager.zombie_show_in_start.opening_battlefield_zombie as Zombie000Base
 	assert(is_instance_valid(opening_show))
+	assert(opening_show.zombie_type == CharacterRegistry.ZombieType.Z500Norm)
 	assert(opening_scene.zombie_manager.curr_zombie_num == 0)
 	var opening_show_position := opening_show.global_position
 	await get_tree().create_timer(0.2, false).timeout

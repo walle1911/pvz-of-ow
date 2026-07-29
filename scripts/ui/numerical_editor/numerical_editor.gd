@@ -327,14 +327,18 @@ func _build_character_fields(scene_path: String) -> void:
 				basic_fields.append(field)
 			else:
 				normal_fields.append(field)
-	var registry_field_count := 2 if selected_item.get("kind", "") == "plant" else 0
+	var registry_fields: Array[String] = []
+	if selected_item.get("kind", "") == "plant":
+		registry_fields.assign(["plant_sun_cost", "plant_cool_time"])
+	elif ZombieWaveCreateManager.zombie_weights_ori.has(int(selected_item.get("id", -1))):
+		registry_fields.append("zombie_spawn_weight")
+	var registry_field_count := registry_fields.size()
 	field_count = registry_field_count + basic_fields.size() + normal_fields.size()
 	if registry_field_count > 0 or not basic_fields.is_empty():
 		basic_fields.sort_custom(_sort_basic_fields)
 		_add_section_header("◆ 基础参数")
-		if registry_field_count > 0:
-			_add_registry_property_editor("plant_sun_cost")
-			_add_registry_property_editor("plant_cool_time")
+		for property_name in registry_fields:
+			_add_registry_property_editor(property_name)
 		for field in basic_fields:
 			_add_property_editor(instance, field["node"], field["property_info"])
 	var last_node: Node
@@ -413,8 +417,13 @@ func _add_node_header(root: Node, node: Node) -> void:
 
 func _add_registry_property_editor(property_name:String) -> void:
 	var is_sun_cost := property_name == "plant_sun_cost"
-	var attribute = CharacterRegistry.PlantInfoAttribute.SunCost if is_sun_cost else CharacterRegistry.PlantInfoAttribute.CoolTime
-	var original_value = Global.character_registry.get_plant_info(selected_item["id"], attribute)
+	var is_spawn_weight := property_name == "zombie_spawn_weight"
+	var original_value
+	if is_spawn_weight:
+		original_value = int(ZombieWaveCreateManager.zombie_weights_ori[selected_item["id"]])
+	else:
+		var attribute = CharacterRegistry.PlantInfoAttribute.SunCost if is_sun_cost else CharacterRegistry.PlantInfoAttribute.CoolTime
+		original_value = Global.character_registry.get_plant_info(selected_item["id"], attribute)
 	var current_value = _effective_value(REGISTRY_NODE_PATH, property_name, original_value)
 	var row := HBoxContainer.new()
 	row.custom_minimum_size = Vector2(570, 34)
@@ -431,13 +440,13 @@ func _add_registry_property_editor(property_name:String) -> void:
 	spin.custom_minimum_size.x = 220
 	spin.allow_greater = false
 	spin.allow_lesser = false
-	spin.min_value = 0.0 if is_sun_cost else 0.01
-	spin.max_value = 10000000.0 if is_sun_cost else 600.0
-	spin.step = 1.0 if is_sun_cost else 0.01
+	spin.min_value = 1.0 if is_spawn_weight else (0.0 if is_sun_cost else 0.01)
+	spin.max_value = 10000000.0 if is_sun_cost or is_spawn_weight else 600.0
+	spin.step = 1.0 if is_sun_cost or is_spawn_weight else 0.01
 	spin.value = float(current_value)
 	_style_line_edit(spin.get_line_edit())
 	spin.value_changed.connect(
-		func(value): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(value) if is_sun_cost else value)
+		func(value): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(value) if is_sun_cost or is_spawn_weight else value)
 	)
 	row.add_child(spin)
 	field_box.add_child(row)
