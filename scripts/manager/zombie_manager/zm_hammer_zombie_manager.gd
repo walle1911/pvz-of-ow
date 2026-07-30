@@ -63,6 +63,20 @@ signal signal_wave_refresh(is_end_wave:bool)
 
 func _ready() -> void:
 	hammer_zombie_timer.one_shot = true
+	Global.config_service.signal_difficulty_changed.connect(_on_difficulty_changed)
+
+func _difficulty_scaled_duration(base_duration: float) -> float:
+	return ZombieWaveRefreshManager.scaled_refresh_duration(
+		base_duration,
+		Global.config_service.get_difficulty_refresh_speed()
+	)
+
+func _on_difficulty_changed(new_speed: float) -> void:
+	if hammer_zombie_timer.is_stopped():
+		return
+	var old_speed := maxf(0.1, hammer_zombie_timer.get_meta("difficulty_speed", 1.0))
+	hammer_zombie_timer.set_meta("difficulty_speed", new_speed)
+	hammer_zombie_timer.start(maxf(0.01, hammer_zombie_timer.time_left * old_speed / new_speed))
 
 func init_hammer_zombie_manager(game_para:ResourceLevelData):
 	zombie_multy = game_para.zombie_multy_hammer
@@ -155,7 +169,7 @@ func _on_hammer_zombie_timer_timeout() -> void:
 	curr_all_group_min_num_sum += 1
 	## 如果为第10波最后一小组
 	if curr_wave % 10 == 9 and curr_group_min == 9:
-		await get_tree().create_timer(3).timeout
+		await get_tree().create_timer(_difficulty_scaled_duration(3.0)).timeout
 		set_progress_bar(int(curr_wave/10.0))
 		big_wave = true
 	else:
@@ -190,13 +204,14 @@ func _on_hammer_zombie_timer_timeout() -> void:
 			interval_every_group = clampf(interval_every_group-0.05, 0.5, 1.0)
 
 			## 等待3秒，将被清理的墓碑补足到5个，不再继续增加墓碑总量。
-			await get_tree().create_timer(3).timeout
+			await get_tree().create_timer(_difficulty_scaled_duration(3.0)).timeout
 			if Global.main_game.plant_cell_manager.tombstone_list.size() < 5:
 				EventBus.push_event("create_tombstone", [5 - Global.main_game.plant_cell_manager.tombstone_list.size()])
-			await get_tree().create_timer(2).timeout
-			hammer_zombie_timer.wait_time = interval_every_group + randf_range(-0.1, 0.1)
+			await get_tree().create_timer(_difficulty_scaled_duration(2.0)).timeout
+			hammer_zombie_timer.wait_time = _difficulty_scaled_duration(interval_every_group + randf_range(-0.1, 0.1))
 
 	else:
-		hammer_zombie_timer.wait_time = interval_every_group + randf_range(-0.1, 0.1)
+		hammer_zombie_timer.wait_time = _difficulty_scaled_duration(interval_every_group + randf_range(-0.1, 0.1))
 
+	hammer_zombie_timer.set_meta("difficulty_speed", Global.config_service.get_difficulty_refresh_speed())
 	hammer_zombie_timer.start()

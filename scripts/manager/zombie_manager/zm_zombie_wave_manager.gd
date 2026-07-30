@@ -52,6 +52,10 @@ func _ready() -> void:
 	zombie_wave_refresh_manager.signal_refresh.connect(start_next_wave)
 	## 新波次自然刷新时间
 	zombie_wave_refresh_manager.signal_norm_time.connect(update_progress_bar_segment_mini_every_sec)
+	zombie_wave_refresh_manager.signal_refresh_speed_changed.connect(_on_refresh_speed_changed)
+
+func _on_refresh_speed_changed(speed_ratio: float) -> void:
+	progress_bar_segment_mini_every_sec *= speed_ratio
 
 ## 初始化波次管理器
 func init_zombie_wave_manager(game_para:ResourceLevelData):
@@ -168,9 +172,12 @@ func start_custom_timeline() -> void:
 				break
 			await get_tree().process_frame
 			var delta := get_process_delta_time()
-			elapsed += delta
+			elapsed += delta * zombie_wave_refresh_manager.refresh_speed_multiplier
 			if early_refresh_remaining > 0.0:
-				early_refresh_remaining = maxf(0.0, early_refresh_remaining - delta)
+				early_refresh_remaining = maxf(
+					0.0,
+					early_refresh_remaining - delta * zombie_wave_refresh_manager.refresh_speed_multiplier
+				)
 		signal_wave_refresh.emit(false)
 	flag_progress_bar.set_progress(100.0)
 

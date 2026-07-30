@@ -5,6 +5,7 @@ const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd"
 const CONFIG_PATH := "res://data/numerical_adjustment_whitelist.json"
 
 var scene_picker: OptionButton
+var search_edit: LineEdit
 var property_tree: Tree
 var status_label: Label
 var scene_paths: Array[String] = []
@@ -32,6 +33,11 @@ func _ready() -> void:
 	refresh_button.text = "刷新"
 	refresh_button.pressed.connect(_scan_plants)
 	toolbar.add_child(refresh_button)
+	search_edit = LineEdit.new()
+	search_edit.placeholder_text = "搜索变量名或节点路径"
+	search_edit.clear_button_enabled = true
+	search_edit.text_changed.connect(_apply_property_filter)
+	add_child(search_edit)
 	property_tree = Tree.new()
 	property_tree.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	property_tree.columns = 5
@@ -113,17 +119,22 @@ func _load_scene(scene_path: String) -> void:
 		return
 	current_instance = packed.instantiate()
 	var root_item := property_tree.create_item()
+	var field_count := 0
 	for node in _all_nodes(current_instance):
-		_add_node_properties(root_item, node)
-	status_label.text = "修改后点击底部按钮保存。未勾选字段会被该植物明确禁用。"
+		field_count += _add_node_properties(root_item, node)
+	_apply_property_filter(search_edit.text)
+	if field_count == 0:
+		status_label.text = "该场景没有可配置的数值或布尔导出参数。"
+	else:
+		status_label.text = "修改后点击底部按钮保存。未勾选字段会被该植物明确禁用。"
 
 
-func _add_node_properties(tree_root: TreeItem, node: Node) -> void:
+func _add_node_properties(tree_root: TreeItem, node: Node) -> int:
 	var node_path := "." if node == current_instance else str(current_instance.get_path_to(node))
 	var fields: Array[Dictionary] = []
-	for info in node.get_property_list():
+	for info in _script_property_list(node):
 		var usage := int(info.get("usage", 0))
-		if (usage & PROPERTY_USAGE_EDITOR) == 0 or (usage & PROPERTY_USAGE_SCRIPT_VARIABLE) == 0:
+		if (usage & PROPERTY_USAGE_EDITOR) == 0:
 			continue
 		var type := int(info.get("type", TYPE_NIL))
 		var hint := int(info.get("hint", PROPERTY_HINT_NONE))
@@ -134,7 +145,7 @@ func _add_node_properties(tree_root: TreeItem, node: Node) -> void:
 			continue
 		fields.append(info)
 	if fields.is_empty():
-		return
+		return 0
 	var header := property_tree.create_item(tree_root)
 	header.set_text(0, "角色本体" if node == current_instance else node_path)
 	header.set_selectable(0, false)
@@ -157,6 +168,45 @@ func _add_node_properties(tree_root: TreeItem, node: Node) -> void:
 			item.set_text(2, str(rule.get("item_min" if is_array else "min", 0.0)))
 			item.set_text(3, str(rule.get("item_max" if is_array else "max", 1000000.0)))
 			item.set_text(4, str(rule.get("step", 1.0 if _is_int_value(value) else 0.01)))
+	return fields.size()
+
+
+func _script_property_list(node: Node) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	var seen := {}
+	var script := node.get_script() as Script
+	while script != null:
+		for info in script.get_script_property_list():
+			var property_name := str(info.get("name", ""))
+			if property_name.is_empty() or seen.has(property_name):
+				continue
+			seen[property_name] = true
+			result.append(info)
+		script = script.get_base_script()
+	return result
+
+
+func _apply_property_filter(query: String) -> void:
+	var root_item := property_tree.get_root()
+	if root_item == null:
+		return
+	var normalized_query := query.strip_edges().to_lower()
+	var header := root_item.get_first_child()
+	while header != null:
+		var header_matches := normalized_query.is_empty() or normalized_query in header.get_text(0).to_lower()
+		var has_visible_property := false
+		var item := header.get_first_child()
+		while item != null:
+			var metadata = item.get_metadata(0)
+			var searchable_text := item.get_text(0)
+			if metadata is Dictionary:
+				searchable_text += " " + str(metadata.get("node_path", ""))
+			var matches := normalized_query.is_empty() or normalized_query in searchable_text.to_lower()
+			item.set_visible(header_matches or matches)
+			has_visible_property = has_visible_property or header_matches or matches
+			item = item.get_next()
+		header.set_visible(has_visible_property)
+		header = header.get_next()
 
 
 func _save_current_scene() -> void:

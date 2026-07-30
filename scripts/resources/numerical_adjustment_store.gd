@@ -4,12 +4,20 @@ class_name NumericalAdjustmentStore
 const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
 
 const SAVE_PATH := "user://numerical_adjustments.json"
-const DATA_VERSION := 2
+const DATA_VERSION := 4
 const REGISTRY_NODE_PATH := "@registry"
+const ZOMBIE_SPAWN_WEIGHT_BY_GRADE := {
+	1: 4000, # A：极高
+	2: 3500, # B：很高
+	3: 3000, # C：高
+	4: 2000, # D：中
+	5: 1500, # E：较低
+	6: 1000, # F：低
+}
 const REGISTRY_RULES := {
 	"plant_sun_cost": {"min": 0.0, "max": 10000000.0, "integer": true},
 	"plant_cool_time": {"min": 0.01, "max": 600.0, "integer": false},
-	"zombie_spawn_weight": {"min": 1.0, "max": 10000000.0, "integer": true},
+	"zombie_spawn_weight": {"min": 1.0, "max": 6.0, "integer": true},
 }
 
 static var _cache: Dictionary = {}
@@ -29,11 +37,15 @@ static func load_data(force_reload := false) -> Dictionary:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary and parsed.get("characters") is Dictionary:
 		_cache = parsed
+		_migrate_data(_cache)
 		_cache["version"] = DATA_VERSION
 	return _cache
 
 
 static func save_data(data: Dictionary) -> bool:
+	data = data.duplicate(true)
+	_migrate_data(data)
+	data["version"] = DATA_VERSION
 	data = _sanitize_data(data)
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
@@ -69,6 +81,48 @@ static func validate_registry_value(property_name:String, saved_value, fallback)
 	if not is_finite(number) or number < float(rule["min"]) or number > float(rule["max"]):
 		return {"ok": false}
 	return {"ok": true, "value": int(number) if bool(rule["integer"]) else number}
+
+
+static func zombie_spawn_weight_from_grade(grade: int) -> int:
+	return int(ZOMBIE_SPAWN_WEIGHT_BY_GRADE.get(clampi(grade, 1, 6), 1000))
+
+
+static func zombie_spawn_weight_to_grade(weight: int) -> int:
+	var nearest_grade := 1
+	var nearest_distance := absi(weight - int(ZOMBIE_SPAWN_WEIGHT_BY_GRADE[nearest_grade]))
+	for grade_value in ZOMBIE_SPAWN_WEIGHT_BY_GRADE:
+		var grade := int(grade_value)
+		var distance := absi(weight - int(ZOMBIE_SPAWN_WEIGHT_BY_GRADE[grade]))
+		if distance < nearest_distance:
+			nearest_grade = grade
+			nearest_distance = distance
+	return nearest_grade
+
+
+static func _migrate_data(data: Dictionary) -> void:
+	var old_version := int(data.get("version", 0))
+	if old_version >= DATA_VERSION:
+		return
+	var characters = data.get("characters", {})
+	if not characters is Dictionary:
+		return
+	for scene_path in characters:
+		var character_data = characters[scene_path]
+		if not character_data is Dictionary:
+			continue
+		var registry_data = character_data.get(REGISTRY_NODE_PATH, {})
+		if not registry_data is Dictionary or not registry_data.has("zombie_spawn_weight"):
+			continue
+		var old_weight = registry_data["zombie_spawn_weight"]
+		if typeof(old_weight) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(old_weight)):
+			if old_version < 3:
+				if int(old_weight) < 1000:
+					registry_data.erase("zombie_spawn_weight")
+				else:
+					registry_data["zombie_spawn_weight"] = zombie_spawn_weight_to_grade(int(old_weight))
+			elif int(old_weight) == 7:
+				## 短暂使用过的 G 档不是正式档位，恢复该僵尸的默认权重。
+				registry_data.erase("zombie_spawn_weight")
 
 
 static func apply_to_character(character: Node, is_developer_level := false) -> void:

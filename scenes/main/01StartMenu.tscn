@@ -2352,7 +2352,7 @@ offset_top = 115.0
 offset_right = 320.0
 offset_bottom = 373.0
 
-[node name="Music" type="Control" parent="StartMenuOptionDialog/Option" unique_id=628270071]
+[node name="Sound" type="Control" parent="StartMenuOptionDialog/Option" unique_id=628270071]
 custom_minimum_size = Vector2(0, 30)
 anchors_preset = 0
 offset_left = 4.0
@@ -2360,14 +2360,14 @@ offset_top = -0.5
 offset_right = 216.0
 offset_bottom = 29.5
 
-[node name="Label" type="Label" parent="StartMenuOptionDialog/Option/Music" unique_id=1637885737]
+[node name="Label" type="Label" parent="StartMenuOptionDialog/Option/Sound" unique_id=1637885737]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 theme_type_variation = &"Label2"
-text = "音乐"
+text = "声音"
 
-[node name="HSlider" type="HSlider" parent="StartMenuOptionDialog/Option/Music" unique_id=1790522698]
+[node name="HSlider" type="HSlider" parent="StartMenuOptionDialog/Option/Sound" unique_id=1790522698]
 layout_mode = 0
 offset_left = 62.0
 offset_top = 1.0
@@ -2377,7 +2377,7 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="SoundEffect" type="Control" parent="StartMenuOptionDialog/Option" unique_id=1493096671]
+[node name="Difficulty" type="Control" parent="StartMenuOptionDialog/Option" unique_id=1493096671]
 custom_minimum_size = Vector2(0, 30)
 anchors_preset = 0
 offset_left = 4.0
@@ -2385,22 +2385,22 @@ offset_top = 33.5
 offset_right = 216.0
 offset_bottom = 63.5
 
-[node name="Label" type="Label" parent="StartMenuOptionDialog/Option/SoundEffect" unique_id=391795133]
+[node name="Label" type="Label" parent="StartMenuOptionDialog/Option/Difficulty" unique_id=391795133]
 layout_mode = 0
-offset_right = 40.0
+offset_right = 100.0
 offset_bottom = 23.0
 theme_type_variation = &"Label2"
-text = "音效"
+text = "难度 中等"
 
-[node name="HSlider" type="HSlider" parent="StartMenuOptionDialog/Option/SoundEffect" unique_id=1677560523]
+[node name="HSlider" type="HSlider" parent="StartMenuOptionDialog/Option/Difficulty" unique_id=1677560523]
 layout_mode = 0
-offset_left = 62.0
+offset_left = 115.0
 offset_top = 1.0
 offset_right = 212.0
 offset_bottom = 30.0
-max_value = 1.0
-step = 0.01
-value = 0.5
+max_value = 2.0
+step = 1.0
+value = 1.0
 
 [node name="FullScreen" type="Control" parent="StartMenuOptionDialog/Option" unique_id=473210163]
 custom_minimum_size = Vector2(0, 50)

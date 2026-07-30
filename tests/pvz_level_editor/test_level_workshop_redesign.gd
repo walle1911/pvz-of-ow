@@ -43,7 +43,7 @@ func _run() -> void:
 	assert((workshop.reward_mode_button.get_child(0) as Label).text == "植物卡片")
 	workshop.call("_load_preset_for_edit", "adventure_2_1")
 	assert(workshop.background_sprite.texture == workshop.NIGHT_LAWN)
-	assert((workshop.reward_mode_button.get_child(0) as Label).text.contains("奖✖️"))
+	assert((workshop.reward_mode_button.get_child(0) as Label).text == "植物卡片")
 	workshop.call("_toggle_reward_catalog")
 	assert((workshop.reward_mode_button.get_child(0) as Label).text.begins_with("登场僵尸"))
 	workshop.call("_load_preset_for_edit", "adventure_3_1")
@@ -210,7 +210,8 @@ func _run() -> void:
 	workshop.call("_load_preset_for_edit", "adventure_1_7")
 	var later_reward_conflicts: Array = workshop.call("_later_formal_reward_conflicts", 18)
 	assert(not later_reward_conflicts.is_empty())
-	workshop.call("_set_formal_reward_plants", [])
+	var no_rewards: Array[int] = []
+	workshop.call("_set_formal_reward_plants", no_rewards)
 	workshop.call("_toggle_reward_card", 18, true)
 	assert(workshop.reward_conflict_dialog != null)
 	assert(workshop.reward_conflict_dialog.dialog_text.contains("后续关卡将需要新增奖励植物"))
@@ -276,7 +277,7 @@ func _run() -> void:
 			if new_reward_types.size() == 2:
 				break
 	assert(new_reward_types.size() == 2)
-	workshop.call("_set_formal_reward_plants", [])
+	workshop.call("_set_formal_reward_plants", no_rewards)
 	workshop.call("_toggle_reward_card", new_reward_types[0], true)
 	assert(workshop.level["rewardPlants"] == [new_reward_types[0]])
 	assert(not (workshop.level["availablePlants"] as Array).has(new_reward_types[0]))
@@ -338,18 +339,23 @@ func _run() -> void:
 	assert(not workshop.clear_cards_button.visible)
 
 	workshop.level = Logic.example_level()
+	workshop.level["simpleZombiePool"] = [int(CharacterRegistry.ZombieType.Z000NormTalon)]
+	workshop.level["simpleZombieIntroWaves"] = {}
 	workshop.level["waves"] = [Logic.make_wave("wave_redesign", "尺寸测试", 0.0, 10.0, [], "flag")]
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
 	workshop.call("_select_simple_zombie", "500")
-	assert(workshop.preview_zombies.size() == 1)
-	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 1)
+	assert(workshop.preview_zombies.size() == 2)
+	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 2)
+	assert((workshop.level["simpleZombiePool"] as Array).has(500))
+	assert(int((workshop.level["simpleZombieIntroWaves"] as Dictionary)["500"]) == 1)
 	var selected_zombie_holder: Control = workshop.call("_make_zombie_card", 500)
 	assert((selected_zombie_holder.get_child(0) as Card).modulate == Color.WHITE)
 	assert(not ((selected_zombie_holder.get_child(0) as Card).get_node("CardBg/Cost") as Label).visible)
 	workshop.call("_select_simple_zombie", "500")
-	assert(workshop.preview_zombies.is_empty())
-	assert((workshop.level["waves"][0]["spawnGroups"] as Array).is_empty())
+	assert(workshop.preview_zombies.size() == 1)
+	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 1)
+	assert(not (workshop.level["simpleZombiePool"] as Array).has(500))
 	workshop.call("_select_simple_zombie", "500")
 	workshop.call("_open_simple_zombie_dialog", "500")
 	assert(workshop.quantity_dialog_layer != null)

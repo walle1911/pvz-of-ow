@@ -124,11 +124,10 @@ func start_game():
 		ConstLevelData.E_MonsterMode.Norm:
 			## 简易主线与普通资源关卡的首波默认等待 10 秒；关卡仍可通过刷新速度倍率统一缩放。
 			var initial_wave_delay := game_para.custom_initial_wave_delay
-			if game_para.custom_spawn_schedule.is_empty():
-				initial_wave_delay = ZombieWaveRefreshManager.scaled_refresh_duration(
-					initial_wave_delay,
-					game_para.zombie_refresh_speed_multiplier
-				)
+			initial_wave_delay = ZombieWaveRefreshManager.scaled_refresh_duration(
+				initial_wave_delay,
+				Global.config_service.get_combined_refresh_speed(game_para.zombie_refresh_speed_multiplier)
+			)
 			await get_tree().create_timer(initial_wave_delay).timeout
 			if game_para.custom_spawn_schedule.is_empty():
 				zombie_wave_manager.start_first_wave()
@@ -136,7 +135,12 @@ func start_game():
 				zombie_wave_manager.start_custom_timeline()
 
 		ConstLevelData.E_MonsterMode.HammerZombie:
-			await get_tree().create_timer(2).timeout
+			await get_tree().create_timer(
+				ZombieWaveRefreshManager.scaled_refresh_duration(
+					2.0,
+					Global.config_service.get_difficulty_refresh_speed()
+				)
+			).timeout
 			hammer_zombie_manager.start_first_wave()
 
 #region 生成僵尸

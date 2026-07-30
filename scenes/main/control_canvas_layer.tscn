@@ -31,7 +31,7 @@ offset_right = 49.0
 offset_bottom = 70.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 29
-text = "控制台"
+text = "选项设置"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -56,6 +56,7 @@ mouse_default_cursor_shape = 2
 text = "自动收集阳光"
 
 [node name="CheckBox2" type="CheckBox" parent="OptionBG/HBoxContainer/VBoxContainer" unique_id=1105232444]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 tooltip_text = "自动收集金币（没做）"
@@ -104,6 +105,7 @@ mouse_default_cursor_shape = 2
 text = "焦点卡槽自动置顶"
 
 [node name="CheckBox8" type="CheckBox" parent="OptionBG/HBoxContainer/VBoxContainer" unique_id=1103806107]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 tooltip_text = "游戏有浓雾时，选择静态或动态浓雾"
@@ -115,6 +117,46 @@ text = "静态浓雾"
 layout_mode = 2
 theme_override_constants/separation = 11
 
+[node name="Music" type="Control" parent="OptionBG/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(240, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OptionBG/HBoxContainer/VBoxContainer2/Music"]
+layout_mode = 0
+offset_right = 45.0
+offset_bottom = 30.0
+text = "音乐"
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="OptionBG/HBoxContainer/VBoxContainer2/Music"]
+layout_mode = 0
+offset_left = 65.0
+offset_right = 235.0
+offset_bottom = 30.0
+max_value = 1.0
+step = 0.01
+value = 0.5
+
+[node name="SoundEffect" type="Control" parent="OptionBG/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(240, 30)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="OptionBG/HBoxContainer/VBoxContainer2/SoundEffect"]
+layout_mode = 0
+offset_right = 45.0
+offset_bottom = 30.0
+text = "音效"
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="OptionBG/HBoxContainer/VBoxContainer2/SoundEffect"]
+layout_mode = 0
+offset_left = 65.0
+offset_right = 235.0
+offset_bottom = 30.0
+max_value = 1.0
+step = 0.01
+value = 0.5
+
 [node name="CheckBox9" type="CheckBox" parent="OptionBG/HBoxContainer/VBoxContainer2" unique_id=865581138]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -124,6 +166,7 @@ mouse_default_cursor_shape = 2
 text = "预铲除植物置顶"
 
 [node name="CheckBox10" type="CheckBox" parent="OptionBG/HBoxContainer/VBoxContainer2" unique_id=1347351891]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 tooltip_text = "铲子预铲除植物时，将该植物高亮同时在本格置顶，方便观察被铲除的植物"
@@ -132,6 +175,7 @@ mouse_default_cursor_shape = 2
 text = "开放所有关卡"
 
 [node name="CheckBox11" type="CheckBox" parent="OptionBG/HBoxContainer/VBoxContainer2" unique_id=1247747719]
+visible = false
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 tooltip_text = "追踪子弹无目标时，追踪鼠标"

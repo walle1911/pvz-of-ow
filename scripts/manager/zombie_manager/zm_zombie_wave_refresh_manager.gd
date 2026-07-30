@@ -43,6 +43,7 @@ enum E_RefreshStatus{
 @export var time_min_wave := 6.0
 ## 关卡级自然刷新速度；只缩放时间，不改变残血阈值和波次内容。
 var refresh_speed_multiplier := 1.0
+var level_refresh_speed_multiplier := 1.0
 
 ## 当前刷新状态
 var curr_refresh_status:=E_RefreshStatus.DisableRefresh
@@ -66,14 +67,32 @@ signal signal_refresh
 signal signal_norm_time(time:float)
 ## 开始等待刷新，当前波次时间已达最小值，可以触发下次提前刷新
 signal signal_start_await_refresh
+## 难度变化后通知进度条同步调整推进速度。
+signal signal_refresh_speed_changed(speed_ratio: float)
 
 func _ready() -> void:
 	wave_min_time_timer.wait_time = time_min_wave
+	Global.config_service.signal_difficulty_changed.connect(_on_difficulty_changed)
 
 
 func init_zombie_wave_refresh_manager(game_para: ResourceLevelData) -> void:
-	refresh_speed_multiplier = clampf(game_para.zombie_refresh_speed_multiplier, 0.1, 5.0)
+	level_refresh_speed_multiplier = game_para.zombie_refresh_speed_multiplier
+	refresh_speed_multiplier = Global.config_service.get_combined_refresh_speed(level_refresh_speed_multiplier)
 	wave_min_time_timer.wait_time = scaled_refresh_duration(time_min_wave, refresh_speed_multiplier)
+
+func _on_difficulty_changed(_difficulty_speed: float) -> void:
+	var old_speed := refresh_speed_multiplier
+	refresh_speed_multiplier = Global.config_service.get_combined_refresh_speed(level_refresh_speed_multiplier)
+	if is_equal_approx(old_speed, refresh_speed_multiplier):
+		return
+	_rescale_running_timer(wave_min_time_timer, old_speed, refresh_speed_multiplier)
+	_rescale_running_timer(wave_norm_refresh_timer, old_speed, refresh_speed_multiplier)
+	signal_refresh_speed_changed.emit(refresh_speed_multiplier / old_speed)
+
+func _rescale_running_timer(timer: Timer, old_speed: float, new_speed: float) -> void:
+	if timer.is_stopped():
+		return
+	timer.start(maxf(0.01, timer.time_left * old_speed / new_speed))
 
 
 static func scaled_refresh_duration(base_duration: float, speed_multiplier: float) -> float:

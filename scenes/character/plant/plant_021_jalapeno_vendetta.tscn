@@ -115,6 +115,8 @@ _data = {
 
 [node name="Plant021JalapenoVendetta" unique_id=2087937088 node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("1_14btg")]
 script = ExtResource("2_citj3")
+center_lane_damage = 1800
+edge_lane_damage = 600
 plant_type = 21
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 

@@ -2,6 +2,7 @@ extends Node
 
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const FormalStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 
 func _ready() -> void:
 	## 1-1 只有中间三行草皮；刷怪权重必须同步屏蔽上下两条未铺草皮行。
@@ -60,6 +61,15 @@ func _ready() -> void:
 	assert(simple_para.custom_flag_data.is_empty())
 	assert(simple_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z000NormTalon)
 	assert(simple_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z001FlagTalon)
+	assert(simple_para.zombie_refresh_types == [
+		CharacterRegistry.ZombieType.Z000NormTalon,
+		CharacterRegistry.ZombieType.Z002ConeTalon,
+		CharacterRegistry.ZombieType.Z004BucketTalon,
+	])
+	assert(simple_para.simple_zombie_intro_waves == {
+		int(CharacterRegistry.ZombieType.Z002ConeTalon): 4,
+		int(CharacterRegistry.ZombieType.Z004BucketTalon): 7,
+	})
 	var alternate_roles := simple_level.duplicate(true)
 	alternate_roles["simpleBaseZombieType"] = int(CharacterRegistry.ZombieType.Z500Norm)
 	alternate_roles["simpleFlagZombieType"] = int(CharacterRegistry.ZombieType.Z501Flag)
@@ -119,11 +129,39 @@ func _ready() -> void:
 	assert(int(normalized_legacy["simpleFlagCount"]) == 3)
 	assert(int(normalized_legacy["simpleWaveCount"]) == 30)
 	var normal_only_level := simple_level.duplicate(true)
+	normal_only_level.erase("simpleZombiePool")
+	normal_only_level.erase("simpleZombieIntroWaves")
 	for stage in normal_only_level["waves"]:
 		stage["spawnGroups"] = []
 	var normal_only_built := Runtime.build_game_para(normal_only_level)
 	assert(normal_only_built["ok"], normal_only_built["error"])
 	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z000NormTalon])
+	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z510Duckytube] == 1)
+	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z510Duckytube] == 3600)
+	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z020ZombieYetiWinston] == 300)
+	## 1-1～3-10 工坊曲线必须全部可构建，僵尸池/首秀表也必须闭合。
+	for world in range(1, 4):
+		for level_number in range(1, 11):
+			var preset_id := "adventure_%d_%d" % [world, level_number]
+			var stored := FormalStore.load_developer_level(preset_id)
+			assert(stored["ok"], "%s: %s" % [preset_id, stored["error"]])
+			var curve_level := Logic.normalize_level(stored["level"])
+			var curve_errors := Logic.validate_level(curve_level).filter(
+				func(issue): return str((issue as Dictionary).get("severity", "")) == "error"
+			)
+			assert(curve_errors.is_empty(), "%s: %s" % [preset_id, str(curve_errors)])
+			var curve_built := Runtime.build_game_para(curve_level)
+			assert(curve_built["ok"], "%s: %s" % [preset_id, curve_built["error"]])
+			var curve_para := curve_built["game_para"] as ResourceLevelData
+			assert(curve_para.max_wave == int(curve_level["simpleFlagCount"]) * 10)
+			for zombie_type_value in curve_level["simpleZombiePool"]:
+				var zombie_type := int(zombie_type_value)
+				assert(ZombieWaveCreateManager.zombie_power.has(zombie_type), "%s missing power %d" % [preset_id, zombie_type])
+				assert(ZombieWaveCreateManager.zombie_weights_ori.has(zombie_type), "%s missing weight %d" % [preset_id, zombie_type])
+			for zombie_type_value in curve_level["simpleZombieIntroWaves"]:
+				var zombie_type := int(zombie_type_value)
+				assert((curve_level["simpleZombiePool"] as Array).has(zombie_type))
+				assert(curve_para.simple_zombie_intro_waves.has(zombie_type))
 	var grass_cell := PlantCell.new()
 	var pool_cell := PlantCell.new()
 	pool_cell.plant_cell_type = PlantCell.PlantCellType.Pool

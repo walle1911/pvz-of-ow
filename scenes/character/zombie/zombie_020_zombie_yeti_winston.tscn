@@ -1174,7 +1174,7 @@ node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"
 
 [node name="Zombie020ZombieYetiWinston" unique_id=300308370 instance=ExtResource("1_77dhx")]
 script = ExtResource("2_cl1ng")
-probability_run = 0.2
+probability_run = 0.0
 zombie_type = 20
 
 [node name="BodyCorrect" parent="Body" index="0"]

@@ -56,10 +56,26 @@ func _run() -> void:
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_attack_values")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_019_threepeater_daotian.tscn", "AttackComponent", "bullet_speeds")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_002_sunflower_mercy.tscn", ".", "damage_boost_multiplier")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_004_wall_nut_brigitte.tscn", ".", "heal_pulse_interval")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_006_snow_pea_mei.tscn", "AttackComponent", "close_spray_hits_to_freeze")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_016_doom_shroom_dva.tscn", ".", "baby_grow_time")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_020_tanglekelp_mizuki.tscn", ".", "first_ally_heal")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_021_jalapeno_vendetta.tscn", ".", "center_lane_damage")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_022_caltrop_hazard.tscn", ".", "downpour_immobilize_time")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_025_sea_shroom_wuyang.tscn", "AttackComponent", "guidance_attack_damage")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_024_tall_nut_sigma.tscn", ".", "slam_hold_time")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_031_pumpkin_zarya.tscn", ".", "gravity_hold_duration")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_032_magnet_shroom_sombra.tscn", ".", "emp_duration")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_036_coffee_bean_ana.tscn", ".", "boost_duration")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_037_garlic_mauga.tscn", ".", "chain_last_stand_duration")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn", ".", "yellow_fume_chance")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_044_cattail_jetpack_cat.tscn", ".", "critical_knockback_distance")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "HpComponent", "max_hp")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "AttackComponent", "init_attack_value_per_min")
 	_assert_not_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "is_attack")
 	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", ".", "is_walk")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "DropItemComponent", "drop_coin_rate")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "DropItemComponent", "drop_coin_silver_glod_diamond_rate")
 
 	var soldier_path := "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn"
 	var policy_script_rules_loaded: bool = Policy._scene_rules_loaded
@@ -84,6 +100,21 @@ func _run() -> void:
 	policy_soldier.free()
 	Policy._scene_rules_loaded = policy_script_rules_loaded
 	Policy._scene_rules = policy_scene_rules
+	var snow_pea := (load("res://scenes/character/plant/plant_006_snow_pea_mei.tscn") as PackedScene).instantiate()
+	var snow_attack := snow_pea.get_node("AttackComponent")
+	assert(Policy.get_rule(snow_attack, "close_spray_freeze_time")["max"] == 60.0)
+	assert(not Policy.validate_value(snow_attack, "close_spray_freeze_time", 61.0)["ok"])
+	snow_pea.free()
+	var normal_zombie := (load("res://scenes/character/zombie/zombie_500_norm.tscn") as PackedScene).instantiate()
+	var drop_item := normal_zombie.get_node("DropItemComponent")
+	assert(Policy.get_rule(drop_item, "drop_coin_rate").is_empty())
+	assert(Policy.get_rule(drop_item, "drop_coin_silver_glod_diamond_rate").is_empty())
+	normal_zombie.free()
+	var wall_nut := (load("res://scenes/character/plant/plant_004_wall_nut_brigitte.tscn") as PackedScene).instantiate()
+	var hp_stage := wall_nut.get_node("HpStageChangeComponent")
+	assert(Policy.validate_value(hp_stage, "boundary_value_hp", [2666, 1333, 0])["ok"])
+	assert(not Policy.validate_value(hp_stage, "boundary_value_hp", [1333, 2666, 0])["ok"])
+	wall_nut.free()
 	var data := {
 		"characters": {
 			soldier_path: {
@@ -112,18 +143,41 @@ func _run() -> void:
 
 	var normal_zombie_path := "res://scenes/character/zombie/zombie_500_norm.tscn"
 	var zombie_data := {
+		"version": Store.DATA_VERSION,
 		"characters": {
 			normal_zombie_path: {
-				"@registry": {"zombie_spawn_weight": 6789},
+				"@registry": {"zombie_spawn_weight": 6},
+				"DropItemComponent": {
+					"drop_coin_rate": 1.0,
+					"drop_coin_silver_glod_diamond_rate": [0.0, 0.0, 1.0],
+				},
 			}
 		}
 	}
 	assert(Store.save_data(zombie_data))
-	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 4000, true) == 6789)
-	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 4000, false) == 4000)
+	var sanitized_zombie_data := Store.load_data()
+	assert(not sanitized_zombie_data["characters"][normal_zombie_path].has("DropItemComponent"))
+	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 1, true) == 6)
+	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 1, false) == 1)
+	assert(Store.zombie_spawn_weight_from_grade(1) == 4000)
+	assert(Store.zombie_spawn_weight_from_grade(6) == 1000)
+	assert(Store.zombie_spawn_weight_to_grade(3500) == 2)
+	assert(not Store.validate_registry_value("zombie_spawn_weight", 7, 1).get("ok", false))
+	assert(ZombieWaveCreateManager.scaled_decay_weight(4000, 4000, 180, 25) == 400)
+	assert(ZombieWaveCreateManager.scaled_decay_weight(1000, 4000, 180, 25) == 100)
+	var legacy_zombie_data := {
+		"version": 2,
+		"characters": {
+			normal_zombie_path: {
+				"@registry": {"zombie_spawn_weight": 3500},
+			}
+		}
+	}
+	Store._migrate_data(legacy_zombie_data)
+	assert(legacy_zombie_data["characters"][normal_zombie_path]["@registry"]["zombie_spawn_weight"] == 2)
 	var wave_create_manager := ZombieWaveCreateManager.new()
 	wave_create_manager.call("_reset_zombie_weights_from_adjustments")
-	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z500Norm] == 6789)
+	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z500Norm] == 1000)
 	wave_create_manager.free()
 	var normal_zombie_item: Dictionary
 	for item in editor.catalog:
@@ -135,8 +189,9 @@ func _run() -> void:
 	var has_spawn_weight_field := false
 	for child in editor.field_box.get_children():
 		if child is HBoxContainer and child.get_child_count() > 0 and child.get_child(0) is Label:
-			if (child.get_child(0) as Label).text == "刷怪权重":
+			if (child.get_child(0) as Label).text == "刷怪权重等级":
 				has_spawn_weight_field = true
+				assert(child.get_child(1) is OptionButton)
 				break
 	assert(has_spawn_weight_field)
 	Store.save_data(original_adjustments)

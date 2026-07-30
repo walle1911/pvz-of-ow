@@ -86,7 +86,7 @@ size = Vector2(75, 5)
 [node name="Plant022CaltropHazard" unique_id=170120932 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_afx53")]
 script = ExtResource("2_5b05c")
 downpour_preview_time = 0.5
-downpour_immobilize_time = 5.0
+downpour_immobilize_time = 3.0
 downpour_damage = 40
 attack_value = 20
 is_attack = false

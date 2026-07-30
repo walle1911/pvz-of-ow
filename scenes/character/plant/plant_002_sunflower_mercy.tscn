@@ -182,7 +182,7 @@ node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
 
 [node name="Plant002SunflowerMercy" unique_id=815212199 node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("1_3q4dl")]
 script = ExtResource("2_vbc7f")
-damage_boost_multiplier = 1.5
+damage_boost_multiplier = 1.25
 damage_boost_target_check_interval = 0.15
 damage_boost_target_cell_max_range = 1
 damage_boost_source_anchor_path = NodePath("Body/BodyCorrect/Stalk_bottom")

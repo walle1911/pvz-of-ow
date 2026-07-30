@@ -270,7 +270,7 @@ script = ExtResource("21_k2f5v")
 # 射击间隔（秒）；Inspector 中可直接调整，数值越小射击越快。
 attack_cd = 1.5
 giant_pea_attack_value = 80
-giant_pea_knockback_distance = 30.0
+giant_pea_knockback_distance = 20.0
 giant_pea_bullet_type = 18
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Anim_idle/HeadCorrect/Marker2D")]
 

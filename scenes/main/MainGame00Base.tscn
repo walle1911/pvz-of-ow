@@ -757,21 +757,21 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/separation = 10
 
-[node name="Music" type="Control" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer" unique_id=1178401887]
+[node name="Sound" type="Control" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer" unique_id=1178401887]
 custom_minimum_size = Vector2(220, 30)
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Music" unique_id=552360551]
+[node name="Label" type="Label" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Sound" unique_id=552360551]
 layout_mode = 0
 offset_left = 7.71088
 offset_top = 4.20592
 offset_right = 47.7109
 offset_bottom = 27.2059
 theme_type_variation = &"Label2"
-text = "音乐"
+text = "声音"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Music" unique_id=316759424]
+[node name="HSlider" type="HSlider" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Sound" unique_id=316759424]
 layout_mode = 0
 offset_left = 62.0
 offset_top = 1.0
@@ -782,30 +782,30 @@ max_value = 1.0
 step = 0.01
 value = 0.5
 
-[node name="SoundEffect" type="Control" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer" unique_id=1308272446]
+[node name="Difficulty" type="Control" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer" unique_id=1308272446]
 custom_minimum_size = Vector2(220, 30)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/SoundEffect" unique_id=1927189430]
+[node name="Label" type="Label" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Difficulty" unique_id=1927189430]
 layout_mode = 0
 offset_left = 7.71088
 offset_top = 4.20592
-offset_right = 47.7109
+offset_right = 107.711
 offset_bottom = 27.2059
 theme_type_variation = &"Label2"
-text = "音效"
+text = "难度 中等"
 
-[node name="HSlider" type="HSlider" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/SoundEffect" unique_id=1837129687]
+[node name="HSlider" type="HSlider" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer/Difficulty" unique_id=1837129687]
 layout_mode = 0
-offset_left = 62.0
+offset_left = 115.0
 offset_top = 1.0
 offset_right = 212.0
 offset_bottom = 30.0
 mouse_filter = 1
-max_value = 1.0
-step = 0.01
-value = 0.5
+max_value = 2.0
+step = 1.0
+value = 1.0
 
 [node name="TimeScale" type="Control" parent="CanvasLayerUI/All_UI/MainGameMenuOptionDialog/Option/VBoxContainer" unique_id=1870653596]
 custom_minimum_size = Vector2(220, 30)

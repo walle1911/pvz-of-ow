@@ -39,6 +39,7 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z507Football: 7,	# 橄榄球战力
 	CharacterRegistry.ZombieType.Z508Jackson: 5,		# 舞王战力
 	CharacterRegistry.ZombieType.Z509Dancer: 1,		# 伴舞权重
+	CharacterRegistry.ZombieType.Z510Duckytube: 1,		# 鸭子救生圈僵尸
 
 	CharacterRegistry.ZombieType.Z511Snorkle: 3,		# 潜水
 	CharacterRegistry.ZombieType.Z512Zamboni: 7,		# 冰车
@@ -83,6 +84,7 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z507Football: 2000,		# 橄榄球权重
 	CharacterRegistry.ZombieType.Z508Jackson: 1000,		# 舞王权重
 	CharacterRegistry.ZombieType.Z509Dancer: 4000,		# 舞王权重
+	CharacterRegistry.ZombieType.Z510Duckytube: 3600,		# 鸭子救生圈僵尸
 
 	CharacterRegistry.ZombieType.Z511Snorkle: 2000,		# 潜水
 	CharacterRegistry.ZombieType.Z512Zamboni: 2000,		# 冰车
@@ -96,7 +98,7 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: 1000,		# 矿工
 	CharacterRegistry.ZombieType.Z518Pogo: 1000,			# 跳跳
 	CharacterRegistry.ZombieType.Z519Yeti: 1,			# 原版雪人
-	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 1,			# 雪人
+	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 300,			# Winston 雪人：Boss 级低频单位，不沿用原版彩蛋的极低权重
 
 	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
@@ -122,6 +124,8 @@ var wave_all_zombies:Array[Zombie000Base]
 var natural_spawn_count := 0
 var first_natural_spawn_lane := -1
 var natural_created_count := 0
+## 已完成保底首秀的简易模式主题僵尸。
+var simple_intro_spawned: Dictionary = {}
 ## 选卡前放在草坪上的开场替身所在行；真实首只僵尸复用该行完成无缝接替。
 var opening_first_zombie_lane := -1
 
@@ -133,6 +137,7 @@ func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	natural_spawn_count = 0
 	first_natural_spawn_lane = -1
 	natural_created_count = 0
+	simple_intro_spawned.clear()
 	opening_first_zombie_lane = -1
 	zombie_choose_row_system.init_zombie_choose_row_system()
 	if game_para.custom_spawn_schedule.is_empty():
@@ -143,18 +148,23 @@ func _reset_zombie_weights_from_adjustments() -> void:
 	zombie_weights_base = zombie_weights_ori.duplicate_deep()
 	for zombie_type_value in zombie_weights_base.keys():
 		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
+		## 权重 1 是雪人等角色的内部稀有规则，不属于对玩家开放的 A～F 档位。
+		if int(zombie_weights_base[zombie_type]) < 1000:
+			continue
 		var scene: PackedScene = Global.character_registry.get_zombie_info(
 			zombie_type,
 			CharacterRegistry.ZombieInfoAttribute.ZombieScenes
 		)
 		if scene == null:
 			continue
-		zombie_weights_base[zombie_type] = NumericalStore.get_registry_override(
+		var default_grade := NumericalStore.zombie_spawn_weight_to_grade(zombie_weights_base[zombie_type])
+		var selected_grade: int = NumericalStore.get_registry_override(
 			scene.resource_path,
 			"zombie_spawn_weight",
-			zombie_weights_base[zombie_type],
+			default_grade,
 			true
 		)
+		zombie_weights_base[zombie_type] = NumericalStore.zombie_spawn_weight_from_grade(selected_grade)
 	zombie_weights = zombie_weights_base.duplicate_deep()
 	is_update_weight_on_limit = false
 
@@ -371,17 +381,33 @@ func _update_weights(wave: int):
 			wave = 25
 
 		for norm_type in [CharacterRegistry.ZombieType.Z000NormTalon, CharacterRegistry.ZombieType.Z500Norm]:
-			var norm_weight = maxi(1, int(zombie_weights_base[norm_type]) - (wave - 5) * 180)
+			var norm_weight := scaled_decay_weight(
+				int(zombie_weights_base[norm_type]),
+				int(zombie_weights_ori[norm_type]),
+				180,
+				wave
+			)
 			zombie_weights[norm_type] = norm_weight
 			if norm_type in zombie_manager.zombie_refresh_types:
 				zombie_choose_random_pool.update_item_weight(norm_type, norm_weight, false)
 		for cone_type in [CharacterRegistry.ZombieType.Z002ConeTalon, CharacterRegistry.ZombieType.Z502Cone]:
-			var cone_weight = maxi(1, int(zombie_weights_base[cone_type]) - (wave - 5) * 150)
+			var cone_weight := scaled_decay_weight(
+				int(zombie_weights_base[cone_type]),
+				int(zombie_weights_ori[cone_type]),
+				150,
+				wave
+			)
 			zombie_weights[cone_type] = cone_weight
 			if cone_type in zombie_manager.zombie_refresh_types:
 				zombie_choose_random_pool.update_item_weight(cone_type, cone_weight, false)
 
 		zombie_choose_random_pool.rebuild_alias_table()
+
+
+static func scaled_decay_weight(base_weight: int, original_weight: int, decrement: int, wave: int) -> int:
+	var safe_original := maxi(1, original_weight)
+	var original_at_wave := maxi(1, safe_original - maxi(0, wave - 5) * maxi(0, decrement))
+	return maxi(1, roundi(float(maxi(1, base_weight)) * original_at_wave / safe_original))
 
 ## 获取当前波僵尸列表
 func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limit:int) ->Array[CharacterRegistry.ZombieType]:
@@ -392,17 +418,36 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 	## 当前空隙位置
 	var curr_spare_slot = max_zombies_per_wave
 
-	## 如果是大波，先刷新特殊僵尸
+	var big_wave_plain_count := 0
+	## 如果是大波，先预留旗帜僵尸；普通填充要等主题首秀拿到预算后再加入。
 	if is_big_wave:
 		var flag_zombie_type := _flag_zombie_type()
 		wave_spawn.append(flag_zombie_type)
 		total_power += zombie_power[flag_zombie_type]
 		curr_spare_slot -= 1
-
-		var plain_zombie_type := _plain_zombie_type()
 		## 简易模式保留现有旗帜波数量规则；其余自然关卡继续使用旧规则。
-		var plain_count := mini(wave / 3 + 1, 8) if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
-		for _index in plain_count:
+		big_wave_plain_count = mini(wave / 3 + 1, 8) \
+			if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
+
+	## 简易模式先为已经到达“最早登场波次”的主题敌人预留预算。
+	## 若本波预算不足则自然顺延，避免为了首秀制造不合理的战力尖峰。
+	if zombie_manager.game_para.custom_simple_original_mode:
+		for intro_zombie_type in _due_simple_intro_types(
+			wave,
+			curr_wave_power_limit - total_power,
+			curr_spare_slot
+		):
+			wave_spawn.append(intro_zombie_type)
+			total_power += int(zombie_power[intro_zombie_type])
+			curr_spare_slot -= 1
+			simple_intro_spawned[int(intro_zombie_type)] = true
+
+	if is_big_wave:
+		var plain_zombie_type := _plain_zombie_type()
+		for _index in big_wave_plain_count:
+			if zombie_manager.game_para.custom_simple_original_mode \
+			and total_power + int(zombie_power[plain_zombie_type]) > curr_wave_power_limit:
+				break
 			wave_spawn.append(plain_zombie_type)
 			total_power += zombie_power[plain_zombie_type]
 			curr_spare_slot -= 1
@@ -412,6 +457,9 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 
 		var selected_zombie:CharacterRegistry.ZombieType = zombie_choose_random_pool.get_random_item()
 		var zombie_power_value = zombie_power[selected_zombie]
+		if zombie_manager.game_para.custom_simple_original_mode \
+		and not _simple_zombie_is_unlocked(selected_zombie, wave):
+			continue
 
 		#prints("当前剩余僵尸", curr_spare_slot, "当前战力:", total_power, "当前所选僵尸:", selected_zombie, "当前所选僵尸战力:", zombie_power_value)
 
@@ -431,6 +479,46 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 			continue
 
 	return wave_spawn
+
+
+func _due_simple_intro_types(
+	wave: int,
+	remaining_power: int,
+	remaining_slots: int
+) -> Array[CharacterRegistry.ZombieType]:
+	var candidates: Array[CharacterRegistry.ZombieType] = []
+	var intro_waves: Dictionary = zombie_manager.game_para.simple_zombie_intro_waves
+	for zombie_type_value in intro_waves:
+		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
+		if simple_intro_spawned.has(int(zombie_type)) \
+		or not zombie_manager.zombie_refresh_types.has(zombie_type) \
+		or int(intro_waves[zombie_type_value]) > wave + 1 \
+		or not zombie_power.has(zombie_type):
+			continue
+		candidates.append(zombie_type)
+	candidates.sort_custom(func(left: CharacterRegistry.ZombieType, right: CharacterRegistry.ZombieType):
+		var left_wave := _simple_intro_wave(left)
+		var right_wave := _simple_intro_wave(right)
+		return left_wave < right_wave or (left_wave == right_wave and int(left) < int(right))
+	)
+	var result: Array[CharacterRegistry.ZombieType] = []
+	for zombie_type in candidates:
+		var power := int(zombie_power[zombie_type])
+		if remaining_slots <= 0 or power > remaining_power:
+			continue
+		result.append(zombie_type)
+		remaining_power -= power
+		remaining_slots -= 1
+	return result
+
+
+func _simple_zombie_is_unlocked(zombie_type: CharacterRegistry.ZombieType, wave: int) -> bool:
+	return wave + 1 >= _simple_intro_wave(zombie_type)
+
+
+func _simple_intro_wave(zombie_type: CharacterRegistry.ZombieType) -> int:
+	var intro_waves: Dictionary = zombie_manager.game_para.simple_zombie_intro_waves
+	return maxi(1, int(intro_waves.get(int(zombie_type), intro_waves.get(str(int(zombie_type)), 1))))
 
 
 func _plain_zombie_type() -> CharacterRegistry.ZombieType:

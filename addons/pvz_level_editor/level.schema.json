@@ -12,6 +12,14 @@
     "editorMode": {"enum": ["simple", "advanced"]},
     "simpleFlagCount": {"type": "integer", "minimum": 1, "maximum": 10},
     "simpleWaveCount": {"type": "integer", "minimum": 10, "maximum": 100, "multipleOf": 10},
+    "simpleBaseZombieType": {"type": "integer", "minimum": 1},
+    "simpleFlagZombieType": {"type": "integer", "minimum": 1},
+    "simpleZombiePool": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 1, "uniqueItems": true},
+    "simpleZombieIntroWaves": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[0-9]+$"},
+      "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 100}
+    },
     "zombieRefreshSpeedMultiplier": {"type": "number", "minimum": 0.1, "maximum": 5.0},
     "openingFirstZombieAdvanceCells": {"type": "number", "minimum": 0, "maximum": 12},
     "mapConfig": {"$ref": "#/$defs/mapConfig"},

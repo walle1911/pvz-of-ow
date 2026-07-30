@@ -129,7 +129,7 @@ anim_offset_max = 1.0
 
 [node name="Plant504PotatoMine" node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_8djfp")]
 script = ExtResource("2_0r7iw")
-prepare_time = 10.0
+prepare_time = 12.0
 is_prepare_end = false
 plant_type = 504
 node_no_change_direction = [null, null, null]

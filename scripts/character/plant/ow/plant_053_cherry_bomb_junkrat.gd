@@ -4,6 +4,7 @@ class_name Plant053CherryBombJunkrat
 @onready var bomb_component: BombComponentBase = %BombComponent
 
 @export var tire_bullet_scene: PackedScene
+@export_range(0, 10000000, 1, "or_greater") var tire_bomb_damage := 600
 
 const TIRE_LAUNCH_OFFSET := Vector2(25.0, 9.0)
 
@@ -27,6 +28,9 @@ func _launch_tire():
 	if not is_instance_valid(bullets):
 		return
 	var tire_bullet: Bullet000NormBase = tire_bullet_scene.instantiate()
+	var tire_bomb_component := tire_bullet.get_node_or_null("BombComponent") as BombComponentBase
+	if tire_bomb_component != null:
+		tire_bomb_component.bomb_value = tire_bomb_damage
 	mark_bullet_recording_source(tire_bullet)
 	var bullet_paras := {
 		Bullet000NormBase.E_InitParasAttr.BulletLane: lane,

@@ -92,6 +92,15 @@
 	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 101,
+	"simpleZombieIntroWaves": {
+		"18": 10,
+		"102": 4
+	},
+	"simpleZombiePool": [
+		100,
+		102,
+		18
+	],
 	"simpleWaveCount": 20,
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,

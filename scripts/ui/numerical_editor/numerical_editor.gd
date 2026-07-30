@@ -46,6 +46,14 @@ const BASIC_PARAMETER_PROPERTIES := {
 	"damage_multiplier": 23,
 	"damage_boost_multiplier": 24,
 }
+const REWORK_COMPONENT_SCRIPTS := {
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_fume_shroom_roadhog.gd": true,
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_gatling_pea_bastion.gd": true,
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_sea_shroom_wuyang.gd": true,
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_snow_pea_mei.gd": true,
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_three_pea.gd": true,
+	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_widowmaker.gd": true,
+}
 
 var catalog: Array[Dictionary] = []
 var selected_kind := "plant"
@@ -303,8 +311,8 @@ func _populate_almanac_panel(panel: AlmanacCharacterShowPanel, item: Dictionary)
 	panel.update_character_name(null, item["display_name"])
 	panel.get_node("AllBg/PlantEndPara").visible = is_plant
 	if is_plant:
-		var default_sun_cost = Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.SunCost)
-		var default_cool_time = Global.character_registry.get_plant_info(item["id"], CharacterRegistry.PlantInfoAttribute.CoolTime)
+		var default_sun_cost = _plant_registry_default_value(item["id"], CharacterRegistry.PlantInfoAttribute.SunCost)
+		var default_cool_time = _plant_registry_default_value(item["id"], CharacterRegistry.PlantInfoAttribute.CoolTime)
 		panel.cost.get_node("Value").text = str(_effective_value(REGISTRY_NODE_PATH, "plant_sun_cost", default_sun_cost))
 		panel.cool_time.get_node("Value").text = "%s（秒）" % str(_effective_value(REGISTRY_NODE_PATH, "plant_cool_time", default_cool_time))
 
@@ -318,22 +326,25 @@ func _build_character_fields(scene_path: String) -> void:
 	var instance := packed.instantiate()
 	var field_count := 0
 	var basic_fields: Array[Dictionary] = []
+	var rework_fields: Array[Dictionary] = []
 	var normal_fields: Array[Dictionary] = []
 	for node in _all_nodes(instance):
 		var properties := _tunable_properties(node, instance)
 		for property_info in properties:
 			var field := {"node": node, "property_info": property_info}
-			if BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
+			if _is_rework_skill_node(node):
+				rework_fields.append(field)
+			elif BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
 				basic_fields.append(field)
 			else:
 				normal_fields.append(field)
 	var registry_fields: Array[String] = []
 	if selected_item.get("kind", "") == "plant":
 		registry_fields.assign(["plant_sun_cost", "plant_cool_time"])
-	elif ZombieWaveCreateManager.zombie_weights_ori.has(int(selected_item.get("id", -1))):
+	elif int(ZombieWaveCreateManager.zombie_weights_ori.get(int(selected_item.get("id", -1)), 0)) >= 1000:
 		registry_fields.append("zombie_spawn_weight")
 	var registry_field_count := registry_fields.size()
-	field_count = registry_field_count + basic_fields.size() + normal_fields.size()
+	field_count = registry_field_count + basic_fields.size() + rework_fields.size() + normal_fields.size()
 	if registry_field_count > 0 or not basic_fields.is_empty():
 		basic_fields.sort_custom(_sort_basic_fields)
 		_add_section_header("◆ 基础参数")
@@ -341,6 +352,15 @@ func _build_character_fields(scene_path: String) -> void:
 			_add_registry_property_editor(property_name)
 		for field in basic_fields:
 			_add_property_editor(instance, field["node"], field["property_info"])
+	if not rework_fields.is_empty():
+		_add_section_header("◆ 改版技能参数")
+		var last_rework_node: Node
+		for field in rework_fields:
+			var rework_node: Node = field["node"]
+			if rework_node != last_rework_node:
+				_add_rework_node_header(instance, rework_node)
+				last_rework_node = rework_node
+			_add_property_editor(instance, rework_node, field["property_info"])
 	var last_node: Node
 	for field in normal_fields:
 		var node: Node = field["node"]
@@ -401,6 +421,17 @@ func _sort_basic_fields(a: Dictionary, b: Dictionary) -> bool:
 	return int(BASIC_PARAMETER_PROPERTIES[a_name]) < int(BASIC_PARAMETER_PROPERTIES[b_name])
 
 
+func _is_rework_skill_node(node: Node) -> bool:
+	var script := node.get_script() as Script
+	while script != null:
+		var script_path := script.resource_path
+		if script_path.begins_with("res://scripts/character/plant/ow/") \
+		or REWORK_COMPONENT_SCRIPTS.has(script_path):
+			return true
+		script = script.get_base_script()
+	return false
+
+
 func _add_section_header(text_value: String) -> void:
 	var header := Label.new()
 	header.custom_minimum_size = Vector2(570, 26)
@@ -408,6 +439,16 @@ func _add_section_header(text_value: String) -> void:
 	header.add_theme_font_override("font", ALMANAC_FONT)
 	header.add_theme_font_size_override("font_size", 17)
 	header.add_theme_color_override("font_color", Color("7e390f"))
+	field_box.add_child(header)
+
+
+func _add_rework_node_header(root: Node, node: Node) -> void:
+	var header := Label.new()
+	header.custom_minimum_size = Vector2(570, 22)
+	header.text = "  · 角色本体" if node == root else "  · " + L10n.component_name(str(node.name))
+	header.add_theme_font_override("font", ALMANAC_FONT)
+	header.add_theme_font_size_override("font_size", 14)
+	header.add_theme_color_override("font_color", Color("995011"))
 	field_box.add_child(header)
 
 
@@ -420,10 +461,12 @@ func _add_registry_property_editor(property_name:String) -> void:
 	var is_spawn_weight := property_name == "zombie_spawn_weight"
 	var original_value
 	if is_spawn_weight:
-		original_value = int(ZombieWaveCreateManager.zombie_weights_ori[selected_item["id"]])
+		original_value = Store.zombie_spawn_weight_to_grade(
+			int(ZombieWaveCreateManager.zombie_weights_ori[selected_item["id"]])
+		)
 	else:
 		var attribute = CharacterRegistry.PlantInfoAttribute.SunCost if is_sun_cost else CharacterRegistry.PlantInfoAttribute.CoolTime
-		original_value = Global.character_registry.get_plant_info(selected_item["id"], attribute)
+		original_value = _plant_registry_default_value(selected_item["id"], attribute)
 	var current_value = _effective_value(REGISTRY_NODE_PATH, property_name, original_value)
 	var row := HBoxContainer.new()
 	row.custom_minimum_size = Vector2(570, 34)
@@ -436,20 +479,38 @@ func _add_registry_property_editor(property_name:String) -> void:
 	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", Color("59270c"))
 	row.add_child(label)
+	if is_spawn_weight:
+		var grade_select := OptionButton.new()
+		grade_select.custom_minimum_size.x = 220
+		grade_select.tooltip_text = "只允许选择安全档位；内部概率与随波次变化算法保持不变。"
+		for grade_text in ["A（极高）", "B（很高）", "C（高）", "D（中）", "E（较低）", "F（低）"]:
+			grade_select.add_item(grade_text)
+		grade_select.select(clampi(int(current_value), 1, 6) - 1)
+		grade_select.item_selected.connect(
+			func(index): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(index) + 1)
+		)
+		row.add_child(grade_select)
+		field_box.add_child(row)
+		return
 	var spin := SpinBox.new()
 	spin.custom_minimum_size.x = 220
 	spin.allow_greater = false
 	spin.allow_lesser = false
-	spin.min_value = 1.0 if is_spawn_weight else (0.0 if is_sun_cost else 0.01)
-	spin.max_value = 10000000.0 if is_sun_cost or is_spawn_weight else 600.0
-	spin.step = 1.0 if is_sun_cost or is_spawn_weight else 0.01
+	spin.min_value = 0.0 if is_sun_cost else 0.01
+	spin.max_value = 10000000.0 if is_sun_cost else 600.0
+	spin.step = 1.0 if is_sun_cost else 0.01
 	spin.value = float(current_value)
 	_style_line_edit(spin.get_line_edit())
 	spin.value_changed.connect(
-		func(value): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(value) if is_sun_cost or is_spawn_weight else value)
+		func(value): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(value) if is_sun_cost else value)
 	)
 	row.add_child(spin)
 	field_box.add_child(row)
+
+
+func _plant_registry_default_value(plant_id: int, attribute: CharacterRegistry.PlantInfoAttribute):
+	var plant_info: Dictionary = CharacterRegistry.PlantInfo.get(plant_id, {})
+	return plant_info.get(attribute, 0)
 
 
 func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> void:
@@ -496,8 +557,16 @@ func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> 
 			edit.text = _array_to_text(current_value)
 			edit.tooltip_text = "用半角逗号分隔，顺序与原角色面板数组一致"
 			_style_line_edit(edit)
-			edit.text_submitted.connect(func(_text): _commit_array_edit(edit, node_path, property_name, original_value))
-			edit.focus_exited.connect(func(): _commit_array_edit(edit, node_path, property_name, original_value))
+			edit.text_submitted.connect(
+				func(_text): _commit_array_edit(
+					edit, node, root.scene_file_path, node_path, property_name, original_value
+				)
+			)
+			edit.focus_exited.connect(
+				func(): _commit_array_edit(
+					edit, node, root.scene_file_path, node_path, property_name, original_value
+				)
+			)
 			row.add_child(edit)
 	field_box.add_child(row)
 
@@ -614,7 +683,14 @@ func _set_pending_value(node_path: String, property_name: String, value) -> void
 		status_label.text = "有未保存修改"
 
 
-func _commit_array_edit(edit: LineEdit, node_path: String, property_name: String, original_value: Array) -> void:
+func _commit_array_edit(
+	edit: LineEdit,
+	target: Node,
+	scene_path: String,
+	node_path: String,
+	property_name: String,
+	original_value: Array
+) -> void:
 	var values := edit.text.split(",", false)
 	if values.size() != original_value.size():
 		status_label.text = "“%s”需要 %d 个数值" % [L10n.property_name(property_name), original_value.size()]
@@ -632,8 +708,13 @@ func _commit_array_edit(edit: LineEdit, node_path: String, property_name: String
 				result.append(int(float(part)))
 			_:
 				result.append(float(part))
-	_set_pending_value(node_path, property_name, result)
-	edit.text = _array_to_text(result)
+	var validation := Policy.validate_value(target, property_name, result, scene_path, node_path)
+	if not validation.get("ok", false):
+		status_label.text = "“%s”的范围、顺序或总和不符合安全要求" % L10n.property_name(property_name)
+		edit.text = _array_to_text(_effective_value(node_path, property_name, original_value))
+		return
+	_set_pending_value(node_path, property_name, validation["value"])
+	edit.text = _array_to_text(validation["value"])
 
 
 func _array_to_text(values: Array) -> String:

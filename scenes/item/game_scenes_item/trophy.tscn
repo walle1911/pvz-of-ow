@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dpaa326ftym5a"]
+[gd_scene load_steps=15 format=3 uid="uid://dpaa326ftym5a"]
 
 [ext_resource type="Script" uid="uid://csqombr7s87dx" path="res://scripts/ui/main_game_ui/trophy.gd" id="1_46dpp"]
 [ext_resource type="Texture2D" uid="uid://dsx7x222200ae" path="res://assets/image/ui/ui_trophy/AwardGlow.png" id="2_qvwtp"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://cebgrjamlxbme" path="res://assets/image/main_game_item/AwardScreen_Back.jpg" id="11_reward_bg"]
 [ext_resource type="Texture2D" uid="uid://bals73i7y4ksp" path="res://assets/image/particles/SeedPacketGlow.png" id="12_seed_glow"]
 [ext_resource type="Texture2D" uid="uid://c4en5812dngkx" path="res://assets/image/particles/SeedPacketFlash.png" id="13_seed_flash"]
+[ext_resource type="FontFile" uid="uid://dqb8lum530s2f" path="res://assets/fonts/方正少儿_GBK.ttf" id="14_reward_font"]
 
 [node name="Trophy" type="Node2D"]
 z_index = 2000
@@ -105,21 +106,37 @@ offset_right = 310.0
 offset_bottom = -220.0
 theme_override_colors/font_color = Color(1, 0.92, 0.36, 1)
 theme_override_colors/font_outline_color = Color(0.22, 0.08, 0.01, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 34
-text = "获得新植物！"
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("14_reward_font")
+theme_override_font_sizes/font_size = 32
+text = "你得到一株新植物！"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hint" type="Label" parent="RewardScreen"]
+[node name="Description" type="Label" parent="RewardScreen"]
 z_index = 1
-offset_left = -145.0
-offset_top = 72.0
-offset_right = 145.0
-offset_bottom = 148.0
-theme_override_colors/font_color = Color(0.25, 0.11, 0.035, 1)
-theme_override_font_sizes/font_size = 22
-text = "你获得了一张新植物卡！\n点击卡片继续"
+offset_left = -135.0
+offset_top = 52.0
+offset_right = 135.0
+offset_bottom = 143.0
+theme_override_colors/font_color = Color(0.32, 0.18, 0.08, 1)
+theme_override_fonts/font = ExtResource("14_reward_font")
+theme_override_font_sizes/font_size = 16
+text = "豌豆射手，你的第一道防线，发射豌豆攻击僵尸"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Continue" type="Label" parent="RewardScreen"]
+z_index = 1
+offset_left = -135.0
+offset_top = 143.0
+offset_right = 135.0
+offset_bottom = 174.0
+theme_override_colors/font_color = Color(0.32, 0.18, 0.08, 1)
+theme_override_fonts/font = ExtResource("14_reward_font")
+theme_override_font_sizes/font_size = 18
+text = "点击继续游戏"
 horizontal_alignment = 1
 vertical_alignment = 1
 

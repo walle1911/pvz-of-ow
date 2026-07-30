@@ -12,6 +12,9 @@ size = Vector2(190, 140)
 script = ExtResource("2_script")
 speed = 188.0
 
+[node name="BombComponent" parent="." index="4"]
+bomb_value = 600
+
 [node name="Body" parent="." index="1"]
 modulate = Color(1, 1, 1, 1)
 

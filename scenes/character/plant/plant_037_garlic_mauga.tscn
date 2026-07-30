@@ -50,6 +50,7 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant037GarlicMauga" unique_id=1402278193 instance=ExtResource("1_34mm5")]
 script = ExtResource("2_5vkpm")
+chain_last_stand_duration = 4.0
 chain_lane_shift_time = 0.55
 chain_lane_hold_time = 1.0
 chain_pull_time = 0.75

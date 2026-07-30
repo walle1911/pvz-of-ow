@@ -45,6 +45,8 @@ static func example_level() -> Dictionary:
 		"simpleWaveCount": 20,
 		"simpleBaseZombieType": 100,
 		"simpleFlagZombieType": 101,
+		"simpleZombiePool": [100, 102, 104],
+		"simpleZombieIntroWaves": {"102": 4, "104": 7},
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
@@ -120,7 +122,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleZombieIntroWaves", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -144,6 +146,31 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["simpleBaseZombieType"] = simple_base_zombie_type if [100, 500].has(simple_base_zombie_type) else 100
 	var simple_flag_zombie_type := int(result.get("simpleFlagZombieType", 101))
 	result["simpleFlagZombieType"] = simple_flag_zombie_type if [101, 501].has(simple_flag_zombie_type) else 101
+	var normalized_simple_pool: Array[int] = []
+	var source_simple_pool: Array = result.get("simpleZombiePool", []) if source.has("simpleZombiePool") else []
+	if source_simple_pool.is_empty():
+		for wave in result.get("waves", []):
+			for group in (wave as Dictionary).get("spawnGroups", []):
+				source_simple_pool.append((group as Dictionary).get("zombieType", simple_base_zombie_type))
+	for value in source_simple_pool:
+		var zombie_type := int(LEGACY_ZOMBIE_TYPE_IDS.get(str(value).to_lower(), value))
+		if zombie_type > 0 and not normalized_simple_pool.has(zombie_type):
+			normalized_simple_pool.append(zombie_type)
+	if not normalized_simple_pool.has(result["simpleBaseZombieType"]):
+		normalized_simple_pool.push_front(result["simpleBaseZombieType"])
+	result["simpleZombiePool"] = normalized_simple_pool
+	var normalized_intro_waves := {}
+	var source_intro_waves = result.get("simpleZombieIntroWaves", {})
+	if source_intro_waves is Dictionary:
+		for zombie_type_value in source_intro_waves:
+			var zombie_type := int(zombie_type_value)
+			if zombie_type > 0 and normalized_simple_pool.has(zombie_type) \
+			and zombie_type != int(result["simpleBaseZombieType"]) \
+			and zombie_type != int(result["simpleFlagZombieType"]):
+				normalized_intro_waves[str(zombie_type)] = clampi(
+					int(source_intro_waves[zombie_type_value]), 1, simple_flag_count * 10
+				)
+	result["simpleZombieIntroWaves"] = normalized_intro_waves
 	result["zombieRefreshSpeedMultiplier"] = float(result.get("zombieRefreshSpeedMultiplier", 1.0))
 	result["openingFirstZombieAdvanceCells"] = clampf(
 		float(result.get("openingFirstZombieAdvanceCells", 0.0)),
@@ -235,6 +262,33 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		issues.append(issue("error", "关卡名称不能为空", "name"))
 	if not ["simple", "advanced"].has(str(level.get("editorMode", "advanced"))):
 		issues.append(issue("error", "编辑模式必须是简易模式或进阶模式", "editorMode"))
+	if str(level.get("editorMode", "advanced")) == "simple":
+		var simple_pool: Array = level.get("simpleZombiePool", [])
+		if simple_pool.is_empty():
+			issues.append(issue("error", "简易模式至少需要一个可刷新僵尸", "simpleZombiePool"))
+		for value in simple_pool:
+			var zombie_type := int(value)
+			if not CharacterRegistry.ZombieInfo.has(zombie_type):
+				issues.append(issue("error", "简易模式僵尸池包含未登记类型", "simpleZombiePool"))
+				break
+			var natural_weight := int(ZombieWaveCreateManager.zombie_weights_ori.get(
+				zombie_type,
+				AdventureLevelPresets.ZOMBIE_WEIGHTS.get(zombie_type, 0)
+			))
+			if natural_weight <= 0:
+				issues.append(issue("error", "该僵尸不支持简易自然波次，请改用进阶模式", "simpleZombiePool"))
+				break
+		var intro_waves = level.get("simpleZombieIntroWaves", {})
+		if intro_waves is not Dictionary:
+			issues.append(issue("error", "最早登场波次配置格式错误", "simpleZombieIntroWaves"))
+		else:
+			var max_simple_wave := clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
+			for zombie_type_value in intro_waves:
+				var zombie_type := int(zombie_type_value)
+				var intro_wave := int(intro_waves[zombie_type_value])
+				if not simple_pool.has(zombie_type) or intro_wave < 1 or intro_wave > max_simple_wave:
+					issues.append(issue("error", "最早登场波次必须属于本关僵尸池和有效波次", "simpleZombieIntroWaves/%s" % str(zombie_type_value)))
+					break
 	if level.has("coverCharacters"):
 		var cover_characters: Array = level.get("coverCharacters", [])
 		if cover_characters.size() > 3:
@@ -277,6 +331,12 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 	var columns := int(map.get("columns", 0))
 	if not MAP_TYPES.has(str(map.get("type", ""))):
 		issues.append(issue("error", "地图类型不存在", "mapConfig/type"))
+	if str(level.get("editorMode", "advanced")) == "simple" \
+	and not ["pool", "fog"].has(str(map.get("type", ""))):
+		for value in level.get("simpleZombiePool", []):
+			if AdventureLevelPresets.POOL_ONLY_ZOMBIES.has(int(value)):
+				issues.append(issue("error", "水路僵尸只能加入泳池或雾夜地图", "simpleZombiePool"))
+				break
 	if rows < 1 or rows > 8 or columns < 1 or columns > 12:
 		issues.append(issue("error", "地图行数必须为 1–8、列数必须为 1–12", "mapConfig"))
 	var environment: Dictionary = level.get("environmentConfig", {})
@@ -376,6 +436,12 @@ static func recommended_cover_characters(level: Dictionary, previous_level: Dict
 
 static func _cover_zombie_types(level: Dictionary) -> Array[int]:
 	var result: Array[int] = []
+	if str(level.get("editorMode", "advanced")) == "simple" and level.has("simpleZombiePool"):
+		for value in level.get("simpleZombiePool", []):
+			var zombie_type := int(value)
+			if zombie_type > 0 and not result.has(zombie_type):
+				result.append(zombie_type)
+		return result
 	for wave in level.get("waves", []):
 		for group in (wave as Dictionary).get("spawnGroups", []):
 			var zombie_type := int((group as Dictionary).get("zombieType", 0))

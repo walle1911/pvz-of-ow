@@ -3,8 +3,9 @@ class_name MainGameMenuOptionDialog
 
 @onready var dialog: Dialog = $"../Dialog"
 
-@onready var music_h_slider: HSlider = $Option/VBoxContainer/Music/HSlider
-@onready var sound_h_slider: HSlider = $Option/VBoxContainer/SoundEffect/HSlider
+@onready var sound_h_slider: HSlider = $Option/VBoxContainer/Sound/HSlider
+@onready var difficulty_h_slider: HSlider = $Option/VBoxContainer/Difficulty/HSlider
+@onready var difficulty_label: Label = $Option/VBoxContainer/Difficulty/Label
 @onready var time_scale_h_slider: HSlider = $Option/VBoxContainer/TimeScale/HSlider
 @onready var time_sacle_label: Label = $Option/VBoxContainer/TimeScale/Label
 @onready var canvas_layer_console: CanvasLayerConsole = %CanvasLayerConsole
@@ -16,8 +17,8 @@ func _ready() -> void:
 	## 为按钮添加音效
 	SoundManager.setup_ui_main_game_sound(self)
 	## 连接滑轨信号
-	music_sound_signal(music_h_slider, AudioServer.get_bus_index("BGM"))
-	music_sound_signal(sound_h_slider, AudioServer.get_bus_index("SFX"))
+	music_sound_signal(sound_h_slider, AudioServer.get_bus_index("Master"))
+	difficulty_signal(difficulty_h_slider)
 	time_sacle_signal(time_scale_h_slider)
 	time_sacle_label.text = "倍速 " + str(Global.time_scale) + " 倍"
 
@@ -28,6 +29,19 @@ func music_sound_signal(h_slider: HSlider, bus_index):
 		SoundManager.set_volume(bus_index, v)
 		Global.config_service.save_config()
 	)
+
+func difficulty_signal(h_slider: HSlider) -> void:
+	h_slider.set_value_no_signal(Global.config_service.game_difficulty)
+	_update_difficulty_label(int(h_slider.value))
+	h_slider.value_changed.connect(func(value: float):
+		Global.config_service.game_difficulty = int(value) as ConfigService.GameDifficulty
+		_update_difficulty_label(int(value))
+		Global.config_service.save_config()
+	)
+
+func _update_difficulty_label(difficulty: int) -> void:
+	var names := ["简单", "中等", "困难"]
+	difficulty_label.text = "难度 " + names[clampi(difficulty, 0, names.size() - 1)]
 
 
 func time_sacle_signal(h_slider: HSlider):

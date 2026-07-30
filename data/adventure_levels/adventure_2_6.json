@@ -100,6 +100,21 @@
 	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 101,
+	"simpleZombieIntroWaves": {
+		"102": 4,
+		"104": 12,
+		"505": 5,
+		"506": 11,
+		"507": 10
+	},
+	"simpleZombiePool": [
+		100,
+		102,
+		104,
+		505,
+		506,
+		507
+	],
 	"simpleWaveCount": 20,
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
@@ -896,5 +911,5 @@
 		}
 	],
 	"workshopMode": "normal",
-	"zombieRefreshSpeedMultiplier": 1.0
+	"zombieRefreshSpeedMultiplier": 1.05
 }

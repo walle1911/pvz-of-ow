@@ -11,6 +11,19 @@ signal signal_change_card_slot_top_mouse_focus
 signal signal_fog_is_static
 ## 子弹无目标时追踪鼠标
 signal signal_track_bullet_mouse
+signal signal_difficulty_changed(refresh_speed_multiplier: float)
+
+enum GameDifficulty {
+	EASY,
+	MEDIUM,
+	HARD,
+}
+
+const DIFFICULTY_REFRESH_SPEED := {
+	GameDifficulty.EASY: 0.75,
+	GameDifficulty.MEDIUM: 1.0,
+	GameDifficulty.HARD: 1.25,
+}
 
 @onready var user_manager: UserManager = %UserManager
 
@@ -19,6 +32,13 @@ const CURRENT_CONFIG_FILE := "config.ini"
 ## 用户选项（持久化字段）
 var auto_collect_sun := false
 var auto_collect_coin := false
+var game_difficulty: GameDifficulty = GameDifficulty.MEDIUM:
+	set(value):
+		var safe_value := clampi(int(value), GameDifficulty.EASY, GameDifficulty.HARD) as GameDifficulty
+		if game_difficulty == safe_value:
+			return
+		game_difficulty = safe_value
+		signal_difficulty_changed.emit(get_difficulty_refresh_speed())
 
 var disappear_spare_card_Placeholder := false:
 	set(value):
@@ -72,6 +92,12 @@ func _get_config_path() -> String:
 		return ""
 	return "user://" + user_manager.curr_user_name + "/" + CURRENT_CONFIG_FILE
 
+func get_difficulty_refresh_speed() -> float:
+	return float(DIFFICULTY_REFRESH_SPEED.get(game_difficulty, 1.0))
+
+func get_combined_refresh_speed(level_refresh_speed: float) -> float:
+	return clampf(level_refresh_speed * get_difficulty_refresh_speed(), 0.1, 5.0)
+
 func load_and_apply_config() -> void:
 
 	var path := _get_config_path()
@@ -86,6 +112,7 @@ func load_and_apply_config() -> void:
 	SoundManager.set_volume(SoundManager.Bus.MASTER, config.get_value("audio", "master", 1.0))
 	SoundManager.set_volume(SoundManager.Bus.BGM, config.get_value("audio", "bgm", 0.5))
 	SoundManager.set_volume(SoundManager.Bus.SFX, config.get_value("audio", "sfx", 0.5))
+	game_difficulty = config.get_value("gameplay", "difficulty", GameDifficulty.MEDIUM)
 
 	# 用户选项控制台
 	auto_collect_sun = config.get_value("user_control", "auto_collect_sun", false)
@@ -112,6 +139,7 @@ func save_config() -> void:
 	config.set_value("audio", "master", SoundManager.get_volum(SoundManager.Bus.MASTER))
 	config.set_value("audio", "bgm", SoundManager.get_volum(SoundManager.Bus.BGM))
 	config.set_value("audio", "sfx", SoundManager.get_volum(SoundManager.Bus.SFX))
+	config.set_value("gameplay", "difficulty", game_difficulty)
 
 	# 用户选项控制台相关
 	config.set_value("user_control", "auto_collect_sun", auto_collect_sun)

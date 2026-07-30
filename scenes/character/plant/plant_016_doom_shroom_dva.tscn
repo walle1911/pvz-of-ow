@@ -1622,7 +1622,7 @@ _data = {
 
 [node name="Plant016DoomShroomDVA" unique_id=652917354 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_uubea")]
 script = ExtResource("2_tjrwq")
-baby_grow_time = 20.0
+baby_grow_time = 30.0
 baby_scale = 0.55
 baby_launch_duration = 0.8
 baby_launch_height = 120.0

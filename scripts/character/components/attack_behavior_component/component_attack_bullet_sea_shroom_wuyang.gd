@@ -12,9 +12,9 @@ var is_global_detection_enabled := false
 ## 直射模式两次射击之间的基础间隔。
 @export_range(0.05, 60.0, 0.05, "or_greater", "suffix:秒") var direct_attack_interval := 1.5
 ## 跟踪模式单发伤害。
-@export_range(1, 10000, 1, "or_greater") var guidance_attack_damage := 40
+@export_range(1, 10000, 1, "or_greater") var guidance_attack_damage := 30
 ## 跟踪模式两次射击之间的基础间隔。
-@export_range(0.05, 60.0, 0.05, "or_greater", "suffix:秒") var guidance_attack_interval := 2.5
+@export_range(0.05, 60.0, 0.05, "or_greater", "suffix:秒") var guidance_attack_interval := 3.0
 
 
 func _ready() -> void:

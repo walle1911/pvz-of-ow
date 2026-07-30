@@ -64,7 +64,7 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 [node name="Plant031PumpkinZarya" unique_id=462202408 instance=ExtResource("1_j7k8l")]
 script = ExtResource("2_j7k8l")
 gravity_trigger_hp_threshold = 1000
-gravity_hold_duration = 3.0
+gravity_hold_duration = 2.5
 covered_front_child_path = NodePath("Body/BodyCorrect/Pumpkin_front/hair")
 covered_front_child_alpha_percent = 50.0
 plant_type = 31

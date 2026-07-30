@@ -9,12 +9,11 @@ var bullets:Node2D
 ## 子弹升级数据
 const bullet_upgrade_data = {
 	BulletRegistry.BulletType.Bullet001Pea: BulletRegistry.BulletType.Bullet006PeaFire,
-	BulletRegistry.BulletType.Bullet002PeaSnow: BulletRegistry.BulletType.Bullet001Pea,
 }
 
 @export_group("蓝色强化特效")
 ## 子弹穿过火炬后的伤害倍率
-@export var bullet_damage_multiplier: float = 1.0
+@export var bullet_damage_multiplier: float = 1.5
 ## 蓝光基础色
 @export var glow_base_color := Color(0.0, 0.35, 0.72, 0.82)
 ## 蓝光高亮色
@@ -29,6 +28,7 @@ const bullet_upgrade_data = {
 ## 子弹 → 蓝光容器 映射（用于清理）
 var _bullet_glow_map: Dictionary = {}  # int(instance_id) → Node2D
 var _glow_shader: Shader
+var _bullet_prototype_damage_cache: Dictionary = {}
 
 func ready_norm() -> void:
 	super()
@@ -58,7 +58,7 @@ func _up_bullet(curr_bullet:Bullet000Base):
 	# 三线射手等：强制跳过类型升级，只叠加蓝光
 	if curr_bullet.is_glow_upgrade_only:
 		_up_bullet_glow_only(curr_bullet)
-	# 只有豌豆能点燃：类型升级 + 蓝光
+	# 只有普通豌豆能点燃：类型升级 + 蓝光。雪豌豆保留减速，走蓝光强化。
 	elif can_ignite:
 		_up_bullet_ignite(curr_bullet)
 	# 其他飞行子弹：只叠加蓝光，不改变类型
@@ -71,16 +71,46 @@ func _up_bullet_ignite(curr_bullet: Bullet000Base) -> void:
 	var new_bullet_up_scenes = Global.bullet_registry.get_bullet_scenes(bullet_upgrade_data[curr_bullet.bullet_type])
 	var bullet_up :Bullet000Base = new_bullet_up_scenes.instantiate()
 	_copy_recording_freeze_metadata(curr_bullet, bullet_up)
-	bullet_up.init_bullet(curr_bullet.get_bullet_paras())
-	# 伤害倍率
-	if not is_equal_approx(bullet_damage_multiplier, 1.0) and bullet_up is Bullet000NormBase:
+	var bullet_paras: Dictionary = curr_bullet.get_bullet_paras()
+	# 保留位置、行号和可攻击状态，但不让旧子弹的伤害覆盖新子弹原型。
+	bullet_paras.erase(Bullet000NormBase.E_InitParasAttr.AttackValue)
+	bullet_up.init_bullet(bullet_paras)
+	if bullet_up is Bullet000NormBase and curr_bullet is Bullet000NormBase:
 		var norm_bullet := bullet_up as Bullet000NormBase
-		norm_bullet.attack_value = maxi(1, int(round(float(norm_bullet.attack_value) * bullet_damage_multiplier)))
+		var upgraded_prototype_damage := norm_bullet.attack_value
+		var inherited_damage_multiplier := _get_inherited_damage_multiplier(curr_bullet as Bullet000NormBase)
+		norm_bullet.attack_value = maxi(1, int(round(
+			float(upgraded_prototype_damage) * inherited_damage_multiplier * bullet_damage_multiplier
+		)))
 	# 蓝光叠加（火豌豆基础上也能叠加）
 	_apply_bullet_blue_glow(bullet_up)
 	curr_bullet_up.append(bullet_up)
 	bullets.call_deferred("add_child", bullet_up)
 	curr_bullet.queue_free()
+
+
+## 保留射手或其他增益已经叠加到原子弹上的伤害倍率。
+## 例如：默认豌豆20点燃为火豌豆40，再受本植物1.5倍强化为60。
+func _get_inherited_damage_multiplier(source_bullet: Bullet000NormBase) -> float:
+	var cached_damage: int = int(_bullet_prototype_damage_cache.get(source_bullet.bullet_type, 0))
+	if cached_damage > 0:
+		return float(source_bullet.attack_value) / float(cached_damage)
+	var source_scene: PackedScene = Global.bullet_registry.get_bullet_scenes(source_bullet.bullet_type)
+	if not is_instance_valid(source_scene):
+		return 1.0
+	var source_node: Node = source_scene.instantiate()
+	if not is_instance_valid(source_node):
+		return 1.0
+	var source_prototype := source_node as Bullet000NormBase
+	if not is_instance_valid(source_prototype):
+		source_node.free()
+		return 1.0
+	var prototype_damage := source_prototype.attack_value
+	source_prototype.free()
+	if prototype_damage <= 0:
+		return 1.0
+	_bullet_prototype_damage_cache[source_bullet.bullet_type] = prototype_damage
+	return float(source_bullet.attack_value) / float(prototype_damage)
 
 
 func _copy_recording_freeze_metadata(source_bullet: Bullet000Base, target_bullet: Bullet000Base) -> void:

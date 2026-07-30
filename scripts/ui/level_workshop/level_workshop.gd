@@ -1156,6 +1156,7 @@ func _apply_simple_flag_count(flag_count: int) -> void:
 	flag_count = clampi(flag_count, 1, 10)
 	level["simpleFlagCount"] = flag_count
 	level["simpleWaveCount"] = flag_count * 10
+	_sanitize_simple_intro_waves()
 	_set_simple_flag_count(flag_count)
 	_changed("旗帜数量已设为 %d（共 %d 波）" % [flag_count, flag_count * 10])
 	_refresh_wave()
@@ -1666,16 +1667,25 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	var required_simple_zombie := _is_simple_mode() and (
 		zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type()
 	)
+	var simple_supported := not _is_simple_mode() or required_simple_zombie or _has_original_pick_weight(zombie_type)
 	var simple_role := _simple_zombie_role(zombie_type) if _is_simple_mode() else ""
-	card.tooltip_text = ("当前基础僵尸，固定参与刷怪" if required_simple_zombie else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type)))
+	card.tooltip_text = (
+		"当前基础僵尸，固定参与刷怪" if required_simple_zombie
+		else "简易自然波次暂不支持该僵尸" if not simple_supported
+		else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type))
+	)
 	card.set_process(false)
-	var selected := required_simple_zombie or not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
+	var selected := required_simple_zombie or (
+		_simple_zombie_pool().has(zombie_type) if _is_simple_mode()
+		else not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
+	)
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
 	if button != null:
 		for connection in button.pressed.get_connections():
 			button.pressed.disconnect(connection.callable)
+		button.disabled = not simple_supported
 		button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("zombie", zombie_type))
 	holder.add_child(card)
@@ -2129,6 +2139,11 @@ func _open_zombie_quantity_dialog(zombie_key: String) -> void:
 
 func _select_simple_zombie(zombie_key: String) -> void:
 	var zombie_type := _zombie_type_id(zombie_key)
+	if not _has_original_pick_weight(zombie_type) \
+	and zombie_type != _simple_base_zombie_type() \
+	and zombie_type != _simple_flag_zombie_type():
+		status_label.text = "%s不支持简易自然波次，请改用进阶模式" % _zombie_name(zombie_key)
+		return
 	if zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type():
 		_sanitize_simple_allowed_pool()
 		_sync_all_simple_stage_type_pools()
@@ -2136,23 +2151,24 @@ func _select_simple_zombie(zombie_key: String) -> void:
 		_refresh_card_page()
 		_refresh_wave()
 		return
-	var wave: Dictionary = level["waves"][selected_wave]
-	if not _find_group(wave, zombie_key).is_empty():
+	var simple_pool := _simple_zombie_pool()
+	if simple_pool.has(zombie_type):
 		_delete_simple_zombie(zombie_key)
 		return
-	var group_id := Logic.make_unique_id("group", _all_ids())
-	var group := Logic.make_group(group_id, str(_zombie_type_id(zombie_key)), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5))
-	wave["spawnGroups"].append(group)
-	_sync_simple_stage_type_pool()
+	simple_pool.append(zombie_type)
+	level["simpleZombiePool"] = simple_pool
+	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {}).duplicate()
+	intro_waves[str(zombie_type)] = _recommended_simple_intro_wave(zombie_type)
+	level["simpleZombieIntroWaves"] = intro_waves
+	_sync_all_simple_stage_type_pools()
 	_changed("已将%s加入本关允许僵尸表" % _zombie_name(zombie_key))
 	_refresh_card_page()
 	_refresh_wave()
 
 
 func _open_simple_zombie_dialog(zombie_key: String) -> void:
-	var wave: Dictionary = level["waves"][selected_wave]
-	var group := _find_group(wave, zombie_key)
-	if group.is_empty():
+	var zombie_type := _zombie_type_id(zombie_key)
+	if not _simple_zombie_pool().has(zombie_type):
 		return
 	_close_quantity_dialog()
 	quantity_dialog_layer = Control.new()
@@ -2165,34 +2181,48 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP
 	quantity_dialog_layer.add_child(shade)
 	var dialog := TextureRect.new()
-	dialog.position = Vector2(327, 138)
-	dialog.size = Vector2(412, 324)
+	dialog.position = Vector2(327, 105)
+	dialog.size = Vector2(412, 390)
 	dialog.texture = DIALOG_BACKGROUND
 	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	dialog.stretch_mode = TextureRect.STRETCH_SCALE
 	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
 	quantity_dialog_layer.add_child(dialog)
-	var title := _paper_label(_zombie_name(zombie_key), Vector2(48, 55), Vector2(316, 44), 27, Color("e7e4d1"))
+	var title := _paper_label(_zombie_name(zombie_key), Vector2(48, 42), Vector2(316, 44), 27, Color("e7e4d1"))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_outline_color", Color("25263b"))
 	title.add_theme_constant_override("outline_size", 4)
 	dialog.add_child(title)
-	var hint := _paper_label("PvZ1 原版按点值、首次允许波数和固定权重抽取", Vector2(50, 112), Vector2(312, 42), 14, Color("d7bd80"))
+	var hint := _paper_label("到达设定波次后保底首秀；战力不足会顺延，不会提前出现", Vector2(50, 91), Vector2(312, 42), 14, Color("d7bd80"))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog.add_child(hint)
-	var delete_button := _texture_button("删除僵尸", Vector2(135, 174), Vector2(142, 38), DIALOG_BUTTON, DIALOG_BUTTON, func():
+	var fixed_zombie := zombie_type == _simple_base_zombie_type() \
+		or zombie_type == _simple_flag_zombie_type()
+	var current_intro_wave := 1 if fixed_zombie else _simple_intro_wave(zombie_type)
+	var intro_wave := _settings_spin(
+		dialog,
+		"最早登场波次",
+		Vector2(101, 137),
+		1,
+		clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10,
+		current_intro_wave,
+		1
+	)
+	intro_wave.editable = not fixed_zombie
+	var delete_button := _texture_button("删除僵尸", Vector2(53, 234), Vector2(142, 38), DIALOG_BUTTON, DIALOG_BUTTON, func():
 		_close_quantity_dialog()
 		_delete_simple_zombie(zombie_key)
 	, 16)
-	var fixed_zombie := _zombie_type_id(zombie_key) == _simple_base_zombie_type() \
-		or _zombie_type_id(zombie_key) == _simple_flag_zombie_type()
 	delete_button.disabled = fixed_zombie
 	delete_button.tooltip_text = "本关固定僵尸必然登场；请先勾选另一个同类单位" if fixed_zombie else ""
 	(delete_button.get_child(0) as Label).add_theme_color_override("font_color", Color("6f2118"))
 	dialog.add_child(delete_button)
-	dialog.add_child(_texture_button("取消", Vector2(63, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("关闭", Vector2(217, 238), Vector2(132, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
+	dialog.add_child(_texture_button("取消", Vector2(217, 234), Vector2(142, 38), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 16))
+	dialog.add_child(_texture_button("保存", Vector2(135, 305), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, func():
+		_set_simple_intro_wave(zombie_type, int(intro_wave.value))
+		_close_quantity_dialog()
+	, 17))
 
 
 func _delete_simple_zombie(zombie_key: String) -> void:
@@ -2204,12 +2234,16 @@ func _delete_simple_zombie(zombie_key: String) -> void:
 		_refresh_card_page()
 		_refresh_wave()
 		return
-	var wave: Dictionary = level["waves"][selected_wave]
-	var group := _find_group(wave, zombie_key)
-	if group.is_empty():
+	var simple_pool := _simple_zombie_pool()
+	if not simple_pool.has(zombie_type):
 		return
-	wave["spawnGroups"].erase(group)
-	_sync_simple_stage_type_pool()
+	simple_pool.erase(zombie_type)
+	level["simpleZombiePool"] = simple_pool
+	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {}).duplicate()
+	intro_waves.erase(str(zombie_type))
+	intro_waves.erase(zombie_type)
+	level["simpleZombieIntroWaves"] = intro_waves
+	_sync_all_simple_stage_type_pools()
 	_changed("已将%s移出本关允许僵尸表" % _zombie_name(zombie_key))
 	_refresh_card_page()
 	_refresh_wave()
@@ -2219,13 +2253,16 @@ func _sync_simple_stage_type_pool() -> void:
 	if not _is_simple_mode():
 		return
 	var stages: Array = level.get("waves", [])
-	if selected_wave < 0 or selected_wave >= stages.size():
+	if stages.is_empty():
 		return
-	var source_groups: Array = (stages[selected_wave] as Dictionary).get("spawnGroups", [])
+	var source_groups: Array = []
+	for zombie_type in _simple_zombie_pool():
+		source_groups.append(Logic.make_group(
+			"simple_pool_%d" % zombie_type,
+			str(zombie_type), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5)
+		))
 	for stage_index in stages.size():
 		var stage: Dictionary = stages[stage_index]
-		if stage_index == selected_wave:
-			continue
 		var copied_groups: Array = source_groups.duplicate(true)
 		for group_index in copied_groups.size():
 			var zombie_type := _zombie_type_id((copied_groups[group_index] as Dictionary).get("zombieType", "500"))
@@ -2235,6 +2272,18 @@ func _sync_simple_stage_type_pool() -> void:
 
 func _sync_all_simple_stage_type_pools() -> void:
 	_sync_simple_stage_type_pool()
+
+
+func _set_simple_intro_wave(zombie_type: int, intro_wave: int) -> void:
+	if zombie_type == _simple_base_zombie_type() or zombie_type == _simple_flag_zombie_type():
+		return
+	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {}).duplicate()
+	intro_waves[str(zombie_type)] = clampi(
+		intro_wave, 1, clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
+	)
+	level["simpleZombieIntroWaves"] = intro_waves
+	_changed("%s最早从第 %d 波登场" % [_zombie_name(str(zombie_type)), int(intro_waves[str(zombie_type)])])
+	_refresh_wave()
 
 
 func _set_zombie_quantity(zombie_key: String, quantity: int) -> void:
@@ -2959,18 +3008,66 @@ func _sanitize_simple_allowed_pool() -> void:
 	if not _is_simple_mode():
 		return
 	var required_zombie := _simple_base_zombie_type()
-	for stage in level.get("waves", []):
-		var filtered_groups: Array = []
-		for group in (stage as Dictionary).get("spawnGroups", []):
-			var zombie_type := _zombie_type_id((group as Dictionary).get("zombieType", "500"))
-			if zombie_type == required_zombie or _has_original_pick_weight(zombie_type):
-				filtered_groups.append(group)
-		if not filtered_groups.any(func(group): return _zombie_type_id((group as Dictionary).get("zombieType", "500")) == required_zombie):
-			filtered_groups.push_front(Logic.make_group(
-				"simple_required_%s" % str((stage as Dictionary).get("id", "stage")),
-				str(required_zombie), 1, 0.0, "fixed", 2.0, "random", Logic.fit_lane_weights([], 5)
-			))
-		stage["spawnGroups"] = filtered_groups
+	var source_pool: Array = level.get("simpleZombiePool", [])
+	if source_pool.is_empty():
+		for stage in level.get("waves", []):
+			for group in (stage as Dictionary).get("spawnGroups", []):
+				source_pool.append(_zombie_type_id((group as Dictionary).get("zombieType", "500")))
+	var filtered_pool: Array[int] = []
+	for value in source_pool:
+		var zombie_type := int(value)
+		if (zombie_type == required_zombie or _has_original_pick_weight(zombie_type)) \
+		and not filtered_pool.has(zombie_type):
+			filtered_pool.append(zombie_type)
+	if not filtered_pool.has(required_zombie):
+		filtered_pool.push_front(required_zombie)
+	level["simpleZombiePool"] = filtered_pool
+	_sanitize_simple_intro_waves()
+	_sync_all_simple_stage_type_pools()
+
+
+func _sanitize_simple_intro_waves() -> void:
+	var simple_pool := _simple_zombie_pool()
+	var source = level.get("simpleZombieIntroWaves", {})
+	var filtered := {}
+	if source is Dictionary:
+		for zombie_type_value in source:
+			var zombie_type := int(zombie_type_value)
+			if not simple_pool.has(zombie_type) \
+			or zombie_type == _simple_base_zombie_type() \
+			or zombie_type == _simple_flag_zombie_type():
+				continue
+			filtered[str(zombie_type)] = clampi(
+				int(source[zombie_type_value]),
+				1,
+				clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
+			)
+	level["simpleZombieIntroWaves"] = filtered
+
+
+func _simple_zombie_pool() -> Array[int]:
+	var result: Array[int] = []
+	for value in level.get("simpleZombiePool", []):
+		var zombie_type := int(value)
+		if zombie_type > 0 and not result.has(zombie_type):
+			result.append(zombie_type)
+	var required_zombie := _simple_base_zombie_type()
+	if not result.has(required_zombie):
+		result.push_front(required_zombie)
+	return result
+
+
+func _simple_intro_wave(zombie_type: int) -> int:
+	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {})
+	return maxi(1, int(intro_waves.get(str(zombie_type), intro_waves.get(zombie_type, 1))))
+
+
+func _recommended_simple_intro_wave(zombie_type: int) -> int:
+	var power := maxi(1, int(ZombieWaveCreateManager.zombie_power.get(zombie_type, 1)))
+	return mini(
+		clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10,
+		(power - 1) * 3 + 1
+	)
 
 
 func _simple_base_zombie_type() -> int:

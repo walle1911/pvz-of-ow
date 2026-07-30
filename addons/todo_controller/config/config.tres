@@ -442,10 +442,12 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_level_editor_panel_smoke.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_workshop_redesign.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1],
+"res://tests/pvz_level_editor/test_simple_curve_controls.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1],
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
-"res://tests/test_overwatch_streamer_id_library.gd": [-1, -1]
+"res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
+"res://tests/test_plant_balance_smoke.gd": [-1, -1]
 }
 line_number_show = true
 complete_path_show = true

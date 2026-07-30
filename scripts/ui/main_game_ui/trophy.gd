@@ -12,7 +12,8 @@ class_name Trophy
 @onready var reward_card_holder: Control = $RewardScreen/RewardCardHolder
 @onready var reward_glow: Sprite2D = $RewardScreen/RewardGlow
 @onready var reward_flash: Sprite2D = $RewardScreen/RewardFlash
-@onready var reward_hint: Label = $RewardScreen/Hint
+@onready var reward_title: Label = $RewardScreen/Title
+@onready var reward_description: Label = $RewardScreen/Description
 
 var reward_cards: Array[Card] = []
 var reward_is_being_collected := false
@@ -83,7 +84,7 @@ func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 	reward_screen.scale = Vector2(0.94, 0.94)
 
 	var card_count := plant_types.size()
-	reward_hint.text = "你获得了 %d 张新植物卡！\n点击卡片继续" % card_count
+	_update_reward_copy(plant_types)
 	var card_spacing := 62.0
 	var holder_scale := minf(2.0, 5.5 / float(card_count))
 	reward_card_holder.scale = Vector2.ONE * holder_scale
@@ -97,12 +98,15 @@ func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 		reward_card.set_meta("reward_target_x", target_x)
 		reward_card.pivot_offset = Vector2(25, 35)
 		reward_card.scale = Vector2(0.25, 0.25)
-		reward_card.tooltip_text = "点击领取全部通关奖励"
+		reward_card.tooltip_text = "点击继续游戏"
 		reward_card_holder.add_child(reward_card)
 		reward_cards.append(reward_card)
 		var cost_label := reward_card.get_node_or_null("CardBg/Cost") as Label
 		if cost_label != null:
-			cost_label.visible = false
+			cost_label.visible = true
+		var progress_bar := reward_card.get_node_or_null("ProgressBar") as ProgressBar
+		if progress_bar != null:
+			progress_bar.visible = false
 		var card_button := reward_card.get_node_or_null("Button") as Button
 		if card_button != null:
 			card_button.pressed.connect(_on_reward_card_pressed, CONNECT_ONE_SHOT)
@@ -123,6 +127,32 @@ func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 	var glow_tween := create_tween()
 	glow_tween.tween_property(reward_glow, "rotation", TAU, 6.0).set_trans(Tween.TRANS_LINEAR)
 	glow_tween.set_loops()
+
+
+func _update_reward_copy(plant_types: Array[CharacterRegistry.PlantType]) -> void:
+	if plant_types.size() != 1:
+		reward_title.text = "你得到 %d 株新植物！" % plant_types.size()
+		reward_description.text = "这些新植物已经加入你的卡片收藏。"
+		reward_description.add_theme_font_size_override("font_size", 16)
+		return
+
+	reward_title.text = "你得到一株新植物！"
+	var plant_type := plant_types[0]
+	var registry_name: String = Global.character_registry.get_plant_info(
+		plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantName,
+	)
+	Global.global_read_data.ensure_almanac_loaded()
+	var plant_group: Dictionary = Global.global_read_data.data_almanac.get("Plant", {})
+	var plant_data: Dictionary = plant_group.get(registry_name, {})
+	reward_description.text = str(plant_data.get("描述", "这株新植物已经加入你的卡片收藏。"))
+	var description_length := reward_description.text.length()
+	var description_font_size := 16
+	if description_length > 66:
+		description_font_size = 13
+	elif description_length > 44:
+		description_font_size = 14
+	reward_description.add_theme_font_size_override("font_size", description_font_size)
 
 
 func _on_reward_card_pressed() -> void:

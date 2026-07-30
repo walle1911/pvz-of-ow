@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/pvz_level_editor/test_simple_curve_controls.gd" type="Script" id="1"]
+
+[node name="TestSimpleCurveControls" type="Node"]
+script = ExtResource("1")

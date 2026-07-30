@@ -14,7 +14,7 @@ attack_value = 80
 bullet_mode = 1
 can_attack_zombie_status = 5
 bullet_type = 18
-knockback_distance = 30.0
+knockback_distance = 20.0
 
 [node name="BulletShadow" parent="." index="0"]
 scale = Vector2(1.75, 1.75)

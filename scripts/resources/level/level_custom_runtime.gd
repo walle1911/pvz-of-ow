@@ -119,6 +119,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon)) as CharacterRegistry.ZombieType
 		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon)) as CharacterRegistry.ZombieType
 		var allowed_types := _simple_allowed_zombie_types(
+			level.get("simpleZombiePool", []),
 			level.get("waves", []),
 			str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")),
 			game_para.simple_base_zombie_type
@@ -129,6 +130,13 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		game_para.custom_stage_schedule.clear()
 		game_para.custom_flag_data.clear()
 		game_para.zombie_refresh_types = allowed_types
+		game_para.simple_zombie_intro_waves = _simple_intro_waves(
+			level.get("simpleZombieIntroWaves", {}),
+			allowed_types,
+			game_para.simple_base_zombie_type,
+			game_para.simple_flag_zombie_type,
+			game_para.max_wave
+		)
 	## 预设冒险关和启用了“可选卡片”的自制关都只展示编辑器选中的植物池。
 	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false)) \
 		or bool(level.get("plantSelectionEnabled", false))
@@ -160,21 +168,45 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 
 
 static func _simple_allowed_zombie_types(
+	explicit_pool: Array,
 	stages: Array,
 	map_type: String,
 	base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
 ) -> Array[CharacterRegistry.ZombieType]:
 	var types: Array[CharacterRegistry.ZombieType] = [base_zombie_type]
-	for stage in stages:
-		for entry in (stage as Dictionary).get("spawnGroups", []):
-			var zombie_type := _zombie_type_id((entry as Dictionary).get("zombieType", "500")) as CharacterRegistry.ZombieType
-			if zombie_type != base_zombie_type and _original_zombie_weight(int(zombie_type)) <= 0:
-				continue
-			if AdventurePresets.POOL_ONLY_ZOMBIES.has(int(zombie_type)) and not ["pool", "fog"].has(map_type):
-				continue
-			if not types.has(zombie_type):
-				types.append(zombie_type)
+	var source_values: Array = explicit_pool.duplicate()
+	if source_values.is_empty():
+		for stage in stages:
+			for entry in (stage as Dictionary).get("spawnGroups", []):
+				source_values.append((entry as Dictionary).get("zombieType", "500"))
+	for value in source_values:
+		var zombie_type := _zombie_type_id(value) as CharacterRegistry.ZombieType
+		if zombie_type != base_zombie_type and _original_zombie_weight(int(zombie_type)) <= 0:
+			continue
+		if AdventurePresets.POOL_ONLY_ZOMBIES.has(int(zombie_type)) and not ["pool", "fog"].has(map_type):
+			continue
+		if not types.has(zombie_type):
+			types.append(zombie_type)
 	return types
+
+
+static func _simple_intro_waves(
+	value,
+	allowed_types: Array[CharacterRegistry.ZombieType],
+	base_zombie_type: CharacterRegistry.ZombieType,
+	flag_zombie_type: CharacterRegistry.ZombieType,
+	max_wave: int
+) -> Dictionary:
+	var result := {}
+	if value is not Dictionary:
+		return result
+	for zombie_type_value in value:
+		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
+		if zombie_type == base_zombie_type or zombie_type == flag_zombie_type \
+		or not allowed_types.has(zombie_type):
+			continue
+		result[int(zombie_type)] = clampi(int(value[zombie_type_value]), 1, max_wave)
+	return result
 
 static func _original_zombie_weight(zombie_type: int) -> int:
 	return maxi(0, int(ZombieWaveCreateManager.zombie_weights_ori.get(zombie_type, AdventurePresets.ZOMBIE_WEIGHTS.get(zombie_type, 0))))

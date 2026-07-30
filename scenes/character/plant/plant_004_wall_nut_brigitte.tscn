@@ -72,8 +72,8 @@ metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
 [node name="Plant004WallNutBrigitte" unique_id=1723955843 instance=ExtResource("1_rscpg")]
 script = ExtResource("2_v6xc2")
-heal_amount_per_pulse = 40
-heal_pulse_interval = 1.0
+heal_amount_per_pulse = 25
+heal_pulse_interval = 2.0
 heal_ripple_color = Color(1, 0.78, 0.08, 0.72)
 heal_ripple_radius = 135.0
 heal_ripple_duration = 0.7

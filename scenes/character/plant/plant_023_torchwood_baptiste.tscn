@@ -166,7 +166,7 @@ size = Vector2(66, 66)
 
 [node name="Plant023TorchwoodBaptiste" unique_id=2099143003 instance=ExtResource("1_d3e4f")]
 script = ExtResource("2_d3e4f")
-bullet_damage_multiplier = 1.0
+bullet_damage_multiplier = 1.5
 glow_base_color = Color(0, 0.35, 0.72, 0.82)
 glow_highlight_color = Color(0.2, 0.65, 0.95, 0.88)
 glow_pulse_amount = 0.18

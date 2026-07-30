@@ -13,11 +13,15 @@ class_name CanvasLayerConsole
 @onready var check_box_9: CheckBox = $OptionBG/HBoxContainer/VBoxContainer2/CheckBox9
 @onready var check_box_10: CheckBox = $OptionBG/HBoxContainer/VBoxContainer2/CheckBox10
 @onready var check_box_11: CheckBox = $OptionBG/HBoxContainer/VBoxContainer2/CheckBox11
+@onready var music_h_slider: HSlider = $OptionBG/HBoxContainer/VBoxContainer2/Music/HSlider
+@onready var sound_h_slider: HSlider = $OptionBG/HBoxContainer/VBoxContainer2/SoundEffect/HSlider
 
 
 func _ready() -> void:
 	init_console_panel()
 	EventBus.subscribe("on_config_update", on_config_update)
+	_music_sound_signal(music_h_slider, AudioServer.get_bus_index("BGM"))
+	_music_sound_signal(sound_h_slider, AudioServer.get_bus_index("SFX"))
 
 
 ## 初始化控制台
@@ -39,6 +43,14 @@ func _update_console_panel():
 	check_box_9.button_pressed = Global.config_service.plant_be_shovel_front
 	check_box_10.button_pressed = Global.config_service.open_all_level
 	check_box_11.button_pressed = Global.config_service.track_bullet_mouse
+	music_h_slider.set_value_no_signal(SoundManager.get_volum(SoundManager.Bus.BGM))
+	sound_h_slider.set_value_no_signal(SoundManager.get_volum(SoundManager.Bus.SFX))
+
+func _music_sound_signal(h_slider: HSlider, bus_index: int) -> void:
+	h_slider.value_changed.connect(func(value: float):
+		SoundManager.set_volume(bus_index, value)
+		Global.config_service.save_config()
+	)
 
 
 ## 关闭控制台

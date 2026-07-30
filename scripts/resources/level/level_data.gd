@@ -91,6 +91,9 @@ var custom_simple_original_mode := false
 ## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
 var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
 var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001FlagTalon
+## 简易关卡的主题僵尸最早登场波次（僵尸类型 -> 1-based 波次）；
+## 战力预算不足时会顺延到首个可容纳波次，但不会提前随机出现。
+var simple_zombie_intro_waves: Dictionary = {}
 var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []
