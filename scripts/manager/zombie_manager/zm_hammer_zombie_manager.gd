@@ -16,10 +16,9 @@ class_name HammerZombieManager
 最后1波时，所有墓碑同时召唤铁桶或路障，但是不超过20只
 
 
-游戏开始时，长9个墓碑
-每次长墓碑时，如果墓碑数量<5，则把墓碑数量长至5
-每次长墓碑时，如果墓碑数量=>5，则长1个墓碑
-墓碑只长第4列~第9列，如果都被占满则不长墓碑，只有停顿
+游戏开始时生成5个墓碑
+每次补墓碑时，如果墓碑数量<5，则把墓碑数量补至5；已有5个时不再增加
+墓碑优先生成在第4列~第9列
 """
 @onready var hammer_zombie_timer: Timer = $HammerZombieTimer
 @onready var flag_progress_bar: FlagProgressBar = %FlagProgressBar
@@ -53,6 +52,10 @@ var curr_speed_zombie := 1.0
 var speed_zombie_add := 0.15
 ## 僵尸速度提升最大值
 var speed_zombie_max := 2.0
+
+## 探奇矿工不经过墓碑，直接在地下沿草坪格移动。
+const VENTURE_DIGGER_START_WAVE := 0
+const VENTURE_DIGGER_SPAWN_CHANCE := 0.30
 
 
 ## 波次刷新信号,给zombie_manager,删除魅惑僵尸，更新是否为最后一波
@@ -95,6 +98,49 @@ func create_one_group_min_zombie():
 		Global.main_game.plant_cell_manager.tombstone_list.shuffle()
 		for i in range(real_zombie_num):
 			Global.main_game.plant_cell_manager.tombstone_list[i].create_new_zombie(new_zombie_type, curr_speed_zombie)
+
+	## 探奇矿工是额外的独立出怪，不占墓碑的生产名额；大波必定出现，平时按概率出现。
+	if curr_wave >= VENTURE_DIGGER_START_WAVE and (big_wave or randf() <= VENTURE_DIGGER_SPAWN_CHANCE):
+		_create_venture_digger()
+
+## 从最右侧草坪格创建探奇矿工，由角色脚本负责沿相邻格移动和出土。
+func _create_venture_digger() -> void:
+	var plant_cell_manager:PlantCellManager = Global.main_game.plant_cell_manager
+	if plant_cell_manager.all_plant_cells.is_empty():
+		return
+
+	var candidate_rows:Array[int] = []
+	for row_i in range(plant_cell_manager.all_plant_cells.size()):
+		if not Global.main_game.game_para.active_lawn_rows.is_empty() and not Global.main_game.game_para.active_lawn_rows.has(row_i):
+			continue
+		if Global.main_game.zombie_manager.all_zombie_rows[row_i].zombie_row_type == CharacterRegistry.ZombieRowType.Land:
+			candidate_rows.append(row_i)
+	if candidate_rows.is_empty():
+		return
+
+	var start_row:int = candidate_rows.pick_random()
+	var start_col:int = plant_cell_manager.all_plant_cells[start_row].size() - 1
+	if start_col < 0:
+		return
+	var start_cell:PlantCell = plant_cell_manager.all_plant_cells[start_row][start_col]
+	var start_pos := Vector2(
+		start_cell.global_position.x + start_cell.size.x * 0.5,
+		Global.main_game.zombie_manager.all_zombie_rows[start_row].zombie_create_position.global_position.y
+	)
+	var zombie_init_para:Dictionary = {
+		Zombie000Base.E_ZInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsNorm,
+		Zombie000Base.E_ZInitAttr.Lane: start_row,
+		Zombie000Base.E_ZInitAttr.CurrWave: curr_wave,
+	}
+	var zombie:Zombie000Base = Global.main_game.zombie_manager.create_norm_zombie(
+		CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
+		Global.main_game.zombie_manager.all_zombie_rows[start_row],
+		zombie_init_para,
+		start_pos,
+		func(new_zombie:Zombie000Base):
+			(new_zombie as Zombie028DiggerZombieVenture).enable_hammer_grid_mode()
+	)
+	(zombie as Zombie028DiggerZombieVenture).start_hammer_grid_route(Vector2i(start_row, start_col))
 
 ## 计算当前进度并更新进度条
 func set_progress_bar(curr_flag=-1):
@@ -143,11 +189,9 @@ func _on_hammer_zombie_timer_timeout() -> void:
 			curr_speed_zombie = clampf(curr_speed_zombie+speed_zombie_add, curr_speed_zombie, speed_zombie_max)
 			interval_every_group = clampf(interval_every_group-0.05, 0.5, 1.0)
 
-			## 等待3秒创建墓碑后再等待两秒
+			## 等待3秒，将被清理的墓碑补足到5个，不再继续增加墓碑总量。
 			await get_tree().create_timer(3).timeout
-			if Global.main_game.plant_cell_manager.tombstone_list.size() >= 5:
-				EventBus.push_event("create_tombstone", [1])
-			else:
+			if Global.main_game.plant_cell_manager.tombstone_list.size() < 5:
 				EventBus.push_event("create_tombstone", [5 - Global.main_game.plant_cell_manager.tombstone_list.size()])
 			await get_tree().create_timer(2).timeout
 			hammer_zombie_timer.wait_time = interval_every_group + randf_range(-0.1, 0.1)
@@ -156,4 +200,3 @@ func _on_hammer_zombie_timer_timeout() -> void:
 		hammer_zombie_timer.wait_time = interval_every_group + randf_range(-0.1, 0.1)
 
 	hammer_zombie_timer.start()
-

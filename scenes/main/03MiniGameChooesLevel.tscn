@@ -259,7 +259,7 @@ layout_mode = 2
 curr_level_data_game_para = ExtResource("8_fgi2n")
 
 [node name="Label" parent="AllPage/GridContainer/ChooseLevelButton2/TextureButton" index="0"]
-text = "锤僵尸"
+text = "打地鼠"
 
 [node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButton2"]
 clip_children = 1
