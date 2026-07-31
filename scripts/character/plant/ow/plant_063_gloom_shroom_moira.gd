@@ -50,8 +50,9 @@ func attack_once():
 		return
 
 	var all_enemy: Array[Character000Base] = attack_component.detect_component.get_all_enemy_can_be_attacked()
+	var final_attack_value := int(round(float(attack_value) * get_attack_damage_multiplier()))
 	for enemy in all_enemy:
-		enemy.be_attacked_bullet(attack_value, BulletRegistry.AttackMode.Penetration)
+		enemy.be_attacked_bullet(final_attack_value, BulletRegistry.AttackMode.Penetration)
 
 func heal_plants_in_fume():
 	for plant in get_all_plants_in_fume():

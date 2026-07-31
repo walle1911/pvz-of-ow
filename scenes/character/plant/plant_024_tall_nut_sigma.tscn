@@ -104,8 +104,10 @@ size = Vector2(50, 50)
 
 [node name="Plant024TallNutSigma" unique_id=487282947 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_qbo1e")]
 script = ExtResource("2_lgypc")
-slam_front_cell_count = 2
-slam_range_edge_tolerance = 8.0
+slam_range_edge_tolerance = 0.0
+slam_charge_time = 1.5
+slam_effect_radius_scale = 1.0
+slam_effect_perspective_y_scale = 0.56
 slam_lift_height = 65.0
 slam_air_body_scale = 1.25
 slam_air_shadow_scale = 0.4

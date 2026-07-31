@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/test/MainGameDebug9999Sun.tscn" id="1_main"]
+[ext_resource type="Script" path="res://tests/test_sigma_gravity_field_runtime.gd" id="2_test"]
+
+[node name="TestSigmaGravityFieldRuntime" instance=ExtResource("1_main")]
+
+[node name="SigmaGravityFieldRuntimeTest" type="Node" parent="."]
+script = ExtResource("2_test")

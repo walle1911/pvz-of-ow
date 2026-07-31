@@ -79,7 +79,6 @@ scale = Vector2(0.83644056, 0.79644054)
 
 [node name="PeashooterHead" parent="Body/BodyCorrect" index="6" unique_id=1190529282 instance=ExtResource("3_head")]
 unique_name_in_owner = true
-z_index = 10
 position = Vector2(62.73838, -1.8604546)
 rotation = 2.9291146
 scale = Vector2(1.003696, -1.003696)

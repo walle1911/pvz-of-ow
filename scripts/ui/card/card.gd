@@ -39,6 +39,16 @@ signal signal_card_ready(card:Card)
 var is_hidden_by_squash_doomfist := false
 var is_being_attacked_by_squash_doomfist := false
 var _original_cool_time: float
+## 安娜咖啡豆卡在战斗阶段可以切换为普通咖啡豆；两种形态共用同一份冷却进度。
+var _is_ana_coffee_dual_card := false
+var _is_ana_coffee_mode := false
+var _ana_coffee_mode_toggle:TextureButton
+var _ana_coffee_mode_toggle_icon:TextureRect
+var _ana_coffee_preview_root:Node2D
+var _normal_coffee_preview_root:Node2D
+const ANA_COFFEE_CARD_TEXTURE := preload("res://assets/image/ui/Character_Card/CoffeeBean_Ana_Card.png")
+const NORMAL_COFFEE_CARD_TEXTURE := preload("res://assets/reanim/Coffeebean_head1.png")
+const MINI_SEED_PACKET_TEXTURE := preload("res://assets/image/ui/ui_card/SeedPacket_Larger.png")
 ## 棋盘格正式模式翻地奖励卡：允许绕过 OW 紫卡前置规则。
 var is_chessboard_reveal_reward := false
 ## 棋盘格翻地获得的友军僵尸卡，落地后立即走现有魅惑流程。
@@ -46,6 +56,10 @@ var is_chessboard_hypno_reward := false
 
 func _ready() -> void:
 	super()
+	_is_ana_coffee_dual_card = card_plant_type == CharacterRegistry.PlantType.P036CoffeeBeanAna
+	_is_ana_coffee_mode = _is_ana_coffee_dual_card
+	if _is_ana_coffee_dual_card and is_instance_valid(character_static) and character_static.get_child_count() > 0:
+		_ana_coffee_preview_root = character_static.get_child(0) as Node2D
 	_apply_developer_plant_card_values()
 	_original_cool_time = cool_time
 	_cool_mask.value = 0
@@ -95,6 +109,7 @@ func card_init_conveyor_belt():
 
 ## 卡片冷卻
 func _process(delta: float) -> void:
+	_ensure_ana_coffee_toggle_in_battle()
 	if _is_cooling:
 		_cool_timer -= delta
 		_cool_mask.value = _cool_timer
@@ -103,6 +118,150 @@ func _process(delta: float) -> void:
 			_is_cooling = false
 			_restore_squash_doomfist_card_visual()
 			judge_card_ready()
+
+
+## 只有进入正式战斗后才创建小切换卡，避免选卡阶段改变安娜卡的身份和存档数据。
+func _ensure_ana_coffee_toggle_in_battle() -> void:
+	if not _is_ana_coffee_dual_card or is_instance_valid(_ana_coffee_mode_toggle):
+		return
+	if not is_instance_valid(Global.main_game) \
+		or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
+		return
+
+	_ana_coffee_mode_toggle = TextureButton.new()
+	_ana_coffee_mode_toggle.name = "AnaCoffeeModeToggle"
+	_ana_coffee_mode_toggle.position = Vector2(size.x - 19.0, 2.0)
+	_ana_coffee_mode_toggle.size = Vector2(18.0, 23.0)
+	_ana_coffee_mode_toggle.z_index = 100
+	_ana_coffee_mode_toggle.mouse_filter = Control.MOUSE_FILTER_STOP
+	_ana_coffee_mode_toggle.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_ana_coffee_mode_toggle.texture_normal = MINI_SEED_PACKET_TEXTURE
+	_ana_coffee_mode_toggle.ignore_texture_size = true
+	_ana_coffee_mode_toggle.stretch_mode = TextureButton.STRETCH_SCALE
+	_ana_coffee_mode_toggle.tooltip_text = "切换为普通咖啡豆"
+	_ana_coffee_mode_toggle.pressed.connect(_toggle_ana_coffee_mode)
+	_ana_coffee_mode_toggle.mouse_entered.connect(
+		func(): _ana_coffee_mode_toggle.self_modulate = Color(1.12, 1.12, 1.12, 1.0)
+	)
+	_ana_coffee_mode_toggle.mouse_exited.connect(
+		func(): _ana_coffee_mode_toggle.self_modulate = Color.WHITE
+	)
+	add_child(_ana_coffee_mode_toggle)
+
+	_ana_coffee_mode_toggle_icon = TextureRect.new()
+	_ana_coffee_mode_toggle_icon.name = "ModeIcon"
+	_ana_coffee_mode_toggle_icon.position = Vector2(2.0, 2.0)
+	_ana_coffee_mode_toggle_icon.size = Vector2(14.0, 17.0)
+	_ana_coffee_mode_toggle_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ana_coffee_mode_toggle_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_ana_coffee_mode_toggle_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_icon)
+	_update_ana_coffee_toggle_visual()
+
+
+func _toggle_ana_coffee_mode() -> void:
+	if not _is_ana_coffee_dual_card or is_being_attacked_by_squash_doomfist:
+		return
+	_cancel_hand_if_this_card_is_selected()
+	_set_ana_coffee_mode(not _is_ana_coffee_mode)
+	SoundManager.play_other_SFX("tap")
+
+
+func _set_ana_coffee_mode(use_ana:bool) -> void:
+	if not _is_ana_coffee_dual_card or _is_ana_coffee_mode == use_ana:
+		return
+	if not use_ana and not _ensure_normal_coffee_preview():
+		return
+
+	var old_cool_time := cool_time
+	var elapsed_cool_time := 0.0
+	if _is_cooling:
+		elapsed_cool_time = maxf(old_cool_time - _cool_timer, 0.0)
+
+	_is_ana_coffee_mode = use_ana
+	var next_plant_type := CharacterRegistry.PlantType.P036CoffeeBeanAna \
+		if use_ana else CharacterRegistry.PlantType.P535CoffeeBean
+	card_plant_type = next_plant_type
+	plant_condition = Global.character_registry.get_plant_info(
+		next_plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	sun_cost = Global.character_registry.get_plant_info(
+		next_plant_type,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	)
+	cool_time = Global.character_registry.get_plant_info(
+		next_plant_type,
+		CharacterRegistry.PlantInfoAttribute.CoolTime
+	)
+	_sync_ana_coffee_preview()
+	_update_ana_coffee_toggle_visual()
+
+	if _is_cooling:
+		_cool_timer = maxf(cool_time - elapsed_cool_time, 0.0)
+		_cool_mask.value = _cool_timer
+		if _cool_timer <= 0.0:
+			_is_cooling = false
+			_restore_squash_doomfist_card_visual()
+	_refresh_sun_and_ready_state_after_mode_switch()
+
+
+func _ensure_normal_coffee_preview() -> bool:
+	if is_instance_valid(_normal_coffee_preview_root):
+		return true
+	if not AllCards.all_plant_card_prefabs.has(CharacterRegistry.PlantType.P535CoffeeBean):
+		return false
+	var normal_card := AllCards.all_plant_card_prefabs[CharacterRegistry.PlantType.P535CoffeeBean] as Card
+	if not is_instance_valid(normal_card) or not is_instance_valid(normal_card.character_static) \
+		or normal_card.character_static.get_child_count() == 0:
+		return false
+	_normal_coffee_preview_root = normal_card.character_static.get_child(0).duplicate() as Node2D
+	if not is_instance_valid(_normal_coffee_preview_root):
+		return false
+	_normal_coffee_preview_root.name = "Plant535CoffeeBeanCardMode"
+	_normal_coffee_preview_root.visible = false
+	character_static.add_child(_normal_coffee_preview_root)
+	return true
+
+
+func _sync_ana_coffee_preview() -> void:
+	if is_instance_valid(_ana_coffee_preview_root):
+		_ana_coffee_preview_root.visible = _is_ana_coffee_mode
+		if _is_ana_coffee_mode:
+			character_static.move_child(_ana_coffee_preview_root, 0)
+	if is_instance_valid(_normal_coffee_preview_root):
+		_normal_coffee_preview_root.visible = not _is_ana_coffee_mode
+		if not _is_ana_coffee_mode:
+			character_static.move_child(_normal_coffee_preview_root, 0)
+
+
+func _update_ana_coffee_toggle_visual() -> void:
+	if not is_instance_valid(_ana_coffee_mode_toggle):
+		return
+	if is_instance_valid(_ana_coffee_mode_toggle_icon):
+		_ana_coffee_mode_toggle_icon.texture = NORMAL_COFFEE_CARD_TEXTURE if _is_ana_coffee_mode else ANA_COFFEE_CARD_TEXTURE
+	_ana_coffee_mode_toggle.tooltip_text = "切换为普通咖啡豆" if _is_ana_coffee_mode else "切换为安娜咖啡豆"
+
+
+func _cancel_hand_if_this_card_is_selected() -> void:
+	if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.hand_manager):
+		return
+	var hand_manager:HandManager = Global.main_game.hand_manager
+	if hand_manager.curr_hm_status == HandManager.E_HandManagerStatus.Character \
+		and hand_manager.hm_character.curr_card == self:
+		hand_manager.curr_hm_status = HandManager.E_HandManagerStatus.Null
+
+
+func _refresh_sun_and_ready_state_after_mode_switch() -> void:
+	if is_instance_valid(Global.main_game) and is_instance_valid(Global.main_game.card_manager) \
+		and is_instance_valid(Global.main_game.card_manager.card_slot_battle):
+		judge_sun_enough(Global.main_game.card_manager.card_slot_battle.sun_value)
+	else:
+		judge_card_ready()
+
+
+func is_ana_coffee_mode_active() -> bool:
+	return _is_ana_coffee_dual_card and _is_ana_coffee_mode
 
 ## 修改阳光时会调用
 func judge_sun_enough(curr_sun_value):

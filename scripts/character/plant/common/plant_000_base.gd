@@ -251,11 +251,11 @@ func remove_attack_damage_multiplier(source:Object):
 		return
 	attack_damage_multiplier_sources.erase(source.get_instance_id())
 
-## 获取当前攻击伤害倍率，多个来源取最高值
+## 获取当前攻击伤害倍率。不同来源乘算，使天使蓝线与安娜纳米强化可以同时生效。
 func get_attack_damage_multiplier() -> float:
 	var result := 1.0
 	for multiplier:float in attack_damage_multiplier_sources.values():
-		result = maxf(result, multiplier)
+		result *= maxf(multiplier, 0.0)
 	return result
 
 

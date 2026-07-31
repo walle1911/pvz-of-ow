@@ -38,17 +38,34 @@ func _ready() -> void:
 	assert(game_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z500Norm))
 	assert(int(game_para.simple_zombie_intro_waves[original_normal]) == 6)
 
-	## 小鬼没有自然权重：简易模式必须明确禁用，不能选中后在试玩时静默消失。
-	var unsupported_type := int(CharacterRegistry.ZombieType.Z524Imp)
-	workshop.call("_select_simple_zombie", str(unsupported_type))
-	assert(not (workshop.level["simpleZombiePool"] as Array).has(unsupported_type))
-	var unsupported_holder := workshop.call("_make_zombie_card", unsupported_type) as Control
-	assert(((unsupported_holder.get_child(0) as Card).get_node("Button") as Button).disabled)
-	var invalid_level := Logic.normalize_level(workshop.level)
-	invalid_level["simpleZombiePool"] = [base_type, unsupported_type]
-	assert(Logic.validate_level(invalid_level).any(func(issue):
-		return str((issue as Dictionary).get("message", "")).contains("不支持简易自然波次")
+	## 原本只用于召唤的小鬼现在也可由简易自然波次直接抽取。
+	var summoned_type := int(CharacterRegistry.ZombieType.Z524Imp)
+	workshop.call("_select_simple_zombie", str(summoned_type))
+	assert((workshop.level["simpleZombiePool"] as Array).has(summoned_type))
+	var summoned_holder := workshop.call("_make_zombie_card", summoned_type) as Control
+	assert(not ((summoned_holder.get_child(0) as Card).get_node("Button") as Button).disabled)
+	var summoned_level := Logic.normalize_level(workshop.level)
+	assert(not Logic.validate_level(summoned_level).any(func(issue):
+		return str((issue as Dictionary).get("severity", "")) == "error"
 	))
+	var summoned_built := Runtime.build_game_para(summoned_level)
+	assert(summoned_built["ok"], summoned_built["error"])
+	var summoned_para := summoned_built["game_para"] as ResourceLevelData
+	summoned_para.call("_init_zombie_refresh_from_whitelist")
+	assert(summoned_para.zombie_refresh_types.has(
+		CharacterRegistry.ZombieType.Z524Imp
+	))
+	workshop.call("_delete_simple_zombie", str(summoned_type))
+
+	## 蹦极使用既有的旗帜波目标格机制，不能作为道路行走僵尸创建。
+	var bungee_type := int(CharacterRegistry.ZombieType.Z520Bungi)
+	workshop.call("_select_simple_zombie", str(bungee_type))
+	var bungee_built := Runtime.build_game_para(Logic.normalize_level(workshop.level))
+	assert(bungee_built["ok"], bungee_built["error"])
+	var bungee_para := bungee_built["game_para"] as ResourceLevelData
+	assert(bungee_para.is_bungi)
+	assert(not bungee_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z520Bungi))
+	workshop.call("_delete_simple_zombie", str(bungee_type))
 
 	workshop.call("_delete_simple_zombie", str(original_normal))
 	assert(not (workshop.level["simpleZombiePool"] as Array).has(original_normal))

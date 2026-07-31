@@ -17,6 +17,8 @@ func start_boost(
 	new_target:Plant000Base,
 	attack_speed_multiplier:float,
 	damage_multiplier:float,
+	damage_reduction:float,
+	instant_heal:int,
 	duration:float
 ) -> void:
 	_remove_gameplay_boost()
@@ -25,6 +27,12 @@ func start_boost(
 	remaining_duration = maxf(duration, 0.1)
 
 	target_plant.add_attack_damage_multiplier(self, damage_multiplier)
+	if is_instance_valid(target_plant.hp_component):
+		target_plant.hp_component.curr_hp = mini(
+			target_plant.hp_component.curr_hp + maxi(instant_heal, 0),
+			target_plant.hp_component.max_hp
+		)
+		target_plant.hp_component.add_damage_taken_multiplier(self, 1.0 - clampf(damage_reduction, 0.0, 1.0))
 	if is_instance_valid(attack_component):
 		attack_component.add_attack_speed_multiplier(self, attack_speed_multiplier)
 	elif target_plant.has_method(&"add_attack_speed_multiplier"):
@@ -60,6 +68,8 @@ func _remove_gameplay_boost() -> void:
 		return
 	if is_instance_valid(target_plant):
 		target_plant.remove_attack_damage_multiplier(self)
+		if is_instance_valid(target_plant.hp_component):
+			target_plant.hp_component.remove_damage_taken_multiplier(self)
 	if is_instance_valid(attack_component):
 		attack_component.remove_attack_speed_multiplier(self)
 	elif is_instance_valid(target_plant) and target_plant.has_method(&"remove_attack_speed_multiplier"):

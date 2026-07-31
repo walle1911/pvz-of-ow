@@ -316,6 +316,12 @@ func _pad_prechosen_cards() -> void:
 func _init_zombie_refresh_from_whitelist() -> void:
 	if monster_mode != ConstLevelData.E_MonsterMode.Norm:
 		return
+	## 自制简易关卡的名单已经由工坊按注册表、地图行类型和自然权重校验。
+	## 这里保留作者显式选择的召唤单位（伴舞、小鬼、单个雪橇等），否则
+	## 通用冒险白名单会把它们静默删掉，造成编辑器与实战不一致。
+	if custom_simple_original_mode:
+		whitelist_refresh_zombie_types = zombie_refresh_types.duplicate()
+		return
 	whitelist_refresh_zombie_types = Global.global_read_data.whitelist_refresh_zombie_types_with_zombie_row_type[Global.main_scene_registry.ZombieRowTypewithMainScenesMap[game_sences]]
 	zombie_refresh_types = filter_invalid_zombie_refresh_types(zombie_refresh_types, whitelist_refresh_zombie_types)
 

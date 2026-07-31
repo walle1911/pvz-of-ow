@@ -24,6 +24,7 @@ var range_num_bungi:Vector2i = Vector2i(3,5)
 const zombie_power = {
 	CharacterRegistry.ZombieType.Z000NormTalon: 1,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 5,
+	CharacterRegistry.ZombieType.Z010BackupDancerLucio: 1,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 7,
 	CharacterRegistry.ZombieType.Z001FlagTalon: 1,	# 黑爪旗帜战力
 	CharacterRegistry.ZombieType.Z002ConeTalon: 2,
@@ -54,6 +55,7 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z518Pogo: 4,			# 跳跳
 	CharacterRegistry.ZombieType.Z519Yeti: 4,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 4,			# 雪人
+	CharacterRegistry.ZombieType.Z520Bungi: 3,
 
 	CharacterRegistry.ZombieType.Z521Ladder: 4,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 5,		# 投篮
@@ -61,7 +63,10 @@ const zombie_power = {
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 10,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 10,
 	CharacterRegistry.ZombieType.Z524Imp: 1,			# 小鬼
+	CharacterRegistry.ZombieType.Z027ImpTorbjorn: 1,
+	CharacterRegistry.ZombieType.Z028ImpAshe: 1,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 3,	# 豌豆射手僵尸(远程)
+	CharacterRegistry.ZombieType.Z1001BobsledSingle: 1,
 }
 
 ## 创建 zombie_weights 字典，存储初始权重,普僵权重会修改，
@@ -70,11 +75,13 @@ var zombie_weights:Dictionary = zombie_weights_base.duplicate_deep()
 const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z000NormTalon: 4000,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 1000,
+	CharacterRegistry.ZombieType.Z010BackupDancerLucio: 4000,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 2000,
+	CharacterRegistry.ZombieType.Z001FlagTalon: 1000,
 	CharacterRegistry.ZombieType.Z002ConeTalon: 4000,
 	CharacterRegistry.ZombieType.Z004BucketTalon: 3000,
 	CharacterRegistry.ZombieType.Z500Norm: 4000,			# 普僵权重
-	#CharacterRegistry.ZombieType.Z501Flag: 0,			# 旗帜权重
+	CharacterRegistry.ZombieType.Z501Flag: 1000,			# 允许在自制自然池中作为普通抽取项
 	CharacterRegistry.ZombieType.Z502Cone: 4000,			# 路障权重
 	CharacterRegistry.ZombieType.Z503PoleVaulter: 2000,	# 撑杆权重
 	CharacterRegistry.ZombieType.Z504Bucket: 3000,		# 铁桶权重
@@ -99,14 +106,18 @@ const zombie_weights_ori = {
 	CharacterRegistry.ZombieType.Z518Pogo: 1000,			# 跳跳
 	CharacterRegistry.ZombieType.Z519Yeti: 1,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 300,			# Winston 雪人：Boss 级低频单位，不沿用原版彩蛋的极低权重
+	CharacterRegistry.ZombieType.Z520Bungi: 1000,		# 简易工坊会转交旗帜波蹦极机制，不走道路出生
 
 	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
 	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
 	CharacterRegistry.ZombieType.Z523Gargantuar: 1500,	# 原版伽刚特尔
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 1500,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 1500,
+	CharacterRegistry.ZombieType.Z524Imp: 4000,
+	CharacterRegistry.ZombieType.Z027ImpTorbjorn: 4000,
+	CharacterRegistry.ZombieType.Z028ImpAshe: 4000,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 1500,	# 豌豆射手僵尸
-	#CharacterRegistry.ZombieType.Z524Imp: 0,		# 小鬼
+	CharacterRegistry.ZombieType.Z1001BobsledSingle: 4000,
 }
 
 ## 僵尸随机选择池

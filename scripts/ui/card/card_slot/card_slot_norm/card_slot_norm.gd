@@ -88,8 +88,8 @@ func _on_texture_button_pressed() -> void:
 ## 从AllCards中复制一张新卡,隐藏card_slot_candidate的卡片
 func init_pre_choosed_card(card_type_list:Array[CharacterRegistry.PlantType], card_type_list_zombie:Array[CharacterRegistry.ZombieType]):
 	for i in card_type_list.size():
-		if card_slot_battle.curr_cards.size() >= card_slot_battle.max_visible_card_num:
-			push_warning("预选卡超过顶部卡槽显示上限，已跳过后续卡片")
+		if card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit:
+			push_warning("预选卡超过当前关卡选卡上限，已跳过后续卡片")
 			break
 		var card:Card
 		var plant_type:CharacterRegistry.PlantType = card_type_list[i]
@@ -166,6 +166,10 @@ func _on_card_click(card:Card):
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
 		return
+	## 达到当前关卡上限后，未选卡片不再响应点击；已选卡片仍可取消。
+	if not card.is_choosed_pre_card \
+	and card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit:
+		return
 	SoundManager.play_other_SFX("tap")
 	# 如果card被选择，取消选取，后面的card向前移动
 	if card.is_choosed_pre_card:
@@ -176,12 +180,11 @@ func _on_card_click(card:Card):
 			move_card_to(card_slot_battle.curr_cards[i], card_slot_battle.cards_placeholder[i])
 		move_card_to(card, card.card_candidate_container)
 
-	## 如果没被选取，放在最后一位；卡槽已满则自动扩展
+	## 如果没被选取，放在最后一位；达到当前关卡上限则拒绝选择。
 	else:
 		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
 			var new_placeholder = card_slot_battle.add_card_placeholder()
 			if not is_instance_valid(new_placeholder):
-				SoundManager.play_other_SFX("buzzer")
 				return
 		card.is_choosed_pre_card = true
 		card_slot_battle.curr_cards.append(card)
@@ -195,6 +198,10 @@ func _on_imitater_card_click(card:Card):
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
 		return
+	## 达到当前关卡上限后，未选模仿者卡片不再响应点击。
+	if not card.is_choosed_pre_card \
+	and card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit:
+		return
 	SoundManager.play_other_SFX("tap")
 	# 如果card被选择，取消选取，后面的card向前移动
 	if card.is_choosed_pre_card:
@@ -207,13 +214,11 @@ func _on_imitater_card_click(card:Card):
 		card.reparent(card.card_candidate_container, false)
 		card_slot_candidate.imitater_be_choosed_cancel()
 
-	## 如果没被选取，放在最后一位；卡槽已满则自动扩展
+	## 如果没被选取，放在最后一位；达到当前关卡上限则拒绝选择。
 	else:
 		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
 			var new_placeholder = card_slot_battle.add_card_placeholder()
 			if not is_instance_valid(new_placeholder):
-				SoundManager.play_other_SFX("buzzer")
-				card_slot_candidate.imitater_card_slot_disappear()
 				return
 		card.is_choosed_pre_card = true
 		card_slot_battle.curr_cards.append(card)

@@ -1,11 +1,15 @@
 extends Plant000Base
 class_name Plant057TallNutSigma
 
+const GRAVITY_WELL_EFFECT_SCRIPT := preload("res://scripts/fx/plant_effect/plant_effect_tall_nut_sigma_gravity_well.gd")
+
 @onready var hp_stage_change_component: HpStageChangeComponent = $HpStageChangeComponent
 
 @export_group("西格玛下砸")
-@export_range(1, 9, 1) var slam_front_cell_count:int = 2
-@export_range(0.0, 30.0, 1.0, "suffix:px") var slam_range_edge_tolerance:float = 8.0
+@export_range(0.0, 30.0, 1.0, "suffix:px") var slam_range_edge_tolerance:float = 0.0
+@export_range(0.01, 4.0, 0.01, "suffix:秒") var slam_charge_time:float = 1.5
+@export_range(0.5, 2.0, 0.05) var slam_effect_radius_scale:float = 1.0
+@export_range(0.3, 0.9, 0.01) var slam_effect_perspective_y_scale:float = 0.56
 @export_range(1.0, 150.0, 1.0, "suffix:px") var slam_lift_height:float = 91.0
 @export_range(1.0, 2.0, 0.01) var slam_air_body_scale:float = 1.25
 @export_range(0.1, 1.0, 0.05) var slam_air_shadow_scale:float = 0.4
@@ -126,6 +130,97 @@ class TallNutSigmaSlamSequence extends Node:
 		impact_tween.tween_property(impact_root, ^"modulate:a", 0.0, 0.35)
 		impact_tween.chain().tween_callback(impact_root.queue_free)
 
+
+class TallNutSigmaFieldSequence extends Node:
+	var effect_center:= Vector2.ZERO
+	var effect_radii:= Vector2.ONE
+	var lift_height:float
+	var air_body_scale:float
+	var air_shadow_scale:float
+	var air_shadow_alpha:float
+	var lift_time:float
+	var hold_time:float
+	var fall_time:float
+	var impact_squash_scale:Vector2
+	var impact_recover_time:float
+	var current_hp_ratio:float
+	var impact_sound_volume_db:float
+
+	func start(
+		center:Vector2,
+		radii:Vector2,
+		charge_time:float,
+		new_lift_height:float,
+		new_air_body_scale:float,
+		new_air_shadow_scale:float,
+		new_air_shadow_alpha:float,
+		new_lift_time:float,
+		new_hold_time:float,
+		new_fall_time:float,
+		new_impact_squash_scale:Vector2,
+		new_impact_recover_time:float,
+		new_current_hp_ratio:float,
+		new_impact_sound_volume_db:float
+	) -> void:
+		effect_center = center
+		effect_radii = Vector2(maxf(1.0, radii.x), maxf(1.0, radii.y))
+		lift_height = new_lift_height
+		air_body_scale = new_air_body_scale
+		air_shadow_scale = new_air_shadow_scale
+		air_shadow_alpha = new_air_shadow_alpha
+		lift_time = new_lift_time
+		hold_time = new_hold_time
+		fall_time = new_fall_time
+		impact_squash_scale = new_impact_squash_scale
+		impact_recover_time = new_impact_recover_time
+		current_hp_ratio = new_current_hp_ratio
+		impact_sound_volume_db = new_impact_sound_volume_db
+
+		var gravity_well:= GRAVITY_WELL_EFFECT_SCRIPT.new()
+		gravity_well.name = "TallNutSigmaGravityWellEffect"
+		add_child(gravity_well)
+		gravity_well.play(effect_center, effect_radii, charge_time)
+		await gravity_well.finished
+		## 特效结束前只取一次目标快照；之后进入范围的僵尸不会补抬。
+		_slam_targets_in_effect()
+		queue_free()
+
+	func _slam_targets_in_effect() -> void:
+		if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.zombie_manager):
+			return
+		for zombie_value in Global.main_game.zombie_manager.all_zombies_1d.duplicate():
+			var zombie:= zombie_value as Zombie000Base
+			if not is_instance_valid(zombie) or zombie.is_death or zombie.is_hypno:
+				continue
+			if zombie.has_meta(SLAM_ACTIVE_META) or not _is_position_in_effect(zombie.shadow.global_position):
+				continue
+			_start_zombie_slam(zombie)
+
+	func _is_position_in_effect(target_position:Vector2) -> bool:
+		var normalized_offset:= Vector2(
+			(target_position.x - effect_center.x) / effect_radii.x,
+			(target_position.y - effect_center.y) / effect_radii.y
+		)
+		return normalized_offset.length_squared() <= 1.0
+
+	func _start_zombie_slam(zombie:Zombie000Base) -> void:
+		var slam_sequence:= TallNutSigmaSlamSequence.new()
+		zombie.add_child(slam_sequence)
+		slam_sequence.start(
+			zombie,
+			lift_height,
+			air_body_scale,
+			air_shadow_scale,
+			air_shadow_alpha,
+			lift_time,
+			hold_time,
+			fall_time,
+			impact_squash_scale,
+			impact_recover_time,
+			current_hp_ratio,
+			impact_sound_volume_db
+		)
+
 var _slam_triggered:= false
 
 func ready_norm_signal_connect():
@@ -135,40 +230,27 @@ func ready_norm_signal_connect():
 	hp_component.signal_hp_loss.connect(hp_stage_change_component.judge_body_change)
 
 func _on_hp_stage_change(curr_hp_stage:int) -> void:
-	if _slam_triggered or is_death or curr_hp_stage < SLAM_TRIGGER_HP_STAGE:
+	## HpComponent 会先同步标记死亡、再发阶段更新；不能用 is_death 拦截致死跨阶段。
+	if _slam_triggered or curr_hp_stage < SLAM_TRIGGER_HP_STAGE:
 		return
 	_slam_triggered = true
-	_slam_zombies_in_front_cells()
+	_create_gravity_field_sequence()
 
-func _slam_zombies_in_front_cells() -> void:
+func _create_gravity_field_sequence() -> void:
 	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
 		return
-	var all_zombies_2d:Array = Global.main_game.zombie_manager.all_zombies_2d
-	var first_lane:int = maxi(0, row_col.x - 1)
-	var last_lane_exclusive:int = mini(all_zombies_2d.size(), row_col.x + 2)
-	var area_left:float = global_position.x - slam_range_edge_tolerance
-	var area_right:float = (
-		global_position.x
-		+ plant_cell.size.x * slam_front_cell_count
-		+ slam_range_edge_tolerance
-	)
-
-	for target_lane:int in range(first_lane, last_lane_exclusive):
-		for zombie:Zombie000Base in all_zombies_2d[target_lane].duplicate():
-			if not is_instance_valid(zombie) or zombie.is_death:
-				continue
-			var zombie_ground_x:float = zombie.shadow.global_position.x
-			if zombie_ground_x < area_left or zombie_ground_x > area_right:
-				continue
-			_start_zombie_slam(zombie)
-
-func _start_zombie_slam(zombie:Zombie000Base) -> void:
-	if zombie.has_meta(SLAM_ACTIVE_META):
+	var center_cell:= _get_gravity_well_center_cell()
+	if not is_instance_valid(center_cell):
 		return
-	var slam_sequence:= TallNutSigmaSlamSequence.new()
-	zombie.add_child(slam_sequence)
-	slam_sequence.start(
-		zombie,
+	var effect_center:= _get_gravity_well_center(center_cell)
+	var effect_radii:= _get_gravity_well_radii(center_cell, effect_center)
+	var field_sequence:= TallNutSigmaFieldSequence.new()
+	field_sequence.name = "TallNutSigmaFieldSequence"
+	Global.main_game.add_child(field_sequence)
+	field_sequence.start(
+		effect_center,
+		effect_radii,
+		slam_charge_time,
 		slam_lift_height,
 		slam_air_body_scale,
 		slam_air_shadow_scale,
@@ -181,6 +263,65 @@ func _start_zombie_slam(zombie:Zombie000Base) -> void:
 		slam_current_hp_ratio,
 		slam_impact_sound_volume_db
 	)
+
+
+func _get_gravity_well_center_cell() -> PlantCell:
+	var all_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
+	if row_col.x < 0 or row_col.x >= all_cells.size() or all_cells[row_col.x].is_empty():
+		return null
+	var lane_cells:Array = all_cells[row_col.x]
+	var target_column:int = mini(row_col.y + 1, lane_cells.size() - 1)
+	return lane_cells[target_column] as PlantCell
+
+
+func _get_gravity_well_center(center_cell:PlantCell) -> Vector2:
+	var norm_container:Control = center_cell.plant_container_node.get(
+		CharacterRegistry.PlacePlantInCell.Norm
+	) as Control
+	if is_instance_valid(norm_container):
+		return norm_container.global_position
+	return center_cell.global_position + center_cell.size * 0.5
+
+
+func _get_gravity_well_x_range(center_column:int) -> Vector2:
+	var all_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
+	var lane_cells:Array = all_cells[row_col.x]
+	var first_column:int = maxi(0, center_column - 1)
+	var last_column:int = mini(lane_cells.size() - 1, center_column + 1)
+	var first_cell:PlantCell = lane_cells[first_column]
+	var last_cell:PlantCell = lane_cells[last_column]
+	var first_edge_a:float = first_cell.global_position.x
+	var first_edge_b:float = first_edge_a + first_cell.size.x
+	var last_edge_a:float = last_cell.global_position.x
+	var last_edge_b:float = last_edge_a + last_cell.size.x
+	return Vector2(
+		minf(first_edge_a, first_edge_b) - slam_range_edge_tolerance,
+		maxf(last_edge_a, last_edge_b) + slam_range_edge_tolerance
+	)
+
+
+func _get_gravity_well_radii(center_cell:PlantCell, effect_center:Vector2) -> Vector2:
+	var center_lane_x_range:= _get_gravity_well_x_range(center_cell.row_col.y)
+	var horizontal_radius:float = minf(
+		absf(effect_center.x - center_lane_x_range.x),
+		absf(center_lane_x_range.y - effect_center.x)
+	)
+	var available_vertical_radius:float = plant_cell.size.y * 0.5
+	var zombie_rows:Array = Global.main_game.zombie_manager.all_zombie_rows
+	var first_lane:int = maxi(0, row_col.x - 1)
+	var last_lane:int = mini(zombie_rows.size() - 1, row_col.x + 1)
+	if not zombie_rows.is_empty():
+		var first_y:float = zombie_rows[first_lane].zombie_create_position.global_position.y
+		var last_y:float = zombie_rows[last_lane].zombie_create_position.global_position.y
+		var top_y:float = minf(first_y, last_y) - plant_cell.size.y * 0.5
+		var bottom_y:float = maxf(first_y, last_y) + plant_cell.size.y * 0.5
+		available_vertical_radius = minf(
+			absf(effect_center.y - top_y),
+			absf(bottom_y - effect_center.y)
+		)
+	var perspective_vertical_radius:float = horizontal_radius * slam_effect_perspective_y_scale
+	var vertical_radius:float = minf(available_vertical_radius, perspective_vertical_radius)
+	return Vector2(horizontal_radius, vertical_radius) * slam_effect_radius_scale
 
 func _on_area_2d_stop_jump_area_entered(area: Area2D) -> void:
 	var zombie:Zombie000Base = area.owner

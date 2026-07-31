@@ -11,6 +11,7 @@ var failures: Array[String] = []
 func _ready() -> void:
 	_test_all_normal_levels_build()
 	_test_card_unlock_curve()
+	_test_world_card_slot_limits()
 	_test_zombie_pool_resolution()
 	_test_bob_boss_profile()
 	_test_environment_tools()
@@ -19,6 +20,7 @@ func _ready() -> void:
 	_test_difficulty_growth()
 	_test_formal_level_ids()
 	_test_developer_override_isolation()
+	await _test_card_slot_limit_enforcement()
 	await _test_choose_level_pages()
 	if failures.is_empty():
 		print("ADVENTURE_PRESETS_OK levels=50 final_plants=51 pool_rule=ow_first")
@@ -69,6 +71,35 @@ func _test_card_unlock_curve() -> void:
 	var final_pool: Array = Presets.build_level("adventure_5_10").get("availablePlants", [])
 	_expect(final_pool.size() == 51, "最终植物池应由 49 个原版槽位、第二 OW 猫尾草和 OW 独占植物组成")
 	_expect(final_pool.has(1) and final_pool.has(504) and final_pool.has(544), "最终池应同时包含 OW 替代、原版基础回退和原版升级回退")
+
+
+func _test_world_card_slot_limits() -> void:
+	var expected_limits := {1: 8, 2: 9, 3: 10, 4: 10, 5: 10}
+	for world in range(1, 6):
+		var built := Runtime.build_game_para(Presets.build_level("adventure_%d_10" % world))
+		var game_para := built["game_para"] as ResourceLevelData
+		_expect(
+			game_para.max_choosed_card_num == int(expected_limits[world]),
+			"第 %d 世界最终关应最多选择 %d 张植物卡，实际为 %d" % [
+				world,
+				int(expected_limits[world]),
+				game_para.max_choosed_card_num,
+			]
+		)
+
+
+func _test_card_slot_limit_enforcement() -> void:
+	var card_slot := (load("res://scenes/card_slot/card_slot_norm.tscn") as PackedScene).instantiate()
+	get_tree().root.add_child.call_deferred(card_slot)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var battle := card_slot.get_node("CardSlotBattle") as CardSlotBattle
+	battle.init_card_slot_battle(8, 50)
+	_expect(battle.card_selection_limit == 8, "第一世界试玩应把 8 保存为选卡硬上限")
+	_expect(battle.cards_placeholder.size() == 8, "第一世界试玩应只创建 8 个卡槽")
+	_expect(battle.add_card_placeholder() == null, "达到 8 张后不得继续动态扩展卡槽")
+	card_slot.queue_free()
+	await get_tree().process_frame
 
 
 func _test_zombie_pool_resolution() -> void:

@@ -138,7 +138,8 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/plant/ow/plant_054_squash_doomfist.gd": {"squash_attack_value": "damage"},
 	"res://scripts/character/plant/ow/plant_057_tall_nut_sigma.gd": {
-		"slam_front_cell_count": "positive_int", "slam_range_edge_tolerance": "distance",
+		"slam_range_edge_tolerance": "distance", "slam_charge_time": "seconds",
+		"slam_effect_radius_scale": "multiplier", "slam_effect_perspective_y_scale": "multiplier",
 		"slam_lift_height": "distance", "slam_air_body_scale": "multiplier",
 		"slam_air_shadow_scale": "multiplier", "slam_air_shadow_alpha": "probability",
 		"slam_lift_time": "seconds", "slam_hold_time": "non_negative_seconds",
@@ -171,6 +172,7 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/plant/ow/plant_067_coffee_bean_ana.gd": {
 		"attack_speed_multiplier": "multiplier", "damage_multiplier": "multiplier",
+		"damage_reduction": "probability", "instant_heal": "non_negative_int",
 		"boost_duration": "seconds",
 	},
 	"res://scripts/character/plant/ow/plant_031_pumpkin_zarya.gd": {

@@ -150,7 +150,8 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			if not CharacterRegistry.PlantInfo.has(plant_type):
 				continue
 			game_para.available_plant_types.append(plant_type)
-		game_para.max_choosed_card_num = maxi(1, mini(10, game_para.available_plant_types.size()))
+		var card_limit := _formal_adventure_card_limit(str(level.get("formalPresetId", "")))
+		game_para.max_choosed_card_num = maxi(1, mini(card_limit, game_para.available_plant_types.size()))
 		var forced_plants: Array[CharacterRegistry.PlantType] = []
 		for value in level.get("forcedPlants", []):
 			var plant_type := int(value) as CharacterRegistry.PlantType
@@ -161,10 +162,32 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	var environment: Dictionary = level.get("environmentConfig", {})
 	game_para.init_tombstone_num = maxi(0, int(environment.get("initialTombstones", 0)))
 	game_para.is_have_tombston = bool(environment.get("tombstoneSpawns", false))
-	game_para.is_bungi = bool(environment.get("bungee", false))
+	## 蹦极僵尸依赖植物格目标，不能走道路自然出生；简易池选择它时转为
+	## 现有旗帜波蹦极机制，避免缺少 plant_cell 的无效实例。
+	game_para.is_bungi = bool(environment.get("bungee", false)) or (
+		is_simple_mode and _contains_zombie_type(
+			level.get("simpleZombiePool", []),
+			CharacterRegistry.ZombieType.Z520Bungi
+		)
+	)
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
 	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
+
+
+static func _formal_adventure_card_limit(formal_preset_id: String) -> int:
+	if not formal_preset_id.begins_with("adventure_"):
+		return 10
+	var id_parts := formal_preset_id.split("_")
+	if id_parts.size() < 3:
+		return 10
+	match int(id_parts[1]):
+		1:
+			return 8
+		2:
+			return 9
+		_:
+			return 10
 
 
 static func _simple_allowed_zombie_types(
@@ -181,6 +204,8 @@ static func _simple_allowed_zombie_types(
 				source_values.append((entry as Dictionary).get("zombieType", "500"))
 	for value in source_values:
 		var zombie_type := _zombie_type_id(value) as CharacterRegistry.ZombieType
+		if zombie_type == CharacterRegistry.ZombieType.Z520Bungi:
+			continue
 		if zombie_type != base_zombie_type and _original_zombie_weight(int(zombie_type)) <= 0:
 			continue
 		if AdventurePresets.POOL_ONLY_ZOMBIES.has(int(zombie_type)) and not ["pool", "fog"].has(map_type):
@@ -188,6 +213,13 @@ static func _simple_allowed_zombie_types(
 		if not types.has(zombie_type):
 			types.append(zombie_type)
 	return types
+
+
+static func _contains_zombie_type(values: Array, expected: CharacterRegistry.ZombieType) -> bool:
+	for value in values:
+		if _zombie_type_id(value) == int(expected):
+			return true
+	return false
 
 
 static func _simple_intro_waves(

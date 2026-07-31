@@ -8,5 +8,7 @@ func _judge_special_plants_condition(plant_cell:PlantCell) -> bool:
 	if not is_instance_valid(target_value) or not target_value is Plant000Base:
 		return false
 	var target_plant := target_value as Plant000Base
+	if Plant067CoffeeBeanAna.has_active_nano_boost(target_plant):
+		return false
 	return target_plant.is_sleeping \
 		or Plant067CoffeeBeanAna.is_nano_boost_target_type(target_plant.plant_type)

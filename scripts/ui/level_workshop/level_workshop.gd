@@ -1669,9 +1669,15 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	)
 	var simple_supported := not _is_simple_mode() or required_simple_zombie or _has_original_pick_weight(zombie_type)
 	var simple_role := _simple_zombie_role(zombie_type) if _is_simple_mode() else ""
+	var pool_map_required := _is_simple_mode() \
+		and AdventurePresets.POOL_ONLY_ZOMBIES.has(zombie_type) \
+		and not ["pool", "fog"].has(str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
 	card.tooltip_text = (
 		"当前基础僵尸，固定参与刷怪" if required_simple_zombie
+		else "该僵尸只能用于泳池或雾夜地图" if pool_map_required
 		else "简易自然波次暂不支持该僵尸" if not simple_supported
+		else "选择%s（在旗帜波按蹦极机制登场）" % _zombie_name(str(zombie_type)) \
+			if _is_simple_mode() and zombie_type == int(CharacterRegistry.ZombieType.Z520Bungi)
 		else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type))
 	)
 	card.set_process(false)
@@ -2157,9 +2163,10 @@ func _select_simple_zombie(zombie_key: String) -> void:
 		return
 	simple_pool.append(zombie_type)
 	level["simpleZombiePool"] = simple_pool
-	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {}).duplicate()
-	intro_waves[str(zombie_type)] = _recommended_simple_intro_wave(zombie_type)
-	level["simpleZombieIntroWaves"] = intro_waves
+	if zombie_type != int(CharacterRegistry.ZombieType.Z520Bungi):
+		var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {}).duplicate()
+		intro_waves[str(zombie_type)] = _recommended_simple_intro_wave(zombie_type)
+		level["simpleZombieIntroWaves"] = intro_waves
 	_sync_all_simple_stage_type_pools()
 	_changed("已将%s加入本关允许僵尸表" % _zombie_name(zombie_key))
 	_refresh_card_page()

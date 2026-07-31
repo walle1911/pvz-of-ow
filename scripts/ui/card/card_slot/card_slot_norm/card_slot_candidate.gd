@@ -88,47 +88,53 @@ func _init_card_slot_candidate_pages():
 	all_card_page.remove_child(grid_container_plant)
 	all_card_page.remove_child(grid_container_zombie)
 
-	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[0])
-	_add_zombie_card_page(AllCards.all_zombie_cards_parent_node_root[0])
-	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[1])
-	_add_plant_card_page(AllCards.all_plant_cards_parent_node_root[2])
-	_add_zombie_card_page(AllCards.all_zombie_cards_parent_node_root[1])
+	var ordered_plant_cards := _collect_plant_cards()
+	ordered_plant_cards.sort_custom(_sort_card_by_id)
+	_add_card_pages(grid_container_plant, ordered_plant_cards, all_card_candidate_containers_plant)
+
+	var ordered_zombie_cards := _collect_zombie_cards()
+	ordered_zombie_cards.sort_custom(_sort_card_by_id)
+	_add_card_pages(grid_container_zombie, ordered_zombie_cards, all_card_candidate_containers_zombie)
 
 	grid_container_plant.queue_free()
 	grid_container_zombie.queue_free()
 
 
-func _add_plant_card_page(cards_parent_node:GridContainer):
+func _collect_plant_cards() -> Array[Card]:
 	var ordered_cards:Array[Card] = []
-	for node in cards_parent_node.get_children():
-		var card := node as Card
-		if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
-			continue
-		if _adventure_card_lock_active() and not _is_adventure_plant_available(card.card_plant_type):
-			continue
-		# 非冒险锁定的棋盘格场景也只提供 500+ 的原版植物。
-		if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
-			continue
-		ordered_cards.append(card)
+	for cards_parent_node:GridContainer in AllCards.all_plant_cards_parent_node_root:
+		for node in cards_parent_node.get_children():
+			var card := node as Card
+			if card == null or card.card_plant_type == CharacterRegistry.PlantType.Null:
+				continue
+			if _adventure_card_lock_active() and not _is_adventure_plant_available(card.card_plant_type):
+				continue
+			# 非冒险锁定的棋盘格场景也只提供 500+ 的原版植物。
+			if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
+				continue
+			ordered_cards.append(card)
+	return ordered_cards
 
-	_add_card_page(grid_container_plant, ordered_cards, all_card_candidate_containers_plant)
 
-
-func _add_zombie_card_page(cards_parent_node:GridContainer):
+func _collect_zombie_cards() -> Array[Card]:
 	## 两条冒险主线都是植物选卡，棋盘格也不提供友军僵尸卡。
 	if _adventure_card_lock_active():
-		return
+		return []
 	var ordered_cards:Array[Card] = []
-	for node in cards_parent_node.get_children():
-		var card := node as Card
-		if card == null or card.card_zombie_type == CharacterRegistry.ZombieType.Null:
-			continue
-		ordered_cards.append(card)
+	for cards_parent_node:GridContainer in AllCards.all_zombie_cards_parent_node_root:
+		for node in cards_parent_node.get_children():
+			var card := node as Card
+			if card == null or card.card_zombie_type == CharacterRegistry.ZombieType.Null:
+				continue
+			ordered_cards.append(card)
+	return ordered_cards
 
-	_add_card_page(grid_container_zombie, ordered_cards, all_card_candidate_containers_zombie)
+
+func _sort_card_by_id(card_a:Card, card_b:Card) -> bool:
+	return card_a.card_id < card_b.card_id
 
 
-func _add_card_page(page_template:GridContainer, ordered_cards:Array[Card], card_candidate_containers:Dictionary[int, CardCandidateContainer]):
+func _add_card_pages(page_template:GridContainer, ordered_cards:Array[Card], card_candidate_containers:Dictionary[int, CardCandidateContainer]):
 	if ordered_cards.is_empty():
 		return
 	var cards_per_page := page_template.get_child_count()

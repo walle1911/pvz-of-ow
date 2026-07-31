@@ -19,6 +19,9 @@ var is_can_look_hp:=true
 var is_death := false
 
 var death_hp:int = 0
+## 受到伤害倍率来源。安娜纳米强化使用 0.7 表示减伤 30%。
+var damage_taken_multiplier_sources:Dictionary[int, float] = {}
+var _ignore_damage_reduction_once := false
 var curr_hp:int:
 	set(value):
 		value = max(value, 0)
@@ -86,7 +89,11 @@ func get_all_hp():
 ## [is_drop_2:bool] 是否有掉落额外条件
 ## return bool: 返回是否死亡
 func Hp_loss(attack_value:int, _bullet_mode:BulletRegistry.AttackMode =BulletRegistry.AttackMode.Norm, is_drop_on_death=true, trigger_be_attack_SFX:=true, is_drop_2:=true):
-	curr_hp -= attack_value
+	var final_attack_value := attack_value
+	if not _ignore_damage_reduction_once and attack_value > 0:
+		final_attack_value = maxi(1, int(round(float(attack_value) * get_damage_taken_multiplier())))
+	_ignore_damage_reduction_once = false
+	curr_hp -= final_attack_value
 	var is_drop = not (owner.is_death and not is_drop_on_death) and is_drop_2
 	signal_hp_loss.emit(curr_hp, is_drop)
 
@@ -99,4 +106,25 @@ func Hp_loss(attack_value:int, _bullet_mode:BulletRegistry.AttackMode =BulletReg
 ## 掉血死亡
 ##[is_drop:bool]是否有掉落body
 func Hp_loss_death(is_drop:=true):
+	_ignore_damage_reduction_once = true
 	Hp_loss(get_all_hp(),BulletRegistry.AttackMode.Norm, is_drop, false)
+	_ignore_damage_reduction_once = false
+
+## 增加一个受到伤害倍率来源。
+func add_damage_taken_multiplier(source:Object, multiplier:float):
+	if not is_instance_valid(source):
+		return
+	damage_taken_multiplier_sources[source.get_instance_id()] = maxf(multiplier, 0.0)
+
+## 移除一个受到伤害倍率来源。
+func remove_damage_taken_multiplier(source:Object):
+	if not is_instance_valid(source):
+		return
+	damage_taken_multiplier_sources.erase(source.get_instance_id())
+
+## 不同减伤来源乘算；当前安娜强化只会存在一个实例。
+func get_damage_taken_multiplier() -> float:
+	var result := 1.0
+	for multiplier:float in damage_taken_multiplier_sources.values():
+		result *= multiplier
+	return result

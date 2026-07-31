@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/test/MainGameDebug9999Sun.tscn" id="1_debug"]
+[ext_resource type="Script" path="res://tests/test_ana_coffee_card_runtime.gd" id="2_test"]
+
+[node name="TestAnaCoffeeCardRuntime" instance=ExtResource("1_debug")]
+test_pre_choosed_card_list_plant = Array[int]([36])
+
+[node name="AnaCoffeeCardRuntimeTest" type="Node" parent="."]
+script = ExtResource("2_test")

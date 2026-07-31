@@ -1153,7 +1153,7 @@ const ZombieInfo = {
 			ZombieInfoAttribute.ZombieName: "PeashooterZombie",
 			ZombieInfoAttribute.CoolTime: 0.0,
 			ZombieInfoAttribute.SunCost: 100,
-			ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_026_peashooter_zombie.tscn"),
+			ZombieInfoAttribute.ZombieScenes:preload("res://scenes/character/zombie/zombie_026_peashooter_soj.tscn"),
 			ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 		},
 	## 单独雪橇僵尸

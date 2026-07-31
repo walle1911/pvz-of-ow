@@ -279,6 +279,7 @@ script_list_meta = {
 "res://scripts/fx/plant_effect/plant_effect_006_bomb_con_cannon.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_effect_garlic_mauga_chain.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_effect_pumpkin_zarya_black_hole.gd": [-1, -1],
+"res://scripts/fx/plant_effect/plant_effect_tall_nut_sigma_gravity_well.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_effect_vendetta_jalapeno_slash.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_start_effect.gd": [-1, -1],
 "res://scripts/garden/Item/garden_item_01_wateringcan.gd": [-1, -1],
@@ -443,11 +444,13 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_level_workshop_redesign.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_level_workshop_runtime.gd": [-1, -1],
 "res://tests/pvz_level_editor/test_simple_curve_controls.gd": [-1, -1],
+"res://tests/test_ana_coffee_card_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1],
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
-"res://tests/test_plant_balance_smoke.gd": [-1, -1]
+"res://tests/test_plant_balance_smoke.gd": [-1, -1],
+"res://tests/test_sigma_gravity_field_runtime.gd": [-1, -1]
 }
 line_number_show = true
 complete_path_show = true

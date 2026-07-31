@@ -16,6 +16,8 @@ var card_placeholder_template: TextureRect
 var cards_placeholder:Array = []
 ## 出战卡片
 var curr_cards : Array[Card]
+## 当前关卡允许选择的卡片数量；不得用界面可见上限替代。
+var card_selection_limit := 0
 var _squash_doomfist_card_attack_check_timer := 0.0
 ## 阳光值
 var sun_value:
@@ -47,8 +49,9 @@ func _process(delta: float) -> void:
 ## 初始化出战卡槽，管理器调用
 func init_card_slot_battle(max_choosed_card_num:int, sun:int):
 	self.sun_value = sun
+	card_selection_limit = mini(maxi(0, max_choosed_card_num), max_visible_card_num)
 	card_placeholder_template = card_placeholder_ori.duplicate()
-	for i in range(mini(max_choosed_card_num, max_visible_card_num)):
+	for i in range(card_selection_limit):
 		var cloned_card_placeholder = card_placeholder_template.duplicate()
 		card_ui_list.add_child(cloned_card_placeholder)
 
@@ -60,9 +63,9 @@ func init_card_slot_battle(max_choosed_card_num:int, sun:int):
 	return cards_placeholder
 
 
-## 动态添加一个卡槽占位节点（超过初始上限时自动扩展）
+## 动态补充缺失的占位节点，但不能突破当前关卡的选卡上限。
 func add_card_placeholder() -> Control:
-	if cards_placeholder.size() >= max_visible_card_num:
+	if cards_placeholder.size() >= card_selection_limit:
 		return null
 	if not is_instance_valid(card_placeholder_template):
 		return null
@@ -122,6 +125,8 @@ func _try_squash_doomfist_attack_card(card:Card) -> bool:
 	if not _is_valid_card(card):
 		return false
 	if card.card_plant_type != CharacterRegistry.PlantType.P036CoffeeBeanAna:
+		return false
+	if not card.is_ana_coffee_mode_active():
 		return false
 	if card.is_hidden_by_squash_doomfist:
 		return false

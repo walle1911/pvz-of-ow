@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0
+		0,
+		1,
+		2,
+		3,
+		4
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -26,6 +26,12 @@
 		"zombieCardPool": [],
 		"zombieCardProbability": 0.0
 	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 4
+		}
+	],
 	"earlyRefreshDelay": 1.5,
 	"editorMode": "simple",
 	"environmentConfig": {
@@ -63,12 +69,15 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071504.0,
-	"rewardPlant": -1,
-	"rewardPlants": [],
+	"rewardPlant": 18,
+	"rewardPlants": [
+		18
+	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 500,
 	"simpleFlagCount": 1,
 	"simpleFlagZombieType": 501,
+	"simpleWaveCount": 10,
 	"simpleZombieIntroWaves": {
 		"502": 4,
 		"503": 5,
@@ -80,7 +89,6 @@
 		503,
 		504
 	],
-	"simpleWaveCount": 10,
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
 	"strictOriginalTiming": true,
@@ -99,7 +107,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_required_adventure_1_4_wave_01",
+					"id": "simple_0_500_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -123,7 +131,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "group_1",
+					"id": "simple_0_502_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -147,7 +155,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "group_2",
+					"id": "simple_0_503_2",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -171,7 +179,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "group_3",
+					"id": "simple_0_504_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
