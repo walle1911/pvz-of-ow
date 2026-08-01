@@ -46,7 +46,7 @@ static func example_level() -> Dictionary:
 		"simpleBaseZombieType": 100,
 		"simpleFlagZombieType": 101,
 		"simpleZombiePool": [100, 102, 104],
-		"simpleZombieIntroWaves": {"102": 4, "104": 7},
+		"simpleZombieIntroWaves": {},
 		"simpleOnceFinalZombies": [],
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,

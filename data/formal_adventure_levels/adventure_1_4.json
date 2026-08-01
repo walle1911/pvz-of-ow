@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0,
-		1,
-		2,
-		3,
-		4
+		0.0,
+		1.0,
+		2.0,
+		3.0,
+		4.0
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -75,13 +75,12 @@
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 500,
-	"simpleFlagCount": 1,
+	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 501,
-	"simpleWaveCount": 10,
+	"simpleOnceFinalZombies": [],
+	"simpleWaveCount": 20,
 	"simpleZombieIntroWaves": {
-		"502": 4,
-		"503": 5,
-		"504": 10
+		"503": 5
 	},
 	"simpleZombiePool": [
 		500,

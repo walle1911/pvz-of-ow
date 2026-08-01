@@ -27,16 +27,17 @@ func _ready() -> void:
 
 	workshop.call("_select_simple_zombie", str(original_normal))
 	assert((workshop.level["simpleZombiePool"] as Array).has(original_normal))
-	assert(int((workshop.level["simpleZombieIntroWaves"] as Dictionary)[str(original_normal)]) == 1)
+	assert(not (workshop.level["simpleZombieIntroWaves"] as Dictionary).has(str(original_normal)))
 	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 2)
-	workshop.call("_set_simple_intro_wave", original_normal, 6)
-	assert(int((workshop.level["simpleZombieIntroWaves"] as Dictionary)[str(original_normal)]) == 6)
+	workshop.call("_toggle_simple_required_zombie", original_normal)
+	var automatic_required_wave := int(workshop.call("_original_style_required_wave", original_normal))
+	assert(int((workshop.level["simpleZombieIntroWaves"] as Dictionary)[str(original_normal)]) == automatic_required_wave)
 
 	var built := Runtime.build_game_para(Logic.normalize_level(workshop.level))
 	assert(built["ok"], built["error"])
 	var game_para := built["game_para"] as ResourceLevelData
 	assert(game_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z500Norm))
-	assert(int(game_para.simple_zombie_intro_waves[original_normal]) == 6)
+	assert(int(game_para.simple_zombie_intro_waves[original_normal]) == automatic_required_wave)
 
 	## 原本只用于召唤的小鬼现在也可由简易自然波次直接抽取。
 	var summoned_type := int(CharacterRegistry.ZombieType.Z524Imp)
@@ -76,7 +77,7 @@ func _ready() -> void:
 	workshop.queue_free()
 	await get_tree().process_frame
 
-	## 首秀既要阻止提前随机，也要在目标波先于旗帜波普通填充预留战力。
+	## 必定登场既要阻止提前随机，也要在目标波先于旗帜波普通填充。
 	var intro_level := Logic.example_level()
 	intro_level["editorMode"] = "simple"
 	intro_level["simpleFlagCount"] = 1
@@ -114,11 +115,7 @@ func _ready() -> void:
 	assert(wave_creator.zombie_weights[CharacterRegistry.ZombieType.Z000NormTalon] < 4000)
 	assert(wave_creator.zombie_weights[CharacterRegistry.ZombieType.Z002ConeTalon] < 4000)
 	var flag_intro: Array[CharacterRegistry.ZombieType] = wave_creator.create_curr_wave_zombie_list(9, true)
-	## 最终波复刻 PutInMissingZombies：即使路障和冰车此前已经首秀，
-	## 最终波仍必须包含本关允许表中的每一种僵尸。
 	assert(flag_intro.has(CharacterRegistry.ZombieType.Z000NormTalon))
-	assert(flag_intro.has(CharacterRegistry.ZombieType.Z002ConeTalon))
-	assert(flag_intro.has(CharacterRegistry.ZombieType.Z013ZomboniShion))
 	for index in 4:
 		assert(flag_intro[index] == CharacterRegistry.ZombieType.Z000NormTalon)
 	assert(flag_intro[4] == CharacterRegistry.ZombieType.Z001FlagTalon)

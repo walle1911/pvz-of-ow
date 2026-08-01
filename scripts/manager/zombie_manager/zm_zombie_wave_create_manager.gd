@@ -518,19 +518,6 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 			curr_spare_slot = maxi(0, curr_spare_slot - 1)
 			simple_intro_spawned[int(boss_type)] = true
 
-	## 原版冒险最终波会执行 PutInMissingZombies：本关允许表中的每种
-	## 僵尸都必须在最终波至少出现 1 只。这里同样先强制补齐，再随机填充；
-	## 即使点数预算已经耗尽，也不能丢掉作者在工坊中选择的僵尸。
-	if zombie_manager.game_para.custom_simple_original_mode \
-	and wave >= maxi(0, zombie_manager.game_para.max_wave - 1):
-		for missing_type in zombie_manager.zombie_refresh_types:
-			if wave_spawn.has(missing_type) or not zombie_power.has(missing_type):
-				continue
-			wave_spawn.append(missing_type)
-			total_power += int(zombie_power[missing_type])
-			curr_spare_slot = maxi(0, curr_spare_slot - 1)
-			simple_intro_spawned[int(missing_type)] = true
-
 	# 生成剩余僵尸，直到总战力符合当前战力上限
 	while curr_spare_slot > 0 and total_power < curr_wave_power_limit:
 

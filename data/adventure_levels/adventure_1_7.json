@@ -86,9 +86,6 @@
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 20,
 	"simpleZombieIntroWaves": {
-		"102": 4,
-		"104": 10,
-		"503": 5,
 		"506": 10
 	},
 	"simpleZombiePool": [
