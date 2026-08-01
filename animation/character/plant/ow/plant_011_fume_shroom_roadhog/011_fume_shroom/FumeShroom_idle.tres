@@ -1,4 +1,4 @@
-[gd_resource type="Animation" load_steps=5 format=3]
+[gd_resource type="Animation" format=3 uid="uid://db8les2jdmhck"]
 
 [ext_resource type="Texture2D" uid="uid://b5v5vannbipgc" path="res://assets/reanim/FumeShroom_body.png" id="0_fuck"]
 [ext_resource type="Texture2D" uid="uid://bdecyr5u832mx" path="res://assets/reanim/FumeShroom_head.png" id="2_fuck"]
@@ -369,16 +369,4 @@ tracks/29/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [ExtResource("4_fuck"), ExtResource("4_fuck")]
-}
-tracks/30/type = "value"
-tracks/30/imported = false
-tracks/30/enabled = true
-tracks/30/path = NodePath("Body/BodyCorrect/Anim_blink:position")
-tracks/30/interp = 1
-tracks/30/loop_wrap = true
-tracks/30/keys = {
-"times": PackedFloat32Array(0, 0.333333, 0.916667, 1.33333),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(43, 50), Vector2(43, 51), Vector2(43, 50), Vector2(43, 50)]
 }

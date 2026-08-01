@@ -118,7 +118,7 @@ func _collect_plant_cards() -> Array[Card]:
 
 func _collect_zombie_cards() -> Array[Card]:
 	## 两条冒险主线都是植物选卡，棋盘格也不提供友军僵尸卡。
-	if _adventure_card_lock_active():
+	if _adventure_card_lock_active() or _is_chessboard_mode():
 		return []
 	var ordered_cards:Array[Card] = []
 	for cards_parent_node:GridContainer in AllCards.all_zombie_cards_parent_node_root:

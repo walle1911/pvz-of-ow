@@ -46,7 +46,7 @@ func _ready() -> void:
 	var simple_built := Runtime.build_game_para(simple_level)
 	assert(simple_built["ok"], simple_built["error"])
 	var simple_para: ResourceLevelData = simple_built["game_para"]
-	## 简易关卡保留专属入场规则，但僵尸名单改为每波实时权重抽取。
+	## 简易关卡保留专属入场规则，僵尸名单由自然波次管理器开战前预生成。
 	assert(simple_para.custom_simple_original_mode)
 	assert(simple_para.custom_initial_wave_delay == 0.25)
 	assert(simple_para.opening_first_zombie_advance_cells == 7.5)

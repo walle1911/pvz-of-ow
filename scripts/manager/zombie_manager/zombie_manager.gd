@@ -215,6 +215,12 @@ func _on_zombie_dead(zombie: Zombie000Base) -> void:
 
 #region 波次刷新
 func wave_refresh(curr_is_end_wave:bool):
+	## 排位最终旗帜由棋盘双条件接管，不能掉奖杯或启动 49 秒换轮计时器。
+	if game_para.is_ranked_mode and curr_is_end_wave:
+		is_end_wave = false
+		set_zombie_death_over_view()
+		check_zombie_end_wave_timer.stop()
+		return
 	is_end_wave = curr_is_end_wave
 	set_zombie_death_over_view()
 	if is_end_wave:
@@ -271,6 +277,17 @@ func start_next_game_zombie_mananger_update():
 		for i in range(all_zombies_1d.size()-1,-1,-1):
 			var zombie:Zombie000Base = all_zombies_1d[i]
 			zombie.character_death_disappear()
+
+## 排位渡劫成功后静默进入下一大段：保留场上植物和现有卡组，不进入重新选卡流程。
+func start_next_ranked_round() -> void:
+	if not game_para.is_ranked_mode:
+		return
+	is_end_wave = false
+	check_zombie_end_wave_timer.stop()
+	update_multi_round_zombie_refresh_types(main_game.curr_game_round, main_game.game_para.game_sences)
+	zombie_wave_manager.start_next_game_zombie_wave_mananger_update()
+	await get_tree().create_timer(3.0, false).timeout
+	zombie_wave_manager.start_next_wave()
 
 #endregion
 

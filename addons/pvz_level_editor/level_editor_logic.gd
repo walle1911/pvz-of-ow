@@ -289,14 +289,14 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 				break
 		var intro_waves = level.get("simpleZombieIntroWaves", {})
 		if intro_waves is not Dictionary:
-			issues.append(issue("error", "最早登场波次配置格式错误", "simpleZombieIntroWaves"))
+			issues.append(issue("error", "必定登场波次配置格式错误", "simpleZombieIntroWaves"))
 		else:
 			var max_simple_wave := clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
 			for zombie_type_value in intro_waves:
 				var zombie_type := int(zombie_type_value)
 				var intro_wave := int(intro_waves[zombie_type_value])
 				if not simple_pool.has(zombie_type) or intro_wave < 1 or intro_wave > max_simple_wave:
-					issues.append(issue("error", "最早登场波次必须属于本关僵尸池和有效波次", "simpleZombieIntroWaves/%s" % str(zombie_type_value)))
+					issues.append(issue("error", "必定登场波次必须属于本关僵尸池和有效波次", "simpleZombieIntroWaves/%s" % str(zombie_type_value)))
 					break
 	var once_final = level.get("simpleOnceFinalZombies", [])
 	if once_final is not Array:

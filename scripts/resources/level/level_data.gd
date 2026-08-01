@@ -86,13 +86,13 @@ var custom_spawn_schedule: Array[Dictionary] = []
 var custom_stage_schedule: Array[Dictionary] = []
 ## 旗帜波在时间轴上的位置，用于大波提示和右下角进度条。
 var custom_flag_data: Array[Dictionary] = []
-## 简易关卡使用自然波次实时权重抽取，同时保留其专属旗帜数量和出生偏移规则。
+## 简易关卡在开战前预生成自然波次，并保留权重衰减、旗帜数量和出生偏移规则。
 var custom_simple_original_mode := false
 ## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
 var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
 var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001FlagTalon
-## 简易关卡的主题僵尸最早登场波次（僵尸类型 -> 1-based 波次）；
-## 战力预算不足时会顺延到首个可容纳波次，但不会提前随机出现。
+## 简易关卡的主题僵尸必定登场波次（僵尸类型 -> 1-based 波次）；
+## 到达该波次时优先于战力预算插入，且不会在此之前被随机抽到。
 var simple_zombie_intro_waves: Dictionary = {}
 ## 简易关卡的整局一次性 Boss：不参与加权随机，仅在最后一波各强制刷 1 只。
 var simple_once_final_zombie_types: Array[CharacterRegistry.ZombieType] = []
@@ -183,6 +183,10 @@ var force_second_zombie_same_lane_as_first := false
 
 @export_group("棋盘格模式参数")
 @export var is_chessboard_mode := false
+## 排位模式只用于棋盘格无尽：保留普通卡槽和天降阳光，额外挂载奖励传送带。
+@export var is_ranked_mode := false
+## 伪水面植物同时存活上限；防止用水面永久规避整张棋盘。
+@export_range(1, 45, 1) var ranked_fake_water_limit := 9
 @export_range(0, 45, 1) var chessboard_mine_limit := 8
 @export_range(0.0, 1.0, 0.01) var chessboard_plant_card_probability := 0.25
 @export_range(0.0, 1.0, 0.01) var chessboard_hypno_zombie_card_probability := 0.20

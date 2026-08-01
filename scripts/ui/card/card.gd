@@ -53,6 +53,12 @@ const MINI_SEED_PACKET_TEXTURE := preload("res://assets/image/ui/ui_card/SeedPac
 var is_chessboard_reveal_reward := false
 ## 棋盘格翻地获得的友军僵尸卡，落地后立即走现有魅惑流程。
 var is_chessboard_hypno_reward := false
+## 排位奖励传送带的一次性消耗卡。保留原生阳光费用，但不进入冷却。
+var is_ranked_reward_consumable := false
+## 翻地后落在草坪上的待拾取奖励；点击只执行收集，不进入手持种植状态。
+var is_ranked_board_pickup := false
+var is_ranked_pickup_collecting := false
+signal signal_ranked_pickup_clicked(card:Card)
 
 func _ready() -> void:
 	super()
@@ -105,6 +111,16 @@ func set_card_disable():
 func card_init_conveyor_belt():
 	_cool_mask.value = 0
 	sun_cost = 0
+
+## 排位奖励卡初始化：与传统传送带不同，保留角色原生阳光费用。
+func card_init_ranked_reward():
+	is_ranked_reward_consumable = true
+	_is_cooling = false
+	_cool_timer = 0.0
+	_cool_mask.value = 0
+	_cool_mask.visible = false
+	is_can_click = true
+	_is_ready_state = true
 
 
 ## 卡片冷卻
@@ -389,6 +405,10 @@ func _get_canvas_item_child(parent_node:Node, node_names:Array[String]) -> Canva
 
 ## 点击卡片时
 func _on_button_pressed() -> void:
+	if is_ranked_board_pickup:
+		if not is_ranked_pickup_collecting:
+			signal_ranked_pickup_clicked.emit(self)
+		return
 	## 如果为图鉴卡片
 	if is_almanac_card:
 		signal_card_click.emit()

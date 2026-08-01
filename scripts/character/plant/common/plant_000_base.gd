@@ -9,6 +9,11 @@ class_name Plant000Base
 #region 植物类基础属性
 
 @export var plant_type:CharacterRegistry.PlantType
+## 数值工坊“烘焙到场景”写入的卡牌权威值；负数表示继续使用注册表默认值。
+@export_group("正式卡牌数值")
+@export var plant_sun_cost: int = -1
+@export var plant_cool_time: float = -1.0
+@export_group("")
 ## 植物初始化受击状态（从1[is_norm] 开始）僵尸攻击检测时判断是否可以攻击
 @export var init_be_attack_status :E_BeAttackStatusPlant = E_BeAttackStatusPlant.IsNorm
 ## 是否白天睡觉

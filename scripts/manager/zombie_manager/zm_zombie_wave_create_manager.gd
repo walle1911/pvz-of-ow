@@ -133,11 +133,13 @@ var min_power:=100
 var curr_zombie_weight_upper_limit :int
 ## 当前波次生成的僵尸
 var wave_all_zombies:Array[Zombie000Base]
+## PvZ1 会在开战前一次生成整关波表；简易原版模式运行时只读取这份名单。
+var simple_wave_plan: Array[Array] = []
 ## 关卡限定所需的自然波次出场顺序；不参与波次计时和数量计算。
 var natural_spawn_count := 0
 var first_natural_spawn_lane := -1
 var natural_created_count := 0
-## 已完成保底首秀的简易模式主题僵尸。
+## 已完成强制首秀的简易模式主题僵尸。
 var simple_intro_spawned: Dictionary = {}
 ## 选卡前放在草坪上的开场替身所在行；真实首只僵尸复用该行完成无缝接替。
 var opening_first_zombie_lane := -1
@@ -151,10 +153,13 @@ func init_zombie_wave_create_manager(game_para:ResourceLevelData):
 	first_natural_spawn_lane = -1
 	natural_created_count = 0
 	simple_intro_spawned.clear()
+	simple_wave_plan.clear()
 	opening_first_zombie_lane = -1
 	zombie_choose_row_system.init_zombie_choose_row_system()
 	if game_para.custom_spawn_schedule.is_empty():
 		update_zombie_refresh_types()
+		if game_para.custom_simple_original_mode:
+			_build_simple_wave_plan(game_para.max_wave)
 
 
 func _reset_zombie_weights_from_adjustments() -> void:
@@ -171,6 +176,15 @@ func _reset_zombie_weights_from_adjustments() -> void:
 		if scene == null:
 			continue
 		var default_grade := NumericalStore.zombie_spawn_weight_to_grade(zombie_weights_base[zombie_type])
+		var scene_state := scene.get_state()
+		if scene_state.get_node_count() > 0:
+			for property_index in scene_state.get_node_property_count(0):
+				if str(scene_state.get_node_property_name(0, property_index)) != "zombie_spawn_weight":
+					continue
+				var baked_grade := int(scene_state.get_node_property_value(0, property_index))
+				if baked_grade >= 1 and baked_grade <= 7:
+					default_grade = baked_grade
+				break
 		var selected_grade: int = NumericalStore.get_registry_override(
 			scene.resource_path,
 			"zombie_spawn_weight",
@@ -354,13 +368,31 @@ func opening_first_zombie_global_position(lane: int) -> Vector2:
 #region 创建当前波僵尸生成列表
 ## 创建当前波僵尸生成列表
 func create_curr_wave_zombie_list(wave:int, is_big_wave:bool):
+	if zombie_manager.game_para.custom_simple_original_mode \
+	and wave >= 0 and wave < simple_wave_plan.size():
+		var planned_wave: Array = simple_wave_plan[wave]
+		var result: Array[CharacterRegistry.ZombieType] = []
+		result.assign(planned_wave)
+		return result
+	return _generate_curr_wave_zombie_list(wave, is_big_wave)
+
+
+func _build_simple_wave_plan(wave_count: int) -> void:
+	simple_wave_plan.clear()
+	simple_intro_spawned.clear()
+	var waves_per_flag := wave_count if wave_count < 10 else 10
+	for wave in wave_count:
+		var is_big_wave := wave % maxi(1, waves_per_flag) == maxi(1, waves_per_flag) - 1
+		simple_wave_plan.append(_generate_curr_wave_zombie_list(wave, is_big_wave))
+
+
+func _generate_curr_wave_zombie_list(wave:int, is_big_wave:bool) -> Array[CharacterRegistry.ZombieType]:
 	## 计算当前波僵尸战力上限
 	var curr_wave_power_limit = calculate_wave_power_limit(wave, is_big_wave)
 	## 更新僵尸权重上限
 	update_curr_zombie_weight_upper_limit(wave)
 	## 获取当前波的生成僵尸列表
-	var wave_spawn :Array[CharacterRegistry.ZombieType] = get_curr_wave_zombie_list(wave, is_big_wave, curr_wave_power_limit)
-	return wave_spawn
+	return get_curr_wave_zombie_list(wave, is_big_wave, curr_wave_power_limit)
 
 ## 计算每波的战力上限
 func calculate_wave_power_limit(wave:int, is_big_wave: bool) -> int:
@@ -370,14 +402,7 @@ func calculate_wave_power_limit(wave:int, is_big_wave: bool) -> int:
 	var base_power_limit:int = wave / 3 + 1
 	## 如果是大波，战力上限是原战力上限的2.5倍
 	if is_big_wave:
-		var big_wave_mult := 2.5
-		## 工坊简易关需要大波明显强于前后普通波；原版自然关仍保持 2.5。
-		if zombie_manager.game_para.custom_simple_original_mode:
-			big_wave_mult = 3.5
-			## 最后一波再抬一档，避免“旗前一堆铁桶、终局反而泄劲”。
-			if wave >= maxi(0, zombie_manager.game_para.max_wave - 1):
-				big_wave_mult = 4.5
-		return int(base_power_limit * big_wave_mult) * zombie_multy
+		return int(base_power_limit * 2.5) * zombie_multy
 
 	return base_power_limit * zombie_multy
 
@@ -392,6 +417,8 @@ func update_curr_zombie_weight_upper_limit(wave:int):
 	elif wave < 4:
 		pass
 	elif wave < 26:
+		## 保留项目采用的普僵/路障权重衰减；预生成后每一波会固化
+		## 当时的权重结果，运行期间不再重新抽取。
 		_update_weights(wave)
 		curr_zombie_weight_upper_limit = 0
 		# 计算所有可能僵尸的权重总和
@@ -450,28 +477,28 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 	## 当前空隙位置
 	var curr_spare_slot = max_zombies_per_wave
 
-	var big_wave_plain_count := 0
-	## 如果是大波，先预留旗帜僵尸；普通填充要等主题首秀拿到预算后再加入。
+	## 原版先按大波开始前的基础点数计算固定普僵数量，再把本波预算乘 2.5。
+	## 固定普僵和旗帜僵尸均先于新登场、最终补齐和随机填充单位进入波表。
 	if is_big_wave:
 		var flag_zombie_type := _flag_zombie_type()
+		var big_wave_plain_count := mini(wave / 3 + 1, 8) \
+			if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
+		var plain_zombie_type := _plain_zombie_type()
+		for _index in big_wave_plain_count:
+			wave_spawn.append(plain_zombie_type)
+			total_power += int(zombie_power[plain_zombie_type])
+			curr_spare_slot = maxi(0, curr_spare_slot - 1)
 		wave_spawn.append(flag_zombie_type)
 		total_power += zombie_power[flag_zombie_type]
-		curr_spare_slot -= 1
-		## 简易模式保留现有旗帜波数量规则；其余自然关卡继续使用旧规则。
-		big_wave_plain_count = mini(wave / 3 + 1, 8) \
-			if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
+		curr_spare_slot = maxi(0, curr_spare_slot - 1)
 
-	## 简易模式先为已经到达“最早登场波次”的主题敌人预留预算。
-	## 若本波预算不足则自然顺延，避免为了首秀制造不合理的战力尖峰。
+	## 原版 PickZombieWaves 会先把本关新登场僵尸放入指定波次，再用剩余
+	## 点数随机填充；固定登场优先于点数预算，因此允许本波临时超预算。
 	if zombie_manager.game_para.custom_simple_original_mode:
-		for intro_zombie_type in _due_simple_intro_types(
-			wave,
-			curr_wave_power_limit - total_power,
-			curr_spare_slot
-		):
+		for intro_zombie_type in _due_simple_intro_types(wave):
 			wave_spawn.append(intro_zombie_type)
 			total_power += int(zombie_power[intro_zombie_type])
-			curr_spare_slot -= 1
+			curr_spare_slot = maxi(0, curr_spare_slot - 1)
 			simple_intro_spawned[int(intro_zombie_type)] = true
 
 	## 整局一次性终局 Boss（JSON 字段 + 权重第 7 档）：仅末波强制各刷 1 只。
@@ -483,15 +510,26 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 			if not once_bosses.has(zt) and CharacterRegistry.ZombieInfo.has(zt):
 				once_bosses.append(zt)
 		for boss_type in once_bosses:
-			if curr_spare_slot <= 0:
-				break
 			if simple_intro_spawned.has(int(boss_type)):
 				continue
 			wave_spawn.append(boss_type)
 			if zombie_power.has(boss_type):
 				total_power += int(zombie_power[boss_type])
-			curr_spare_slot -= 1
+			curr_spare_slot = maxi(0, curr_spare_slot - 1)
 			simple_intro_spawned[int(boss_type)] = true
+
+	## 原版冒险最终波会执行 PutInMissingZombies：本关允许表中的每种
+	## 僵尸都必须在最终波至少出现 1 只。这里同样先强制补齐，再随机填充；
+	## 即使点数预算已经耗尽，也不能丢掉作者在工坊中选择的僵尸。
+	if zombie_manager.game_para.custom_simple_original_mode \
+	and wave >= maxi(0, zombie_manager.game_para.max_wave - 1):
+		for missing_type in zombie_manager.zombie_refresh_types:
+			if wave_spawn.has(missing_type) or not zombie_power.has(missing_type):
+				continue
+			wave_spawn.append(missing_type)
+			total_power += int(zombie_power[missing_type])
+			curr_spare_slot = maxi(0, curr_spare_slot - 1)
+			simple_intro_spawned[int(missing_type)] = true
 
 	# 生成剩余僵尸，直到总战力符合当前战力上限
 	while curr_spare_slot > 0 and total_power < curr_wave_power_limit:
@@ -519,44 +557,11 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 		else:
 			continue
 
-	## 旗帜波附赠普僵：在加权填充完成后加入，不计入战力预算。
-	## 同时把“原版前缀普僵本会占用的预算”补给精锐池，避免只变多炮灰。
-	if is_big_wave and big_wave_plain_count > 0:
-		var plain_zombie_type := _plain_zombie_type()
-		var plain_power := int(zombie_power.get(plain_zombie_type, 1))
-		var elite_refund := big_wave_plain_count * plain_power
-		## 用退回的预算再抽一轮精锐，抽不满的剩余再用附赠普僵补场面。
-		var refund_guard := 0
-		while elite_refund > 0 and curr_spare_slot > 0 and refund_guard < 200:
-			refund_guard += 1
-			var selected_zombie: CharacterRegistry.ZombieType = zombie_choose_random_pool.get_random_item()
-			var zombie_power_value := int(zombie_power[selected_zombie])
-			if zombie_manager.game_para.custom_simple_original_mode \
-			and not _simple_zombie_is_unlocked(selected_zombie, wave):
-				continue
-			if zombie_power_value <= elite_refund:
-				wave_spawn.append(selected_zombie)
-				elite_refund -= zombie_power_value
-				curr_spare_slot -= 1
-			elif elite_refund < min_power:
-				break
-		for _index in big_wave_plain_count:
-			if curr_spare_slot <= 0:
-				break
-			wave_spawn.append(plain_zombie_type)
-			curr_spare_slot -= 1
-
-	## 打乱出怪顺序，避免旗子/精锐/附赠普僵按区块挤在一起。
-	if wave_spawn.size() > 1:
-		wave_spawn.shuffle()
-
 	return wave_spawn
 
 
 func _due_simple_intro_types(
-	wave: int,
-	remaining_power: int,
-	remaining_slots: int
+	wave: int
 ) -> Array[CharacterRegistry.ZombieType]:
 	var candidates: Array[CharacterRegistry.ZombieType] = []
 	var intro_waves: Dictionary = zombie_manager.game_para.simple_zombie_intro_waves
@@ -578,12 +583,7 @@ func _due_simple_intro_types(
 	)
 	var result: Array[CharacterRegistry.ZombieType] = []
 	for zombie_type in candidates:
-		var power := int(zombie_power[zombie_type])
-		if remaining_slots <= 0 or power > remaining_power:
-			continue
 		result.append(zombie_type)
-		remaining_power -= power
-		remaining_slots -= 1
 	return result
 
 

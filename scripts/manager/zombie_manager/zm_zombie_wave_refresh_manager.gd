@@ -89,6 +89,16 @@ func _on_difficulty_changed(_difficulty_speed: float) -> void:
 	_rescale_running_timer(wave_norm_refresh_timer, old_speed, refresh_speed_multiplier)
 	signal_refresh_speed_changed.emit(refresh_speed_multiplier / old_speed)
 
+## 排位大段只改变自然换波速度，不改变出怪权重和原版血量阈值。
+func set_ranked_level_speed(speed:float) -> void:
+	var old_speed := refresh_speed_multiplier
+	level_refresh_speed_multiplier = clampf(speed, 0.1, 1.5)
+	refresh_speed_multiplier = Global.config_service.get_combined_refresh_speed(level_refresh_speed_multiplier)
+	if is_equal_approx(old_speed, refresh_speed_multiplier): return
+	_rescale_running_timer(wave_min_time_timer, old_speed, refresh_speed_multiplier)
+	_rescale_running_timer(wave_norm_refresh_timer, old_speed, refresh_speed_multiplier)
+	signal_refresh_speed_changed.emit(refresh_speed_multiplier / old_speed)
+
 func _rescale_running_timer(timer: Timer, old_speed: float, new_speed: float) -> void:
 	if timer.is_stopped():
 		return

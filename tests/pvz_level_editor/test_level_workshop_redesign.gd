@@ -63,6 +63,24 @@ func _run() -> void:
 	assert(workshop.context_card_kind == "zombie")
 	assert(workshop.context_card_type == int(first_zombie_card.card_zombie_type))
 	workshop.card_context_menu.hide()
+	var required_wave_type := int(CharacterRegistry.ZombieType.Z002ConeTalon)
+	var simple_pool: Array = workshop.call("_simple_zombie_pool")
+	if not simple_pool.has(required_wave_type):
+		workshop.call("_select_simple_zombie", str(required_wave_type))
+	workshop.call("_set_simple_intro_wave", required_wave_type, 4)
+	var required_wave_holder := workshop.call("_make_zombie_card", required_wave_type) as Control
+	var required_wave_badge := required_wave_holder.get_node("CardStateBadge") as TextureRect
+	assert((required_wave_badge.get_child(0) as Label).text == "必")
+	required_wave_holder.free()
+	workshop.call("_on_workshop_card_gui_input", context_click, "zombie", required_wave_type)
+	var required_wave_menu_index: int = workshop.card_context_menu.get_item_index(1)
+	assert(required_wave_menu_index >= 0)
+	assert(workshop.card_context_menu.get_item_text(required_wave_menu_index) == "设置必定登场波次")
+	assert(not workshop.card_context_menu.is_item_disabled(required_wave_menu_index))
+	workshop.card_context_menu.hide()
+	workshop.call("_on_card_context_menu_pressed", 1)
+	assert(workshop.quantity_dialog_layer != null)
+	workshop.call("_close_quantity_dialog")
 	for holder in workshop.card_grid.get_children():
 		if holder.get_child_count() > 0:
 			assert(not (holder.get_child(0) as Card).is_imitater)

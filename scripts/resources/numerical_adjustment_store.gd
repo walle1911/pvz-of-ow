@@ -17,7 +17,7 @@ const ZOMBIE_SPAWN_WEIGHT_BY_GRADE := {
 const REGISTRY_RULES := {
 	"plant_sun_cost": {"min": 0.0, "max": 10000000.0, "integer": true},
 	"plant_cool_time": {"min": 0.01, "max": 600.0, "integer": false},
-	"zombie_spawn_weight": {"min": 1.0, "max": 6.0, "integer": true},
+	"zombie_spawn_weight": {"min": 1.0, "max": 7.0, "integer": true},
 }
 
 static var _cache: Dictionary = {}
@@ -84,6 +84,8 @@ static func validate_registry_value(property_name:String, saved_value, fallback)
 
 
 static func zombie_spawn_weight_from_grade(grade: int) -> int:
+	if grade == 7:
+		return 0
 	return int(ZOMBIE_SPAWN_WEIGHT_BY_GRADE.get(clampi(grade, 1, 6), 1000))
 
 

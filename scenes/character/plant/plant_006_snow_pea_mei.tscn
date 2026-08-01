@@ -108,6 +108,7 @@ script = ExtResource("2_6otjv")
 plant_type = 6
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
+plant_sun_cost = 175.0
 [node name="BodyCorrect" parent="Body" index="0"]
 unique_name_in_owner = true
 position = Vector2(-43, -69)
@@ -258,7 +259,7 @@ script = ExtResource("3_4556a")
 attack_bullet_type = 2
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Anim_stem/stem_correct/Marker2DBullet")]
 close_spray_hits_to_freeze = 5
-close_spray_freeze_time = 2.0
+close_spray_freeze_time = 4.0
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=384645410]
 unique_name_in_owner = true

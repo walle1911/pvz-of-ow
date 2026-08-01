@@ -2,6 +2,7 @@ extends Control
 class_name NumericalEditor
 
 const Store := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const SceneBaker := preload("res://scripts/resources/numerical_adjustment_scene_baker.gd")
 const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
 const L10n := preload("res://scripts/ui/numerical_editor/numerical_editor_localization.gd")
 const ALMANAC_PANEL := preload("res://scenes/almanac/almanac_character_show_panel.tscn")
@@ -300,6 +301,8 @@ func _build_detail_page() -> void:
 
 	detail_page.add_child(_index_texture_button("返回选卡" if return_to_workshop else "返回卡片", Vector2(16, 568), _back_from_detail))
 	detail_page.add_child(_small_texture_button("恢复默认", Vector2(470, 568), _reset_current_character))
+	if OS.has_feature("editor"):
+		detail_page.add_child(_index_texture_button("烘焙到 .tscn", Vector2(735, 568), _bake_current_character))
 	detail_page.add_child(_close_texture_button("保存并返回" if return_to_workshop else "保存", Vector2(930 if return_to_workshop else 955, 568), _save_changes))
 
 
@@ -839,6 +842,29 @@ func _save_changes() -> void:
 			status_label.text = "已保存，将对所有后续对局全局生效"
 	else:
 		status_label.text = "保存失败，请检查游戏存档目录"
+
+
+func _bake_current_character() -> void:
+	if not OS.has_feature("editor"):
+		status_label.text = "只有从 Godot 编辑器运行时才能写入 .tscn"
+		return
+	if not Store.save_data(pending_data):
+		status_label.text = "烘焙前保存调整失败"
+		return
+	var result := SceneBaker.bake_character(selected_scene_path, pending_data)
+	if not result["ok"]:
+		status_label.text = "烘焙失败：%s" % str(result["error"])
+		return
+	var baked_record := {selected_scene_path: (pending_data["characters"] as Dictionary)[selected_scene_path]}
+	var manifest_result := SceneBaker.record_baked_characters(baked_record)
+	if not manifest_result["ok"]:
+		status_label.text = "场景已写入，但烘焙清单保存失败：%s" % str(manifest_result["error"])
+		return
+	pending_data = (result["remaining_data"] as Dictionary).duplicate(true)
+	if not Store.save_data(pending_data):
+		status_label.text = "场景已写入，但清理临时覆盖失败"
+		return
+	status_label.text = "已将 %d 个数值写入 %s" % [int(result["property_count"]), selected_scene_path.get_file()]
 
 
 func _reset_current_character() -> void:

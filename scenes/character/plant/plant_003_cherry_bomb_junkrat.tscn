@@ -334,6 +334,7 @@ plant_type = 3
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("BombComponent/Area2DBomb")]
 
+plant_sun_cost = 150.0
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-42, -67)
 

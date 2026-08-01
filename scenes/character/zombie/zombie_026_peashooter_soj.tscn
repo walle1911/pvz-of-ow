@@ -295,7 +295,7 @@ visible = false
 
 [node name="HpComponent" parent="." index="4"]
 visible = false
-max_hp = 300
+max_hp = 8000.0
 
 [node name="AttackComponent" parent="." index="6"]
 visible = false

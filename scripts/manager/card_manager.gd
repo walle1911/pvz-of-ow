@@ -13,6 +13,8 @@ var is_norm_appeared:=false
 
 ## 传送带卡槽
 var card_slot_conveyor_belt: CardSlotConveyorBelt
+## 排位模式独立奖励卡槽；横向放在铲子右侧。
+var ranked_reward_card_slot:RankedRewardCardSlot
 
 ## 金币卡槽
 var card_slot_coin: CardSlotCoin
@@ -80,10 +82,17 @@ func init_manager() -> void:
 			card_slot_coin.init_card_slot_coin(game_para)
 			card_slot_battle_coin = card_slot_coin.card_slot_battle_coin
 			card_slot_root.curr_cards = card_slot_battle_coin.curr_cards
+	if game_para.is_ranked_mode:
+		ranked_reward_card_slot = load("res://scenes/card_slot/ranked_reward_card_slot.tscn").instantiate()
+		ranked_reward_card_slot.name = "RankedRewardCardSlot"
+		canvas_layer_card_slot_front.add_child(ranked_reward_card_slot)
+		ranked_reward_card_slot.visible = false
 
 ## 开始下一轮游戏更新卡片管理器
 func start_next_game_card_manager_update():
 	card_slot_root.ui_shovel.visible = false
+	if is_instance_valid(ranked_reward_card_slot):
+		ranked_reward_card_slot.visible = false
 	if is_seed_rain:
 		card_slot_seed_rain.pause_seed_rain()
 
@@ -144,6 +153,25 @@ func card_slot_update_main_game():
 					card.card_change_cool_time(0)
 	if is_shovel:
 		card_slot_root.ui_shovel.visible = true
+	if is_instance_valid(ranked_reward_card_slot):
+		await get_tree().process_frame
+		_layout_ranked_reward_card_slot()
+		ranked_reward_card_slot.visible = true
+
+func _layout_ranked_reward_card_slot() -> void:
+	if not is_instance_valid(ranked_reward_card_slot) or not is_instance_valid(card_slot_battle):
+		return
+	var shovel_rect := card_slot_root.ui_shovel.get_global_rect()
+	var battle_rect := card_slot_battle.get_global_rect()
+	ranked_reward_card_slot.global_position = Vector2(shovel_rect.end.x, battle_rect.position.y)
+
+func enqueue_ranked_plant_reward(plant_type:CharacterRegistry.PlantType) -> void:
+	if is_instance_valid(ranked_reward_card_slot):
+		ranked_reward_card_slot.enqueue_ranked_reward(&"plant", int(plant_type))
+
+func enqueue_ranked_zombie_reward(zombie_type:CharacterRegistry.ZombieType) -> void:
+	if is_instance_valid(ranked_reward_card_slot):
+		ranked_reward_card_slot.enqueue_ranked_reward(&"zombie", int(zombie_type))
 
 ## 待选卡槽卡槽消失
 func card_slot_disappear_choose():

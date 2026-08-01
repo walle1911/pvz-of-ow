@@ -127,6 +127,8 @@ boost_duration = 12.0
 plant_type = 36
 init_be_attack_status = 2
 
+plant_cool_time = 25.0
+plant_sun_cost = 100.0
 [node name="Shadow" parent="." index="0"]
 visible = false
 

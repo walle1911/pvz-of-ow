@@ -140,6 +140,7 @@ is_sleep_in_day = true
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent"), NodePath("ScaredyComponent")]
 
+plant_sun_cost = 50.0
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-36, -72)
 
@@ -267,7 +268,7 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1589178663 node_paths=PackedStringArray("markers_2d_bullet")]
 script = ExtResource("20_wh8am")
-attack_value_bullet = 270
+attack_value_bullet = 75.0
 attack_cd = 5.0
 attack_bullet_type = 19
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]

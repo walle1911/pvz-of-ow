@@ -96,6 +96,8 @@ var ladder:Ladder
 ## 植物种植和死亡信号
 signal signal_plant_create(plant_cell:PlantCell, plant_type:CharacterRegistry.PlantType)
 signal signal_plant_free(plant_cell:PlantCell, plant_type:CharacterRegistry.PlantType)
+signal signal_plant_created_instance(plant_cell:PlantCell, plant:Plant000Base)
+signal signal_plant_freed_instance(plant_cell:PlantCell, plant:Plant000Base)
 
 #region 植物格子初始化
 func _ready() -> void:
@@ -239,6 +241,7 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 			plant_container_node[CharacterRegistry.PlacePlantInCell.Shell].global_position = plant_postion_node_ori_global_position[CharacterRegistry.PlacePlantInCell.Shell] - plant.plant_up_position
 
 	signal_plant_create.emit(self, plant.plant_type)
+	signal_plant_created_instance.emit(self, plant)
 
 	return plant
 
@@ -320,7 +323,9 @@ func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:f
 ## 咖啡豆唤醒在睡眠中的植物
 func coffee_bean_awake_up():
 	if is_instance_valid(plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]):
-		plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm].coffee_bean_awake_up()
+		var target_plant:Plant000Base = plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
+		target_plant.set_meta(&"ranked_permanent_awake", true)
+		target_plant.coffee_bean_awake_up()
 	else:
 		print("没有睡眠植物")
 
@@ -330,6 +335,7 @@ func get_new_plant_static_shadow_global_position(place_plant_in_cell:CharacterRe
 
 ## 植物死亡
 func one_plant_free(plant:Plant000Base):
+	signal_plant_freed_instance.emit(self, plant)
 	var curr_plant_condition :ResourcePlantCondition = Global.character_registry.get_plant_info(plant.plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 
 	## 如果没有种植条件（如模仿者），清理 Imitater 位置后直接返回

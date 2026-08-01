@@ -69,6 +69,8 @@ const SIMPLE_FLAG_ZOMBIE_CANDIDATES := [
 const UNSELECTED_CARD_MODULATE := Color(0.55, 0.55, 0.55, 0.72)
 const ACTIVE_SOURCE_BUTTON_MODULATE := Color(0.67, 0.62, 0.56, 1.0)
 const ACTIVE_SOURCE_BUTTON_OFFSET_Y := 4.0
+const CARD_CONTEXT_EDIT_GLOBAL := 0
+const CARD_CONTEXT_SET_REQUIRED_WAVE := 1
 
 enum TimelineMode { NORMAL, PLACE_FLAG }
 enum CatalogMode { SPAWN_ZOMBIES, REWARD_CARDS }
@@ -1795,6 +1797,8 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		_simple_zombie_pool().has(zombie_type) if _is_simple_mode()
 		else not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
 	)
+	if _is_simple_mode() and _can_set_simple_required_wave(zombie_type):
+		card.tooltip_text += "\n右键%s设置必定登场波次" % ("" if selected else "加入本关并")
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
@@ -1809,6 +1813,8 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		_add_simple_role_checkbox(holder, zombie_type, simple_role)
 	if required_simple_zombie:
 		_add_card_state_glow(holder, Color("d77835"))
+	elif selected and _has_simple_required_wave(zombie_type):
+		_add_card_state_badge(holder, "必", Color("3f8f63"))
 	return holder
 
 
@@ -1931,17 +1937,34 @@ func _on_workshop_card_gui_input(event: InputEvent, kind: String, type_id: int) 
 	context_card_type = type_id
 	if not is_instance_valid(card_context_menu):
 		card_context_menu = PopupMenu.new()
-		card_context_menu.add_item("编辑全局数值", 0)
 		card_context_menu.id_pressed.connect(_on_card_context_menu_pressed)
 		add_child(card_context_menu)
 		_force_font_recursive(card_context_menu)
+	card_context_menu.clear()
+	card_context_menu.add_item("编辑全局数值", CARD_CONTEXT_EDIT_GLOBAL)
+	if kind == "zombie" and _is_simple_mode():
+		card_context_menu.add_separator()
+		card_context_menu.add_item("设置必定登场波次", CARD_CONTEXT_SET_REQUIRED_WAVE)
+		card_context_menu.set_item_disabled(
+			card_context_menu.get_item_index(CARD_CONTEXT_SET_REQUIRED_WAVE),
+			not _can_set_simple_required_wave(type_id)
+		)
 	card_context_menu.position = Vector2i(get_viewport().get_mouse_position())
 	card_context_menu.popup()
 	get_viewport().set_input_as_handled()
 
 
 func _on_card_context_menu_pressed(item_id: int) -> void:
-	if item_id != 0 or context_card_type < 0:
+	if context_card_type < 0:
+		return
+	if item_id == CARD_CONTEXT_SET_REQUIRED_WAVE:
+		if not _can_set_simple_required_wave(context_card_type):
+			return
+		if not _simple_zombie_pool().has(context_card_type):
+			_select_simple_zombie(str(context_card_type))
+		_open_simple_zombie_dialog(str(context_card_type))
+		return
+	if item_id != CARD_CONTEXT_EDIT_GLOBAL:
 		return
 	DraftStore.save_autosave(level)
 	Global.developer_workshop_level_source = level.duplicate(true)
@@ -2310,7 +2333,7 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 	title.add_theme_color_override("font_outline_color", Color("25263b"))
 	title.add_theme_constant_override("outline_size", 4)
 	dialog.add_child(title)
-	var hint := _paper_label("到达设定波次后保底首秀；战力不足会顺延，不会提前出现", Vector2(50, 91), Vector2(312, 42), 14, Color("d7bd80"))
+	var hint := _paper_label("设定波次必定登场，不受战力预算限制；最终波还会补齐本关全部允许僵尸", Vector2(50, 91), Vector2(312, 42), 14, Color("d7bd80"))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog.add_child(hint)
@@ -2319,7 +2342,7 @@ func _open_simple_zombie_dialog(zombie_key: String) -> void:
 	var current_intro_wave := 1 if fixed_zombie else _simple_intro_wave(zombie_type)
 	var intro_wave := _settings_spin(
 		dialog,
-		"最早登场波次",
+		"必定登场波次",
 		Vector2(101, 137),
 		1,
 		clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10,
@@ -2399,7 +2422,8 @@ func _set_simple_intro_wave(zombie_type: int, intro_wave: int) -> void:
 		intro_wave, 1, clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
 	)
 	level["simpleZombieIntroWaves"] = intro_waves
-	_changed("%s最早从第 %d 波登场" % [_zombie_name(str(zombie_type)), int(intro_waves[str(zombie_type)])])
+	_changed("%s将在第 %d 波必定登场" % [_zombie_name(str(zombie_type)), int(intro_waves[str(zombie_type)])])
+	_refresh_card_page()
 	_refresh_wave()
 
 
@@ -3194,6 +3218,19 @@ func _simple_zombie_pool() -> Array[int]:
 func _simple_intro_wave(zombie_type: int) -> int:
 	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {})
 	return maxi(1, int(intro_waves.get(str(zombie_type), intro_waves.get(zombie_type, 1))))
+
+
+func _has_simple_required_wave(zombie_type: int) -> bool:
+	var intro_waves: Dictionary = level.get("simpleZombieIntroWaves", {})
+	return intro_waves.has(str(zombie_type)) or intro_waves.has(zombie_type)
+
+
+func _can_set_simple_required_wave(zombie_type: int) -> bool:
+	return _has_original_pick_weight(zombie_type) \
+		and zombie_type != _simple_base_zombie_type() \
+		and zombie_type != _simple_flag_zombie_type() \
+		and zombie_type != int(CharacterRegistry.ZombieType.Z520Bungi) \
+		and not (level.get("simpleOnceFinalZombies", []) as Array).has(zombie_type)
 
 
 func _recommended_simple_intro_wave(zombie_type: int) -> int:

@@ -21,3 +21,5 @@ class_name ResourceSaveGameMainGame
 
 @export_group("小推车数据")
 @export var lawn_mover_manager_data:Dictionary = {}
+@export_group("排位模式数据")
+@export var ranked_mode_data:Dictionary = {}

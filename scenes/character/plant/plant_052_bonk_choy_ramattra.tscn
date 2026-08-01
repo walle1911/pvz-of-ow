@@ -24,6 +24,8 @@ is_plant_food = false
 plant_type = 52
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("DetectComponent/FrontArea"), NodePath("DetectComponent/BackArea")]
 
+plant_cool_time = 30.0
+plant_sun_cost = 150.0
 [node name="Shadow" parent="." index="0"]
 scale = Vector2(1.25, 0.85)
 
@@ -68,3 +70,7 @@ collision_mask = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectComponent/BackArea" index="0" unique_id=522534326]
 position = Vector2(-2, 7)
 shape = SubResource("RectangleShape2D_attack")
+
+
+[node name="HpComponent" parent="."]
+max_hp = 1200.0

@@ -18,7 +18,7 @@ const MOVED_CHESSBOARD_LEVELS: Array[ResourceLevelData] = [
 	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_02_ten_rounds.tres"),
 	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_03_endless.tres"),
 ]
-const MOVED_CHESSBOARD_NAMES := ["棋盘格·十旗", "棋盘格·十轮", "棋盘格·无尽"]
+const MOVED_CHESSBOARD_NAMES := ["棋盘格·十旗", "棋盘格·十轮", "排位模式"]
 
 ## 用于生成关卡 ID 的计数
 var next_level_number: int = 1

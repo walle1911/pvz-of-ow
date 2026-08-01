@@ -129,6 +129,7 @@ plant_type = 43
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
+plant_sun_cost = 125.0
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-39, -67)
 
@@ -315,6 +316,7 @@ attack_cd = 2.0
 attack_bullet_type = 4
 attack_sfx = &"Fume"
 
+attack_value_bullet = 15.0
 [node name="DetectComponent" type="Node2D" parent="AttackComponent" index="0" unique_id=1334402744]
 script = ExtResource("18_xweqa")
 is_lane = false

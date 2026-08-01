@@ -833,7 +833,26 @@ func get_plant_info(plant_type:PlantType, info_attribute:PlantInfoAttribute):
 	if plant_scene == null:
 		return default_value
 	var property_name := "plant_cool_time" if info_attribute == PlantInfoAttribute.CoolTime else "plant_sun_cost"
-	return _get_developer_plant_registry_value(plant_scene.resource_path, property_name, default_value)
+	var baked_value = _get_baked_plant_scene_value(plant_scene, property_name, default_value)
+	return _get_developer_plant_registry_value(plant_scene.resource_path, property_name, baked_value)
+
+
+func _get_baked_plant_scene_value(plant_scene: PackedScene, property_name: String, fallback):
+	var state := plant_scene.get_state()
+	if state.get_node_count() == 0:
+		return fallback
+	var value = null
+	for property_index in state.get_node_property_count(0):
+		if str(state.get_node_property_name(0, property_index)) == property_name:
+			value = state.get_node_property_value(0, property_index)
+			break
+	if value == null:
+		return fallback
+	if property_name == "plant_sun_cost":
+		return int(value) if int(value) >= 0 else fallback
+	if property_name == "plant_cool_time":
+		return float(value) if float(value) >= 0.01 else fallback
+	return fallback
 
 
 ## 注册表是 Global 的组成部分，不能依赖数值存储脚本新增的静态接口，否则

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/card/card_slot/ranked_reward_card_slot.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxReward"]
+bg_color = Color(0.31, 0.13, 0.045, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.58, 0.27, 0.075, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[node name="RankedRewardCardSlot" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 90)
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxReward")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="CardArea" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 0

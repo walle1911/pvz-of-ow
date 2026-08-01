@@ -598,6 +598,10 @@ func save_game_main_game():
 	save_game_data_main_game.card_manager_data = card_manager.get_save_game_data_card_manager()
 	## 小推车数据
 	save_game_data_main_game.lawn_mover_manager_data = game_item_manager.gim_lawn_mover.get_save_game_data_lawn_mover_manager()
+	if game_para.is_ranked_mode:
+		var ranked_controller:Node = get_node_or_null("ChessboardMode")
+		if is_instance_valid(ranked_controller) and ranked_controller.has_method("get_ranked_save_data"):
+			save_game_data_main_game.ranked_mode_data = ranked_controller.get_ranked_save_data()
 
 	var path = game_para.get_save_game_path()
 	var err = ResourceSaver.save(save_game_data_main_game, path)

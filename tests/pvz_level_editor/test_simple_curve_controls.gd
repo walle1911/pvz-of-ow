@@ -88,7 +88,7 @@ func _ready() -> void:
 	]
 	intro_level["simpleZombieIntroWaves"] = {
 		str(int(CharacterRegistry.ZombieType.Z002ConeTalon)): 7,
-		str(int(CharacterRegistry.ZombieType.Z013ZomboniShion)): 10,
+		str(int(CharacterRegistry.ZombieType.Z013ZomboniShion)): 1,
 	}
 	var intro_built := Runtime.build_game_para(Logic.normalize_level(intro_level))
 	assert(intro_built["ok"], intro_built["error"])
@@ -100,13 +100,28 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var wave_creator := main_scene.get_node("Manager/ZombieManager/ZombieWaveManager/ZombieWaveCreateManager") as ZombieWaveCreateManager
+	assert(wave_creator.simple_wave_plan.size() == 10)
+	## 原版先强制插入新登场僵尸，再随机填充；即使第 1 波预算只有 1，
+	## 战力为 7 的冰车也必须出现并允许本波超预算。
+	var forced_over_budget: Array[CharacterRegistry.ZombieType] = wave_creator.create_curr_wave_zombie_list(0, false)
+	assert(forced_over_budget.has(CharacterRegistry.ZombieType.Z013ZomboniShion))
+	assert(_zombie_power_total(forced_over_budget) > wave_creator.calculate_wave_power_limit(0, false))
+	assert(wave_creator.calculate_wave_power_limit(9, true) == 10)
 	var before_intro: Array[CharacterRegistry.ZombieType] = wave_creator.create_curr_wave_zombie_list(3, false)
 	assert(not before_intro.has(CharacterRegistry.ZombieType.Z002ConeTalon))
 	var cone_intro: Array[CharacterRegistry.ZombieType] = wave_creator.create_curr_wave_zombie_list(6, false)
 	assert(cone_intro.has(CharacterRegistry.ZombieType.Z002ConeTalon))
+	assert(wave_creator.zombie_weights[CharacterRegistry.ZombieType.Z000NormTalon] < 4000)
+	assert(wave_creator.zombie_weights[CharacterRegistry.ZombieType.Z002ConeTalon] < 4000)
 	var flag_intro: Array[CharacterRegistry.ZombieType] = wave_creator.create_curr_wave_zombie_list(9, true)
+	## 最终波复刻 PutInMissingZombies：即使路障和冰车此前已经首秀，
+	## 最终波仍必须包含本关允许表中的每一种僵尸。
+	assert(flag_intro.has(CharacterRegistry.ZombieType.Z000NormTalon))
+	assert(flag_intro.has(CharacterRegistry.ZombieType.Z002ConeTalon))
 	assert(flag_intro.has(CharacterRegistry.ZombieType.Z013ZomboniShion))
-	assert(_zombie_power_total(flag_intro) <= wave_creator.calculate_wave_power_limit(9, true))
+	for index in 4:
+		assert(flag_intro[index] == CharacterRegistry.ZombieType.Z000NormTalon)
+	assert(flag_intro[4] == CharacterRegistry.ZombieType.Z001FlagTalon)
 	main_scene.queue_free()
 	await get_tree().process_frame
 	print("test_simple_curve_controls: PASS")

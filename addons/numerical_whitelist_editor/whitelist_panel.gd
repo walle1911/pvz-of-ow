@@ -2,15 +2,23 @@
 extends VBoxContainer
 
 const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
+const NumericalStore := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const SceneBaker := preload("res://scripts/resources/numerical_adjustment_scene_baker.gd")
 const CONFIG_PATH := "res://data/numerical_adjustment_whitelist.json"
 
 var scene_picker: OptionButton
 var search_edit: LineEdit
 var property_tree: Tree
 var status_label: Label
+var bake_button: Button
+var bake_progress: ProgressBar
+var bake_state_tree: Tree
 var scene_paths: Array[String] = []
 var current_scene_path := ""
 var current_instance: Node
+var last_baked_scene_count := 0
+var last_baked_property_count := 0
+var is_baking := false
 
 
 func _ready() -> void:
@@ -23,6 +31,27 @@ func _ready() -> void:
 	hint.text = "选择植物，勾选允许在“数值调整”中出现的参数。"
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(hint)
+	bake_button = Button.new()
+	bake_button.text = "烘焙全部开发者数值到角色 .tscn"
+	bake_button.tooltip_text = "把 user://numerical_adjustments.json 中的植物、僵尸数值写回项目角色场景，并清除已烘焙的临时覆盖。"
+	bake_button.pressed.connect(bake_all_numerical_adjustments)
+	add_child(bake_button)
+	bake_progress = ProgressBar.new()
+	bake_progress.visible = false
+	bake_progress.show_percentage = true
+	bake_progress.custom_minimum_size.y = 24
+	add_child(bake_progress)
+	var state_title := Label.new()
+	state_title.text = "烘焙状态（展开角色可查看字段）"
+	add_child(state_title)
+	bake_state_tree = Tree.new()
+	bake_state_tree.custom_minimum_size.y = 180
+	bake_state_tree.hide_root = true
+	add_child(bake_state_tree)
+	var refresh_state_button := Button.new()
+	refresh_state_button.text = "刷新烘焙清单"
+	refresh_state_button.pressed.connect(_refresh_bake_state)
+	add_child(refresh_state_button)
 	var toolbar := HBoxContainer.new()
 	add_child(toolbar)
 	scene_picker = OptionButton.new()
@@ -59,7 +88,146 @@ func _ready() -> void:
 	status_label = Label.new()
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(status_label)
+	_refresh_bake_state()
 	_scan_plants()
+
+
+func bake_all_numerical_adjustments() -> void:
+	if is_baking:
+		return
+	var data := NumericalStore.load_data(true).duplicate(true)
+	var characters = data.get("characters", {})
+	if not characters is Dictionary or characters.is_empty():
+		bake_progress.visible = false
+		if last_baked_scene_count > 0:
+			status_label.text = "没有新的待烘焙数据；本次会话上次已把 %d 个数值写入 %d 个角色 .tscn。" % [last_baked_property_count, last_baked_scene_count]
+		else:
+			status_label.text = "没有待烘焙数据：数值可能已经写入 .tscn，或者尚未在开发者模式保存。"
+		return
+	var scene_paths_to_bake: Array = characters.keys()
+	scene_paths_to_bake.sort()
+	is_baking = true
+	bake_button.disabled = true
+	bake_progress.visible = true
+	bake_progress.min_value = 0
+	bake_progress.max_value = scene_paths_to_bake.size()
+	bake_progress.value = 0
+	status_label.text = "准备烘焙 %d 个角色……" % scene_paths_to_bake.size()
+	await get_tree().process_frame
+	var remaining_data := data
+	var baked_scene_count := 0
+	var baked_property_count := 0
+	var baked_records: Dictionary = {}
+	var errors: Array[String] = []
+	for index in scene_paths_to_bake.size():
+		var scene_path := str(scene_paths_to_bake[index])
+		status_label.text = "正在烘焙 %d / %d：%s" % [index + 1, scene_paths_to_bake.size(), scene_path.get_file()]
+		var result := SceneBaker.bake_character(scene_path, remaining_data)
+		if result["ok"]:
+			remaining_data = result["remaining_data"]
+			baked_records[scene_path] = characters[scene_path]
+			baked_scene_count += 1
+			baked_property_count += int(result["property_count"])
+		else:
+			errors.append("%s：%s" % [scene_path.get_file(), str(result["error"])])
+		bake_progress.value = index + 1
+		await get_tree().process_frame
+	if baked_scene_count > 0:
+		var manifest_result := SceneBaker.record_baked_characters(baked_records)
+		if not manifest_result["ok"]:
+			status_label.text = "场景已写入，但烘焙清单保存失败：%s。待烘焙数据已保留。" % str(manifest_result["error"])
+			_finish_bake_progress()
+			return
+	if baked_scene_count > 0 and not NumericalStore.save_data(remaining_data):
+		status_label.text = "场景已写入，但清理 user:// 临时覆盖失败。请先不要继续调整。"
+		_finish_bake_progress()
+		return
+	last_baked_scene_count = baked_scene_count
+	last_baked_property_count = baked_property_count
+	_refresh_bake_state()
+	if errors.is_empty():
+		status_label.text = "完成：已把 %d 个数值烘焙到 %d 个角色 .tscn。即将刷新文件系统。" % [baked_property_count, baked_scene_count]
+	else:
+		status_label.text = "已写入 %d 个角色，%d 个失败：\n%s" % [baked_scene_count, errors.size(), "\n".join(errors)]
+	_finish_bake_progress()
+	## 先让 100% 进度与结果至少渲染两帧，再触发 Godot 的磁盘重载检查。
+	await get_tree().process_frame
+	await get_tree().process_frame
+	EditorInterface.get_resource_filesystem().scan()
+
+
+func _finish_bake_progress() -> void:
+	is_baking = false
+	if is_instance_valid(bake_button):
+		bake_button.disabled = false
+
+
+func _refresh_bake_state() -> void:
+	if not is_instance_valid(bake_state_tree):
+		return
+	bake_state_tree.clear()
+	var root := bake_state_tree.create_item()
+	var pending_data := NumericalStore.load_data(true)
+	var pending_characters = pending_data.get("characters", {})
+	var pending_count := _count_adjustment_properties(pending_characters)
+	var pending_root := bake_state_tree.create_item(root)
+	pending_root.set_text(0, "待烘焙：%d 个角色 / %d 个字段" % [pending_characters.size() if pending_characters is Dictionary else 0, pending_count])
+	_append_adjustment_tree(pending_root, pending_characters, false)
+	var manifest := SceneBaker.load_manifest()
+	var baked_characters = manifest.get("characters", {})
+	var baked_values: Dictionary = {}
+	if baked_characters is Dictionary:
+		for scene_path_value in baked_characters:
+			var record = baked_characters[scene_path_value]
+			if record is Dictionary and record.get("values") is Dictionary:
+				baked_values[str(scene_path_value)] = record["values"]
+	var baked_root := bake_state_tree.create_item(root)
+	baked_root.set_text(0, "已烘焙：%d 个角色 / %d 个字段" % [baked_values.size(), _count_adjustment_properties(baked_values)])
+	_append_adjustment_tree(baked_root, baked_values, true)
+	pending_root.collapsed = pending_count == 0
+	baked_root.collapsed = false
+
+
+func _append_adjustment_tree(parent: TreeItem, characters, include_values: bool) -> void:
+	if not characters is Dictionary:
+		return
+	var paths: Array = characters.keys()
+	paths.sort()
+	for scene_path_value in paths:
+		var scene_path := str(scene_path_value)
+		var character_data = characters[scene_path_value]
+		if not character_data is Dictionary:
+			continue
+		var character_item := bake_state_tree.create_item(parent)
+		character_item.set_text(0, "%s（%d）" % [scene_path.get_file(), _count_character_properties(character_data)])
+		character_item.set_tooltip_text(0, scene_path)
+		character_item.collapsed = true
+		for node_path_value in character_data:
+			var node_values = character_data[node_path_value]
+			if not node_values is Dictionary:
+				continue
+			for property_name_value in node_values:
+				var property_item := bake_state_tree.create_item(character_item)
+				var field_name := "%s/%s" % [str(node_path_value), str(property_name_value)]
+				property_item.set_text(0, "%s = %s" % [field_name, str(node_values[property_name_value])] if include_values else field_name)
+
+
+func _count_adjustment_properties(characters) -> int:
+	if not characters is Dictionary:
+		return 0
+	var total := 0
+	for character_data in characters.values():
+		if character_data is Dictionary:
+			total += _count_character_properties(character_data)
+	return total
+
+
+func _count_character_properties(character_data: Dictionary) -> int:
+	var total := 0
+	for node_values in character_data.values():
+		if node_values is Dictionary:
+			total += node_values.size()
+	return total
 
 
 func _exit_tree() -> void:

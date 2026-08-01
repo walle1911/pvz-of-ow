@@ -101,7 +101,7 @@ height = 495.001
 
 [node name="Plant032MagnetShroomSombra" unique_id=1063671644 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_la5fr")]
 script = ExtResource("2_fmi46")
-emp_radius = 120.0
+emp_radius = 80.0
 emp_duration = 3.0
 emp_switch_interval = 0.8
 emp_switch_interval_randomness = 0.25
@@ -112,6 +112,7 @@ plant_type = 32
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("MagnetComponent/Area2D")]
 
+plant_cool_time = 25.0
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-43, -68)
 

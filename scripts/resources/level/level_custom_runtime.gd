@@ -114,7 +114,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.custom_huge_wave_warning_delay = float(level.get("hugeWaveWarningDelay", 6.0))
 	game_para.force_second_zombie_same_lane_as_first = false
 	if is_simple_mode:
-		## 简易关卡沿用自然波次管理器，在每波开始时按实时权重抽取僵尸。
+		## 简易关卡沿用自然波次管理器，并在管理器初始化时按权重预生成整关波表。
 		game_para.custom_simple_original_mode = true
 		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon)) as CharacterRegistry.ZombieType
 		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon)) as CharacterRegistry.ZombieType

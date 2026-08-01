@@ -14,6 +14,8 @@ const ORIGINAL_ZOMBIE_SCRIPT_PREFIX := "res://scripts/character/zombie/original/
 
 #region 僵尸类基础属性
 @export var zombie_type:CharacterRegistry.ZombieType
+## 数值工坊“烘焙到场景”写入的正式刷新档位；0 表示沿用代码默认权重。
+@export_range(0, 7, 1) var zombie_spawn_weight: int = 0
 ## 僵尸基础属性参数，_ready初始化
 @export_group("僵尸基础属性")
 ## 是否忽略梯子,即可以攻击梯子下的植物

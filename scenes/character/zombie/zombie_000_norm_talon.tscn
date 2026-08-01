@@ -1854,7 +1854,7 @@ body_change = Array[ExtResource("51_35kym")]([SubResource("Resource_7rguq"), Sub
 unique_name_in_owner = true
 z_index = 10
 script = ExtResource("42_iou0j")
-max_hp = 270
+max_hp = 350.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HpComponent" unique_id=1738286431]
 anchors_preset = 8
@@ -2086,6 +2086,7 @@ libraries/ = SubResource("AnimationLibrary_bab66")
 unique_name_in_owner = true
 script = ExtResource("61_wanxm")
 
+init_attack_value_per_min = 125.0
 [node name="DetectComponent" type="Node2D" parent="AttackComponent" unique_id=143642084]
 unique_name_in_owner = true
 script = ExtResource("62_hbvro")
@@ -2105,6 +2106,7 @@ shape = SubResource("RectangleShape2D_t14t4")
 unique_name_in_owner = true
 script = ExtResource("63_x64et")
 
+ori_speed = 30.0
 [node name="SwimBoxComponent" type="Node2D" parent="." unique_id=420196999]
 unique_name_in_owner = true
 script = ExtResource("55_b4qrn")

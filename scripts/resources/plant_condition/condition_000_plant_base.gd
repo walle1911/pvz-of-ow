@@ -55,8 +55,16 @@ func _is_chessboard_reward_card(curr_plant_type: CharacterRegistry.PlantType) ->
 func _judge_chessboard_reward_plant(plant_cell: PlantCell, curr_plant_type: CharacterRegistry.PlantType) -> bool:
 	if not plant_cell.can_common_plant or is_instance_valid(plant_cell.plant_in_cell[place_plant_in_cell]):
 		return false
-	# OW 香蒲奖励卡可以不依赖睡莲，直接落在水池格。
-	if curr_plant_type == CharacterRegistry.PlantType.P044CattailJetpackCat:
+	# 排位模式的三种 OW 水生奖励可直接落在草地，地形本身不改变。
+	if curr_plant_type in [
+		CharacterRegistry.PlantType.P020TangleKelpMizuki,
+		CharacterRegistry.PlantType.P025SeaShroomWuyang,
+		CharacterRegistry.PlantType.P044CattailJetpackCat,
+	]:
+		if Global.main_game.game_para.is_ranked_mode:
+			var chessboard:Node = Global.main_game.get_node_or_null("ChessboardMode")
+			return plant_cell.plant_cell_type == PlantCell.PlantCellType.Grass \
+				and (not is_instance_valid(chessboard) or chessboard.can_create_fake_water(plant_cell))
 		return plant_cell.plant_cell_type == PlantCell.PlantCellType.Pool
 	return bool(plant_condition & plant_cell.curr_condition)
 

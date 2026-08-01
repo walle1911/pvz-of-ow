@@ -88,6 +88,7 @@ heal_ripple_expand_ease = 2.0
 plant_type = 4
 is_can_ladder = true
 
+plant_sun_cost = 50.0
 [node name="Shadow" parent="." index="0"]
 position = Vector2(0, -5)
 

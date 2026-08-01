@@ -125,6 +125,7 @@ node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePat
 metadata/_edit_vertical_guides_ = [-228.0]
 metadata/_edit_horizontal_guides_ = [-107.0]
 
+plant_sun_cost = 175.0
 [node name="Body" parent="." index="1"]
 position = Vector2(28.7, 0)
 
