@@ -7,8 +7,8 @@ const L10n := preload("res://scripts/ui/numerical_editor/numerical_editor_locali
 const ALMANAC_PANEL := preload("res://scenes/almanac/almanac_character_show_panel.tscn")
 
 const CHALLENGE_BACKGROUND := preload("res://assets/image/ui/ui_level/Challenge_Background.jpg")
-const PLANT_BACKGROUND := preload("res://assets/image/Almanac/Almanac_PlantBack.jpg")
-const ZOMBIE_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack.jpg")
+## 数值调整页使用无虚线网格的宽屏图鉴底图，比例与项目 1066×600 视口一致。
+const DETAIL_BACKGROUND := preload("res://assets/image/Almanac/Almanac_ZombieBack1.png")
 const ALMANAC_PLANT_CARD := preload("res://assets/image/Almanac/Almanac_PlantCard.png")
 const ALMANAC_ZOMBIE_CARD := preload("res://assets/image/Almanac/Almanac_ZombieCard.png")
 const ALMANAC_GROUND_DAY := preload("res://assets/image/Almanac/Almanac_GroundDay.jpg")
@@ -40,11 +40,26 @@ const BASIC_PARAMETER_PROPERTIES := {
 	"smash_attack_value": 17,
 	"plant_food_attack_value": 18,
 	"bullet_attack_values": 19,
-	"uppercut_attack_multiplier": 20,
-	"slam_current_hp_ratio": 21,
-	"bullet_damage_multiplier": 22,
-	"damage_multiplier": 23,
-	"damage_boost_multiplier": 24,
+	"direct_attack_damage": 20,
+	"guidance_attack_damage": 21,
+	"giant_pea_attack_value": 22,
+	"downpour_damage": 23,
+	"max_skill_damage": 24,
+	"tire_bomb_damage": 25,
+	"center_lane_damage": 26,
+	"edge_lane_damage": 27,
+	"pea_attack_damage": 28,
+	"laser_penetration_damage": 29,
+	"attack_cd": 30,
+	"direct_attack_interval": 31,
+	"guidance_attack_interval": 32,
+	"bullet_attack_intervals": 33,
+	"uppercut_attack_multiplier": 40,
+	"slam_current_hp_ratio": 41,
+	"bullet_damage_multiplier": 42,
+	"damage_multiplier": 43,
+	"damage_boost_multiplier": 44,
+	"damage_reduction": 45,
 }
 const REWORK_COMPONENT_SCRIPTS := {
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_fume_shroom_roadhog.gd": true,
@@ -240,7 +255,7 @@ func _open_detail(item: Dictionary) -> void:
 func _build_detail_page() -> void:
 	_clear(detail_page)
 	var is_plant: bool = selected_item["kind"] == "plant"
-	detail_page.add_child(_full_background(PLANT_BACKGROUND if is_plant else ZOMBIE_BACKGROUND))
+	detail_page.add_child(_full_background(DETAIL_BACKGROUND))
 
 	var title := _title_label("数值调整——%s" % selected_item["display_name"], Color("e4a100") if is_plant else Color(0, 1, 0))
 	detail_page.add_child(title)
@@ -332,12 +347,16 @@ func _build_character_fields(scene_path: String) -> void:
 		var properties := _tunable_properties(node, instance)
 		for property_info in properties:
 			var field := {"node": node, "property_info": property_info}
-			if _is_rework_skill_node(node):
-				rework_fields.append(field)
-			elif BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
+			## 基础战斗数值优先于脚本归属；改版脚本里的伤害也统一放在基础参数。
+			if BASIC_PARAMETER_PROPERTIES.has(str(property_info["name"])):
 				basic_fields.append(field)
+			elif _is_rework_skill_node(node):
+				rework_fields.append(field)
 			else:
 				normal_fields.append(field)
+	basic_fields = _remove_basic_parameter_aliases(instance, basic_fields)
+	basic_fields = _remove_derived_component_fields(instance, basic_fields, rework_fields)
+	normal_fields = _remove_derived_component_fields(instance, normal_fields, rework_fields)
 	var registry_fields: Array[String] = []
 	if selected_item.get("kind", "") == "plant":
 		registry_fields.assign(["plant_sun_cost", "plant_cool_time"])
@@ -371,6 +390,94 @@ func _build_character_fields(scene_path: String) -> void:
 	instance.free()
 	if field_count == 0:
 		_add_empty_field("这个角色还没有开放可调数值。")
+
+
+## 根脚本和攻击组件同时暴露同一基础伤害/间隔时，只保留运行时权威入口。
+## 改版射击角色以通用攻击组件为准；原版本体攻击则保留根脚本字段。
+func _remove_basic_parameter_aliases(
+	root: Node,
+	basic_fields: Array[Dictionary]
+) -> Array[Dictionary]:
+	var root_is_rework := _is_rework_skill_node(root)
+	var has_root_attack_value := false
+	var has_root_attack_cd := false
+	var has_component_bullet_damage := false
+	var has_component_attack_cd := false
+	for field in basic_fields:
+		var property_info: Dictionary = field["property_info"]
+		var property_name := str(property_info.get("name", ""))
+		if field["node"] == root:
+			has_root_attack_value = has_root_attack_value or property_name == "attack_value"
+			has_root_attack_cd = has_root_attack_cd or property_name == "attack_cd"
+		else:
+			has_component_bullet_damage = has_component_bullet_damage or property_name == "attack_value_bullet"
+			has_component_attack_cd = has_component_attack_cd or property_name == "attack_cd"
+	var result: Array[Dictionary] = []
+	for field in basic_fields:
+		var property_info: Dictionary = field["property_info"]
+		var property_name := str(property_info.get("name", ""))
+		var is_root_field:bool = field["node"] == root
+		if root_is_rework:
+			if is_root_field and property_name == "attack_value" and has_component_bullet_damage:
+				continue
+			if is_root_field and property_name == "attack_cd" and has_component_attack_cd:
+				continue
+		else:
+			if not is_root_field and property_name == "attack_value_bullet" and has_root_attack_value:
+				continue
+			if not is_root_field and property_name == "attack_cd" and has_root_attack_cd:
+				continue
+		result.append(field)
+	return result
+
+
+## 某些改版组件会把专属参数同步到通用 AttackComponent 字段供运行时使用。
+## 通用字段在这里是派生缓存，不应再作为第二个可调入口显示。
+func _remove_derived_component_fields(
+	root: Node,
+	fields: Array[Dictionary],
+	rework_fields: Array[Dictionary]
+) -> Array[Dictionary]:
+	var root_rework_properties: Dictionary = {}
+	for field in rework_fields:
+		if field["node"] != root:
+			continue
+		var property_info: Dictionary = field["property_info"]
+		root_rework_properties[str(property_info.get("name", ""))] = true
+	var result: Array[Dictionary] = []
+	for field in fields:
+		var node: Node = field["node"]
+		var property_info: Dictionary = field["property_info"]
+		var property_name := str(property_info.get("name", ""))
+		var script := node.get_script() as Script
+		var script_path := script.resource_path if script != null else ""
+		if script_path == "res://scripts/character/components/attack_behavior_component/component_attack_bullet_sea_shroom_wuyang.gd" \
+			and property_name in ["attack_value_bullet", "attack_cd"]:
+			continue
+		if script_path == "res://scripts/character/components/attack_behavior_component/component_attack_bullet_gatling_pea_bastion.gd" \
+			and property_name == "attack_value_bullet":
+			continue
+		if script_path == "res://scripts/character/components/attack_behavior_component/component_attack_bullet_three_pea.gd" \
+			and property_name == "attack_value_bullet":
+			var dedicated_values = node.get("bullet_attack_values")
+			if dedicated_values is Array and not dedicated_values.is_empty():
+				var all_dedicated := true
+				for value in dedicated_values:
+					if int(value) <= 0:
+						all_dedicated = false
+						break
+				if all_dedicated:
+					continue
+		if property_name == "attack_cd" and node != root and root_rework_properties.has("attack_cd"):
+			var root_value = _effective_value(".", "attack_cd", root.get("attack_cd"))
+			var component_value = _editor_original_value(node, property_name, _effective_value(
+				str(root.get_path_to(node)), property_name, node.get(property_name)
+			))
+			if typeof(root_value) in [TYPE_INT, TYPE_FLOAT] and typeof(component_value) in [TYPE_INT, TYPE_FLOAT] \
+				and is_equal_approx(float(root_value), float(component_value)):
+				continue
+		result.append(field)
+	return result
 
 
 func _all_nodes(root: Node) -> Array[Node]:
@@ -482,10 +589,10 @@ func _add_registry_property_editor(property_name:String) -> void:
 	if is_spawn_weight:
 		var grade_select := OptionButton.new()
 		grade_select.custom_minimum_size.x = 220
-		grade_select.tooltip_text = "只允许选择安全档位；内部概率与随波次变化算法保持不变。"
-		for grade_text in ["A（极高）", "B（很高）", "C（高）", "D（中）", "E（较低）", "F（低）"]:
+		grade_select.tooltip_text = "Boss 档不进随机池，仅于最后一波各强制刷 1 只；其余档位保持原有概率算法。"
+		for grade_text in ["A（极高）", "B（很高）", "C（高）", "D（中）", "E（较低）", "F（低）", "Boss（必定上场）"]:
 			grade_select.add_item(grade_text)
-		grade_select.select(clampi(int(current_value), 1, 6) - 1)
+		grade_select.select(clampi(int(current_value), 1, 7) - 1)
 		grade_select.item_selected.connect(
 			func(index): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(index) + 1)
 		)

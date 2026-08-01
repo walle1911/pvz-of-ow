@@ -19,6 +19,8 @@ var range_num_bungi:Vector2i = Vector2i(3,5)
 
 ## 僵尸选行系统
 @onready var zombie_choose_row_system: ZombieChooseRowSystem = %ZombieChooseRowSystem
+## 通过权重档位 Boss（第 7 档）标记的一次性终局僵尸。
+var boss_by_weight_grade: Dictionary = {}
 
 ## 定义每个僵尸的战力值
 const zombie_power = {
@@ -175,7 +177,12 @@ func _reset_zombie_weights_from_adjustments() -> void:
 			default_grade,
 			true
 		)
-		zombie_weights_base[zombie_type] = NumericalStore.zombie_spawn_weight_from_grade(selected_grade)
+		var adjusted_weight := NumericalStore.zombie_spawn_weight_from_grade(selected_grade)
+		if adjusted_weight <= 0 and selected_grade == 7:
+			boss_by_weight_grade[int(zombie_type)] = true
+		else:
+			boss_by_weight_grade.erase(int(zombie_type))
+		zombie_weights_base[zombie_type] = maxi(0, adjusted_weight)
 	zombie_weights = zombie_weights_base.duplicate_deep()
 	is_update_weight_on_limit = false
 
@@ -184,10 +191,17 @@ func update_zombie_refresh_types():
 	## 初始化僵尸生成随机池数据
 	var zombie_choose_random_pool_data:Array[Array] = []
 	min_power = 100
+	var once_final := _once_final_type_set()
 	for zombie_type in zombie_manager.zombie_refresh_types:
+		## 整局一次性终局 Boss（JSON 字段 + 权重第 7 档）不进入加权池。
+		if once_final.has(int(zombie_type)) or boss_by_weight_grade.has(int(zombie_type)):
+			continue
+		if not zombie_power.has(zombie_type):
+			continue
 		if min_power > zombie_power[zombie_type]:
 			min_power = zombie_power[zombie_type]
-		zombie_choose_random_pool_data.append([zombie_type, zombie_weights[zombie_type]])
+		var weight := int(zombie_weights.get(zombie_type, zombie_weights_ori.get(zombie_type, 1000)))
+		zombie_choose_random_pool_data.append([zombie_type, weight])
 	print("更新僵尸随机选择池")
 	zombie_choose_random_pool = RandomPicker.new(zombie_choose_random_pool_data)
 
@@ -356,7 +370,14 @@ func calculate_wave_power_limit(wave:int, is_big_wave: bool) -> int:
 	var base_power_limit:int = wave / 3 + 1
 	## 如果是大波，战力上限是原战力上限的2.5倍
 	if is_big_wave:
-		return int(base_power_limit * 2.5) * zombie_multy
+		var big_wave_mult := 2.5
+		## 工坊简易关需要大波明显强于前后普通波；原版自然关仍保持 2.5。
+		if zombie_manager.game_para.custom_simple_original_mode:
+			big_wave_mult = 3.5
+			## 最后一波再抬一档，避免“旗前一堆铁桶、终局反而泄劲”。
+			if wave >= maxi(0, zombie_manager.game_para.max_wave - 1):
+				big_wave_mult = 4.5
+		return int(base_power_limit * big_wave_mult) * zombie_multy
 
 	return base_power_limit * zombie_multy
 
@@ -453,15 +474,24 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 			curr_spare_slot -= 1
 			simple_intro_spawned[int(intro_zombie_type)] = true
 
-	if is_big_wave:
-		var plain_zombie_type := _plain_zombie_type()
-		for _index in big_wave_plain_count:
-			if zombie_manager.game_para.custom_simple_original_mode \
-			and total_power + int(zombie_power[plain_zombie_type]) > curr_wave_power_limit:
+	## 整局一次性终局 Boss（JSON 字段 + 权重第 7 档）：仅末波强制各刷 1 只。
+	if wave >= maxi(0, zombie_manager.game_para.max_wave - 1):
+		var once_bosses: Array[CharacterRegistry.ZombieType] = []
+		once_bosses.append_array(zombie_manager.game_para.simple_once_final_zombie_types)
+		for wz in boss_by_weight_grade:
+			var zt := int(wz) as CharacterRegistry.ZombieType
+			if not once_bosses.has(zt) and CharacterRegistry.ZombieInfo.has(zt):
+				once_bosses.append(zt)
+		for boss_type in once_bosses:
+			if curr_spare_slot <= 0:
 				break
-			wave_spawn.append(plain_zombie_type)
-			total_power += zombie_power[plain_zombie_type]
+			if simple_intro_spawned.has(int(boss_type)):
+				continue
+			wave_spawn.append(boss_type)
+			if zombie_power.has(boss_type):
+				total_power += int(zombie_power[boss_type])
 			curr_spare_slot -= 1
+			simple_intro_spawned[int(boss_type)] = true
 
 	# 生成剩余僵尸，直到总战力符合当前战力上限
 	while curr_spare_slot > 0 and total_power < curr_wave_power_limit:
@@ -489,6 +519,37 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 		else:
 			continue
 
+	## 旗帜波附赠普僵：在加权填充完成后加入，不计入战力预算。
+	## 同时把“原版前缀普僵本会占用的预算”补给精锐池，避免只变多炮灰。
+	if is_big_wave and big_wave_plain_count > 0:
+		var plain_zombie_type := _plain_zombie_type()
+		var plain_power := int(zombie_power.get(plain_zombie_type, 1))
+		var elite_refund := big_wave_plain_count * plain_power
+		## 用退回的预算再抽一轮精锐，抽不满的剩余再用附赠普僵补场面。
+		var refund_guard := 0
+		while elite_refund > 0 and curr_spare_slot > 0 and refund_guard < 200:
+			refund_guard += 1
+			var selected_zombie: CharacterRegistry.ZombieType = zombie_choose_random_pool.get_random_item()
+			var zombie_power_value := int(zombie_power[selected_zombie])
+			if zombie_manager.game_para.custom_simple_original_mode \
+			and not _simple_zombie_is_unlocked(selected_zombie, wave):
+				continue
+			if zombie_power_value <= elite_refund:
+				wave_spawn.append(selected_zombie)
+				elite_refund -= zombie_power_value
+				curr_spare_slot -= 1
+			elif elite_refund < min_power:
+				break
+		for _index in big_wave_plain_count:
+			if curr_spare_slot <= 0:
+				break
+			wave_spawn.append(plain_zombie_type)
+			curr_spare_slot -= 1
+
+	## 打乱出怪顺序，避免旗子/精锐/附赠普僵按区块挤在一起。
+	if wave_spawn.size() > 1:
+		wave_spawn.shuffle()
+
 	return wave_spawn
 
 
@@ -499,8 +560,11 @@ func _due_simple_intro_types(
 ) -> Array[CharacterRegistry.ZombieType]:
 	var candidates: Array[CharacterRegistry.ZombieType] = []
 	var intro_waves: Dictionary = zombie_manager.game_para.simple_zombie_intro_waves
+	var once_final := _once_final_type_set()
 	for zombie_type_value in intro_waves:
 		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
+		if once_final.has(int(zombie_type)) or boss_by_weight_grade.has(int(zombie_type)):
+			continue
 		if simple_intro_spawned.has(int(zombie_type)) \
 		or not zombie_manager.zombie_refresh_types.has(zombie_type) \
 		or int(intro_waves[zombie_type_value]) > wave + 1 \
@@ -524,7 +588,17 @@ func _due_simple_intro_types(
 
 
 func _simple_zombie_is_unlocked(zombie_type: CharacterRegistry.ZombieType, wave: int) -> bool:
+	## 一次性终局 Boss 永不进入加权抽取。
+	if _once_final_type_set().has(int(zombie_type)) or boss_by_weight_grade.has(int(zombie_type)):
+		return false
 	return wave + 1 >= _simple_intro_wave(zombie_type)
+
+
+func _once_final_type_set() -> Dictionary:
+	var result := {}
+	for zombie_type in zombie_manager.game_para.simple_once_final_zombie_types:
+		result[int(zombie_type)] = true
+	return result
 
 
 func _simple_intro_wave(zombie_type: CharacterRegistry.ZombieType) -> int:

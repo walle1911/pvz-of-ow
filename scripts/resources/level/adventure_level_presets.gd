@@ -5,6 +5,8 @@ const FormalLevelStore := preload("res://scripts/resources/level/adventure_level
 
 const LEVELS_PER_WORLD := 10
 const NORMAL_WORLD_COUNT := 5
+## 正式冒险当前发布到 3-10；开发者模式仍可编辑完整五个世界。
+const FORMAL_WORLD_COUNT := 3
 const WORLD_NAMES := ["白天", "夜晚", "泳池", "雾夜", "屋顶"]
 const WORLD_MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const WORLD_ROWS := [5, 5, 6, 6, 5]
@@ -184,6 +186,8 @@ const ZOMBIE_OW_REPLACEMENTS := {
 }
 const OW_BONUS_ZOMBIE_INTROS := {
 	5: [26],
+	## 3-10 温斯顿 Boss；5-10 Bob Boss。
+	30: [20],
 	50: [25],
 }
 ## 旗帜僵尸由大波逻辑单独加入；伴舞僵尸由舞王召唤；蹦极僵尸走地图大波机制。
@@ -194,7 +198,9 @@ const WORLD_ORIGINAL_ZOMBIE_SLOTS := [
 	[500, 502, 504, 515, 516, 517, 518, 519],
 	[500, 502, 504, 521, 522, 523, 524],
 ]
-const WORLD_BONUS_ZOMBIES := [[26], [], [], [], [26, 25]]
+const WORLD_BONUS_ZOMBIES := [[26], [], [20], [], [26, 25]]
+## 整局只在最后一波各刷 1 只的 Boss；不进加权随机池。
+## Bob 全线按 Boss 处理；1-10 豌豆僵尸、3-10 温斯顿由关卡特判写入 simpleOnceFinalZombies。
 const BOSS_ZOMBIES := [25]
 const POOL_ONLY_ZOMBIES := [510, 511, 514]
 const BOTH_ROW_ZOMBIES := [516, 520]
@@ -234,6 +240,30 @@ static func list_presets(workshop_mode := "normal") -> Array[Dictionary]:
 				"level": level_number,
 			})
 	return result
+
+
+static func list_formal_presets(workshop_mode := "normal") -> Array[Dictionary]:
+	var presets := list_presets(workshop_mode)
+	if workshop_mode != "normal":
+		return presets
+	var result: Array[Dictionary] = []
+	for preset in presets:
+		if int(preset.get("world", 0)) <= FORMAL_WORLD_COUNT:
+			result.append(preset)
+	return result
+
+
+static func build_formal_level(preset_id: String) -> Dictionary:
+	var parsed := _parse_preset_id(preset_id)
+	if str(parsed.get("mode", "")) == "normal" and int(parsed.get("world", 0)) > FORMAL_WORLD_COUNT:
+		return {}
+	var stored := FormalLevelStore.load_formal_level(preset_id)
+	if stored["ok"]:
+		return stored["level"]
+	if stored["exists"]:
+		push_error("正式关卡快照无法载入：%s" % str(stored["error"]))
+	## 兼容尚未生成快照的项目副本，避免正式模式出现空关卡。
+	return build_level(preset_id)
 
 
 static func build_level(preset_id: String, use_developer_override := false) -> Dictionary:
@@ -282,6 +312,34 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"plantCardPool": available_plants.duplicate(),
 		"zombieCardPool": [],
 	}
+	var simple_pool: Array = []
+	var simple_intro_waves := {}
+	var simple_once_final: Array = []
+	var roster := _zombie_roster(world, level_number, workshop_mode)
+	var normal_type := ORIGINAL_NORMAL if is_chessboard else OW_NORMAL
+	var flag_type := ORIGINAL_FLAG if is_chessboard else OW_FLAG
+	## 关卡特判的终局一次性 Boss（普通冒险不走 developer JSON 时也生效）。
+	for zt in _level_once_final_bosses(world, level_number, workshop_mode):
+		if not simple_once_final.has(int(zt)):
+			simple_once_final.append(int(zt))
+	for zombie_type in roster:
+		var zt := int(zombie_type)
+		var is_once_boss := simple_once_final.has(zt) or BOSS_ZOMBIES.has(zt)
+		if is_once_boss:
+			if not simple_once_final.has(zt):
+				simple_once_final.append(zt)
+			## Boss 仍放进池子供选卡前展示，但运行时不会被加权抽到。
+			if not simple_pool.has(zt):
+				simple_pool.append(zt)
+			continue
+		if not simple_pool.has(zt):
+			simple_pool.append(zt)
+		var first_wave := int(FIRST_ALLOWED_WAVE.get(zt, 1))
+		if zt != normal_type and zt != flag_type:
+			simple_intro_waves[str(zt)] = clampi(first_wave, 1, simple_flag_count * 10)
+	if simple_pool.is_empty():
+		simple_pool.append(normal_type)
+
 	return {
 		"schemaVersion": 1,
 		"id": preset_id,
@@ -298,6 +356,11 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"editorMode": "simple",
 		"simpleFlagCount": simple_flag_count,
 		"simpleWaveCount": simple_flag_count * 10,
+		"simpleBaseZombieType": normal_type,
+		"simpleFlagZombieType": flag_type,
+		"simpleZombiePool": simple_pool,
+		"simpleZombieIntroWaves": simple_intro_waves,
+		"simpleOnceFinalZombies": simple_once_final,
 		"chessboardConfig": chessboard_config,
 		"availablePlants": available_plants,
 		"plantSelectionEnabled": true,
@@ -416,25 +479,54 @@ static func _build_wave_zombies(
 			zombies.append(normal_type)
 			remaining_points -= 1
 
+	var level_once_bosses := _level_once_final_bosses(world, level_number, workshop_mode)
 	var introduced_types := _introduced_zombies(world, level_number, workshop_mode)
 	if not introduced_types.is_empty() and (wave_index == int(wave_count / 2) or wave_index == wave_count - 1):
 		for introduced_type in introduced_types:
-			if BOSS_ZOMBIES.has(introduced_type) and wave_index != wave_count - 1:
-				continue
+			## Boss 只在最后一波强制出现一次。
+			var is_boss := BOSS_ZOMBIES.has(introduced_type) or level_once_bosses.has(introduced_type)
+			if is_boss:
+				if wave_index != wave_count - 1:
+					continue
+				if zombies.has(introduced_type):
+					continue
 			zombies.append(introduced_type)
 			remaining_points -= int(ZOMBIE_VALUES.get(introduced_type, 1))
+
+	## 最后一波补齐本关全部 Boss，保证整局只在终局露面且必出。
+	if wave_index == wave_count - 1:
+		var once_bosses: Array = []
+		for zt in BOSS_ZOMBIES:
+			once_bosses.append(int(zt))
+		for zt in _level_once_final_bosses(world, level_number, workshop_mode):
+			if not once_bosses.has(int(zt)):
+				once_bosses.append(int(zt))
+		for zt in once_bosses:
+			if roster.has(zt) and not zombies.has(zt):
+				zombies.append(zt)
+				remaining_points -= int(ZOMBIE_VALUES.get(zt, 1))
 
 	## 最终波确保本关较强的后三种敌人露面，不再把整个历史图鉴一次塞进同一波。
 	if wave_index == wave_count - 1:
 		var start_index := maxi(0, roster.size() - 3)
 		for roster_index in range(start_index, roster.size()):
 			var zombie_type := int(roster[roster_index])
+			if BOSS_ZOMBIES.has(zombie_type) or level_once_bosses.has(zombie_type):
+				continue
 			if not zombies.has(zombie_type):
 				zombies.append(zombie_type)
 				remaining_points -= int(ZOMBIE_VALUES.get(zombie_type, 1))
 
+	var weighted_roster: Array[int] = []
+	for zombie_type in roster:
+		var zt := int(zombie_type)
+		if BOSS_ZOMBIES.has(zt) or level_once_bosses.has(zt):
+			continue
+		weighted_roster.append(zt)
+	if weighted_roster.is_empty():
+		weighted_roster.append(normal_type)
 	while remaining_points > 0:
-		var candidate := _pick_weighted_zombie(roster, remaining_points, wave_index + 1, rng_state)
+		var candidate := _pick_weighted_zombie(weighted_roster, remaining_points, wave_index + 1, rng_state)
 		zombies.append(candidate)
 		remaining_points -= int(ZOMBIE_VALUES.get(candidate, 1))
 	return zombies
@@ -496,6 +588,23 @@ static func _resolve_zombie_slot(original_type: int) -> Array[int]:
 	return result
 
 
+## 指定关卡的终局一次性 Boss。返回的类型整局只刷 1 只，且必在最后一波。
+static func _level_once_final_bosses(world: int, level_number: int, workshop_mode: String) -> Array[int]:
+	var result: Array[int] = []
+	if workshop_mode != "normal":
+		return result
+	## 1-10：豌豆射手僵尸
+	if world == 1 and level_number == 10:
+		result.append(26)
+	## 3-10：温斯顿雪人
+	elif world == 3 and level_number == 10:
+		result.append(20)
+	## 5-10：Bob 巨人（也在 BOSS_ZOMBIES，这里再写一次保证必进列表）
+	elif world == 5 and level_number == 10:
+		result.append(25)
+	return result
+
+
 static func _bonus_zombie_intro_level(zombie_type: int) -> int:
 	for intro_level in OW_BONUS_ZOMBIE_INTROS:
 		if OW_BONUS_ZOMBIE_INTROS[intro_level].has(zombie_type):
@@ -507,6 +616,8 @@ static func _pick_weighted_zombie(roster: Array[int], points: int, wave_number: 
 	var eligible: Array[int] = []
 	var total_weight := 0
 	for zombie_type in roster:
+		if BOSS_ZOMBIES.has(int(zombie_type)):
+			continue
 		if int(ZOMBIE_VALUES.get(zombie_type, 1)) > points:
 			continue
 		if wave_number < int(FIRST_ALLOWED_WAVE.get(zombie_type, 1)):

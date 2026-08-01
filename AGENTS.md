@@ -52,6 +52,12 @@ rm "/Users/yourname/Documents/example.txt"
 - `.gitignore` 当前忽略 `.godot/`、`/android/`、`.vscode`、`assets`。完整素材可能在本地存在但不进仓库。
 - 文本编辑尽量小范围修改。`.tscn`、`.tres` 是 Godot 序列化文件，保留 `uid`、`unique_id`、`ext_resource`、节点路径和 Inspector 导出值，避免无关重排。
 
+## UI 弹窗硬性规则
+
+- 所有需要用户决策的弹窗都必须在目标分辨率内始终显示明确的“确认”和“取消/关闭”按钮。
+- 可滚动内容只能占用中间内容区，操作按钮必须使用固定底栏，不能依赖 `ConfirmationDialog` 自动布局把按钮放在内容之后。
+- 新增或修改弹窗后，必须检查长内容、滚动到底部以及窗口缩放场景，确认操作按钮不会被内容挤出屏幕或遮挡。
+
 ## 代码和玩法约束
 
 - 植物/僵尸的原有 idle、攻击、睡眠、死亡和状态机行为优先保留。新效果尽量作为独立状态、叠加节点或组件接入。
@@ -111,4 +117,3 @@ HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path /Users/
 5. 做最小修改，避免跨系统重构。
 6. 运行窄范围检查和必要的 Godot headless 检查。
 7. 汇报改了哪些文件、验证结果、未处理的既有脏文件或无关警告。
-

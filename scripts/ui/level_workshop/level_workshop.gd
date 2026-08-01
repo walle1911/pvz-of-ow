@@ -149,6 +149,7 @@ var saved_level_snapshot := ""
 var pending_unsaved_action := Callable()
 var unsaved_changes_dialog: ConfirmationDialog
 var reward_conflict_dialog: ConfirmationDialog
+var formal_sync_dialog_layer: Control
 
 
 func _layout_control(path: String) -> Control:
@@ -715,13 +716,23 @@ func _open_template_picker() -> void:
 	dialog.title = "编辑正式冒险关卡"
 	dialog.ok_button_text = "载入编辑"
 	dialog.cancel_button_text = "取消"
-	dialog.min_size = Vector2i(480, 190)
+	dialog.min_size = Vector2i(480, 250)
 	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 12)
 	dialog.add_child(box)
 	var picker := OptionButton.new()
 	for preset: Dictionary in presets:
 		picker.add_item(_formal_preset_display_name(preset))
 	box.add_child(picker)
+	var sync_button := Button.new()
+	sync_button.text = "批量同步到正式模式"
+	sync_button.custom_minimum_size = Vector2(420, 44)
+	sync_button.tooltip_text = "勾选并发布已保存的开发者关卡"
+	box.add_child(sync_button)
+	sync_button.pressed.connect(func():
+		dialog.queue_free()
+		_request_leave_with_unsaved_check(_open_formal_sync_dialog)
+	)
 	dialog.confirmed.connect(func():
 		if picker.selected < 0 or picker.selected >= presets.size():
 			return
@@ -732,6 +743,105 @@ func _open_template_picker() -> void:
 	add_child(dialog)
 	_force_font_recursive(dialog)
 	dialog.popup_centered()
+
+
+func _open_formal_sync_dialog() -> void:
+	_close_formal_sync_dialog()
+	var presets := AdventurePresets.list_formal_presets("normal")
+	formal_sync_dialog_layer = Control.new()
+	formal_sync_dialog_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	formal_sync_dialog_layer.z_index = 750
+	add_child(formal_sync_dialog_layer)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0, 0, 0, 0.68)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	formal_sync_dialog_layer.add_child(shade)
+	var dialog := TextureRect.new()
+	dialog.position = Vector2(153, 25)
+	dialog.size = Vector2(760, 550)
+	dialog.texture = DIALOG_BACKGROUND
+	dialog.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	dialog.stretch_mode = TextureRect.STRETCH_SCALE
+	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
+	formal_sync_dialog_layer.add_child(dialog)
+	var title := _paper_label("同步关卡到正式模式", Vector2(80, 18), Vector2(600, 44), 27, Color("f3e7ba"))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_outline_color", Color("25263b"))
+	title.add_theme_constant_override("outline_size", 4)
+	dialog.add_child(title)
+	var hint := _paper_label("勾选需要发布的关卡。同步使用已保存的开发者版本，未勾选关卡不会发生变化。", Vector2(40, 65), Vector2(680, 34), 15, Color("d7bd80"))
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog.add_child(hint)
+	var quick_actions := HBoxContainer.new()
+	quick_actions.position = Vector2(40, 103)
+	quick_actions.size = Vector2(680, 36)
+	quick_actions.add_theme_constant_override("separation", 8)
+	dialog.add_child(quick_actions)
+	var select_all_button := Button.new()
+	select_all_button.text = "全选"
+	select_all_button.custom_minimum_size = Vector2(72, 34)
+	quick_actions.add_child(select_all_button)
+	var clear_button := Button.new()
+	clear_button.text = "清空"
+	clear_button.custom_minimum_size = Vector2(72, 34)
+	quick_actions.add_child(clear_button)
+	var scroll := ScrollContainer.new()
+	scroll.position = Vector2(40, 142)
+	scroll.size = Vector2(680, 300)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	dialog.add_child(scroll)
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 12)
+	grid.add_theme_constant_override("v_separation", 7)
+	scroll.add_child(grid)
+	var checkboxes: Dictionary = {}
+	for preset: Dictionary in presets:
+		var preset_id := str(preset.get("id", ""))
+		var checkbox := CheckBox.new()
+		checkbox.text = _formal_preset_display_name(preset)
+		checkbox.custom_minimum_size = Vector2(210, 34)
+		checkbox.button_pressed = preset_id == formal_preset_id
+		checkbox.tooltip_text = preset_id
+		grid.add_child(checkbox)
+		checkboxes[preset_id] = checkbox
+	select_all_button.pressed.connect(func():
+		for checkbox in checkboxes.values():
+			(checkbox as CheckBox).button_pressed = true
+	)
+	clear_button.pressed.connect(func():
+		for checkbox in checkboxes.values():
+			(checkbox as CheckBox).button_pressed = false
+	)
+	var error_label := _paper_label("", Vector2(40, 446), Vector2(680, 30), 14, Color("ffb49d"))
+	error_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dialog.add_child(error_label)
+	var sync_callback := func():
+		var selected_ids: Array[String] = []
+		for preset: Dictionary in presets:
+			var preset_id := str(preset.get("id", ""))
+			var checkbox := checkboxes.get(preset_id) as CheckBox
+			if is_instance_valid(checkbox) and checkbox.button_pressed:
+				selected_ids.append(preset_id)
+		var result := FormalLevelStore.sync_developer_levels_to_formal(selected_ids)
+		if result["ok"]:
+			status_label.text = "已同步 %d 个关卡到正式模式。" % (result["synced"] as Array).size()
+			_close_formal_sync_dialog()
+		else:
+			status_label.text = "同步失败：%s" % str(result["error"])
+			error_label.text = "同步失败：%s" % str(result["error"])
+	dialog.add_child(_texture_button("取消", Vector2(205, 485), Vector2(150, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_formal_sync_dialog, 17))
+	dialog.add_child(_texture_button("同步所选关卡", Vector2(405, 485), Vector2(150, 42), DIALOG_BUTTON, DIALOG_BUTTON, sync_callback, 16))
+	_force_font_recursive(formal_sync_dialog_layer)
+
+
+func _close_formal_sync_dialog() -> void:
+	if is_instance_valid(formal_sync_dialog_layer):
+		formal_sync_dialog_layer.queue_free()
+	formal_sync_dialog_layer = null
 
 
 func _formal_preset_display_name(preset: Dictionary) -> String:
@@ -2575,6 +2685,13 @@ func _open_level_settings() -> void:
 	title.add_theme_color_override("font_outline_color", Color("25263b"))
 	title.add_theme_constant_override("outline_size", 4)
 	dialog.add_child(title)
+	if loaded_source_kind == "template" and FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		title.position.x = 48.0
+		title.size.x = 374.0
+		var sync_callback := func():
+			_close_quantity_dialog()
+			_request_leave_with_unsaved_check(_open_formal_sync_dialog)
+		dialog.add_child(_texture_button("批量同步", Vector2(438, 34), Vector2(132, 38), DIALOG_BUTTON, DIALOG_BUTTON, sync_callback, 15))
 	var name_input := _settings_line(dialog, "关卡名称", Vector2(76, 78), str(level["name"]))
 	name_input.size.x = 456
 	_add_cover_settings_button(dialog)
@@ -3020,12 +3137,18 @@ func _sanitize_simple_allowed_pool() -> void:
 		for stage in level.get("waves", []):
 			for group in (stage as Dictionary).get("spawnGroups", []):
 				source_pool.append(_zombie_type_id((group as Dictionary).get("zombieType", "500")))
+	var once_final: Array = level.get("simpleOnceFinalZombies", [])
 	var filtered_pool: Array[int] = []
 	for value in source_pool:
 		var zombie_type := int(value)
-		if (zombie_type == required_zombie or _has_original_pick_weight(zombie_type)) \
-		and not filtered_pool.has(zombie_type):
+		var allow := (zombie_type == required_zombie or _has_original_pick_weight(zombie_type)) \
+		or once_final.has(zombie_type)
+		if allow and not filtered_pool.has(zombie_type):
 			filtered_pool.append(zombie_type)
+	## 一次性终局 Boss 未在池中时自动补入，避免保存后丢失。
+	for boss_type in once_final:
+		if int(boss_type) > 0 and not filtered_pool.has(int(boss_type)):
+			filtered_pool.append(int(boss_type))
 	if not filtered_pool.has(required_zombie):
 		filtered_pool.push_front(required_zombie)
 	level["simpleZombiePool"] = filtered_pool
@@ -3036,10 +3159,14 @@ func _sanitize_simple_allowed_pool() -> void:
 func _sanitize_simple_intro_waves() -> void:
 	var simple_pool := _simple_zombie_pool()
 	var source = level.get("simpleZombieIntroWaves", {})
+	var once_final: Array = level.get("simpleOnceFinalZombies", [])
 	var filtered := {}
 	if source is Dictionary:
 		for zombie_type_value in source:
 			var zombie_type := int(zombie_type_value)
+			## 一次性终局 Boss 不参与普通登场波次，避免保存回合泄漏回 intro 表。
+			if once_final.has(zombie_type):
+				continue
 			if not simple_pool.has(zombie_type) \
 			or zombie_type == _simple_base_zombie_type() \
 			or zombie_type == _simple_flag_zombie_type():
@@ -3476,7 +3603,7 @@ func _save_formal_level() -> bool:
 			return false
 		DraftStore.save_autosave(level)
 		_mark_current_level_saved()
-		status_label.text = ("已保存；%s 需要新增奖励植物。" % "、".join(cleared_cleanup)) if not cleared_cleanup.is_empty() else "已覆盖关卡模板 %s；普通模式不受影响。" % formal_preset_id
+		status_label.text = ("已保存；%s 需要新增奖励植物。" % "、".join(cleared_cleanup)) if not cleared_cleanup.is_empty() else "已保存开发者关卡 %s；同步后才会更新正式模式。" % formal_preset_id
 		return true
 	else:
 		status_label.text = "保存关卡模板失败：%s" % str(result["error"])

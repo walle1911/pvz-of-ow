@@ -6,7 +6,8 @@ class_name Plant052SunflowerMercy
 @export_group("蓝线增伤")
 @export var damage_boost_multiplier := 1.25
 @export var damage_boost_target_check_interval := 0.15
-@export var damage_boost_target_cell_max_range := 2
+## 兼容旧场景序列化；蓝线目标范围固定为前后相邻一格。
+@export var damage_boost_target_cell_max_range := 1
 @export var damage_boost_source_anchor_path:NodePath = ^"Body/BodyCorrect/Stalk_bottom"
 @export var damage_boost_source_anchor_offset := Vector2(2, 4)
 @export var damage_boost_target_anchor_offset := Vector2(2, 4)
@@ -69,6 +70,8 @@ const TARGET_ANCHOR_PATHS:Array[NodePath] = [
 ]
 
 const BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
+const BLUE_LINE_SOURCE_META := &"mercy_blue_line_source"
+const ADJACENT_TARGET_OFFSETS:Array[int] = [1, -1]
 
 
 ## 安娜咖啡豆等需要覆盖天使场景“蓝线增伤 | 目标植物类型”时调用。
@@ -192,8 +195,8 @@ func _update_damage_boost_target():
 		return
 
 	_clear_damage_boost_target()
-	damage_boost_target = new_target
-	if is_instance_valid(damage_boost_target):
+	if is_instance_valid(new_target) and _claim_damage_boost_target(new_target):
+		damage_boost_target = new_target
 		target_anchor_node = _get_target_anchor_node(damage_boost_target)
 		damage_boost_target.add_attack_damage_multiplier(self, damage_boost_multiplier)
 		_create_damage_boost_glow_sprites(damage_boost_target)
@@ -203,6 +206,7 @@ func _clear_damage_boost_target():
 	_clear_damage_boost_glow()
 	if is_instance_valid(damage_boost_target):
 		damage_boost_target.remove_attack_damage_multiplier(self)
+		_release_damage_boost_target(damage_boost_target)
 	damage_boost_target = null
 	target_anchor_node = null
 	if is_instance_valid(damage_boost_beam):
@@ -222,11 +226,11 @@ func _get_damage_boost_target() -> Plant000Base:
 	if current_index == -1:
 		return null
 
-	# 从近到远扫描前方格子（1, 2, ..., max_range），优先连接最近的
-	for offset in range(1, damage_boost_target_cell_max_range + 1):
+	## 只检查相邻一格；数组顺序保证前后都有射手时优先牵前方。
+	for offset in ADJACENT_TARGET_OFFSETS:
 		var target_index := current_index + offset
-		if target_index >= lane_cells.size():
-			break
+		if target_index < 0 or target_index >= lane_cells.size():
+			continue
 
 		var target_cell:PlantCell = lane_cells[target_index]
 		var target_plant:Plant000Base = target_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
@@ -234,9 +238,40 @@ func _get_damage_boost_target() -> Plant000Base:
 			continue
 		if not damage_boost_target_plant_types.has(target_plant.plant_type):
 			continue
+		if not _is_damage_boost_target_available(target_plant):
+			continue
 		return target_plant
 
 	return null
+
+
+func _is_damage_boost_target_available(target_plant:Plant000Base) -> bool:
+	if target_plant == damage_boost_target:
+		return true
+	if not target_plant.has_meta(BLUE_LINE_SOURCE_META):
+		return true
+	var source_ref = target_plant.get_meta(BLUE_LINE_SOURCE_META)
+	if source_ref is WeakRef:
+		var source = source_ref.get_ref()
+		if is_instance_valid(source):
+			return source == self
+	target_plant.remove_meta(BLUE_LINE_SOURCE_META)
+	return true
+
+
+func _claim_damage_boost_target(target_plant:Plant000Base) -> bool:
+	if not _is_damage_boost_target_available(target_plant):
+		return false
+	target_plant.set_meta(BLUE_LINE_SOURCE_META, weakref(self))
+	return true
+
+
+func _release_damage_boost_target(target_plant:Plant000Base) -> void:
+	if not target_plant.has_meta(BLUE_LINE_SOURCE_META):
+		return
+	var source_ref = target_plant.get_meta(BLUE_LINE_SOURCE_META)
+	if source_ref is WeakRef and source_ref.get_ref() == self:
+		target_plant.remove_meta(BLUE_LINE_SOURCE_META)
 
 
 func _get_target_anchor_node(target_plant:Plant000Base) -> Node2D:

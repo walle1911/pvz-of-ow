@@ -135,7 +135,6 @@ height = 378.0
 [node name="Plant014ScaredyShroomWidowmaker" unique_id=1787225348 node_paths=PackedStringArray("node_no_change_direction", "node2d_detect_in_slope") instance=ExtResource("1_rixsb")]
 script = ExtResource("2_esfqn")
 is_scared = false
-shot_interval = 5.0
 plant_type = 14
 is_sleep_in_day = true
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]

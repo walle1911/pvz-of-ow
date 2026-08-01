@@ -94,6 +94,8 @@ var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.Zo
 ## 简易关卡的主题僵尸最早登场波次（僵尸类型 -> 1-based 波次）；
 ## 战力预算不足时会顺延到首个可容纳波次，但不会提前随机出现。
 var simple_zombie_intro_waves: Dictionary = {}
+## 简易关卡的整局一次性 Boss：不参与加权随机，仅在最后一波各强制刷 1 只。
+var simple_once_final_zombie_types: Array[CharacterRegistry.ZombieType] = []
 var custom_timeline_duration := 0.0
 ## 原版冒险预设的运行时约束；普通资源关卡保持空数组/默认值，不受影响。
 var available_plant_types: Array[CharacterRegistry.PlantType] = []

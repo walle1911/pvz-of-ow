@@ -12,19 +12,18 @@
 		2,
 		3,
 		4,
-		52,
-		6,
-		36,
 		18,
-		504,
+		36,
+		6,
+		52,
 		23,
+		504,
 		14,
 		11,
 		43,
 		13,
-		40,
 		32,
-		24,
+		37,
 		27
 	],
 	"chessboardConfig": {
@@ -92,7 +91,7 @@
 	"plantSelectionEnabled": true,
 	"playerConfig": {
 		"cooldownMultiplier": 1.0,
-		"initialSun": 75,
+		"initialSun": 125,
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071518.0,
@@ -104,6 +103,7 @@
 	"simpleBaseZombieType": 100,
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 101,
+	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 20,
 	"simpleZombieIntroWaves": {
 		"102": 4,

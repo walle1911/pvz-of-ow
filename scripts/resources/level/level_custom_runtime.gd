@@ -137,6 +137,16 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			game_para.simple_flag_zombie_type,
 			game_para.max_wave
 		)
+		game_para.simple_once_final_zombie_types = _simple_once_final_zombie_types(
+			level.get("simpleOnceFinalZombies", []),
+			game_para.simple_base_zombie_type,
+			game_para.simple_flag_zombie_type
+		)
+		## 一次性终局 Boss 仍放入刷新池供展示/选行，但运行时不会被加权抽到。
+		for boss_type in game_para.simple_once_final_zombie_types:
+			if not allowed_types.has(boss_type):
+				allowed_types.append(boss_type)
+		game_para.zombie_refresh_types = allowed_types
 	## 预设冒险关和启用了“可选卡片”的自制关都只展示编辑器选中的植物池。
 	game_para.adventure_card_lock_active = bool(level.get("strictOriginalTiming", false)) \
 		or bool(level.get("plantSelectionEnabled", false))
@@ -220,6 +230,28 @@ static func _contains_zombie_type(values: Array, expected: CharacterRegistry.Zom
 		if _zombie_type_id(value) == int(expected):
 			return true
 	return false
+
+
+static func _simple_once_final_zombie_types(
+	value,
+	base_zombie_type: CharacterRegistry.ZombieType,
+	flag_zombie_type: CharacterRegistry.ZombieType
+) -> Array[CharacterRegistry.ZombieType]:
+	var result: Array[CharacterRegistry.ZombieType] = []
+	if value is not Array:
+		return result
+	for entry in value:
+		var zombie_type := _zombie_type_id(entry) as CharacterRegistry.ZombieType
+		if zombie_type == base_zombie_type or zombie_type == flag_zombie_type:
+			continue
+		if zombie_type == CharacterRegistry.ZombieType.Z520Bungi:
+			continue
+		if not CharacterRegistry.ZombieInfo.has(zombie_type):
+			continue
+		## 允许 JSON 单独声明终局 Boss，即使它还没写进 simpleZombiePool。
+		if not result.has(zombie_type):
+			result.append(zombie_type)
+	return result
 
 
 static func _simple_intro_waves(
@@ -307,7 +339,7 @@ static func _vector2_from_array(value, fallback: Vector2) -> Vector2:
 static func _apply_map(game_para: ResourceLevelData, map_type: String) -> void:
 	match map_type:
 		"night_lawn":
-			game_para.game_sences = MainSceneRegistry.MainScenes.MainGameBack
+			game_para.game_sences = MainSceneRegistry.MainScenes.MainGameFront
 			game_para.game_BG = ConstLevelData.GameBg.FrontNight
 			game_para.game_BGM = ConstLevelData.GameBGM.FrontNight
 			game_para.is_day = false

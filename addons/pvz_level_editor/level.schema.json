@@ -4,103 +4,366 @@
   "title": "PVZ Level Editor Level",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "availablePlants", "waves", "winConditions", "loseConditions", "randomSeed"],
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "mapConfig",
+    "playerConfig",
+    "availablePlants",
+    "waves",
+    "winConditions",
+    "loseConditions",
+    "randomSeed"
+  ],
   "properties": {
-    "schemaVersion": {"const": 1},
-    "id": {"type": "string", "minLength": 1},
-    "name": {"type": "string", "minLength": 1},
-    "editorMode": {"enum": ["simple", "advanced"]},
-    "simpleFlagCount": {"type": "integer", "minimum": 1, "maximum": 10},
-    "simpleWaveCount": {"type": "integer", "minimum": 10, "maximum": 100, "multipleOf": 10},
-    "simpleBaseZombieType": {"type": "integer", "minimum": 1},
-    "simpleFlagZombieType": {"type": "integer", "minimum": 1},
-    "simpleZombiePool": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 1, "uniqueItems": true},
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "editorMode": {
+      "enum": [
+        "simple",
+        "advanced"
+      ]
+    },
+    "simpleFlagCount": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "simpleWaveCount": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 100,
+      "multipleOf": 10
+    },
+    "simpleBaseZombieType": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "simpleFlagZombieType": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "simpleZombiePool": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "simpleZombieIntroWaves": {
       "type": "object",
-      "propertyNames": {"pattern": "^[0-9]+$"},
-      "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 100}
+      "propertyNames": {
+        "pattern": "^[0-9]+$"
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 100
+      }
     },
-    "zombieRefreshSpeedMultiplier": {"type": "number", "minimum": 0.1, "maximum": 5.0},
-    "openingFirstZombieAdvanceCells": {"type": "number", "minimum": 0, "maximum": 12},
-    "mapConfig": {"$ref": "#/$defs/mapConfig"},
-    "playerConfig": {"$ref": "#/$defs/playerConfig"},
-    "availablePlants": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
-    "plantSelectionEnabled": {"type": "boolean"},
-    "freePlantSelection": {"type": "boolean"},
-    "forcedPlants": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
-    "rewardPlant": {"type": "integer", "minimum": -1},
-    "rewardPlants": {"type": "array", "items": {"type": "integer", "minimum": 0}, "uniqueItems": true},
-    "environmentConfig": {"$ref": "#/$defs/environmentConfig"},
-    "waves": {"type": "array", "items": {"$ref": "#/$defs/wave"}},
-    "winConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}, "minItems": 1},
-    "loseConditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}},
-    "randomSeed": {"type": "integer", "minimum": 1, "maximum": 2147483647}
+    "zombieRefreshSpeedMultiplier": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 5.0
+    },
+    "openingFirstZombieAdvanceCells": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 12
+    },
+    "mapConfig": {
+      "$ref": "#/$defs/mapConfig"
+    },
+    "playerConfig": {
+      "$ref": "#/$defs/playerConfig"
+    },
+    "availablePlants": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "uniqueItems": true
+    },
+    "plantSelectionEnabled": {
+      "type": "boolean"
+    },
+    "freePlantSelection": {
+      "type": "boolean"
+    },
+    "forcedPlants": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "uniqueItems": true
+    },
+    "rewardPlant": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "rewardPlants": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "uniqueItems": true
+    },
+    "environmentConfig": {
+      "$ref": "#/$defs/environmentConfig"
+    },
+    "waves": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/wave"
+      }
+    },
+    "winConditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      },
+      "minItems": 1
+    },
+    "loseConditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      }
+    },
+    "randomSeed": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "simpleOnceFinalZombies": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true,
+      "description": "整局仅在最后一波各强制刷 1 只的 Boss 僵尸，不参与加权随机。"
+    }
   },
   "$defs": {
     "mapConfig": {
       "type": "object",
-      "required": ["type", "rows", "columns"],
+      "required": [
+        "type",
+        "rows",
+        "columns"
+      ],
       "properties": {
-        "type": {"enum": ["front_lawn", "night_lawn", "pool", "fog", "roof"]},
-        "rows": {"type": "integer", "minimum": 1, "maximum": 8},
-        "columns": {"type": "integer", "minimum": 1, "maximum": 12}
+        "type": {
+          "enum": [
+            "front_lawn",
+            "night_lawn",
+            "pool",
+            "fog",
+            "roof"
+          ]
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "columns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        }
       }
     },
     "playerConfig": {
       "type": "object",
-      "required": ["initialSun"],
-      "properties": {"initialSun": {"type": "integer", "minimum": 0}}
+      "required": [
+        "initialSun"
+      ],
+      "properties": {
+        "initialSun": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     },
     "environmentConfig": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "initialTombstones": {"type": "integer", "minimum": 0},
-        "tombstoneSpawns": {"type": "boolean"},
-        "bungee": {"type": "boolean"}
+        "initialTombstones": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tombstoneSpawns": {
+          "type": "boolean"
+        },
+        "bungee": {
+          "type": "boolean"
+        }
       }
     },
     "condition": {
       "type": "object",
-      "required": ["type"],
-      "properties": {"type": {"type": "string", "minLength": 1}}
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "wave": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "name", "startTime", "duration", "spawnGroups"],
+      "required": [
+        "id",
+        "name",
+        "startTime",
+        "duration",
+        "spawnGroups"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "name": {"type": "string", "minLength": 1},
-        "stageType": {"enum": ["flag", "interval"]},
-        "startTime": {"type": "number", "minimum": 0},
-        "duration": {"type": "number", "exclusiveMinimum": 0},
-        "spawnGroups": {"type": "array", "items": {"$ref": "#/$defs/spawnGroup"}}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stageType": {
+          "enum": [
+            "flag",
+            "interval"
+          ]
+        },
+        "startTime": {
+          "type": "number",
+          "minimum": 0
+        },
+        "duration": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "spawnGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/spawnGroup"
+          }
+        }
       }
     },
     "spawnGroup": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "zombieType", "count", "startDelay", "intervalMode", "fixedInterval", "randomInterval", "laneRule", "fixedLane", "laneWeights", "healthMultiplier", "speedMultiplier", "maxAlive"],
+      "required": [
+        "id",
+        "zombieType",
+        "count",
+        "startDelay",
+        "intervalMode",
+        "fixedInterval",
+        "randomInterval",
+        "laneRule",
+        "fixedLane",
+        "laneWeights",
+        "healthMultiplier",
+        "speedMultiplier",
+        "maxAlive"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "zombieType": {"type": "string", "minLength": 1},
-        "count": {"type": "integer", "minimum": 1},
-        "startDelay": {"type": "number", "minimum": 0},
-        "intervalMode": {"enum": ["fixed", "random"]},
-        "fixedInterval": {"type": "number", "exclusiveMinimum": 0},
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "zombieType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "startDelay": {
+          "type": "number",
+          "minimum": 0
+        },
+        "intervalMode": {
+          "enum": [
+            "fixed",
+            "random"
+          ]
+        },
+        "fixedInterval": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
         "randomInterval": {
           "type": "object",
-          "required": ["min", "max"],
-          "properties": {"min": {"type": "number", "exclusiveMinimum": 0}, "max": {"type": "number", "exclusiveMinimum": 0}}
+          "required": [
+            "min",
+            "max"
+          ],
+          "properties": {
+            "min": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "max": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          }
         },
-        "laneRule": {"enum": ["fixed", "random", "weighted"]},
-        "fixedLane": {"type": "integer", "minimum": 1},
-        "laneWeights": {"type": "array", "items": {"type": "number", "minimum": 0}},
-        "healthMultiplier": {"type": "number", "exclusiveMinimum": 0},
-        "speedMultiplier": {"type": "number", "exclusiveMinimum": 0},
-        "maxAlive": {"type": "integer", "minimum": 1},
-        "mustAppear": {"type": "boolean"}
+        "laneRule": {
+          "enum": [
+            "fixed",
+            "random",
+            "weighted"
+          ]
+        },
+        "fixedLane": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "laneWeights": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "healthMultiplier": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "speedMultiplier": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxAlive": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mustAppear": {
+          "type": "boolean"
+        }
       }
     }
   }

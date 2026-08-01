@@ -180,7 +180,7 @@ func generate_level_id() -> String:
 
 func _on_choose_level_button(choose_level_button:ChooseLevelButton):
 	if not choose_level_button.preset_level_id.is_empty():
-		var source := AdventurePresets.build_level(choose_level_button.preset_level_id)
+		var source := AdventurePresets.build_formal_level(choose_level_button.preset_level_id)
 		var built := CustomRuntime.build_game_para(source)
 		if not built["ok"]:
 			push_error("成品冒险关卡无法载入：%s" % str(built["error"]))
@@ -196,8 +196,8 @@ func _build_adventure_preset_buttons() -> void:
 	var mainline_mode := str(Global.adventure_mainline_mode)
 	var title := get_node_or_null("Label") as Label
 	if title != null:
-		title.text = "棋 盘 格 主 线" if mainline_mode == "chessboard" else "冒 险 模 式 · 五 大 世 界"
-	var presets: Array[Dictionary] = AdventurePresets.list_presets(mainline_mode)
+		title.text = "棋 盘 格 主 线" if mainline_mode == "chessboard" else "冒 险 模 式 · 三 大 世 界"
+	var presets: Array[Dictionary] = AdventurePresets.list_formal_presets(mainline_mode)
 	if presets.is_empty() or all_page.get_child_count() == 0:
 		return
 	var template_page := all_page.get_child(0) as GridContainer
@@ -227,7 +227,7 @@ func _build_adventure_preset_buttons() -> void:
 			var preset: Dictionary = presets[preset_index]
 			button.visible = true
 			button.preset_level_id = str(preset["id"])
-			var level_source := AdventurePresets.build_level(button.preset_level_id)
+			var level_source := AdventurePresets.build_formal_level(button.preset_level_id)
 			var built := CustomRuntime.build_game_para(level_source)
 			if built["ok"]:
 				button.curr_level_data_game_para = built["game_para"]

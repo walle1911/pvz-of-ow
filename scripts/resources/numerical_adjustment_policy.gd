@@ -129,7 +129,6 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/plant/ow/plant_052_sunflower_mercy.gd": {
 		"damage_boost_multiplier": "multiplier", "damage_boost_target_check_interval": "seconds",
-		"damage_boost_target_cell_max_range": "non_negative_int",
 	},
 	"res://scripts/character/plant/ow/plant_052_bonk_choy_ramattra.gd": {
 		"attack_value": "damage", "uppercut_attack_multiplier": "multiplier",
@@ -183,9 +182,6 @@ const SCRIPT_RULES := {
 		"chain_lane_shift_time": "seconds", "chain_lane_hold_time": "seconds",
 		"chain_pull_time": "seconds", "chain_stink_pause": "seconds",
 		"chain_last_stand_duration": "seconds",
-	},
-	"res://scripts/character/plant/ow/plant_068_scaredy_shroom_widowmaker.gd": {
-		"shot_interval": "seconds",
 	},
 	"res://scripts/character/zombie/original/zombie_009_jackson.gd": {"num_moon_walk": "non_negative_int"},
 	"res://scripts/character/zombie/ow/zombie_025_gargantuar_bob.gd": {"boss_throw_thresholds": "threshold_array"},

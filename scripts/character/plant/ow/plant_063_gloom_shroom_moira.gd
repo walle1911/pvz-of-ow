@@ -14,11 +14,15 @@ const MOIRA_FUME_RECOLOR_SHADER: Shader = preload("res://shaders/moira_fume_reco
 var yellow_fume_material: ShaderMaterial
 
 func ready_norm():
+	## 改版数值调整以攻击组件的基础攻击间隔为准，避免被父类根字段覆盖。
+	var configured_attack_cd := attack_component.attack_cd
 	yellow_fume_material = ShaderMaterial.new()
 	yellow_fume_material.shader = MOIRA_FUME_RECOLOR_SHADER
 	yellow_fume_material.set_shader_parameter("target_color", yellow_fume_color)
 	yellow_fume_material.set_shader_parameter("alpha_scale", yellow_fume_alpha_scale)
 	super()
+	attack_component.attack_cd = configured_attack_cd
+	attack_component.bullet_attack_cd_timer.wait_time = configured_attack_cd
 	if is_zombie_mode:
 		create_sun_component.disable_component(ComponentNormBase.E_IsEnableFactor.GameMode)
 
@@ -50,7 +54,11 @@ func attack_once():
 		return
 
 	var all_enemy: Array[Character000Base] = attack_component.detect_component.get_all_enemy_can_be_attacked()
-	var final_attack_value := int(round(float(attack_value) * get_attack_damage_multiplier()))
+	## 数值调整统一以基础参数中的子弹伤害为准；旧场景的 attack_value 仅作默认回退。
+	var base_attack_value := attack_component.attack_value_bullet
+	if base_attack_value <= 0:
+		base_attack_value = attack_value
+	var final_attack_value := int(round(float(base_attack_value) * get_attack_damage_multiplier()))
 	for enemy in all_enemy:
 		enemy.be_attacked_bullet(final_attack_value, BulletRegistry.AttackMode.Penetration)
 

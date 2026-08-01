@@ -47,6 +47,7 @@ static func example_level() -> Dictionary:
 		"simpleFlagZombieType": 101,
 		"simpleZombiePool": [100, 102, 104],
 		"simpleZombieIntroWaves": {"102": 4, "104": 7},
+		"simpleOnceFinalZombies": [],
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,
 		"chessboardConfig": {"mineCount": 8, "plantCardProbability": 0.25, "zombieCardProbability": 0.20, "enemyZombieProbability": 0.30, "plantCardPool": [], "zombieCardPool": []},
@@ -122,7 +123,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleZombieIntroWaves", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleZombieIntroWaves", "simpleOnceFinalZombies", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -171,6 +172,14 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 					int(source_intro_waves[zombie_type_value]), 1, simple_flag_count * 10
 				)
 	result["simpleZombieIntroWaves"] = normalized_intro_waves
+	var normalized_once_final: Array = []
+	var source_once_final = result.get("simpleOnceFinalZombies", [])
+	if source_once_final is Array:
+		for entry in source_once_final:
+			var zombie_type := int(entry) if str(entry).is_valid_int() else int(str(entry))
+			if zombie_type > 0 and not normalized_once_final.has(zombie_type):
+				normalized_once_final.append(zombie_type)
+	result["simpleOnceFinalZombies"] = normalized_once_final
 	result["zombieRefreshSpeedMultiplier"] = float(result.get("zombieRefreshSpeedMultiplier", 1.0))
 	result["openingFirstZombieAdvanceCells"] = clampf(
 		float(result.get("openingFirstZombieAdvanceCells", 0.0)),
@@ -289,6 +298,19 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 				if not simple_pool.has(zombie_type) or intro_wave < 1 or intro_wave > max_simple_wave:
 					issues.append(issue("error", "最早登场波次必须属于本关僵尸池和有效波次", "simpleZombieIntroWaves/%s" % str(zombie_type_value)))
 					break
+	var once_final = level.get("simpleOnceFinalZombies", [])
+	if once_final is not Array:
+		issues.append(issue("error", "终局一次性 Boss 配置格式错误", "simpleOnceFinalZombies"))
+	else:
+		var simple_pool: Array = []
+		for value in level.get("simpleZombiePool", []):
+			simple_pool.append(int(value))
+		for entry in once_final:
+			var zombie_type := int(entry) if str(entry).is_valid_int() else -1
+			if zombie_type <= 0:
+				issues.append(issue("error", "终局一次性 Boss 类型无效", "simpleOnceFinalZombies"))
+				break
+			## Boss 可以只写在 simpleOnceFinalZombies；若同时在池中也可。
 	if level.has("coverCharacters"):
 		var cover_characters: Array = level.get("coverCharacters", [])
 		if cover_characters.size() > 3:

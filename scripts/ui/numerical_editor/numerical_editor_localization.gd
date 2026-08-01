@@ -132,7 +132,7 @@ const PROPERTY_LABELS := {
 	"chain_pull_time": "链条拉回时间", "chain_stink_pause": "链条臭气停顿时间",
 	"chain_last_stand_duration": "连锁背水持续时间",
 	"critical_self_heal_amount": "濒死自我治疗量", "critical_ally_heal_amount": "濒死队友治疗量",
-	"critical_knockback_distance": "危急治疗击退距离", "shot_interval": "狙击射击间隔",
+	"critical_knockback_distance": "危急治疗击退距离",
 	"hp_threshold": "近距离爆发血量阈值", "close_burst_distance": "近距离爆发范围",
 }
 

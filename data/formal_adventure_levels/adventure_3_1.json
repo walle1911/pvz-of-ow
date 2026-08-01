@@ -1,0 +1,881 @@
+{
+	"activeLawnRows": [
+		0,
+		1,
+		2,
+		3,
+		4,
+		5
+	],
+	"allowNoFlag": false,
+	"availablePlants": [
+		1,
+		2,
+		3,
+		4,
+		52,
+		6,
+		36,
+		18,
+		504,
+		23,
+		14,
+		11,
+		43,
+		13,
+		40,
+		32,
+		24,
+		27,
+		16,
+		21,
+		516,
+		25
+	],
+	"chessboardConfig": {
+		"enemyZombieProbability": 0.35,
+		"mineCount": 0.0,
+		"plantCardPool": [
+			1.0,
+			2.0,
+			3.0,
+			4.0,
+			504.0,
+			6.0,
+			506.0,
+			507.0,
+			508.0,
+			509.0,
+			11.0,
+			511.0,
+			13.0,
+			14.0,
+			514.0,
+			16.0,
+			516.0,
+			52.0
+		],
+		"plantCardProbability": 0.25,
+		"zombieCardPool": [],
+		"zombieCardProbability": 0.0
+	},
+	"coverCharacters": [
+		{
+			"kind": "plant",
+			"type": 25
+		}
+	],
+	"earlyRefreshDelay": 1.5,
+	"editorMode": "simple",
+	"environmentConfig": {
+		"bungee": false,
+		"initialTombstones": 0,
+		"tombstoneSpawns": false
+	},
+	"forcedPlants": [],
+	"formalPresetId": "adventure_3_1",
+	"freePlantSelection": true,
+	"healthThresholdRange": [
+		0.518,
+		0.638
+	],
+	"hugeWaveWarningDelay": 6.0,
+	"id": "adventure_3_1",
+	"initialWaveDelay": 10.0,
+	"loseConditions": [
+		{
+			"type": "zombie_reaches_house"
+		}
+	],
+	"mapConfig": {
+		"columns": 9,
+		"rows": 6,
+		"type": "pool"
+	},
+	"minimumWaveTime": 5.265,
+	"name": "3-1 别来无漾",
+	"openingFirstZombieAdvanceCells": 0.0,
+	"plantSelectionEnabled": true,
+	"playerConfig": {
+		"cooldownMultiplier": 1.0,
+		"initialSun": 75,
+		"sunDropSpeed": 1.0
+	},
+	"randomSeed": 2026071521.0,
+	"rewardPlant": 44,
+	"rewardPlants": [
+		44
+	],
+	"schemaVersion": 1.0,
+	"simpleBaseZombieType": 100,
+	"simpleFlagCount": 1,
+	"simpleFlagZombieType": 101,
+	"simpleZombieIntroWaves": {
+		"102": 4,
+		"104": 10,
+		"510": 1
+	},
+	"simpleZombiePool": [
+		100,
+		102,
+		104,
+		510
+	],
+	"simpleWaveCount": 10,
+	"sodLayoutRows": 5.0,
+	"sodRolloutRows": 0.0,
+	"strictOriginalTiming": true,
+	"waveIntervalRange": [
+		26.06,
+		31.06
+	],
+	"waves": [
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_01",
+			"name": "第 1 波",
+			"spawnGroups": [
+				{
+					"count": 1.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "simple_required_adventure_3_1_wave_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 8.0,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.87,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_01_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "104"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_01_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "510"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 0.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_02",
+			"name": "第 2 波",
+			"spawnGroups": [
+				{
+					"count": 2.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_02_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.71,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_02_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "102"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_02_group_03",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.7,
+					"zombieType": "510"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 28.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_03",
+			"name": "第 3 波",
+			"spawnGroups": [
+				{
+					"count": 1.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "simple_required_adventure_3_1_wave_03",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 8.0,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.87,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_03_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "104"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_03_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "510"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 56.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_04",
+			"name": "第 4 波",
+			"spawnGroups": [
+				{
+					"count": 1.0,
+					"fixedInterval": 0.71,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_04_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "102"
+				},
+				{
+					"count": 4.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_04_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 84.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_05",
+			"name": "第 5 波",
+			"spawnGroups": [
+				{
+					"count": 4.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_05_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 2.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_05_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "510"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 112.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_06",
+			"name": "第 6 波",
+			"spawnGroups": [
+				{
+					"count": 1.0,
+					"fixedInterval": 2.0,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "simple_required_adventure_3_1_wave_06",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 8.0,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 2.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_06_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "510"
+				},
+				{
+					"count": 2.0,
+					"fixedInterval": 0.71,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_06_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "102"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 140.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_07",
+			"name": "第 7 波",
+			"spawnGroups": [
+				{
+					"count": 6.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_07_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "100"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_07_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "510"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 168.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_08",
+			"name": "第 8 波",
+			"spawnGroups": [
+				{
+					"count": 1.0,
+					"fixedInterval": 0.87,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_08_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "104"
+				},
+				{
+					"count": 3.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_08_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 196.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_09",
+			"name": "第 9 波",
+			"spawnGroups": [
+				{
+					"count": 2.0,
+					"fixedInterval": 0.71,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_09_group_01",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "102"
+				},
+				{
+					"count": 3.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_09_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "100"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 224.0
+		},
+		{
+			"duration": 28.0,
+			"id": "adventure_3_1_wave_10",
+			"name": "第 10 波（大波）",
+			"spawnGroups": [
+				{
+					"count": 6.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_10_group_02",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.35,
+					"zombieType": "100"
+				},
+				{
+					"count": 3.0,
+					"fixedInterval": 0.63,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_10_group_03",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						0.0,
+						0.0,
+						1.0,
+						1.0,
+						0.0,
+						0.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.7,
+					"zombieType": "510"
+				},
+				{
+					"count": 2.0,
+					"fixedInterval": 0.71,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_10_group_04",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 1.05,
+					"zombieType": "102"
+				},
+				{
+					"count": 1.0,
+					"fixedInterval": 0.87,
+					"fixedLane": 1.0,
+					"healthMultiplier": 1.0,
+					"id": "adventure_3_1_wave_10_group_05",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1.0,
+						1.0,
+						0.0,
+						0.0,
+						1.0,
+						1.0
+					],
+					"maxAlive": 44.0,
+					"randomInterval": {
+						"max": 1.2,
+						"min": 0.5
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 1.4,
+					"zombieType": "104"
+				}
+			],
+			"stageType": "flag",
+			"startTime": 252.0
+		}
+	],
+	"winConditions": [
+		{
+			"type": "all_waves_cleared"
+		}
+	],
+	"workshopMode": "normal",
+	"zombieRefreshSpeedMultiplier": 0.95
+}
