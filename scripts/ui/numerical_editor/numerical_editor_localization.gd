@@ -75,7 +75,7 @@ const PROPERTY_LABELS := {
 	"glow_overlay_pulse_speed": "发光叠层脉冲速度", "glow_pulse_amount": "发光脉冲幅度", "glow_pulse_speed": "发光脉冲速度",
 	"ground_y": "地面纵坐标", "heal_amount_per_second": "每秒回血量", "heal_delay_after_attack": "受伤后回血等待",
 	"heal_duration": "回血持续时间", "heal_amount_per_pulse": "单次范围治疗量", "heal_pulse_interval": "范围治疗间隔",
-	"hat_cooldown": "飞帽冷却时间", "hat_flight_scale_percent": "飞行帽缩放百分比",
+	"hat_cooldown": "自动飞帽触发冷却", "hat_flight_scale_percent": "飞行帽缩放百分比",
 	"first_ally_heal": "第一名队友治疗量", "second_ally_heal": "第二名队友治疗量", "third_ally_heal": "第三名队友治疗量",
 	"idle_frame_blend_enabled": "启用待机帧混合", "idle_frame_blend_strength": "待机帧混合强度",
 	"idle_status": "待机状态编号", "idle_status_max": "待机状态最大编号", "imitater_gray_strength": "模仿者灰度强度",
