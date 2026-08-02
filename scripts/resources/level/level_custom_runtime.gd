@@ -130,11 +130,9 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		game_para.custom_stage_schedule.clear()
 		game_para.custom_flag_data.clear()
 		game_para.zombie_refresh_types = allowed_types
-		game_para.simple_zombie_intro_waves = _simple_intro_waves(
-			level.get("simpleZombieIntroWaves", {}),
+		game_para.simple_zombie_intro_waves = _automatic_simple_intro_waves(
+			AdventurePresets.automatically_introduced_zombies(level),
 			allowed_types,
-			game_para.simple_base_zombie_type,
-			game_para.simple_flag_zombie_type,
 			game_para.max_wave
 		)
 		game_para.simple_once_final_zombie_types = _simple_once_final_zombie_types(
@@ -254,22 +252,24 @@ static func _simple_once_final_zombie_types(
 	return result
 
 
-static func _simple_intro_waves(
-	value,
+static func _automatic_simple_intro_waves(
+	introduced_types: Array[int],
 	allowed_types: Array[CharacterRegistry.ZombieType],
-	base_zombie_type: CharacterRegistry.ZombieType,
-	flag_zombie_type: CharacterRegistry.ZombieType,
 	max_wave: int
 ) -> Dictionary:
 	var result := {}
-	if value is not Dictionary:
-		return result
-	for zombie_type_value in value:
+	for zombie_type_value in introduced_types:
 		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
-		if zombie_type == base_zombie_type or zombie_type == flag_zombie_type \
-		or not allowed_types.has(zombie_type):
+		if not allowed_types.has(zombie_type):
 			continue
-		result[int(zombie_type)] = clampi(int(value[zombie_type_value]), 1, max_wave)
+		var intro_wave := max_wave / 2 + 1
+		if zombie_type in [
+			CharacterRegistry.ZombieType.Z516Balloon,
+			CharacterRegistry.ZombieType.Z517Digger,
+			CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
+		]:
+			intro_wave = 7
+		result[int(zombie_type)] = clampi(intro_wave, 1, max_wave)
 	return result
 
 static func _original_zombie_weight(zombie_type: int) -> int:

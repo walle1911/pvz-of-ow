@@ -592,10 +592,10 @@ func _add_registry_property_editor(property_name:String) -> void:
 	if is_spawn_weight:
 		var grade_select := OptionButton.new()
 		grade_select.custom_minimum_size.x = 220
-		grade_select.tooltip_text = "Boss 档不进随机池，仅于最后一波各强制刷 1 只；其余档位保持原有概率算法。"
-		for grade_text in ["A（极高）", "B（很高）", "C（高）", "D（中）", "E（较低）", "F（低）", "Boss（必定上场）"]:
+		grade_select.tooltip_text = "A～F 档只调整该僵尸进入自然随机池后的相对抽取权重。"
+		for grade_text in ["A（极高）", "B（很高）", "C（高）", "D（中）", "E（较低）", "F（低）"]:
 			grade_select.add_item(grade_text)
-		grade_select.select(clampi(int(current_value), 1, 7) - 1)
+		grade_select.select(clampi(int(current_value), 1, 6) - 1)
 		grade_select.item_selected.connect(
 			func(index): _set_pending_value(REGISTRY_NODE_PATH, property_name, int(index) + 1)
 		)

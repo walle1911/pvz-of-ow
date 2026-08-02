@@ -19,6 +19,7 @@ func _ready() -> void:
 	_test_pool_lane_rules()
 	_test_difficulty_growth()
 	_test_formal_level_ids()
+	_test_formal_sync_status()
 	_test_developer_override_isolation()
 	await _test_card_slot_limit_enforcement()
 	await _test_choose_level_pages()
@@ -235,6 +236,12 @@ func _test_formal_level_ids() -> void:
 	_expect(Store.is_formal_preset_id("adventure_5_10"), "5-10 应是合法正式关卡 ID")
 	_expect(not Store.is_formal_preset_id("adventure_6_1"), "不应接受第六世界")
 	_expect(not Store.is_formal_preset_id("chess_2_1"), "棋盘格线目前只保留第一世界")
+
+
+func _test_formal_sync_status() -> void:
+	_expect(Store.is_developer_level_synced("adventure_1_2"), "内容相同的开发者关卡和正式快照应显示为已同步")
+	_expect(not Store.is_developer_level_synced("adventure_1_1"), "内容不同的开发者关卡和正式快照应显示为未同步")
+	_expect(not Store.is_developer_level_synced("adventure_4_1"), "缺少正式快照的关卡应显示为未同步")
 
 
 func _test_developer_override_isolation() -> void:

@@ -21,6 +21,7 @@ static func load_developer_level(preset_id: String) -> Dictionary:
 	var level: Dictionary = loaded["level"]
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
+	level["_adventureLevelSource"] = "developer"
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
@@ -30,6 +31,7 @@ static func save_developer_level(source: Dictionary, preset_id: String) -> Dicti
 	var level := Logic.normalize_level(source)
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
+	level.erase("_adventureLevelSource")
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
 		return {"ok": false, "path": developer_level_path(preset_id), "error": str(built["error"])}
@@ -59,7 +61,24 @@ static func load_formal_level(preset_id: String) -> Dictionary:
 	var level: Dictionary = loaded["level"]
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
+	level["_adventureLevelSource"] = "formal"
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
+
+
+static func is_developer_level_synced(preset_id: String) -> bool:
+	if not is_formal_preset_id(preset_id):
+		return false
+	var developer_path := developer_level_path(preset_id)
+	var formal_path := formal_level_path(preset_id)
+	if not FileAccess.file_exists(developer_path) or not FileAccess.file_exists(formal_path):
+		return false
+	var developer_file := FileAccess.open(developer_path, FileAccess.READ)
+	var formal_file := FileAccess.open(formal_path, FileAccess.READ)
+	if developer_file == null or formal_file == null:
+		return false
+	if developer_file.get_length() != formal_file.get_length():
+		return false
+	return developer_file.get_buffer(developer_file.get_length()) == formal_file.get_buffer(formal_file.get_length())
 
 
 static func sync_developer_levels_to_formal(preset_ids: Array[String]) -> Dictionary:

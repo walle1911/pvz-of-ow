@@ -313,7 +313,6 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"zombieCardPool": [],
 	}
 	var simple_pool: Array = []
-	var simple_intro_waves := {}
 	var simple_once_final: Array = []
 	var roster := _zombie_roster(world, level_number, workshop_mode)
 	var normal_type := ORIGINAL_NORMAL if is_chessboard else OW_NORMAL
@@ -334,9 +333,6 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 			continue
 		if not simple_pool.has(zt):
 			simple_pool.append(zt)
-		var first_wave := int(FIRST_ALLOWED_WAVE.get(zt, 1))
-		if zt != normal_type and zt != flag_type:
-			simple_intro_waves[str(zt)] = clampi(first_wave, 1, simple_flag_count * 10)
 	if simple_pool.is_empty():
 		simple_pool.append(normal_type)
 
@@ -359,7 +355,6 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"simpleBaseZombieType": normal_type,
 		"simpleFlagZombieType": flag_type,
 		"simpleZombiePool": simple_pool,
-		"simpleZombieIntroWaves": simple_intro_waves,
 		"simpleOnceFinalZombies": simple_once_final,
 		"chessboardConfig": chessboard_config,
 		"availablePlants": available_plants,
@@ -383,6 +378,47 @@ static func build_level(preset_id: String, use_developer_override := false) -> D
 		"loseConditions": [{"type": "zombie_reaches_house"}],
 		"randomSeed": 2026071500 + global_level,
 	}
+
+
+## 按当前开发者/正式关卡序列比较此前关卡的自然僵尸池，返回本关首次出现的类型。
+## 缺少已保存快照时使用内置冒险编排作为回退，避免关卡文件不完整时误判所有类型为首秀。
+static func automatically_introduced_zombies(level: Dictionary) -> Array[int]:
+	var preset_id := str(level.get("formalPresetId", level.get("id", "")))
+	var parsed := _parse_preset_id(preset_id)
+	if str(parsed.get("mode", "")) != "normal":
+		return []
+	var current_world := int(parsed.get("world", 0))
+	var current_level := int(parsed.get("level", 0))
+	if current_world <= 0 or current_level <= 0:
+		return []
+	var seen_types := {}
+	var source_kind := str(level.get("_adventureLevelSource", "developer"))
+	var current_global_level := _global_level_number(current_world, current_level)
+	for global_level in range(1, current_global_level):
+		var world: int = int((global_level - 1) / LEVELS_PER_WORLD) + 1
+		var level_number := (global_level - 1) % LEVELS_PER_WORLD + 1
+		var prior_id := _preset_id(world, level_number, "normal")
+		var loaded := FormalLevelStore.load_formal_level(prior_id) \
+			if source_kind == "formal" else FormalLevelStore.load_developer_level(prior_id)
+		var prior_pool: Array = []
+		if loaded["ok"]:
+			prior_pool = (loaded["level"] as Dictionary).get("simpleZombiePool", [])
+		else:
+			prior_pool = _zombie_roster(world, level_number, "normal")
+		for zombie_type_value in prior_pool:
+			seen_types[int(zombie_type_value)] = true
+	var result: Array[int] = []
+	var base_type := int(level.get("simpleBaseZombieType", OW_NORMAL))
+	var flag_type := int(level.get("simpleFlagZombieType", OW_FLAG))
+	var once_final: Array = level.get("simpleOnceFinalZombies", [])
+	for zombie_type_value in level.get("simpleZombiePool", []):
+		var zombie_type := int(zombie_type_value)
+		if zombie_type <= 0 or zombie_type == base_type or zombie_type == flag_type \
+		or zombie_type == int(CharacterRegistry.ZombieType.Z520Bungi) \
+		or once_final.has(zombie_type) or seen_types.has(zombie_type) or result.has(zombie_type):
+			continue
+		result.append(zombie_type)
+	return result
 
 
 static func _available_plants(world: int, level_number: int, workshop_mode: String) -> Array:

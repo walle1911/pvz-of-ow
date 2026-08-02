@@ -161,6 +161,7 @@ func _run() -> void:
 	assert(Store.get_registry_override(normal_zombie_path, "zombie_spawn_weight", 1, false) == 1)
 	assert(Store.zombie_spawn_weight_from_grade(1) == 4000)
 	assert(Store.zombie_spawn_weight_from_grade(6) == 1000)
+	assert(Store.zombie_spawn_weight_from_grade(7) == 1000)
 	assert(Store.zombie_spawn_weight_to_grade(3500) == 2)
 	assert(not Store.validate_registry_value("zombie_spawn_weight", 7, 1).get("ok", false))
 	assert(ZombieWaveCreateManager.scaled_decay_weight(4000, 4000, 180, 25) == 400)
@@ -175,6 +176,16 @@ func _run() -> void:
 	}
 	Store._migrate_data(legacy_zombie_data)
 	assert(legacy_zombie_data["characters"][normal_zombie_path]["@registry"]["zombie_spawn_weight"] == 2)
+	var legacy_boss_grade_data := {
+		"version": 4,
+		"characters": {
+			normal_zombie_path: {
+				"@registry": {"zombie_spawn_weight": 7},
+			}
+		}
+	}
+	Store._migrate_data(legacy_boss_grade_data)
+	assert(not legacy_boss_grade_data["characters"][normal_zombie_path]["@registry"].has("zombie_spawn_weight"))
 	var wave_create_manager := ZombieWaveCreateManager.new()
 	wave_create_manager.call("_reset_zombie_weights_from_adjustments")
 	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z500Norm] == 1000)

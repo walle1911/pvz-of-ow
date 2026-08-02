@@ -91,8 +91,8 @@ var custom_simple_original_mode := false
 ## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
 var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
 var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001FlagTalon
-## 简易关卡的主题僵尸必定登场波次（僵尸类型 -> 1-based 波次）；
-## 到达该波次时优先于战力预算插入，且不会在此之前被随机抽到。
+## 根据此前冒险关卡自动推导的首次登场波次（僵尸类型 -> 1-based 波次）；
+## 到达首秀波时优先插入，并在最终波按原版新僵尸规则再次插入。
 var simple_zombie_intro_waves: Dictionary = {}
 ## 简易关卡的整局一次性 Boss：不参与加权随机，仅在最后一波各强制刷 1 只。
 var simple_once_final_zombie_types: Array[CharacterRegistry.ZombieType] = []

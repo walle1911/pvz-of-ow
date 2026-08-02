@@ -64,6 +64,7 @@
     },
     "simpleZombieIntroWaves": {
       "type": "object",
+      "description": "旧版手动必定登场字段，仅用于兼容读取；当前运行时会忽略并根据此前冒险关卡自动推导首次登场。",
       "propertyNames": {
         "pattern": "^[0-9]+$"
       },

@@ -67,8 +67,8 @@ func _ready() -> void:
 		CharacterRegistry.ZombieType.Z004BucketTalon,
 	])
 	assert(simple_para.simple_zombie_intro_waves == {
-		int(CharacterRegistry.ZombieType.Z002ConeTalon): 4,
-		int(CharacterRegistry.ZombieType.Z004BucketTalon): 7,
+		int(CharacterRegistry.ZombieType.Z002ConeTalon): 11,
+		int(CharacterRegistry.ZombieType.Z004BucketTalon): 11,
 	})
 	var alternate_roles := simple_level.duplicate(true)
 	alternate_roles["simpleBaseZombieType"] = int(CharacterRegistry.ZombieType.Z500Norm)
@@ -130,7 +130,6 @@ func _ready() -> void:
 	assert(int(normalized_legacy["simpleWaveCount"]) == 30)
 	var normal_only_level := simple_level.duplicate(true)
 	normal_only_level.erase("simpleZombiePool")
-	normal_only_level.erase("simpleZombieIntroWaves")
 	for stage in normal_only_level["waves"]:
 		stage["spawnGroups"] = []
 	var normal_only_built := Runtime.build_game_para(normal_only_level)
@@ -139,7 +138,7 @@ func _ready() -> void:
 	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z510Duckytube] == 1)
 	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z510Duckytube] == 3600)
 	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z020ZombieYetiWinston] == 300)
-	## 1-1～3-10 工坊曲线必须全部可构建，僵尸池/首秀表也必须闭合。
+	## 1-1～3-10 工坊曲线必须全部可构建，自动推导的首秀表也必须闭合。
 	for world in range(1, 4):
 		for level_number in range(1, 11):
 			var preset_id := "adventure_%d_%d" % [world, level_number]
@@ -158,8 +157,8 @@ func _ready() -> void:
 				var zombie_type := int(zombie_type_value)
 				assert(ZombieWaveCreateManager.zombie_power.has(zombie_type), "%s missing power %d" % [preset_id, zombie_type])
 				assert(ZombieWaveCreateManager.zombie_weights_ori.has(zombie_type), "%s missing weight %d" % [preset_id, zombie_type])
-			for zombie_type_value in curve_level["simpleZombieIntroWaves"]:
-				var zombie_type := int(zombie_type_value)
+			assert(not curve_level.has("simpleZombieIntroWaves"))
+			for zombie_type in AdventureLevelPresets.automatically_introduced_zombies(curve_level):
 				assert((curve_level["simpleZombiePool"] as Array).has(zombie_type))
 				assert(curve_para.simple_zombie_intro_waves.has(zombie_type))
 	var grass_cell := PlantCell.new()

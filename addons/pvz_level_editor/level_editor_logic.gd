@@ -46,7 +46,6 @@ static func example_level() -> Dictionary:
 		"simpleBaseZombieType": 100,
 		"simpleFlagZombieType": 101,
 		"simpleZombiePool": [100, 102, 104],
-		"simpleZombieIntroWaves": {},
 		"simpleOnceFinalZombies": [],
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,
@@ -123,7 +122,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleZombieIntroWaves", "simpleOnceFinalZombies", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleOnceFinalZombies", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -160,18 +159,9 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	if not normalized_simple_pool.has(result["simpleBaseZombieType"]):
 		normalized_simple_pool.push_front(result["simpleBaseZombieType"])
 	result["simpleZombiePool"] = normalized_simple_pool
-	var normalized_intro_waves := {}
-	var source_intro_waves = result.get("simpleZombieIntroWaves", {})
-	if source_intro_waves is Dictionary:
-		for zombie_type_value in source_intro_waves:
-			var zombie_type := int(zombie_type_value)
-			if zombie_type > 0 and normalized_simple_pool.has(zombie_type) \
-			and zombie_type != int(result["simpleBaseZombieType"]) \
-			and zombie_type != int(result["simpleFlagZombieType"]):
-				normalized_intro_waves[str(zombie_type)] = clampi(
-					int(source_intro_waves[zombie_type_value]), 1, simple_flag_count * 10
-				)
-	result["simpleZombieIntroWaves"] = normalized_intro_waves
+	## 旧版允许作者手动标记必定登场。该字段现由运行时根据此前冒险关卡自动推导，
+	## 载入旧关卡时直接丢弃，避免历史手动标记继续影响波表。
+	result.erase("simpleZombieIntroWaves")
 	var normalized_once_final: Array = []
 	var source_once_final = result.get("simpleOnceFinalZombies", [])
 	if source_once_final is Array:
@@ -287,17 +277,6 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 			if natural_weight <= 0:
 				issues.append(issue("error", "该僵尸不支持简易自然波次，请改用进阶模式", "simpleZombiePool"))
 				break
-		var intro_waves = level.get("simpleZombieIntroWaves", {})
-		if intro_waves is not Dictionary:
-			issues.append(issue("error", "必定登场波次配置格式错误", "simpleZombieIntroWaves"))
-		else:
-			var max_simple_wave := clampi(int(level.get("simpleFlagCount", 1)), 1, 10) * 10
-			for zombie_type_value in intro_waves:
-				var zombie_type := int(zombie_type_value)
-				var intro_wave := int(intro_waves[zombie_type_value])
-				if not simple_pool.has(zombie_type) or intro_wave < 1 or intro_wave > max_simple_wave:
-					issues.append(issue("error", "必定登场波次必须属于本关僵尸池和有效波次", "simpleZombieIntroWaves/%s" % str(zombie_type_value)))
-					break
 	var once_final = level.get("simpleOnceFinalZombies", [])
 	if once_final is not Array:
 		issues.append(issue("error", "终局一次性 Boss 配置格式错误", "simpleOnceFinalZombies"))

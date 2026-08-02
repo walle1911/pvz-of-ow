@@ -4,7 +4,7 @@ class_name NumericalAdjustmentStore
 const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
 
 const SAVE_PATH := "user://numerical_adjustments.json"
-const DATA_VERSION := 4
+const DATA_VERSION := 5
 const REGISTRY_NODE_PATH := "@registry"
 const ZOMBIE_SPAWN_WEIGHT_BY_GRADE := {
 	1: 4000, # A：极高
@@ -17,7 +17,7 @@ const ZOMBIE_SPAWN_WEIGHT_BY_GRADE := {
 const REGISTRY_RULES := {
 	"plant_sun_cost": {"min": 0.0, "max": 10000000.0, "integer": true},
 	"plant_cool_time": {"min": 0.01, "max": 600.0, "integer": false},
-	"zombie_spawn_weight": {"min": 1.0, "max": 7.0, "integer": true},
+	"zombie_spawn_weight": {"min": 1.0, "max": 6.0, "integer": true},
 }
 
 static var _cache: Dictionary = {}
@@ -84,8 +84,6 @@ static func validate_registry_value(property_name:String, saved_value, fallback)
 
 
 static func zombie_spawn_weight_from_grade(grade: int) -> int:
-	if grade == 7:
-		return 0
 	return int(ZOMBIE_SPAWN_WEIGHT_BY_GRADE.get(clampi(grade, 1, 6), 1000))
 
 
@@ -123,7 +121,7 @@ static func _migrate_data(data: Dictionary) -> void:
 				else:
 					registry_data["zombie_spawn_weight"] = zombie_spawn_weight_to_grade(int(old_weight))
 			elif int(old_weight) == 7:
-				## 短暂使用过的 G 档不是正式档位，恢复该僵尸的默认权重。
+				## 旧版第 7 档会把僵尸转成末波 Boss；该机制删除后恢复默认权重。
 				registry_data.erase("zombie_spawn_weight")
 
 

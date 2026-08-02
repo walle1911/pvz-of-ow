@@ -233,9 +233,24 @@ func wave_refresh(curr_is_end_wave:bool):
 
 ### 删除移动超出视野的僵尸,每次刷新僵尸调用
 func set_zombie_death_over_view():
+	var right_cleanup_limit := zombie_range_pos_x.y
+	if game_para.custom_simple_original_mode:
+		## 简易原版模式会把同一波僵尸放在出生点右侧 0..39 像素，
+		## 旗帜波还会整体再右移 40 像素。波次刷新信号在创建僵尸后
+		## 立即触发，清理边界必须覆盖这些合法出生位置，否则出生点为
+		## x=950 的前院会随机删掉 x>1000 的新僵尸。
+		var maximum_spawn_offset := float(
+			ZombieWaveCreateManager.ORIGINAL_START_RANDOM_OFFSET - 1
+			+ ZombieWaveCreateManager.ORIGINAL_FLAG_WAVE_OFFSET
+		)
+		for zombie_row: ZombieRow in all_zombie_rows:
+			right_cleanup_limit = maxf(
+				right_cleanup_limit,
+				zombie_row.zombie_create_position.global_position.x + maximum_spawn_offset
+			)
 	for z:Zombie000Base in all_zombies_1d:
 		# 检查是否在屏幕外
-		if z.global_position.x > zombie_range_pos_x.y or z.global_position.x < zombie_range_pos_x.x:
+		if z.global_position.x > right_cleanup_limit or z.global_position.x < zombie_range_pos_x.x:
 			#all_zombies_be_hypno.erase(z)
 			z.character_death_disappear()
 	#print("删除离开当前视野的僵尸，目前还剩的僵尸：", all_zombies_1d)

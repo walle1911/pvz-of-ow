@@ -67,29 +67,13 @@ func _run() -> void:
 	var simple_pool: Array = workshop.call("_simple_zombie_pool")
 	if not simple_pool.has(required_wave_type):
 		workshop.call("_select_simple_zombie", str(required_wave_type))
-	if bool(workshop.call("_has_simple_required_wave", required_wave_type)):
-		workshop.call("_toggle_simple_required_zombie", required_wave_type)
 	var required_wave_holder := workshop.call("_make_zombie_card", required_wave_type) as Control
 	assert(required_wave_holder.get_node_or_null("CardStateBadge") == null)
 	required_wave_holder.free()
 	workshop.call("_on_workshop_card_gui_input", context_click, "zombie", required_wave_type)
-	var required_wave_menu_index: int = workshop.card_context_menu.get_item_index(1)
-	assert(required_wave_menu_index >= 0)
-	assert(workshop.card_context_menu.get_item_text(required_wave_menu_index) == "设为必定登场")
-	assert(not workshop.card_context_menu.is_item_disabled(required_wave_menu_index))
+	assert(workshop.card_context_menu.item_count == 1)
+	assert(workshop.card_context_menu.get_item_text(0) == "编辑全局数值")
 	workshop.card_context_menu.hide()
-	workshop.call("_on_card_context_menu_pressed", 1)
-	required_wave_holder = workshop.call("_make_zombie_card", required_wave_type) as Control
-	var required_wave_badge := required_wave_holder.get_node("CardStateBadge") as TextureRect
-	assert((required_wave_badge.get_child(0) as Label).text == "必")
-	required_wave_holder.free()
-	workshop.call("_on_workshop_card_gui_input", context_click, "zombie", required_wave_type)
-	assert(workshop.card_context_menu.get_item_text(required_wave_menu_index) == "取消必定登场")
-	workshop.card_context_menu.hide()
-	workshop.call("_on_card_context_menu_pressed", 1)
-	required_wave_holder = workshop.call("_make_zombie_card", required_wave_type) as Control
-	assert(required_wave_holder.get_node_or_null("CardStateBadge") == null)
-	required_wave_holder.free()
 	for holder in workshop.card_grid.get_children():
 		if holder.get_child_count() > 0:
 			assert(not (holder.get_child(0) as Card).is_imitater)
@@ -367,7 +351,6 @@ func _run() -> void:
 
 	workshop.level = Logic.example_level()
 	workshop.level["simpleZombiePool"] = [int(CharacterRegistry.ZombieType.Z000NormTalon)]
-	workshop.level["simpleZombieIntroWaves"] = {}
 	workshop.level["waves"] = [Logic.make_wave("wave_redesign", "尺寸测试", 0.0, 10.0, [], "flag")]
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
@@ -375,7 +358,7 @@ func _run() -> void:
 	assert(workshop.preview_zombies.size() == 2)
 	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 2)
 	assert((workshop.level["simpleZombiePool"] as Array).has(500))
-	assert(not (workshop.level["simpleZombieIntroWaves"] as Dictionary).has("500"))
+	assert(not workshop.level.has("simpleZombieIntroWaves"))
 	var selected_zombie_holder: Control = workshop.call("_make_zombie_card", 500)
 	assert((selected_zombie_holder.get_child(0) as Card).modulate == Color.WHITE)
 	assert(not ((selected_zombie_holder.get_child(0) as Card).get_node("CardBg/Cost") as Label).visible)
