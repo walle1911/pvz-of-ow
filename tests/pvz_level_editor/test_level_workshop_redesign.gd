@@ -261,6 +261,10 @@ func _run() -> void:
 
 	workshop.call("_load_preset_for_edit", "adventure_1_2")
 	assert(workshop.formal_preset_id == "adventure_1_2")
+	var new_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z002ConeTalon)) as Control
+	assert(new_cone_holder.get_node_or_null("CardStateBadge") != null)
+	assert((new_cone_holder.get_node("CardStateBadge/Label") as Label).text == "新")
+	new_cone_holder.free()
 	assert(not workshop.previous_formal_level_button.disabled)
 	assert(not workshop.next_formal_level_button.disabled)
 	assert(str(workshop.level.get("editorMode", "")) == "simple")

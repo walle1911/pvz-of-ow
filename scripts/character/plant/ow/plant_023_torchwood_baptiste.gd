@@ -123,7 +123,10 @@ func _copy_recording_freeze_metadata(source_bullet: Bullet000Base, target_bullet
 func _up_bullet_glow_only(curr_bullet: Bullet000Base) -> void:
 	if not is_equal_approx(bullet_damage_multiplier, 1.0) and curr_bullet is Bullet000NormBase:
 		var norm_bullet := curr_bullet as Bullet000NormBase
-		norm_bullet.attack_value = maxi(1, int(round(float(norm_bullet.attack_value) * bullet_damage_multiplier)))
+		if norm_bullet.has_method(&"apply_external_damage_multiplier"):
+			norm_bullet.call(&"apply_external_damage_multiplier", bullet_damage_multiplier)
+		else:
+			norm_bullet.attack_value = maxi(1, int(round(float(norm_bullet.attack_value) * bullet_damage_multiplier)))
 	_apply_bullet_blue_glow(curr_bullet)
 	curr_bullet_up.append(curr_bullet)
 

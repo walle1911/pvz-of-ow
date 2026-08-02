@@ -82,6 +82,15 @@ func _run() -> void:
 	assert(is_equal_approx(target.get_attack_damage_multiplier(), 1.875))
 	target.hp_component.Hp_loss(100)
 	assert(target.hp_component.curr_hp == 80)
+	## 动画或状态切换可能在强化期间释放原身体精灵；同步流光时不能转换已释放对象。
+	assert(not nano_boost.glow_pairs.is_empty())
+	var removed_source_value:Variant = nano_boost.glow_pairs[0].get("source")
+	assert(is_instance_valid(removed_source_value))
+	(removed_source_value as Sprite2D).queue_free()
+	await get_tree().process_frame
+	nano_boost._sync_full_body_glow()
+	for glow_pair:Dictionary in nano_boost.glow_pairs:
+		assert(is_instance_valid(glow_pair.get("source")))
 	var ana_condition := Global.character_registry.get_plant_info(
 		CharacterRegistry.PlantType.P036CoffeeBeanAna,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource

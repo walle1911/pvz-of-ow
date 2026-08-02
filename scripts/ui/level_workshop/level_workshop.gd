@@ -1806,11 +1806,33 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("zombie", zombie_type))
 	holder.add_child(card)
+	if _is_formal_first_appearance_zombie(zombie_type):
+		_add_card_state_badge(holder, "新", Color("d77835"))
 	if not simple_role.is_empty():
 		_add_simple_role_checkbox(holder, zombie_type, simple_role)
 	if required_simple_zombie:
 		_add_card_state_glow(holder, Color("d77835"))
 	return holder
+
+
+func _is_formal_first_appearance_zombie(zombie_type: int) -> bool:
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		return false
+	var preset_index := _formal_preset_index()
+	if preset_index < 0:
+		return false
+	var current_zombies := Logic._cover_zombie_types(level)
+	if not current_zombies.has(zombie_type):
+		return false
+	if preset_index == 0:
+		return not [101, 501].has(zombie_type)
+	var presets := AdventurePresets.list_presets("normal")
+	for previous_index in preset_index:
+		var previous_id := str((presets[previous_index] as Dictionary).get("id", ""))
+		var previous_level := AdventurePresets.build_level(previous_id, true)
+		if Logic._cover_zombie_types(previous_level).has(zombie_type):
+			return false
+	return not [101, 501].has(zombie_type)
 
 
 func _add_simple_role_checkbox(holder: Control, zombie_type: int, role: String) -> void:

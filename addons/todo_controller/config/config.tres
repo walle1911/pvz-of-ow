@@ -452,7 +452,8 @@ script_list_meta = {
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
 "res://tests/test_plant_balance_smoke.gd": [-1, -1],
-"res://tests/test_sigma_gravity_field_runtime.gd": [-1, -1]
+"res://tests/test_sigma_gravity_field_runtime.gd": [-1, -1],
+"res://tests/test_wuyang_guided_bullet_runtime.gd": [-1, -1]
 }
 line_number_show = true
 complete_path_show = true

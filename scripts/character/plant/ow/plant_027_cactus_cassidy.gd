@@ -3,6 +3,7 @@ class_name Plant027CactusCassidy
 
 const CASSIDY_SKILL_BULLET_SCENE:PackedScene = preload("res://scenes/bullet/bullet_027_cactus_cassidy_skill.tscn")
 const TUMBLEWEED_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_tumbleweed.png")
+const FLASHBANG_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_flare.png")
 
 @onready var flare:Sprite2D = $Body/BodyCorrect/flare
 @onready var flare_remote_transform:RemoteTransform2D = $Body/BodyCorrect/Anim_face/RemoteTransform2D
@@ -15,6 +16,8 @@ const TUMBLEWEED_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy
 @export_range(1, 9, 1) var skill_column_count:= 3
 @export_range(0.05, 2.0, 0.05, "suffix:秒") var backstep_duration:= 0.25
 @export_range(0.25, 3.0, 0.25, "suffix:圈") var backstep_roll_turns:= 1.0
+@export_range(0.1, 5.0, 0.1, "suffix:秒") var trapped_flashbang_stun_time:= 1.0
+@export_range(1.0, 1000.0, 1.0, "suffix:像素") var trapped_flashbang_front_range:= 520.0
 
 var _skill_has_triggered:= false
 var _skill_is_pending_rise:= false
@@ -62,7 +65,9 @@ func anim_rise_end():
 
 func _start_skill() -> void:
 	_skill_is_pending_rise = false
-	_try_backstep_for_charge()
+	if not _try_roll_for_charge():
+		_throw_flashbang_and_die()
+		return
 	_skill_forces_rise = true
 	## 蓄力优先于普通气球攻击；检测组件保持工作，释放后可立即恢复攻击气球。
 	attack_component.update_is_attack_factors(false, AttackComponentBase.E_IsAttackFactors.Character)
@@ -78,26 +83,60 @@ func _begin_charge() -> void:
 	_start_charge_visuals()
 
 
-func _try_backstep_for_charge() -> void:
+func _try_roll_for_charge() -> bool:
 	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
-		return
+		return false
 	var all_plant_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
 	if row_col.x < 0 or row_col.x >= all_plant_cells.size():
-		return
-	var lane_cells:Array = all_plant_cells[row_col.x]
+		return false
+
+	var target_cell:PlantCell
 	var back_column:= row_col.y - direction_x_root
-	if back_column < 0 or back_column >= lane_cells.size():
-		return
-	var target_cell:PlantCell = lane_cells[back_column]
+	var lane_cells:Array = all_plant_cells[row_col.x]
+	if back_column >= 0 and back_column < lane_cells.size():
+		var back_cell := lane_cells[back_column] as PlantCell
+		if _can_roll_into_cell(back_cell):
+			target_cell = back_cell
+
+	## 身后被堵时改为向同列的上/下相邻行翻滚；两边都空时随机选一边。
+	if target_cell == null:
+		var side_cells:Array[PlantCell] = []
+		for target_lane in [row_col.x - 1, row_col.x + 1]:
+			if target_lane < 0 or target_lane >= all_plant_cells.size():
+				continue
+			var target_lane_cells:Array = all_plant_cells[target_lane]
+			if row_col.y < 0 or row_col.y >= target_lane_cells.size():
+				continue
+			var side_cell := target_lane_cells[row_col.y] as PlantCell
+			if _can_roll_into_cell(side_cell):
+				side_cells.append(side_cell)
+		if not side_cells.is_empty():
+			target_cell = side_cells.pick_random()
+	if target_cell == null:
+		return false
+
+	_move_to_roll_cell(target_cell)
+	return true
+
+
+func _can_roll_into_cell(target_cell:PlantCell) -> bool:
+	if not is_instance_valid(target_cell):
+		return false
 	## 后退只进入完整空格，避免覆盖花盆、睡莲或其他位置的植物。
 	if target_cell.get_curr_plant_num() > 0:
-		return
+		return false
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
 		plant_type,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
 	)
-	if not plant_condition.judge_is_can_plant(target_cell, plant_type):
-		return
+	return is_instance_valid(plant_condition) and plant_condition.judge_is_can_plant(target_cell, plant_type)
+
+
+func _move_to_roll_cell(target_cell:PlantCell) -> void:
+	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
+		plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
 
 	var place:= plant_condition.place_plant_in_cell
 	var old_cell:= plant_cell
@@ -119,6 +158,52 @@ func _try_backstep_for_charge() -> void:
 	_backstep_tween.tween_method(_update_backstep_roll_visual, 0.0, 1.0, backstep_duration)
 	_backstep_tween.chain()
 	_backstep_tween.tween_callback(_finish_backstep_roll)
+
+
+func _throw_flashbang_and_die() -> void:
+	## 闪光弹挂到主场景，保证麦克雷死亡并释放节点后投掷视觉仍能播完。
+	if is_instance_valid(Global.main_game):
+		var flashbang := Sprite2D.new()
+		flashbang.name = "CassidyLastFlashbang"
+		flashbang.texture = FLASHBANG_TEXTURE
+		flashbang.global_position = global_position + Vector2(0.0, -48.0)
+		flashbang.scale = Vector2.ONE * 0.45
+		flashbang.z_index = 30
+		Global.main_game.add_child(flashbang)
+		var throw_direction := float(direction_x_root)
+		var flashbang_tween := flashbang.create_tween().set_parallel()
+		flashbang_tween.tween_property(
+			flashbang,
+			^"global_position",
+			flashbang.global_position + Vector2(90.0 * throw_direction, -18.0),
+			0.2
+		).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		flashbang_tween.tween_property(flashbang, ^"rotation", TAU, 0.2)
+		flashbang_tween.tween_property(flashbang, ^"modulate:a", 0.0, 0.28).set_delay(0.12)
+		flashbang_tween.chain().tween_callback(flashbang.queue_free)
+	_stun_nearest_zombie_with_flashbang()
+	hp_component.Hp_loss_death()
+
+
+func _stun_nearest_zombie_with_flashbang() -> void:
+	if not is_instance_valid(Global.main_game):
+		return
+	var all_zombies_2d:Array = Global.main_game.zombie_manager.all_zombies_2d
+	if lane < 0 or lane >= all_zombies_2d.size():
+		return
+	var nearest_zombie:Zombie000Base
+	var nearest_distance := INF
+	for zombie:Zombie000Base in all_zombies_2d[lane]:
+		if not is_instance_valid(zombie) or zombie.is_death or zombie.is_hypno:
+			continue
+		var distance_x := (zombie.global_position.x - global_position.x) * float(direction_x_root)
+		if distance_x <= 0.0 or distance_x > trapped_flashbang_front_range:
+			continue
+		if distance_x < nearest_distance:
+			nearest_distance = distance_x
+			nearest_zombie = zombie
+	if is_instance_valid(nearest_zombie):
+		nearest_zombie.be_butter(trapped_flashbang_stun_time)
 
 
 func _prepare_backstep_roll() -> void:

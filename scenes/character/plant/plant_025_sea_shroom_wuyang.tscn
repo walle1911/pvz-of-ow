@@ -214,8 +214,15 @@ parameters/TimeScale/scale = 1.0
 script = ExtResource("14_x4qhn")
 attack_bullet_type = 21
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
-guidance_attack_damage = 30
-guidance_attack_interval = 3.0
+guidance_attack_damage = 20
+guidance_max_damage = 100
+guidance_growth_distance = 800.0
+guidance_max_scale_multiplier = 2.5
+guidance_turn_speed_degrees = 240.0
+guidance_start_opacity = 0.35
+guidance_mouse_deadzone = 24.0
+guidance_turn_ramp_time = 0.6
+guidance_initial_turn_multiplier = 0.2
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=77714322]
 

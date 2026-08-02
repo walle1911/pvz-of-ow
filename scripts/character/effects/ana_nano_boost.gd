@@ -105,9 +105,11 @@ func _collect_body_sprites(node:Node, result:Array[Sprite2D]) -> void:
 
 func _clear_full_body_glow() -> void:
 	for pair:Dictionary in glow_pairs:
-		var overlay := pair.get("overlay") as Sprite2D
-		if is_instance_valid(overlay):
-			overlay.queue_free()
+		var overlay_value:Variant = pair.get("overlay")
+		if is_instance_valid(overlay_value):
+			var overlay := overlay_value as Sprite2D
+			if overlay != null:
+				overlay.queue_free()
 	glow_pairs.clear()
 
 
@@ -120,10 +122,22 @@ func _clear_stale_full_body_glow(node:Node) -> void:
 
 
 func _sync_full_body_glow() -> void:
-	for pair:Dictionary in glow_pairs:
-		var source := pair.get("source") as Sprite2D
-		var overlay := pair.get("overlay") as Sprite2D
-		if not is_instance_valid(source) or not is_instance_valid(overlay):
+	for pair_index:int in range(glow_pairs.size() - 1, -1, -1):
+		var pair:Dictionary = glow_pairs[pair_index]
+		var source_value:Variant = pair.get("source")
+		var overlay_value:Variant = pair.get("overlay")
+		## 已释放的 Object 在执行 `as Sprite2D` 时就会报错，因此必须先验证原始 Variant。
+		if not is_instance_valid(source_value) or not is_instance_valid(overlay_value):
+			if is_instance_valid(overlay_value):
+				var stale_overlay := overlay_value as Sprite2D
+				if stale_overlay != null:
+					stale_overlay.queue_free()
+			glow_pairs.remove_at(pair_index)
+			continue
+		var source := source_value as Sprite2D
+		var overlay := overlay_value as Sprite2D
+		if source == null or overlay == null:
+			glow_pairs.remove_at(pair_index)
 			continue
 		overlay.texture = source.texture
 		overlay.centered = source.centered
