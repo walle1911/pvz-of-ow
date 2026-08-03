@@ -185,7 +185,8 @@ centered = false
 visible = false
 
 [node name="BlinkComponent" parent="." index="5"]
-all_blink_body_change = Array[ExtResource("14_28p6e")]([SubResource("Resource_18tlf")])
+is_enable_default = false
+all_blink_body_change = Array[ExtResource("14_28p6e")]([])
 
 [node name="HurtBoxComponent" parent="." index="7"]
 visible = false
