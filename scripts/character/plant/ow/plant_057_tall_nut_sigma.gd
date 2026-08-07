@@ -222,6 +222,12 @@ class TallNutSigmaFieldSequence extends Node:
 		)
 
 var _slam_triggered:= false
+var _is_being_shoveled:= false
+
+func be_shovel_kill() -> void:
+	## 铲除通过 Hp_loss_death() 清空血量，但不应触发血量阶段技能。
+	_is_being_shoveled = true
+	super()
 
 func ready_norm_signal_connect():
 	super()
@@ -231,7 +237,7 @@ func ready_norm_signal_connect():
 
 func _on_hp_stage_change(curr_hp_stage:int) -> void:
 	## HpComponent 会先同步标记死亡、再发阶段更新；不能用 is_death 拦截致死跨阶段。
-	if _slam_triggered or curr_hp_stage < SLAM_TRIGGER_HP_STAGE:
+	if _slam_triggered or _is_being_shoveled or curr_hp_stage < SLAM_TRIGGER_HP_STAGE:
 		return
 	_slam_triggered = true
 	_create_gravity_field_sequence()

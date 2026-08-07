@@ -15,6 +15,24 @@ func _run() -> void:
 		return
 	var source_cell:PlantCell = main_game.plant_cell_manager.all_plant_cells[2][3]
 	var target_cell:PlantCell = main_game.plant_cell_manager.all_plant_cells[2][4]
+	var shoveled_sigma:= source_cell.create_plant(
+		CharacterRegistry.PlantType.P024TallNutSigma,
+		false,
+		false
+	) as Plant057TallNutSigma
+	await get_tree().process_frame
+	if not is_instance_valid(shoveled_sigma):
+		_fail("failed to create shoveled Tall Nut Sigma")
+		return
+	shoveled_sigma.be_shovel_kill()
+	await get_tree().process_frame
+	if is_instance_valid(main_game.get_node_or_null(^"TallNutSigmaFieldSequence")):
+		_fail("shoveling Sigma triggered the gravity field")
+		return
+	if is_instance_valid(shoveled_sigma):
+		_fail("shoveled Sigma was not removed")
+		return
+
 	var sigma:= source_cell.create_plant(
 		CharacterRegistry.PlantType.P024TallNutSigma,
 		false,
