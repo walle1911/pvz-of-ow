@@ -1,7 +1,8 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Texture2D" uid="uid://dqorbn48kceyp" path="res://assets/reanim/Cactus_Cassidy_flare.png" id="1_flashbang"]
+[ext_resource type="Texture2D" path="res://assets/reanim/Cactus_Cassidy_flash1.png" id="1_flashbang"]
 
 [node name="CassidyFlashbangEffect" type="Sprite2D"]
 texture = ExtResource("1_flashbang")
+scale = Vector2(1.6, 1.6)
 z_index = 1

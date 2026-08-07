@@ -4,7 +4,9 @@ class_name Plant027CactusCassidy
 const CASSIDY_SKILL_BULLET_SCENE:PackedScene = preload("res://scenes/bullet/bullet_027_cactus_cassidy_skill.tscn")
 const CASSIDY_RETICLE_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plant_effect_cassidy_deadeye_reticle.gd")
 const TUMBLEWEED_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_tumbleweed.png")
-const FLASHBANG_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_flare.png")
+const FLASHBANG_THROW_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_flash0.png")
+const FLASHBANG_EXPLOSION_TEXTURE:Texture2D = preload("res://assets/reanim/Cactus_Cassidy_flash1.png")
+const FLASHBANG_EXPLOSION_DISPLAY_SCALE:= 1.6
 const MAX_CHARGE_DURATION:= 6.0
 const CHARGE_DAMAGE_CAP_PER_SECOND:= 8.0
 const SKILL_RISE_SPEED_MULTIPLIER:= 1.15
@@ -306,26 +308,55 @@ func _finish_trapped_fan_burst() -> void:
 
 func _throw_flashbang(stun_time:= trapped_flashbang_stun_time) -> void:
 	## 闪光弹挂到主场景，保证麦克雷后续状态变化不会中断投掷视觉。
+	var flashbang_target:= _get_nearest_zombie_for_flashbang()
 	if is_instance_valid(Global.main_game):
 		var flashbang := Sprite2D.new()
 		flashbang.name = "CassidyLastFlashbang"
-		flashbang.texture = FLASHBANG_TEXTURE
-		flashbang.global_position = global_position + Vector2(0.0, -48.0)
-		flashbang.scale = Vector2.ONE * 0.45
+		flashbang.texture = FLASHBANG_THROW_TEXTURE
+		var throw_start_position:= global_position + Vector2(0.0, -48.0)
+		flashbang.global_position = throw_start_position
+		flashbang.scale = Vector2.ONE * 0.55
 		flashbang.z_index = 30
 		Global.main_game.add_child(flashbang)
 		var throw_direction := float(direction_x_root)
-		var flashbang_tween := flashbang.create_tween().set_parallel()
-		flashbang_tween.tween_property(
+		var throw_tween := flashbang.create_tween().set_parallel()
+		throw_tween.tween_property(
 			flashbang,
 			^"global_position",
-			flashbang.global_position + Vector2(90.0 * throw_direction, -18.0),
+			throw_start_position + Vector2(90.0 * throw_direction, -18.0),
 			0.2
 		).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		flashbang_tween.tween_property(flashbang, ^"rotation", TAU, 0.2)
-		flashbang_tween.tween_property(flashbang, ^"modulate:a", 0.0, 0.28).set_delay(0.12)
-		flashbang_tween.chain().tween_callback(flashbang.queue_free)
-	_stun_nearest_zombie_with_flashbang(stun_time)
+		throw_tween.tween_property(flashbang, ^"rotation", TAU, 0.2)
+		throw_tween.chain().tween_callback(
+			_show_flashbang_explosion.bind(flashbang, flashbang_target, stun_time)
+		)
+	else:
+		_apply_flashbang_to_zombie(flashbang_target, stun_time)
+
+
+func _show_flashbang_explosion(
+	flashbang:Sprite2D,
+	flashbang_target:Zombie000Base,
+	stun_time:float
+) -> void:
+	if not is_instance_valid(flashbang):
+		_apply_flashbang_to_zombie(flashbang_target, stun_time)
+		return
+	flashbang.texture = FLASHBANG_EXPLOSION_TEXTURE
+	flashbang.rotation = 0.0
+	flashbang.scale = Vector2.ONE * FLASHBANG_EXPLOSION_DISPLAY_SCALE * 0.75
+	flashbang.modulate = Color.WHITE
+	_apply_flashbang_to_zombie(flashbang_target, stun_time)
+
+	var explosion_tween:= flashbang.create_tween().set_parallel()
+	explosion_tween.tween_property(
+		flashbang,
+		^"scale",
+		Vector2.ONE * FLASHBANG_EXPLOSION_DISPLAY_SCALE,
+		0.18
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	explosion_tween.tween_property(flashbang, ^"modulate:a", 0.0, 0.18)
+	explosion_tween.chain().tween_callback(flashbang.queue_free)
 
 
 func _start_trapped_fan_burst() -> void:
@@ -372,12 +403,12 @@ func _fire_trapped_fan_shot(shot_index:int) -> void:
 	attack_component.play_throw_sfx()
 
 
-func _stun_nearest_zombie_with_flashbang(stun_time:float) -> void:
+func _get_nearest_zombie_for_flashbang() -> Zombie000Base:
 	if not is_instance_valid(Global.main_game):
-		return
+		return null
 	var all_zombies_2d:Array = Global.main_game.zombie_manager.all_zombies_2d
 	if lane < 0 or lane >= all_zombies_2d.size():
-		return
+		return null
 	var nearest_zombie:Zombie000Base
 	var nearest_distance := INF
 	for zombie:Zombie000Base in all_zombies_2d[lane]:
@@ -389,8 +420,12 @@ func _stun_nearest_zombie_with_flashbang(stun_time:float) -> void:
 		if distance_x < nearest_distance:
 			nearest_distance = distance_x
 			nearest_zombie = zombie
-	if is_instance_valid(nearest_zombie):
-		nearest_zombie.be_flashbang(stun_time)
+	return nearest_zombie
+
+
+func _apply_flashbang_to_zombie(flashbang_target:Zombie000Base, stun_time:float) -> void:
+	if is_instance_valid(flashbang_target) and not flashbang_target.is_death and not flashbang_target.is_hypno:
+		flashbang_target.be_flashbang(stun_time)
 
 
 func _prepare_backstep_roll() -> void:
