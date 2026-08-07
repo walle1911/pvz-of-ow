@@ -98,8 +98,7 @@ animation = &"Cactus_rise"
 advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2djsr"]
-break_loop_at_end = true
-switch_mode = 2
+xfade_time = 0.05
 advance_mode = 2
 advance_expression = "is_rise"
 
@@ -146,9 +145,10 @@ size = Vector2(1000, 5)
 [node name="Plant027CactusCassidy" unique_id=1839300931 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_g5h6i")]
 script = ExtResource("2_g5h6i")
 charge_time = 4.0
-max_skill_targets = 3
-max_skill_damage = 250
+charge_reference_hp = 250
+lock_speed_multiplier = 1.5
 skill_column_count = 3
+locked_fire_delay = 0.3
 is_rise = false
 plant_type = 27
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]

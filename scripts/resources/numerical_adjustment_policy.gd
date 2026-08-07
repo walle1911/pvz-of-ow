@@ -122,9 +122,10 @@ const SCRIPT_RULES := {
 		"flashbang_front_range": "distance",
 	},
 	"res://scripts/character/plant/ow/plant_027_cactus_cassidy.gd": {
-		"charge_time": "seconds", "skill_trigger_hp": "positive_int",
-		"max_skill_targets": "positive_int", "max_skill_damage": "damage",
-		"skill_column_count": "positive_int", "backstep_duration": "seconds",
+		"charge_time": "seconds", "charge_reference_hp": "positive_int",
+		"lock_speed_multiplier": "multiplier", "skill_trigger_hp": "positive_int",
+		"skill_column_count": "positive_int", "locked_fire_delay": "seconds",
+		"backstep_duration": "seconds",
 		"backstep_roll_turns": "multiplier",
 	},
 	"res://scripts/character/plant/ow/plant_052_sunflower_mercy.gd": {
