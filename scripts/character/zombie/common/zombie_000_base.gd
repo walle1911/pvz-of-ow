@@ -137,6 +137,8 @@ var head1_path_candidate:Array[NodePath] = [
 var head_node:Node2D
 ## 黄油节点,
 var butter_splat:Node2D
+## 卡西迪闪光弹节点，不复用黄油贴图。
+var flashbang_effect:Node2D
 
 ## 原版大蒜嫌恶脸会替代主头部，因此反应期间隐藏独立的下颚/舌头层。
 var garlic_grossout_hidden_node_paths:Array[NodePath] = [
@@ -303,6 +305,8 @@ func ready_norm_signal_connect():
 
 	## 死亡时取消黄油
 	hp_component.signal_hp_component_death.connect(death_stop_butter)
+	## 死亡时取消闪光弹定身及表现
+	hp_component.signal_hp_component_death.connect(death_stop_flashbang)
 
 	## 血量状态变化组件
 	hp_component.signal_hp_loss.connect(hp_stage_change_component.judge_body_change)
@@ -561,6 +565,35 @@ func death_stop_butter():
 func _on_butter_timer_timeout() -> void:
 	update_speed_factor(1.0, E_Influence_Speed_Factor.Butter)
 	butter_splat.visible = false
+#endregion
+
+#region 卡西迪闪光弹
+## 卡西迪闪光弹定身。定身计时和视觉均独立于黄油，避免复用黄油贴图。
+func be_flashbang(flashbang_time:float = 1.25) -> void:
+	if is_death:
+		return
+	if not is_instance_valid(flashbang_effect):
+		flashbang_effect = SceneRegistry.CASSIDY_FLASHBANG_EFFECT.instantiate()
+		add_child(flashbang_effect)
+	flashbang_effect.visible = true
+	flashbang_effect.global_position = head_node.to_global(Vector2(20, 10))
+
+	update_speed_factor(0.0, E_Influence_Speed_Factor.Flashbang)
+	if not is_instance_valid(all_timer[E_TimerType.Flashbang]):
+		all_timer[E_TimerType.Flashbang] = GlobalUtils.create_new_timer_once(self, _on_flashbang_timer_timeout)
+	if all_timer[E_TimerType.Flashbang].time_left < flashbang_time:
+		all_timer[E_TimerType.Flashbang].start(flashbang_time)
+
+## 死亡时停止闪光弹定身。
+func death_stop_flashbang() -> void:
+	if is_instance_valid(flashbang_effect):
+		_on_flashbang_timer_timeout()
+
+## 闪光弹定身计时器结束。
+func _on_flashbang_timer_timeout() -> void:
+	update_speed_factor(1.0, E_Influence_Speed_Factor.Flashbang)
+	if is_instance_valid(flashbang_effect):
+		flashbang_effect.visible = false
 #endregion
 
 #region 骇灾地刺千针雨定身

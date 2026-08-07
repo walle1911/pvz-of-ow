@@ -49,6 +49,8 @@ const SPLASH = preload("res://scenes/item/game_scenes_item/splash.tscn")
 var FIRE = load("res://scenes/fx/fire.tscn")
 ## 黄油特效
 const BUTTER_SPLAT = preload("res://scenes/fx/butter_splat.tscn")
+## 卡西迪闪光弹特效
+const CASSIDY_FLASHBANG_EFFECT = preload("res://scenes/fx/cassidy_flashbang_effect.tscn")
 
 ## 阳光
 var SUN = load("res://scenes/item/game_scenes_item/sun.tscn")

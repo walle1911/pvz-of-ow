@@ -390,7 +390,7 @@ func _stun_nearest_zombie_with_flashbang(stun_time:float) -> void:
 			nearest_distance = distance_x
 			nearest_zombie = zombie
 	if is_instance_valid(nearest_zombie):
-		nearest_zombie.be_butter(stun_time)
+		nearest_zombie.be_flashbang(stun_time)
 
 
 func _prepare_backstep_roll() -> void:

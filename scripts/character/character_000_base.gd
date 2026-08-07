@@ -18,12 +18,14 @@ enum E_TimerType{
 	IceDecelerate,	## 冰冻减速
 	IceFreeze,		## 冰冻停滞
 	Butter,			## 黄油
+	Flashbang,		## 闪光弹
 }
 ## 减速相关计时器(第一次使用时创建)
 var all_timer:Dictionary[E_TimerType, Timer] = {
 	E_TimerType.IceDecelerate:null,
 	E_TimerType.IceFreeze:null,
 	E_TimerType.Butter:null,
+	E_TimerType.Flashbang:null,
 }
 #endregion
 
@@ -57,6 +59,7 @@ enum E_Influence_Speed_Factor{
 	HammerZombieSpeed,	## 锤僵尸模式修改速度
 	ZamboniHp,		## 冰车僵尸血量变化时
 	Butter,			## 黄油
+	Flashbang,		## 闪光弹
 	EatGarlic,		## 啃食大蒜后短时间停止
 	OutBattlefield,	## 宽屏战场外僵尸移动加速
 	TallNutSigmaSlam,	## 被西格玛高坚果抬起时保持静止
