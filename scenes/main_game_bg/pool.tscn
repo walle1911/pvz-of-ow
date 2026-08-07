@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bq5t78cjcpj7y"]
+[gd_scene load_steps=19 format=3 uid="uid://bq5t78cjcpj7y"]
 
 [ext_resource type="Script" uid="uid://cmnt7djyt1387" path="res://scripts/main_game_item/pool.gd" id="1_h0rrj"]
 [ext_resource type="Texture2D" uid="uid://1n27xoaqkwyu" path="res://assets/image/background/pool_base.jpg" id="2_wjd4q"]
@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://dod75n76awrvg" path="res://assets/image/background/pool.jpg" id="4_op0xy"]
 [ext_resource type="Shader" uid="uid://1wkg6t4ewiw0" path="res://shaders/my_shader/pool_drop.gdshader" id="5_ie0cy"]
 [ext_resource type="Texture2D" uid="uid://72dwq6gmdyw0" path="res://assets/image/particles/PoolSparkly.png" id="5_k3fql"]
+[ext_resource type="Texture2D" path="res://assets/image/background/zenyatta_transcendence.png" id="6_zenyatta"]
+[ext_resource type="Shader" uid="uid://dhola54treu5y" path="res://shaders/my_shader/pool_underwater_relic.gdshader" id="7_relic_shader"]
+[ext_resource type="Shader" uid="uid://dkklw7iotrqwn" path="res://shaders/my_shader/pool_underwater_relic_glow.gdshader" id="8_relic_glow_shader"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_71hfq"]
 shader = ExtResource("3_exjdu")
@@ -87,6 +90,21 @@ alpha_curve = SubResource("CurveTexture_12i41")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y1sge"]
 size = Vector2(662, 134)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_zenyatta"]
+shader = ExtResource("7_relic_shader")
+shader_parameter/underwater_tint = Color(0.02, 0.25, 0.32, 1)
+shader_parameter/glow_tint = Color(1, 0.71, 0.25, 1)
+shader_parameter/underwater_alpha = 0.025
+shader_parameter/tint_strength = 0.76
+shader_parameter/ripple_strength = 0.012
+shader_parameter/glow_amount = 0.0
+shader_parameter/idle_alpha_variation = 0.45
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_zenyatta_glow"]
+shader = ExtResource("8_relic_glow_shader")
+shader_parameter/glow_tint = Color(1, 0.82, 0.56, 1)
+shader_parameter/glow_amount = 0.0
+
 [node name="Pool" type="Node2D"]
 script = ExtResource("1_h0rrj")
 
@@ -99,6 +117,25 @@ material = SubResource("ShaderMaterial_71hfq")
 position = Vector2(609.046, 357.303)
 scale = Vector2(1.00531, 1.02405)
 texture = ExtResource("4_op0xy")
+
+[node name="ZenyattaTranscendenceGlow" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_zenyatta_glow")
+offset_left = 573.2
+offset_top = 345.2
+offset_right = 646.8
+offset_bottom = 418.8
+mouse_filter = 2
+z_index = 3
+
+[node name="ZenyattaTranscendence" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_zenyatta")
+position = Vector2(610, 382)
+scale = Vector2(0.46, 0.46)
+z_index = 2
+texture = ExtResource("6_zenyatta")
+
+[node name="RelicGlowTimer" type="Timer" parent="."]
+wait_time = 10.0
 
 [node name="PoolDrop" type="ColorRect" parent="Pool"]
 material = SubResource("ShaderMaterial_huk7e")
@@ -135,3 +172,5 @@ monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PoolArea2D"]
 shape = SubResource("RectangleShape2D_y1sge")
+
+[connection signal="timeout" from="RelicGlowTimer" to="." method="_on_relic_glow_timer_timeout"]

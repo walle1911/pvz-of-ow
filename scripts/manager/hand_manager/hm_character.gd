@@ -10,6 +10,9 @@ const VENDETTA_SLASH_EFFECT = preload("res://scripts/fx/plant_effect/plant_effec
 ## 手持时按实际可见高度兜底，保留巨人/旗帜等合理体型差异，同时修正极小和超大贴图。
 const OW_ZOMBIE_PREVIEW_MIN_HEIGHT := 120.0
 const OW_ZOMBIE_PREVIEW_MAX_HEIGHT := 220.0
+const OW_CONE_TALON_PREVIEW_MAX_HEIGHT := 140.0
+const OW_CONE_TALON_CARD_SPRITE_POSITION := Vector2(-6.0, -58.95)
+const OW_CONE_TALON_CARD_SPRITE_SCALE := 0.3
 const OW_ZOMBIE_PREVIEW_GROUND_Y := 12.0
 
 @onready var hand_manager: HandManager = %HandManager
@@ -164,8 +167,11 @@ func click_card(card:Card) -> bool:
 	else:
 		zombie_row_type = Global.character_registry.get_zombie_info(curr_card.card_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieRowType)
 		## 静态僵尸以及僵尸虚影
-		character_child.scale = Vector2.ONE
-		character_child.position = Vector2.ZERO
+		if curr_card.card_zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon:
+			character_child = _wrap_cone_talon_card_sprite(character_static_copy, character_child)
+		else:
+			character_child.scale = Vector2.ONE
+			character_child.position = Vector2.ZERO
 		_normalize_ow_zombie_preview(character_child, curr_card.card_zombie_type)
 		characte_static_shadow = character_child.duplicate()
 		characte_static_shadow.modulate.a = 0
@@ -178,6 +184,19 @@ func click_card(card:Card) -> bool:
 			click_card_column()
 
 	return true
+
+
+func _wrap_cone_talon_card_sprite(character_static_copy:Node2D, card_sprite:Node2D) -> Node2D:
+	## normal/bucket 卡图都是“根节点 + 内层合成图”；路障卡图原本少了一层根节点，
+	## 导致手持本体和格子虚影的脚底原点与另外两张 Talon 卡不一致。
+	var preview_root := Node2D.new()
+	preview_root.name = "Zombie002ConeTalonPreviewRoot"
+	character_static_copy.remove_child(card_sprite)
+	character_static_copy.add_child(preview_root)
+	preview_root.add_child(card_sprite)
+	card_sprite.position = OW_CONE_TALON_CARD_SPRITE_POSITION
+	card_sprite.scale = Vector2.ONE * OW_CONE_TALON_CARD_SPRITE_SCALE
+	return preview_root
 
 
 func _normalize_ow_zombie_preview(character_root:Node2D, zombie_type:CharacterRegistry.ZombieType) -> void:
@@ -196,11 +215,17 @@ func _normalize_ow_zombie_preview(character_root:Node2D, zombie_type:CharacterRe
 	if visual_bounds.size.y <= 0.0:
 		return
 
+	var preview_max_height := OW_ZOMBIE_PREVIEW_MAX_HEIGHT
+	## 路障海鸥僵尸使用 250x473 的整张卡图，不能按巨型/旗帜僵尸的上限显示。
+	## 140px 与普通 Talon 的实战预选体型一致。
+	if zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon:
+		preview_max_height = OW_CONE_TALON_PREVIEW_MAX_HEIGHT
+
 	var preview_scale := 1.0
 	if visual_bounds.size.y < OW_ZOMBIE_PREVIEW_MIN_HEIGHT:
 		preview_scale = OW_ZOMBIE_PREVIEW_MIN_HEIGHT / visual_bounds.size.y
-	elif visual_bounds.size.y > OW_ZOMBIE_PREVIEW_MAX_HEIGHT:
-		preview_scale = OW_ZOMBIE_PREVIEW_MAX_HEIGHT / visual_bounds.size.y
+	elif visual_bounds.size.y > preview_max_height:
+		preview_scale = preview_max_height / visual_bounds.size.y
 
 	character_root.scale = Vector2.ONE * preview_scale
 	## 卡片内的合成图常以中心为原点；把可见底边重新落到鼠标/格子基准线附近。
@@ -704,6 +729,10 @@ func exit_status():
 
 ## 从游戏场景获取正确的 BodyCorrect 及其子节点结构，应用到卡片预览节点上
 func _fix_body_correct_from_game_scene(plant_child: Node2D, plant_type: CharacterRegistry.PlantType) -> void:
+	## 土豆雷卡牌预览已经烘焙为出土完成帧；真实场景的默认坐标是出土动画
+	## 起始帧，不能覆盖卡图中的最终碎石布局。
+	if plant_type == CharacterRegistry.PlantType.P504PotatoMine:
+		return
 	## Echo 的实战 Anim_idle 初始缩放由 AnimationTree 从近零值驱动；把该初始值
 	## 覆盖到卡牌静态图后，会让鼠标手持贴图看起来完全消失。
 	if plant_type == CharacterRegistry.PlantType.P053ImitaterEcho:
@@ -741,6 +770,11 @@ func _collect_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
 	snapshot[&"scale"] = node.scale
 	var children_snapshot: Dictionary = {}
 	for child in node.get_children():
+		## 卡牌静态图可能会复用出战场景中默认隐藏的动画占位节点。
+		## 这些节点在卡图里被重新摆放并主动显示（例如土豆雷的碎石、脸和眼睛），
+		## 不应被出战场景的隐藏状态坐标覆盖，否则手持预览会出现碎片堆叠。
+		if child is CanvasItem and not (child as CanvasItem).visible:
+			continue
 		var child_node2d := child as Node2D
 		if child_node2d:
 			var child_snap: Dictionary = {}
