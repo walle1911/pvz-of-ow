@@ -20,7 +20,7 @@ const TRAPPED_SHORT_ROLL_DISTANCE:= 22.0
 @export_range(1, 10000, 1, "suffix:血") var charge_reference_hp:= 250
 @export_range(0.1, 10.0, 0.1, "or_greater", "suffix:倍") var lock_speed_multiplier:= 1.5
 @export_range(1, 5000, 1, "suffix:血") var skill_trigger_hp:= 50
-@export_range(1, 9, 1) var skill_column_count:= 3
+@export_range(1, 9, 1) var skill_column_count:= 2
 @export_range(0.05, 1.0, 0.05, "suffix:秒") var locked_fire_delay:= 0.3
 @export_range(0.0, 2.0, 0.05, "suffix:秒") var charged_icon_hold_time:= 0.25
 @export_range(0.05, 2.0, 0.05, "suffix:秒") var backstep_duration:= 0.25
@@ -80,6 +80,8 @@ func _physics_process(delta:float) -> void:
 	if not _skill_is_charging:
 		return
 	_charge_elapsed += delta
+	## 索敌窗口从翻滚完成后的蓄力阶段才开始；翻滚前的重叠对象不会进入锁定列表。
+	_scan_for_new_targets()
 	_update_flare_charge_scale()
 	_update_target_reticles()
 	if _are_all_targets_locked():
@@ -182,6 +184,7 @@ func _begin_charge() -> void:
 		MAX_CHARGE_DURATION
 	)
 	_start_charge_visuals()
+	## 此时翻滚和升起前置动作均已结束，只收录翻滚后仍在检测区域内的敌人。
 	_scan_for_new_targets()
 
 

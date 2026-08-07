@@ -97,7 +97,7 @@ const PROPERTY_LABELS := {
 	"plant_sun_cost": "种植所需阳光", "plant_cool_time": "种植冷却时间（秒）",
 	"zombie_spawn_weight": "刷怪权重等级",
 	"pea_attack_damage": "豌豆普通攻击伤害", "laser_penetration_damage": "电磁炮穿透伤害",
-	"giant_pea_attack_value": "巨型豌豆伤害", "downpour_damage": "千针雨伤害", "max_skill_damage": "特殊技能最大伤害",
+	"giant_pea_attack_value": "巨型豌豆伤害", "downpour_damage": "千针雨伤害",
 	"mini_sun_value": "小阳光数值", "norm_sun_value": "普通阳光数值", "normal_attacks_before_uppercut": "触发上勾拳前普通攻击次数",
 	"num_create_sun": "每次生产阳光数量", "num_moon_walk": "太空步次数", "ori_speed": "移动速度", "p_butter": "黄油触发概率",
 	"plant_food_attack_value": "能量豆攻击伤害", "pogo_y_defalut": "跳跳默认高度", "prepare_time": "准备时间",

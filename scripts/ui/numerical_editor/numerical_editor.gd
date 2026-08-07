@@ -45,7 +45,6 @@ const BASIC_PARAMETER_PROPERTIES := {
 	"guidance_attack_damage": 21,
 	"giant_pea_attack_value": 22,
 	"downpour_damage": 23,
-	"max_skill_damage": 24,
 	"tire_bomb_damage": 25,
 	"center_lane_damage": 26,
 	"edge_lane_damage": 27,
