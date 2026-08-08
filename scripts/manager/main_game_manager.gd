@@ -731,7 +731,9 @@ func _start_boss_battle() -> void:
 	await camera_2d.move_back_ori()
 	if is_instance_valid(boss_preview):
 		boss_preview.queue_free()
-	## 真实 Boss 尚未生成，因此小推车驶离时不会误伤 Boss。
+	## Boss 介绍结束后立即恢复整棵场景树，再放行小推车；真实 Boss 尚未生成，不会被误伤。
+	camera_2d.process_mode = Node.PROCESS_MODE_INHERIT
+	TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
 	await _release_all_lawn_movers_before_boss()
 	if not is_inside_tree() or boss_battle_finished:
 		return
@@ -751,8 +753,6 @@ func _start_boss_battle() -> void:
 	var spawn_position := zombie_parent.zombie_create_position.global_position + Vector2(20, 0)
 	active_boss = zombie_manager.create_norm_zombie(boss_type, zombie_parent, zombie_init_para, spawn_position)
 	active_boss.signal_character_death.connect(_on_boss_defeated.bind(active_boss), CONNECT_ONE_SHOT)
-	camera_2d.process_mode = Node.PROCESS_MODE_INHERIT
-	TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
 	main_game_progress = E_MainGameProgress.MAIN_GAME
 	print("Boss 房开始：", _boss_zombie_name(), "，第 ", lane + 1, " 行")
 
@@ -762,8 +762,6 @@ func _release_all_lawn_movers_before_boss() -> void:
 	for lawn_mover in lawn_mover_manager.all_lawn_movers:
 		if not is_instance_valid(lawn_mover):
 			continue
-		## Boss 入场阶段保持全局暂停，只允许小推车完成退场。
-		lawn_mover.process_mode = Node.PROCESS_MODE_ALWAYS
 		if not lawn_mover.is_moving:
 			lawn_mover._start_mower()
 	## 等待原有移动脚本自然驶出并 queue_free，保证 Boss 登场时场上已无小推车。
