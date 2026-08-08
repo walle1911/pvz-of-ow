@@ -75,11 +75,11 @@ func _process(_delta: float) -> void:
 # ================================================================
 
 ## Set beam endpoints in LOCAL coordinates (relative to this node).
-func set_endpoints(from_local: Vector2, to_local: Vector2) -> void:
-	if _from_pos == from_local and _to_pos == to_local:
+func set_endpoints(from_local: Vector2, endpoint_local: Vector2) -> void:
+	if _from_pos == from_local and _to_pos == endpoint_local:
 		return
 	_from_pos = from_local
-	_to_pos = to_local
+	_to_pos = endpoint_local
 	_has_endpoints = true
 	_geometry_dirty = true
 	visible = true

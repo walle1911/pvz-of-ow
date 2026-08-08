@@ -2,7 +2,6 @@ extends TextureRect
 ## 待选卡槽
 class_name CardSlotCandidate
 
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 ## 所有卡片页面的父节点
 @onready var all_card_page: Control = $AllCardPage

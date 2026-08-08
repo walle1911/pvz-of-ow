@@ -15,7 +15,7 @@
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_048_cob_cannon_emre/048_cob_cannon/CobCannon_idle.tres" id="11_ytr4m"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_048_cob_cannon_emre/048_cob_cannon/CobCannon_shooting.tres" id="12_i0iy0"]
 [ext_resource type="Texture2D" uid="uid://c6dr8rx3ojdff" path="res://assets/reanim/CobCannon_emre_hair.png" id="12_mhen4"]
-[ext_resource type="Texture2D" uid="uid://dirftb646rvfs" path="res://assets/reanim/Cobcannon_husk1.png" id="12_xqx5t"]
+[ext_resource type="Texture2D" uid="uid://dirftb646rvfs" path="res://assets/reanim/CobCannon_husk1.png" id="12_xqx5t"]
 [ext_resource type="Animation" path="res://animation/character/plant/ow/plant_048_cob_cannon_emre/048_cob_cannon/CobCannon_unarmed_idle.tres" id="13_23ndk"]
 [ext_resource type="Texture2D" uid="uid://755medrweq0h" path="res://assets/reanim/CobCannon_emre_face2.png" id="13_noaol"]
 [ext_resource type="Texture2D" uid="uid://bbvua1svv7oro" path="res://assets/reanim/CobCannon_emre_belt.png" id="13_rkadt"]

@@ -231,7 +231,7 @@ func _pick_initial_lane_direction(target_id:int, zombie:Zombie000Base) -> int:
 		return 1
 	return valid_directions.pick_random()
 
-func _get_valid_lane_directions(target_id:int, zombie:Zombie000Base) -> Array[int]:
+func _get_valid_lane_directions(_target_id:int, zombie:Zombie000Base) -> Array[int]:
 	var valid_directions:Array[int] = []
 	var zombie_rows:Array = Global.main_game.zombie_manager.all_zombie_rows
 	var center_lane:int = lane

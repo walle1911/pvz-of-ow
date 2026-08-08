@@ -9,7 +9,6 @@ const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/Selec
 const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png")
 const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
 const STORE_LABEL_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
-const DeveloperPackageStore := preload("res://scripts/resources/developer_package_store.gd")
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
@@ -232,17 +231,17 @@ func _on_button_1_pressed() -> void:
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
 		return
 	Global.adventure_mainline_mode = "normal"
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
+	Global.change_scene_to_cached(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
 func _start_normal_adventure() -> void:
 	Global.adventure_mainline_mode = "normal"
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
+	Global.change_scene_to_cached(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
 func _start_chessboard_adventure() -> void:
 	Global.adventure_mainline_mode = "chessboard"
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
+	Global.change_scene_to_cached(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelAdventure])
 
 
 ## 迷你游戏

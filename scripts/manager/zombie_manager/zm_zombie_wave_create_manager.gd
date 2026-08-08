@@ -477,7 +477,7 @@ func get_curr_wave_zombie_list(wave:int, is_big_wave: bool, curr_wave_power_limi
 	## 固定普僵和旗帜僵尸均先于新登场、最终补齐和随机填充单位进入波表。
 	if is_big_wave:
 		var flag_zombie_type := _flag_zombie_type()
-		var big_wave_plain_count := mini(wave / 3 + 1, 8) \
+		var big_wave_plain_count := mini(int(wave / 3.0) + 1, 8) \
 			if zombie_manager.game_para.custom_simple_original_mode else (4 if wave == 9 else 8)
 		var plain_zombie_type := _plain_zombie_type()
 		for _index in big_wave_plain_count:

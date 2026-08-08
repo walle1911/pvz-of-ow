@@ -4,7 +4,6 @@ class_name AdventureLevelStore
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const JsonRuntime := preload("res://scripts/resources/level/level_json_runtime.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 const DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
 ## 正式模式读取独立快照；只有在工坊中主动同步时才会更新。
 const FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"

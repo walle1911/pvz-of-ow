@@ -6,7 +6,6 @@ const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd"
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
 const NIGHT_LAWN := preload("res://assets/image/background/background2.jpg")
 const POOL_LAWN := preload("res://assets/image/background/background3.jpg")
@@ -189,7 +188,7 @@ func _ready() -> void:
 	level["forcedPlants"] = []
 	level["freePlantSelection"] = true
 	## 普通入口默认简易模式；从数值编辑器返回时恢复离开前的编辑状态。
-	editor_complexity = int(return_state.get("editor_complexity", EditorComplexity.SIMPLE))
+	editor_complexity = int(return_state.get("editor_complexity", EditorComplexity.SIMPLE)) as EditorComplexity
 	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
 	if FormalLevelStore.is_formal_preset_id(formal_preset_id):
 		_apply_formal_map_constraints()
@@ -201,7 +200,7 @@ func _ready() -> void:
 	_sanitize_simple_allowed_pool()
 	_refresh_zombie_catalog()
 	selected_wave = clampi(int(return_state.get("selected_wave", selected_wave)), 0, maxi(0, (level.get("waves", []) as Array).size() - 1))
-	catalog_mode = int(return_state.get("catalog_mode", CatalogMode.SPAWN_ZOMBIES))
+	catalog_mode = int(return_state.get("catalog_mode", CatalogMode.SPAWN_ZOMBIES)) as CatalogMode
 	current_card_page = maxi(0, int(return_state.get("card_page", 0)))
 	_update_editor_complexity_button()
 	_restore_catalog_view()
@@ -224,10 +223,10 @@ func _exit_tree() -> void:
 
 
 func _apply_font() -> void:
-	var theme := Theme.new()
-	theme.default_font = WORKSHOP_FONT
-	theme.default_font_size = 14
-	self.theme = theme
+	var workshop_theme := Theme.new()
+	workshop_theme.default_font = WORKSHOP_FONT
+	workshop_theme.default_font_size = 14
+	self.theme = workshop_theme
 
 
 func _build_scene() -> void:
@@ -833,6 +832,7 @@ func _open_formal_sync_dialog() -> void:
 				selected_ids.append(preset_id)
 		var result := FormalLevelStore.sync_developer_levels_to_formal(selected_ids)
 		if result["ok"]:
+			Global.refresh_adventure_runtime_cache()
 			status_label.text = "已同步 %d 个关卡到正式模式。" % (result["synced"] as Array).size()
 			_close_formal_sync_dialog()
 		else:
@@ -1326,7 +1326,6 @@ func _refresh_timeline() -> void:
 	total_interval_duration = maxf(MIN_SPLIT_INTERVAL_DURATION, total_interval_duration)
 
 	var flag_number := 0
-	var interval_number := 0
 	var elapsed_interval_duration := 0.0
 	var selected_segment_left := FLAG_CENTER_LEFT
 	var selected_segment_right := FLAG_CENTER_RIGHT
@@ -1347,14 +1346,11 @@ func _refresh_timeline() -> void:
 			timeline_stages.add_child(flag_button)
 			timeline_flag_visuals[stage_index] = flag_button.get_node("Flag")
 		else:
-			interval_number += 1
 			var interval_duration := 1.0
 			## 旗帜是时间点；黄色段严格从一根旗杆像素延伸到下一根旗杆像素。
 			var segment_start := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, elapsed_interval_duration / total_interval_duration)
 			elapsed_interval_duration += interval_duration
 			var segment_end := lerpf(FLAG_CENTER_RIGHT, FLAG_CENTER_LEFT, elapsed_interval_duration / total_interval_duration)
-			var segment_left := minf(segment_start, segment_end) * timeline_width_ratio
-			var segment_width := maxf(1.0, absf(segment_start - segment_end) * timeline_width_ratio)
 			if not _is_simple_mode() and stage_index == selected_wave:
 				selected_segment_left = minf(segment_start, segment_end)
 				selected_segment_right = maxf(segment_start, segment_end)
@@ -1395,18 +1391,18 @@ func _on_timeline_gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion:
 		var mouse_position := (event as InputEventMouseMotion).position
-		var interval_index := _timeline_interval_at_position(mouse_position)
-		if interval_index >= 0:
-			var interval_rect := _timeline_interval_rect(interval_index)
+		var hovered_interval_index := _timeline_interval_at_position(mouse_position)
+		if hovered_interval_index >= 0:
+			var interval_rect := _timeline_interval_rect(hovered_interval_index)
 			_show_interval_preview(interval_rect.position.x, interval_rect.size.x)
 			_set_timeline_hover_flag(-1)
 			timeline_stages.tooltip_text = "点击选择该波间阶段" if _is_simple_mode() else ("旗帜前动态阶段：清空可提前推进，否则等待 40～46 秒" \
-				if _is_stage_before_flag(interval_index) else "动态阶段：按剩余血量提前推进，25～31 秒自然刷新")
+				if _is_stage_before_flag(hovered_interval_index) else "动态阶段：按剩余血量提前推进，25～31 秒自然刷新")
 		else:
 			_hide_interval_preview()
-			var flag_index := _timeline_flag_at_position(mouse_position)
-			_set_timeline_hover_flag(flag_index)
-			timeline_stages.tooltip_text = "点击编辑旗帜波" if flag_index >= 0 else ""
+			var hovered_flag_index := _timeline_flag_at_position(mouse_position)
+			_set_timeline_hover_flag(hovered_flag_index)
+			timeline_stages.tooltip_text = "点击编辑旗帜波" if hovered_flag_index >= 0 else ""
 		return
 	if not event is InputEventMouseButton:
 		return
@@ -1960,10 +1956,10 @@ func _add_card_state_glow(holder: Control, color: Color, opacity: float = 0.72) 
 		card.z_index = 1
 
 
-func _add_card_state_badge(holder: Control, text: String, color: Color, position: Vector2 = Vector2(20, 0), badge_name := "CardStateBadge") -> void:
+func _add_card_state_badge(holder: Control, text: String, color: Color, badge_position: Vector2 = Vector2(20, 0), badge_name := "CardStateBadge") -> void:
 	var badge := TextureRect.new()
 	badge.name = badge_name
-	badge.position = position
+	badge.position = badge_position
 	badge.size = Vector2(42, 25)
 	badge.texture = PAGE_BUTTON
 	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -2729,7 +2725,7 @@ func _on_preview_hit_layer_input(event: InputEvent) -> void:
 
 func _preview_zombie_at(local_position: Vector2) -> Node2D:
 	var canvas_position: Vector2 = preview_hit_layer.get_global_transform() * local_position
-	var hit_zombie: Node2D
+	var hit_zombie: Node2D = null
 	for zombie in preview_zombies:
 		if not is_instance_valid(zombie) or not _is_visible_zombie_pixel(zombie, canvas_position):
 			continue
@@ -3255,11 +3251,11 @@ func _settings_spin(parent: Control, label_text: String, pos: Vector2, min_value
 	return input
 
 
-func _set_settings_field_visible(input: Control, is_visible: bool) -> void:
-	input.visible = is_visible
+func _set_settings_field_visible(input: Control, field_visible: bool) -> void:
+	input.visible = field_visible
 	var label = input.get_meta("settings_label", null)
 	if label is Control:
-		(label as Control).visible = is_visible
+		(label as Control).visible = field_visible
 
 
 func _line_field(parent: Control, label_text: String, value: String) -> LineEdit:
@@ -3448,7 +3444,7 @@ func _refresh_zombie_catalog() -> void:
 	zombie_names.clear()
 	reward_card_order.clear()
 	plant_card_prefabs.clear()
-	var all_cards := get_node_or_null("/root/AllCards") as AllCardsClass
+	var all_cards := get_node_or_null("/root/AllCards")
 	if all_cards == null:
 		return
 	## 使用副本；后续刷新会 clear 本地缓存，不能连带清空 AllCards 权威注册表。

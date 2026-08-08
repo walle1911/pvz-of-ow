@@ -41,8 +41,6 @@ var plant_be_shovel_look:Plant000Base
 ## 当前铲子所在格子植物数量
 var curr_shovel_look_plant_num:int = 0
 
-## 铲子拉线
-var shovel_line: ShovelLine
 ## 铲子三股藤蔓拉线
 var shovel_vine_cable: Node2D
 var shovel_vine_target: Node2D
@@ -54,16 +52,7 @@ var is_pulling := false
 
 
 func _ready() -> void:
-	# 创建铲子拉线节点，加到 CanvasLayerTemp（与 TemporaryCharacter 同级）
-	shovel_line = ShovelLine.new()
-	shovel_line.name = "ShovelLine"
 	var canvas_temp: CanvasLayer = temporary_character.get_parent() as CanvasLayer
-	canvas_temp.add_child(shovel_line)
-	# 将线移动到 RealShovel 后面，使其渲染在铲子下层
-	canvas_temp.move_child(shovel_line, real_shovel.get_index())
-	# 微调线与 UI 铲子的对齐（可根据实际效果调整）
-	shovel_line.set_start_offset(SHOVEL_VINE_START_OFFSET)
-
 	shovel_vine_cable = VINE_CABLE_SCENE.instantiate() as Node2D
 	shovel_vine_cable.name = "ShovelVineCable2D"
 	shovel_vine_cable.visible = false
@@ -137,7 +126,6 @@ func exit_status():
 	ui_shovel.ui_shovel_appear()
 	# 如果正在播放拉取动画，不隐藏线（由动画结束回调处理）
 	if not is_pulling:
-		shovel_line.hide_line()
 		_hide_shovel_vine()
 
 func _clear_shovel_look():
@@ -156,7 +144,6 @@ func _play_shovel_pull_animation(plant:Plant000Base):
 		return
 
 	is_pulling = true
-	shovel_line.hide_line()
 	# 先让 UI 铲子可见，确保 PanelContainer 完成布局后再获取屏幕坐标
 	ui_shovel.ui_shovel_appear()
 	_start_shovel_vine_pull(pull_visual)
@@ -202,9 +189,6 @@ func _screen_position_to_parent_local(screen_position:Vector2, parent_node:Canva
 
 func _finish_shovel_pull_animation(plant:Plant000Base, pull_visual:Node2D):
 	is_pulling = false
-	# 仅当线仍在追踪拉取目标时才隐藏（避免覆盖新的铲子操作）
-	if shovel_line.curr_mode == ShovelLine.LineMode.FollowTarget:
-		shovel_line.hide_line()
 	if shovel_vine_target == pull_visual:
 		_hide_shovel_vine()
 	if is_instance_valid(pull_visual):

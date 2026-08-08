@@ -64,7 +64,8 @@ func init_manager() -> void:
 
 	match self.card_mode:
 		ConstLevelData.E_CardMode.Norm:
-			card_slot_norm = load("res://scenes/card_slot/card_slot_norm.tscn").instantiate()
+			var card_slot_scene := load("res://scenes/card_slot/card_slot_norm.tscn") as PackedScene
+			card_slot_norm = card_slot_scene.instantiate()
 			card_slot_root.add_child(card_slot_norm)
 			card_slot_norm.init_card_slot_norm(game_para)
 			card_slot_battle = card_slot_norm.card_slot_battle

@@ -18,8 +18,10 @@ static func configured_special_reward_card_levels(plant_type: int, source_dir: S
 	if plant_type <= 0:
 		return []
 	var catalog_key := source_dir if not source_dir.is_empty() else "all"
-	var catalog: Dictionary = _special_reward_catalog_cache.get(catalog_key, {})
-	if catalog.is_empty():
+	var catalog: Dictionary
+	if _special_reward_catalog_cache.has(catalog_key):
+		catalog = _special_reward_catalog_cache[catalog_key]
+	else:
 		catalog = _build_special_reward_catalog(source_dir)
 		_special_reward_catalog_cache[catalog_key] = catalog
 	var rules: Dictionary = catalog.get("rules", {}) as Dictionary
@@ -43,8 +45,10 @@ static func is_plant_allowed_in_level(plant_type: int, level_id: String, source_
 
 static func limited_plant_types_for_level(level_id: String, source_dir: String = "") -> Array[int]:
 	var catalog_key := source_dir if not source_dir.is_empty() else "all"
-	var catalog: Dictionary = _special_reward_catalog_cache.get(catalog_key, {})
-	if catalog.is_empty():
+	var catalog: Dictionary
+	if _special_reward_catalog_cache.has(catalog_key):
+		catalog = _special_reward_catalog_cache[catalog_key]
+	else:
 		catalog = _build_special_reward_catalog(source_dir)
 		_special_reward_catalog_cache[catalog_key] = catalog
 	var rules: Dictionary = catalog.get("rules", {}) as Dictionary

@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://b1fgpbevxwj7t" path="res://assets/reanim/Zombie_digger_innerleg_lower.png" id="7_vummk"]
 [ext_resource type="Texture2D" uid="uid://ctowlyby5jrur" path="res://assets/reanim/Zombie_digger_innerleg_upper.png" id="8_tofxt"]
 [ext_resource type="Texture2D" uid="uid://bnai3uyg35xml" path="res://assets/reanim/Zombie_digger_body.png" id="9_6mp8v"]
-[ext_resource type="Texture2D" uid="uid://ql7tf5nsep8d" path="res://assets/reanim/Zombie_digger_head.png" id="10_gv8ai"]
+[ext_resource type="Texture2D" uid="uid://b21txxhdunuvy" path="res://assets/reanim/Zombie_digger_head.png" id="10_gv8ai"]
 [ext_resource type="Texture2D" uid="uid://egilmmiqljad" path="res://assets/reanim/Zombie_digger_jaw.png" id="11_mjmg8"]
 [ext_resource type="Texture2D" uid="uid://bibs7qqy86ejr" path="res://assets/reanim/Zombie_digger_outerleg_fool.png" id="12_cheb5"]
 [ext_resource type="Texture2D" uid="uid://cjft5et6kde7n" path="res://assets/reanim/Zombie_digger_outerleg_lower.png" id="13_hpwbq"]
@@ -45,7 +45,7 @@
 [ext_resource type="Animation" uid="uid://dhuhcaqrfqdiy" path="res://animation/character/zombie/original/018_zombie_digger/Zombie_digger_landing.tres" id="25_fk1an"]
 [ext_resource type="Animation" uid="uid://cu8aotelji4gy" path="res://animation/character/zombie/original/018_zombie_digger/Zombie_digger_walk.tres" id="26_yocpx"]
 [ext_resource type="Script" uid="uid://cj4hccewpwgyv" path="res://scripts/character/components/drop_body/ZombieArm1Drop.gd" id="28_yocpx"]
-[ext_resource type="Animation" uid="uid://6mti0jciaeke" path="res://animation/character/zombie/original/018_zombie_digger/Zombie_digger_up.res" id="43_24p33"]
+[ext_resource type="Animation" path="res://animation/character/zombie/original/018_zombie_digger/Zombie_digger_up.res" id="43_24p33"]
 [ext_resource type="Texture2D" uid="uid://dhawpqhvsxd83" path="res://assets/image/particles/dirtsmall.png" id="47_e2y74"]
 
 [sub_resource type="Resource" id="Resource_o2wdo"]

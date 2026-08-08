@@ -700,7 +700,7 @@ func _sync_frozen_groups() -> void:
 		var character: Character000Base = character_value
 		if not current_characters.has(character):
 			_restore_frozen_gray_visual(character, freeze_data)
-			character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT))
+			character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT)) as Node.ProcessMode
 			frozen_character_process_modes.erase(instance_id)
 	for instance_id in character_freeze_group_memberships.keys():
 		if not current_character_ids.has(instance_id):
@@ -762,7 +762,7 @@ func _restore_frozen_bullet(instance_id: int) -> void:
 	var bullet_value: Variant = bullet_ref.get_ref() if is_instance_valid(bullet_ref) else null
 	if is_instance_valid(bullet_value):
 		var bullet := bullet_value as Bullet000Base
-		bullet.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT))
+		bullet.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT)) as Node.ProcessMode
 	frozen_bullet_process_modes.erase(instance_id)
 
 
@@ -1235,7 +1235,7 @@ func _update_freeze_group_summary() -> void:
 				member_count += 1
 		lines.append("%d组  组长:%s  组员:%d  %s" % [
 			group_index + 1,
-			leader.name if is_instance_valid(leader) else "未指定",
+			str(leader.name) if is_instance_valid(leader) else "未指定",
 			member_count,
 			"冻结" if frozen_groups[group_index] else "运行",
 		])
@@ -1319,7 +1319,7 @@ func _apply_character_group_freeze(character: Character000Base) -> void:
 	elif frozen_character_process_modes.has(instance_id):
 		var freeze_data: Dictionary = frozen_character_process_modes[instance_id]
 		_restore_frozen_gray_visual(character, freeze_data)
-		character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT))
+		character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT)) as Node.ProcessMode
 		frozen_character_process_modes.erase(instance_id)
 
 
@@ -1428,7 +1428,7 @@ func _restore_all_group_frozen_characters() -> void:
 			continue
 		var character: Character000Base = character_value
 		_restore_frozen_gray_visual(character, freeze_data)
-		character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT))
+		character.process_mode = int(freeze_data.get("process_mode", Node.PROCESS_MODE_INHERIT)) as Node.ProcessMode
 	frozen_character_process_modes.clear()
 	for membership in character_freeze_group_memberships.values():
 		var character_ref := membership.get("ref") as WeakRef

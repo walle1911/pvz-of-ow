@@ -2,7 +2,6 @@ extends Control
 ## 正常卡槽
 class_name CardSlotNorm
 
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 ## 临时卡片存放节点，避免卡片被挡住
 @onready var temporary_card: Control = $TemporaryCard

@@ -73,14 +73,17 @@ static func get_registry_override(scene_path:String, property_name:String, fallb
 	return validation.get("value", fallback) if validation.get("ok", false) else fallback
 
 
-static func validate_registry_value(property_name:String, saved_value, fallback) -> Dictionary:
+static func validate_registry_value(property_name:String, saved_value, _fallback) -> Dictionary:
 	var rule = REGISTRY_RULES.get(property_name, {})
 	if not rule is Dictionary or rule.is_empty() or typeof(saved_value) not in [TYPE_INT, TYPE_FLOAT]:
 		return {"ok": false}
 	var number := float(saved_value)
 	if not is_finite(number) or number < float(rule["min"]) or number > float(rule["max"]):
 		return {"ok": false}
-	return {"ok": true, "value": int(number) if bool(rule["integer"]) else number}
+	var validated_number:Variant = number
+	if bool(rule["integer"]):
+		validated_number = int(number)
+	return {"ok": true, "value": validated_number}
 
 
 static func zombie_spawn_weight_from_grade(grade: int) -> int:

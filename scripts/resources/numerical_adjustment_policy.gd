@@ -239,7 +239,10 @@ static func validate_value(target: Object, property_name: String, saved_value, s
 			var number := float(saved_value)
 			if not is_finite(number) or number < float(rule.get("min", -INF)) or number > float(rule.get("max", INF)):
 				return {"ok": false}
-			return {"ok": true, "value": int(number) if typeof(current_value) == TYPE_INT else number}
+			var validated_number:Variant = number
+			if typeof(current_value) == TYPE_INT:
+				validated_number = int(number)
+			return {"ok": true, "value": validated_number}
 		TYPE_ARRAY:
 			if not saved_value is Array or saved_value.size() != current_value.size():
 				return {"ok": false}
@@ -253,7 +256,10 @@ static func validate_value(target: Object, property_name: String, saved_value, s
 				if not is_finite(number) or number < float(rule.get("item_min", -INF)) or number > float(rule.get("item_max", INF)):
 					return {"ok": false}
 				var sample = current_value[index]
-				result.append(int(number) if typeof(sample) == TYPE_INT else number)
+				var validated_item:Variant = number
+				if typeof(sample) == TYPE_INT:
+					validated_item = int(number)
+				result.append(validated_item)
 			if str(rule.get("order", "")) == "non_increasing":
 				for index in range(1, result.size()):
 					if float(result[index - 1]) < float(result[index]):

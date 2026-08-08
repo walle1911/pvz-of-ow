@@ -67,7 +67,7 @@ func _run() -> void:
 			push_error("PlantInfo missing for plant ID %d" % int(value))
 			get_tree().quit(1)
 			return
-		var scene := info[CharacterRegistry.PlantInfoAttribute.PlantScenes] as PackedScene
+		var scene := load(str(info[CharacterRegistry.PlantInfoAttribute.PlantScenes])) as PackedScene
 		var character := scene.instantiate()
 		var fields := {}
 		_collect(character, character, scene.resource_path, fields)

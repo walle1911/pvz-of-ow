@@ -4,7 +4,6 @@ class_name LevelCustomRuntime
 const LevelJsonRuntimeScript := preload("res://scripts/resources/level/level_json_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 const ZOMBIE_TYPE_IDS := {
 	"normal": 500,
@@ -286,7 +285,7 @@ static func _automatic_simple_intro_waves(
 		var zombie_type := int(zombie_type_value) as CharacterRegistry.ZombieType
 		if not allowed_types.has(zombie_type):
 			continue
-		var intro_wave := max_wave / 2 + 1
+		var intro_wave := int(max_wave / 2.0) + 1
 		if zombie_type in [
 			CharacterRegistry.ZombieType.Z516Balloon,
 			CharacterRegistry.ZombieType.Z517Digger,

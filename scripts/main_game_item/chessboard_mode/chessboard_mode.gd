@@ -816,7 +816,7 @@ func _weighted_plant_pick(cell:PlantCell) -> CharacterRegistry.PlantType:
 		var value := _plant_major_weight(int(plant_type), _major_index())
 		value *= _subrank_multiplier(_plant_strength(int(plant_type)))
 		weights[int(plant_type)] = value
-	return _weighted_pick(weights, cell, 17)
+	return _weighted_pick(weights, cell, 17) as CharacterRegistry.PlantType
 
 func _plant_major_weight(plant_type:int, major:int) -> float:
 	if plant_weight_overrides.has(plant_type):
@@ -842,7 +842,7 @@ func _weighted_zombie_pick(table:Dictionary, cell:PlantCell, _friendly:bool) -> 
 		if int(key) == 24 and (_major_index() < 6 or cell.row_col.y < 4 or _alive_ranked_giant_count() >= 1):
 			value = 0.0
 		weights[int(key)] = value
-	return _weighted_pick(weights, cell, 31)
+	return _weighted_pick(weights, cell, 31) as CharacterRegistry.ZombieType
 
 func _zombie_strength(zombie_type:int) -> int:
 	if zombie_type in [20, 24, 25]: return 2

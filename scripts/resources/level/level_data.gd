@@ -18,6 +18,22 @@ func set_choose_level(curr_game_mode: MainSceneRegistry.MainScenes, curr_level_p
 	level_id = curr_level_id
 	save_game_name = str(game_mode) + "_" + str(level_page) + "_" + str(level_id)
 
+
+## Resource.duplicate() 只复制带存储标记的导出属性；工坊运行时波次、冒险卡池等脚本变量也必须保留。
+func duplicate_runtime() -> ResourceLevelData:
+	var result := duplicate(true) as ResourceLevelData
+	for property in get_property_list():
+		if not (int(property.get("usage", 0)) & PROPERTY_USAGE_SCRIPT_VARIABLE):
+			continue
+		var property_name := StringName(property.get("name", ""))
+		if property_name.is_empty():
+			continue
+		var value = get(property_name)
+		if value is Array or value is Dictionary:
+			value = value.duplicate(true)
+		result.set(property_name, value)
+	return result
+
 #endregion
 
 #region 关卡背景

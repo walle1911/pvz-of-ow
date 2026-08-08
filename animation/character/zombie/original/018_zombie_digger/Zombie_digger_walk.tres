@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://b1fgpbevxwj7t" path="res://assets/reanim/Zombie_digger_innerleg_lower.png" id="5_fuck"]
 [ext_resource type="Texture2D" uid="uid://ctowlyby5jrur" path="res://assets/reanim/Zombie_digger_innerleg_upper.png" id="6_fuck"]
 [ext_resource type="Texture2D" uid="uid://bnai3uyg35xml" path="res://assets/reanim/Zombie_digger_body.png" id="7_fuck"]
-[ext_resource type="Texture2D" uid="uid://ql7tf5nsep8d" path="res://assets/reanim/Zombie_digger_head.png" id="8_fuck"]
+[ext_resource type="Texture2D" uid="uid://b21txxhdunuvy" path="res://assets/reanim/Zombie_digger_head.png" id="8_fuck"]
 [ext_resource type="Texture2D" uid="uid://egilmmiqljad" path="res://assets/reanim/Zombie_digger_jaw.png" id="9_fuck"]
 [ext_resource type="Texture2D" uid="uid://bibs7qqy86ejr" path="res://assets/reanim/Zombie_digger_outerleg_fool.png" id="10_fuck"]
 [ext_resource type="Texture2D" uid="uid://cjft5et6kde7n" path="res://assets/reanim/Zombie_digger_outerleg_lower.png" id="11_fuck"]

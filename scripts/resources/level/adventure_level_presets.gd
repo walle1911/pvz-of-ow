@@ -395,7 +395,7 @@ static func automatically_introduced_zombies(level: Dictionary) -> Array[int]:
 	var source_kind := str(level.get("_adventureLevelSource", "developer"))
 	var current_global_level := _global_level_number(current_world, current_level)
 	for global_level in range(1, current_global_level):
-		var world: int = int((global_level - 1) / LEVELS_PER_WORLD) + 1
+		var world: int = int(float(global_level - 1) / float(LEVELS_PER_WORLD)) + 1
 		var level_number := (global_level - 1) % LEVELS_PER_WORLD + 1
 		var prior_id := _preset_id(world, level_number, "normal")
 		var loaded := FormalLevelStore.load_formal_level(prior_id) \
@@ -504,20 +504,20 @@ static func _build_wave_zombies(
 	var normal_type := ORIGINAL_NORMAL if workshop_mode == "chessboard" else OW_NORMAL
 	var flag_type := ORIGINAL_FLAG if workshop_mode == "chessboard" else OW_FLAG
 	var global_level := _global_level_number(world, level_number)
-	var remaining_points := 1 + int(float(global_level - 1) * 0.20) + int(wave_index / 3)
+	var remaining_points := 1 + int(float(global_level - 1) * 0.20) + int(wave_index / 3.0)
 	var zombies: Array[int] = []
 	if _is_flag_wave(world, level_number, wave_index, wave_count):
 		remaining_points = int(ceil(float(remaining_points) * 2.2))
 		zombies.append(flag_type)
 		remaining_points -= 1
-		var plain_count := mini(4 + world, maxi(1, int(remaining_points / 3)))
+		var plain_count := mini(4 + world, maxi(1, int(remaining_points / 3.0)))
 		for _index in plain_count:
 			zombies.append(normal_type)
 			remaining_points -= 1
 
 	var level_once_bosses := _level_once_final_bosses(world, level_number, workshop_mode)
 	var introduced_types := _introduced_zombies(world, level_number, workshop_mode)
-	if not introduced_types.is_empty() and (wave_index == int(wave_count / 2) or wave_index == wave_count - 1):
+	if not introduced_types.is_empty() and (wave_index == int(wave_count / 2.0) or wave_index == wave_count - 1):
 		for introduced_type in introduced_types:
 			## Boss 只在最后一波强制出现一次。
 			var is_boss := BOSS_ZOMBIES.has(introduced_type) or level_once_bosses.has(introduced_type)
@@ -735,7 +735,7 @@ static func _ones(size: int) -> Array:
 	return result
 
 
-static func _is_flag_wave(world: int, level_number: int, wave_index: int, wave_count: int) -> bool:
+static func _is_flag_wave(_world: int, _level_number: int, wave_index: int, wave_count: int) -> bool:
 	var waves_per_flag := wave_count if wave_count < 10 else 10
 	return wave_index % waves_per_flag == waves_per_flag - 1
 

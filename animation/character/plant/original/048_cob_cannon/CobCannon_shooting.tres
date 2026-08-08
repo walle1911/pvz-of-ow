@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bw1eaerjcpf15" path="res://assets/reanim/CobCannon_husk3.png" id="4_fuck"]
 [ext_resource type="Texture2D" uid="uid://c0b2nxclwkjxn" path="res://assets/reanim/CobCannon_cob.png" id="5_fuck"]
 [ext_resource type="Texture2D" uid="uid://dnkk3vyykr511" path="res://assets/reanim/CobCannon_husk2.png" id="6_fuck"]
-[ext_resource type="Texture2D" uid="uid://dg8oaxgqbdu2g" path="res://assets/reanim/CobCannon_husk1.png" id="7_fuck"]
+[ext_resource type="Texture2D" uid="uid://dirftb646rvfs" path="res://assets/reanim/CobCannon_husk1.png" id="7_fuck"]
 [ext_resource type="Texture2D" uid="uid://bjfgnxqtsjeal" path="res://assets/reanim/CobCannon_blink1.png" id="8_fuck"]
 [ext_resource type="Texture2D" uid="uid://dpyjy2uwlppeh" path="res://assets/reanim/CobCannon_blink2.png" id="9_fuck"]
 

@@ -191,7 +191,7 @@ func apply_test_card_overrides() -> void:
 	and test_pre_choosed_card_list_zombie.is_empty() \
 	and test_max_choosed_card_num <= 0:
 		return
-	game_para = game_para.duplicate(true)
+	game_para = game_para.duplicate_runtime()
 	if not test_pre_choosed_card_list_plant.is_empty():
 		game_para.pre_choosed_card_list_plant = test_pre_choosed_card_list_plant.duplicate()
 	if not test_pre_choosed_card_list_zombie.is_empty():

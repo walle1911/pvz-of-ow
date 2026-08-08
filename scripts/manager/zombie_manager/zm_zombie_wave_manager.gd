@@ -133,7 +133,6 @@ func start_custom_timeline() -> void:
 		var early_refresh_remaining := -1.0
 		curr_wave = stage_index
 		while flag_index < flags.size() and int(flags[flag_index].get("stage_index", -1)) == stage_index:
-			var flag_data: Dictionary = flags[flag_index]
 			var is_final_flag := flag_index == flags.size() - 1
 			flag_progress_bar.set_progress(stage_progress_start * 100.0, flag_index)
 			if game_para.custom_original_timing:

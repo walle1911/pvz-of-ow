@@ -21,7 +21,6 @@ class_name Plant052SunflowerMercy
 	CharacterRegistry.PlantType.P518ThreePeater,
 	CharacterRegistry.PlantType.P528SplitPea,
 	CharacterRegistry.PlantType.P540GatlingPea,
-	49,
 	CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
 	CharacterRegistry.PlantType.P041GatlingPeaBastion,
@@ -84,7 +83,6 @@ static func is_blue_line_damage_boost_target_type(target_plant_type:CharacterReg
 		CharacterRegistry.PlantType.P518ThreePeater,
 		CharacterRegistry.PlantType.P528SplitPea,
 		CharacterRegistry.PlantType.P540GatlingPea,
-		49,
 		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 		CharacterRegistry.PlantType.P006SnowPeaMei,
 		CharacterRegistry.PlantType.P041GatlingPeaBastion,
@@ -167,11 +165,11 @@ func _update_damage_boost_beam() -> void:
 		return
 
 	# Compute global positions from anchors, then convert to beam-local
-	var from_global := source_anchor_node.to_global(damage_boost_source_anchor_offset)
-	var to_global := target_anchor_node.to_global(damage_boost_target_anchor_offset)
-	var from_local := damage_boost_beam.to_local(from_global)
-	var to_local := damage_boost_beam.to_local(to_global)
-	damage_boost_beam.set_endpoints(from_local, to_local)
+	var source_global_position := source_anchor_node.to_global(damage_boost_source_anchor_offset)
+	var target_global_position := target_anchor_node.to_global(damage_boost_target_anchor_offset)
+	var source_local_position := damage_boost_beam.to_local(source_global_position)
+	var target_local_position := damage_boost_beam.to_local(target_global_position)
+	damage_boost_beam.set_endpoints(source_local_position, target_local_position)
 
 
 # ================================================================
@@ -185,8 +183,8 @@ func _build_config_lookup() -> void:
 			config_lookup[int(config.plant_type)] = config
 
 
-func _get_damage_boost_config_for(plant_type:int) -> DamageBoostTargetConfig:
-	return config_lookup.get(plant_type, null)
+func _get_damage_boost_config_for(target_plant_type:int) -> DamageBoostTargetConfig:
+	return config_lookup.get(target_plant_type, null)
 
 
 func _update_damage_boost_target():
@@ -439,14 +437,14 @@ func _sync_glow_overlay_sprite(overlay:Sprite2D, glow_sprite:Sprite2D) -> void:
 
 
 func _create_glow_overlay_material() -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = _get_glow_overlay_shader()
-	material.set_shader_parameter("base_color", glow_overlay_base_color)
-	material.set_shader_parameter("highlight_color", glow_overlay_highlight_color)
-	material.set_shader_parameter("pulse_amount", glow_overlay_pulse_amount)
-	material.set_shader_parameter("pulse_speed", glow_overlay_pulse_speed)
-	material.set_shader_parameter("flow_speed", glow_overlay_flow_speed)
-	return material
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = _get_glow_overlay_shader()
+	glow_material.set_shader_parameter("base_color", glow_overlay_base_color)
+	glow_material.set_shader_parameter("highlight_color", glow_overlay_highlight_color)
+	glow_material.set_shader_parameter("pulse_amount", glow_overlay_pulse_amount)
+	glow_material.set_shader_parameter("pulse_speed", glow_overlay_pulse_speed)
+	glow_material.set_shader_parameter("flow_speed", glow_overlay_flow_speed)
+	return glow_material
 
 
 func _get_glow_overlay_shader() -> Shader:

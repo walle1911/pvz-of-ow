@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bw1eaerjcpf15" path="res://assets/reanim/CobCannon_husk3.png" id="6_q5hnh"]
 [ext_resource type="Texture2D" uid="uid://dnkk3vyykr511" path="res://assets/reanim/CobCannon_husk2.png" id="7_sqcik"]
 [ext_resource type="Texture2D" uid="uid://c0b2nxclwkjxn" path="res://assets/reanim/CobCannon_cob.png" id="7_vaxr0"]
-[ext_resource type="Texture2D" uid="uid://dg8oaxgqbdu2g" path="res://assets/reanim/CobCannon_husk1.png" id="8_2gymn"]
+[ext_resource type="Texture2D" uid="uid://dirftb646rvfs" path="res://assets/reanim/CobCannon_husk1.png" id="8_2gymn"]
 [ext_resource type="Animation" uid="uid://d07tekmuhcwct" path="res://animation/character/plant/original/048_cob_cannon/CobCannon_charge.tres" id="10_gp4se"]
 [ext_resource type="Texture2D" uid="uid://bjfgnxqtsjeal" path="res://assets/reanim/CobCannon_blink1.png" id="11_q5hnh"]
 [ext_resource type="Animation" uid="uid://b4x146r6tjdqi" path="res://animation/character/plant/original/048_cob_cannon/CobCannon_idle.tres" id="11_ytr4m"]

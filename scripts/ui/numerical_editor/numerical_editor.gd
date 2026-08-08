@@ -375,14 +375,14 @@ func _build_character_fields(scene_path: String) -> void:
 			_add_property_editor(instance, field["node"], field["property_info"])
 	if not rework_fields.is_empty():
 		_add_section_header("◆ 改版技能参数")
-		var last_rework_node: Node
+		var last_rework_node: Node = null
 		for field in rework_fields:
 			var rework_node: Node = field["node"]
 			if rework_node != last_rework_node:
 				_add_rework_node_header(instance, rework_node)
 				last_rework_node = rework_node
 			_add_property_editor(instance, rework_node, field["property_info"])
-	var last_node: Node
+	var last_node: Node = null
 	for field in normal_fields:
 		var node: Node = field["node"]
 		if node != last_node:

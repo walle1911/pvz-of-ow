@@ -1,7 +1,6 @@
 extends CardBase
 class_name Card
 
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 @onready var character_static: Node2D = $CardBg/CharacterStatic
 @onready var short_cut: Label = $ShortCut

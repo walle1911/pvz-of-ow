@@ -61,8 +61,8 @@ func _create_opening_battlefield_zombie() -> void:
 	if is_instance_valid(opening_battlefield_zombie):
 		return
 	var active_rows: Array[int] = zombie_manager.game_para.active_lawn_rows
-	var lane := int(active_rows[int(active_rows.size() / 2)]) if not active_rows.is_empty() \
-		else int(zombie_manager.all_zombie_rows.size() / 2)
+	var lane := int(active_rows[int(active_rows.size() / 2.0)]) if not active_rows.is_empty() \
+		else int(zombie_manager.all_zombie_rows.size() / 2.0)
 	lane = clampi(lane, 0, zombie_manager.all_zombie_rows.size() - 1)
 	var create_manager := zombie_manager.zombie_wave_manager.zombie_wave_create_manager
 	create_manager.opening_first_zombie_lane = lane

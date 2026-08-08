@@ -1,5 +1,8 @@
 extends Node
 
+const AdventurePresetsRuntime := preload("res://scripts/resources/level/adventure_level_presets.gd")
+const CustomLevelRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+
 ## 约定：业务/UI 只通过本脚本暴露的引用访问（如 `Global.user_manager`、`Global.save_service`、`Global.config_service`），
 ## 不要直接 `get_node` / `%` 访问 Global 场景里的子节点，避免绕过门面、破坏初始化顺序假设。
 
@@ -30,6 +33,8 @@ func _ready() -> void:
 	var is_have_user := user_manager.load_current_user()
 	if is_have_user and not user_manager.curr_user_name.is_empty():
 		reload_session_for_current_user()
+	_warm_adventure_runtime_cache()
+	_warm_adventure_scene_cache()
 	## 创建全局数据自动存档计时器（由 SaveService 负责）
 	save_service.start_autosave(60.0)
 
@@ -57,6 +62,72 @@ var level_workshop_return_state: Dictionary = {}
 var level_workshop_edit_mode := "normal"
 ## 冒险预设选择状态；主菜单的“开始冒险吧”固定进入 normal。
 var adventure_mainline_mode := "normal"
+var adventure_runtime_cache: Dictionary = {}
+var adventure_scene_cache: Dictionary[String, PackedScene] = {}
+
+
+func _warm_adventure_runtime_cache() -> void:
+	## 把正式关卡字典转运行时资源的重活放到启动阶段，选关页和关卡点击只复制缓存。
+	for mainline_mode in ["normal", "chessboard"]:
+		var mode_cache: Dictionary = {}
+		for preset in AdventurePresetsRuntime.list_formal_presets(mainline_mode):
+			var preset_id := str((preset as Dictionary).get("id", ""))
+			if preset_id.is_empty():
+				continue
+			var source := AdventurePresetsRuntime.build_formal_level(preset_id)
+			var built := CustomLevelRuntime.build_game_para(source)
+			if built["ok"]:
+				mode_cache[preset_id] = {
+					"source": source,
+					"game_para": built["game_para"],
+				}
+		adventure_runtime_cache[mainline_mode] = mode_cache
+
+
+func refresh_adventure_runtime_cache() -> void:
+	adventure_runtime_cache.clear()
+	_warm_adventure_runtime_cache()
+
+
+func cached_adventure_level(mainline_mode: String, preset_id: String) -> Dictionary:
+	var mode_cache := adventure_runtime_cache.get(mainline_mode, {}) as Dictionary
+	var cached := mode_cache.get(preset_id, {}) as Dictionary
+	if cached.is_empty():
+		return {"ok": false, "source": {}, "game_para": null}
+	var cached_para := cached.get("game_para") as ResourceLevelData
+	return {
+		"ok": cached_para != null,
+		"source": cached.get("source", {}),
+		"game_para": cached_para.duplicate_runtime() if cached_para != null else null,
+	}
+
+
+func _warm_adventure_scene_cache() -> void:
+	## 把“开始冒险”和关卡按钮会切换到的场景文件也在启动阶段解析并持有。
+	for scene_id in [
+		MainSceneRegistry.MainScenes.StartMenu,
+		MainSceneRegistry.MainScenes.ChooseLevelAdventure,
+		MainSceneRegistry.MainScenes.MainGameFront,
+		MainSceneRegistry.MainScenes.MainGameBack,
+		MainSceneRegistry.MainScenes.MainGameRoof,
+		MainSceneRegistry.MainScenes.MainGameChessboardFront,
+		MainSceneRegistry.MainScenes.MainGameChessboardPool,
+	]:
+		var scene_path := str(main_scene_registry.MainScenesMap[scene_id])
+		var packed_scene := load(scene_path) as PackedScene
+		if packed_scene != null:
+			adventure_scene_cache[scene_path] = packed_scene
+	for scene_path in ["res://scenes/card_slot/card_slot_norm.tscn"]:
+		var packed_scene := load(scene_path) as PackedScene
+		if packed_scene != null:
+			adventure_scene_cache[scene_path] = packed_scene
+
+
+func change_scene_to_cached(scene_path: String) -> Error:
+	var packed_scene := adventure_scene_cache.get(scene_path) as PackedScene
+	if packed_scene != null:
+		return get_tree().change_scene_to_packed(packed_scene)
+	return get_tree().change_scene_to_file(scene_path)
 
 ## 游戏倍速
 var time_scale := 1.0

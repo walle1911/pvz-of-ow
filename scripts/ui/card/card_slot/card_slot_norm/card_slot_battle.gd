@@ -2,7 +2,6 @@ extends PanelContainer
 ## 出战卡槽
 class_name CardSlotBattle
 
-const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 ## 顶部卡槽在当前 16:9 UI 中能完整显示的上限。
 @export_range(1, 15) var max_visible_card_num := 13

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c7dr2016dfdoo" path="res://scripts/manager/main_game_manager.gd" id="1_7dde3"]
 [ext_resource type="Script" uid="uid://b2rst408m72au" path="res://scripts/manager/hand_manager/hand_manager.gd" id="3_acpf0"]
 [ext_resource type="Script" uid="uid://duphb7sb466c0" path="res://scripts/manager/hand_manager/hm_character.gd" id="4_ee3wa"]
-[ext_resource type="Texture2D" uid="uid://dh1c6v7dpaxmd" path="res://assets/image/ui/ui_card/Shovel.png" id="4_w5iw5"]
+[ext_resource type="Texture2D" uid="uid://crhupr13vcrib" path="res://assets/image/ui/ui_card/Shovel.png" id="4_w5iw5"]
 [ext_resource type="Script" uid="uid://wbd5do6m44f2" path="res://scripts/manager/hand_manager/hm_item.gd" id="5_3d12c"]
 [ext_resource type="Script" uid="uid://cdcjkojcv1r2v" path="res://scripts/manager/zombie_manager/zombie_manager.gd" id="5_j3aa3"]
 [ext_resource type="Script" uid="uid://bwla64adrag6e" path="res://scripts/manager/zombie_manager/zm_zombie_wave_manager.gd" id="5_qfhda"]

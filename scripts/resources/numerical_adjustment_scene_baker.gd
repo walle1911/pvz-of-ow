@@ -192,8 +192,8 @@ static func _has_property(target: Object, property_name: String) -> bool:
 	return false
 
 
-static func _coerce_value(value, reference):
-	match typeof(reference):
+static func _coerce_value(value, reference_value):
+	match typeof(reference_value):
 		TYPE_BOOL:
 			return bool(value)
 		TYPE_INT:
@@ -201,10 +201,10 @@ static func _coerce_value(value, reference):
 		TYPE_FLOAT:
 			return float(value)
 		TYPE_ARRAY:
-			if value is Array and reference is Array:
+			if value is Array and reference_value is Array:
 				var result: Array = value.duplicate()
-				for index in mini(result.size(), reference.size()):
-					result[index] = _coerce_value(result[index], reference[index])
+				for index in mini(result.size(), reference_value.size()):
+					result[index] = _coerce_value(result[index], reference_value[index])
 				return result
 	return value
 

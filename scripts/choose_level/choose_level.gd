@@ -23,6 +23,7 @@ const MOVED_CHESSBOARD_NAMES := ["棋盘格·十旗", "棋盘格·十轮", "排�
 ## 用于生成关卡 ID 的计数
 var next_level_number: int = 1
 var configured_level_count := 0
+var cover_texture_used_rect_cache: Dictionary[int, Rect2i] = {}
 
 @onready var all_page: Control = $AllPage
 @onready var label_page: Label = get_node_or_null("LabelPage")
@@ -180,12 +181,13 @@ func generate_level_id() -> String:
 
 func _on_choose_level_button(choose_level_button:ChooseLevelButton):
 	if not choose_level_button.preset_level_id.is_empty():
-		var source := AdventurePresets.build_formal_level(choose_level_button.preset_level_id)
-		var built := CustomRuntime.build_game_para(source)
-		if not built["ok"]:
-			push_error("成品冒险关卡无法载入：%s" % str(built["error"]))
+		var cached := Global.cached_adventure_level(
+			str(Global.adventure_mainline_mode), choose_level_button.preset_level_id
+		)
+		if not cached["ok"]:
+			push_error("成品冒险关卡缓存不存在：%s" % choose_level_button.preset_level_id)
 			return
-		var preset_para: ResourceLevelData = built["game_para"]
+		var preset_para: ResourceLevelData = cached["game_para"]
 		preset_para.set_choose_level(game_mode, curr_page, choose_level_button.preset_level_id)
 		choose_level_button.curr_level_data_game_para = preset_para
 	Global.game_para = choose_level_button.curr_level_data_game_para
@@ -227,13 +229,13 @@ func _build_adventure_preset_buttons() -> void:
 			var preset: Dictionary = presets[preset_index]
 			button.visible = true
 			button.preset_level_id = str(preset["id"])
-			var level_source := AdventurePresets.build_formal_level(button.preset_level_id)
-			var built := CustomRuntime.build_game_para(level_source)
-			if built["ok"]:
-				button.curr_level_data_game_para = built["game_para"]
+			var cached := Global.cached_adventure_level(mainline_mode, button.preset_level_id)
+			var level_source := cached["source"] as Dictionary
+			if cached["ok"]:
+				button.curr_level_data_game_para = cached["game_para"]
 			else:
 				button.curr_level_data_game_para = null
-				push_error("成品冒险关卡无法生成：%s，%s" % [button.preset_level_id, str(built["error"])])
+				push_error("成品冒险关卡缓存不存在：%s" % button.preset_level_id)
 			button.configure_level_label(str(level_source.get("name", preset["name"])))
 			_configure_adventure_cover(button, preset, level_source, previous_level_source)
 			previous_level_source = level_source
@@ -321,11 +323,13 @@ func _add_dynamic_character_preview(
 ) -> void:
 	var character_scene: PackedScene
 	if feature_kind == "plant":
-		character_scene = CharacterRegistry.PlantInfo.get(character_type, {}).get(
+		character_scene = Global.character_registry.get_plant_info(
+			character_type as CharacterRegistry.PlantType,
 			CharacterRegistry.PlantInfoAttribute.PlantScenes
 		) as PackedScene
 	else:
-		character_scene = CharacterRegistry.ZombieInfo.get(character_type, {}).get(
+		character_scene = Global.character_registry.get_zombie_info(
+			character_type as CharacterRegistry.ZombieType,
 			CharacterRegistry.ZombieInfoAttribute.ZombieScenes
 		) as PackedScene
 	if character_scene == null:
@@ -396,13 +400,20 @@ func _cover_sprite_visual_rect(sprite: Sprite2D) -> Rect2:
 	## 多帧或自定义 region 的映射方式不同，保留 Godot 给出的绘制边界更安全。
 	if sprite.region_enabled or sprite.hframes != 1 or sprite.vframes != 1:
 		return fallback_rect
-	var image := sprite.texture.get_image()
-	if image == null or image.is_empty():
-		return fallback_rect
-	var used_rect := image.get_used_rect()
+	var texture_id := sprite.texture.get_instance_id()
+	var used_rect := Rect2i()
+	var image_size := Vector2(sprite.texture.get_size())
+	if cover_texture_used_rect_cache.has(texture_id):
+		used_rect = cover_texture_used_rect_cache[texture_id]
+	else:
+		var image := sprite.texture.get_image()
+		if image == null or image.is_empty():
+			return fallback_rect
+		used_rect = image.get_used_rect()
+		image_size = Vector2(image.get_size())
+		cover_texture_used_rect_cache[texture_id] = used_rect
 	if used_rect.size.x <= 0 or used_rect.size.y <= 0:
 		return fallback_rect
-	var image_size := Vector2(image.get_size())
 	var used_position := Vector2(used_rect.position)
 	if sprite.flip_h:
 		used_position.x = image_size.x - float(used_rect.end.x)
@@ -417,11 +428,11 @@ func _cover_sprite_visual_rect(sprite: Sprite2D) -> Rect2:
 
 ## 进入游戏关卡
 func choose_level_start_game(game_scense:MainSceneRegistry.MainScenes):
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[game_scense])
+	Global.change_scene_to_cached(Global.main_scene_registry.MainScenesMap[game_scense])
 
 ## 返回开始菜单
 func back_start_menu():
-	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])
+	Global.change_scene_to_cached(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])
 
 
 func _on_last_pressed() -> void:

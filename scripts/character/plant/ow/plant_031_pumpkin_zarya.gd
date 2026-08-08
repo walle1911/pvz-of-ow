@@ -187,11 +187,11 @@ func _sync_ready_glow_sprite(overlay:Sprite2D, source_sprite:Sprite2D) -> void:
 
 
 func _create_ready_glow_material(intensity:float, edge_only:bool) -> ShaderMaterial:
-	var material := ShaderMaterial.new()
-	material.shader = _get_ready_glow_shader()
-	material.set_shader_parameter(&"intensity", intensity)
-	material.set_shader_parameter(&"edge_only", edge_only)
-	return material
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = _get_ready_glow_shader()
+	glow_material.set_shader_parameter(&"intensity", intensity)
+	glow_material.set_shader_parameter(&"edge_only", edge_only)
+	return glow_material
 
 
 func _get_ready_glow_shader() -> Shader:

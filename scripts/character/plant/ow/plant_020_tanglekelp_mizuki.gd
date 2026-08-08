@@ -596,7 +596,7 @@ class MizukiHatTrail extends Node2D:
 	func _create_trail_line(
 		width:float,
 		end_color:Color,
-		additive_material:CanvasItemMaterial,
+		line_material:CanvasItemMaterial,
 		start_alpha:float
 	) -> Line2D:
 		var line := Line2D.new()
@@ -605,7 +605,7 @@ class MizukiHatTrail extends Node2D:
 		line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 		line.end_cap_mode = Line2D.LINE_CAP_ROUND
 		line.joint_mode = Line2D.LINE_JOINT_ROUND
-		line.material = additive_material
+		line.material = line_material
 		## 尾端细、帽子附近粗，轮廓更接近高速拖出的锥形光束。
 		var width_taper := Curve.new()
 		width_taper.min_value = 0.0
