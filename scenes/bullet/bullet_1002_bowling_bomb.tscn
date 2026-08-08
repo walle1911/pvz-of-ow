@@ -1,11 +1,11 @@
 [gd_scene load_steps=37 format=3 uid="uid://dqaqlnax0o5fp"]
 
 [ext_resource type="PackedScene" uid="uid://cit8bsc5op7f0" path="res://scenes/bullet/bullet_000_linear_base.tscn" id="1_3qq1e"]
-[ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="2_1legp"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="2_1legp"]
 [ext_resource type="Script" uid="uid://c8d7bc8r1pi7i" path="res://scripts/bullet/bullet_1002_bowling_bomb.gd" id="2_3pp2i"]
 [ext_resource type="Texture2D" uid="uid://d0hpo2yp78fwc" path="res://assets/image/plant/plantshadow.png" id="2_vwbp0"]
-[ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="3_vwbp0"]
-[ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="4_uyat5"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="3_vwbp0"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="4_uyat5"]
 [ext_resource type="Script" uid="uid://l0umdgng0y2m" path="res://scripts/character/components/bomb_component/component_bomb_norm.gd" id="7_flmls"]
 [ext_resource type="Script" uid="uid://uv71i8wk2job" path="res://scripts/fx/plant_effect/plant_effect_001_bomb_cherry.gd" id="8_7aro5"]
 [ext_resource type="Texture2D" uid="uid://nnp13qryaqjx" path="res://assets/image/particles/ExplosionCloud.png" id="9_meu2b"]
@@ -209,7 +209,7 @@ hframes = 1
 modulate = Color(1, 0, 0.141176, 1)
 
 [node name="BodyCorrect" type="Node2D" parent="Body" index="1"]
-position = Vector2(0, -29)
+position = Vector2(-3.163, -27.2791)
 
 [node name="_ground" type="Sprite2D" parent="Body/BodyCorrect" index="0"]
 position = Vector2(-42, -41)
@@ -220,28 +220,28 @@ position = Vector2(-42, -41)
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="Body/BodyCorrect" index="2"]
-position = Vector2(-38.163, -32.7476)
+position = Vector2(0, 0)
 rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("2_1legp")
-centered = false
+centered = true
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="Body/BodyCorrect" index="3"]
 visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("3_vwbp0")
-centered = false
+centered = true
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="Body/BodyCorrect" index="4"]
 visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("4_uyat5")
-centered = false
+centered = true
 
 [node name="LordHammondRider" parent="." index="5" instance=ExtResource("11_hammond")]
-position = Vector2(0, -54)
+position = Vector2(-4, -54)
 
 [node name="BulletEffect" parent="." index="2"]
 is_bullet_effect = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cqo7ru5lo8e6g"]
+[gd_scene load_steps=48 format=3 uid="uid://cqo7ru5lo8e6g"]
 
 [ext_resource type="Theme" uid="uid://cx302yraw066y" path="res://data/ChooesLevel.tres" id="1_ehgxy"]
 [ext_resource type="Script" uid="uid://jru6xfv7g4f1" path="res://scripts/choose_level/choose_level.gd" id="1_o008e"]
@@ -6,12 +6,13 @@
 [ext_resource type="Texture2D" uid="uid://hb4b6ujaahoc" path="res://assets/image/Almanac/Almanac_GroundDay.jpg" id="4_e2jkj"]
 [ext_resource type="Resource" uid="uid://c8yt6n65ponc6" path="res://resources/level_date_resource/mode_minigame/minigame_01_bowling.tres" id="5_mrsyh"]
 [ext_resource type="PackedScene" uid="uid://bqvqjd3yshp8r" path="res://scenes/character/zombie/zombie_519_yeti.tscn" id="7_my4l7"]
-[ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="7_pw6t1"]
-[ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="8_bkyeq"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="7_pw6t1"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="8_bkyeq"]
 [ext_resource type="Resource" uid="uid://3mvuumsl5v6c" path="res://resources/level_date_resource/mode_minigame/minigame_02_hammer_zombie.tres" id="8_fgi2n"]
 [ext_resource type="Texture2D" uid="uid://bvp2j68muqgm8" path="res://assets/image/Almanac/Almanac_GroundNight.jpg" id="8_we3l7"]
 [ext_resource type="Texture2D" uid="uid://bqtnl31pv3rv3" path="res://assets/reanim/Hammer_3.png" id="9_e2jkj"]
-[ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="9_rivfv"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="9_rivfv"]
+[ext_resource type="PackedScene" path="res://scenes/bullet/lord_hammond_rider.tscn" id="10_hammond"]
 [ext_resource type="PackedScene" uid="uid://bhjnqm3kqr2fq" path="res://scenes/choose_level/choose_level_button.tscn" id="9_xsph7"]
 [ext_resource type="Texture2D" uid="uid://qtifu6lsmq6x" path="res://assets/reanim/hammer_1.png" id="10_sb4cu"]
 [ext_resource type="Texture2D" uid="uid://dweon5ml8otw5" path="res://assets/reanim/Hammer_2.png" id="11_mrsyh"]
@@ -170,7 +171,7 @@ layout_mode = 2
 curr_level_data_game_para = ExtResource("5_mrsyh")
 
 [node name="Label" parent="AllPage/GridContainer/ChooseLevelButton/TextureButton" index="0"]
-text = "保龄球"
+text = "小小破坏球"
 
 [node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButton"]
 clip_children = 1
@@ -204,15 +205,15 @@ scale = Vector2(0.6, 0.6)
 texture = ExtResource("4_e2jkj")
 
 [node name="Plant1001WallNutBowling" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect"]
-position = Vector2(92.32933, 94.35751)
+position = Vector2(92.32933, 104.35751)
 
 [node name="Body" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling"]
 
 [node name="BowlingCenter" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body"]
-position = Vector2(0, -28)
+position = Vector2(-3.163, -26.2791)
 
 [node name="BodyCorrect" type="Node2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body/BowlingCenter"]
-position = Vector2(0, 30)
+position = Vector2(0, 0)
 
 [node name="_ground" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect"]
 position = Vector2(-42, -71)
@@ -223,25 +224,25 @@ position = Vector2(-42, -71)
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect"]
-position = Vector2(-38.163, -62.7476)
+position = Vector2(0, 0)
 rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("7_pw6t1")
-centered = false
+centered = true
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect"]
 visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("8_bkyeq")
-centered = false
+centered = true
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect"]
 visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
 texture = ExtResource("9_rivfv")
-centered = false
+centered = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling"]
 libraries = {
@@ -253,6 +254,9 @@ tree_root = SubResource("AnimationNodeBlendTree_iqxly")
 advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
 parameters/TimeScale/scale = 1.0
+
+[node name="LordHammondRider" parent="AllPage/GridContainer/ChooseLevelButton/Panel/TextureRect/Plant1001WallNutBowling" instance=ExtResource("10_hammond")]
+position = Vector2(-4, -54)
 
 [node name="ChooseLevelButton2" parent="AllPage/GridContainer" instance=ExtResource("9_xsph7")]
 layout_mode = 2

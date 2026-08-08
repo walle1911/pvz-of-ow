@@ -57,6 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://osds5r8hvsmb" path="res://assets/reanim/Wallnut_body.png" id="51_ocwvu"]
 [ext_resource type="Texture2D" uid="uid://cpbkvykx6yq07" path="res://assets/reanim/Wallnut_twitch.png" id="52_dc0c5"]
 [ext_resource type="Texture2D" uid="uid://co3e8k6uwm4hi" path="res://assets/reanim/Wallnut_blink1.png" id="53_vm05c"]
+[ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="153_wrecking"]
 [ext_resource type="Texture2D" uid="uid://duasiggwu6o7b" path="res://assets/reanim/Wallnut_brigita_body.png" id="53_wallnut_brigita"]
 [ext_resource type="Texture2D" uid="uid://bo22elcj4cnrl" path="res://assets/reanim/PotatoMine_rock4.png" id="54_xqigo"]
 [ext_resource type="Texture2D" uid="uid://cwcs1c31vf7xx" path="res://assets/reanim/PotatoMine_rock2.png" id="55_vfoxv"]
@@ -7470,10 +7471,10 @@ scale = Vector2(0.5, 0.5)
 [node name="Body" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1257323139]
 
 [node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body" unique_id=956018598]
-position = Vector2(0, -28)
+position = Vector2(0, -26.2791)
 
 [node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter" unique_id=543126546]
-position = Vector2(0, 30)
+position = Vector2(0, 0)
 
 [node name="_ground" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1881035733]
 position = Vector2(-42, -71)
@@ -7484,25 +7485,25 @@ position = Vector2(-42, -71)
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1471035214]
-position = Vector2(-38.163, -62.7476)
+position = Vector2(0, 0)
 rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=266141564]
 visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1239765073]
 visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card/CardBg/CharacterStatic/Plant1001WallNutBowling" unique_id=1760105188]
 libraries/ = SubResource("AnimationLibrary_7lapw")
@@ -7533,10 +7534,10 @@ scale = Vector2(0.5, 0.5)
 modulate = Color(1, 0, 0.141176, 1)
 
 [node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body" unique_id=488448717]
-position = Vector2(2, -26)
+position = Vector2(0, -26.2791)
 
 [node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter" unique_id=1002396343]
-position = Vector2(-2, 26)
+position = Vector2(0, 0)
 
 [node name="_ground" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1908181115]
 position = Vector2(-42, -69)
@@ -7547,25 +7548,25 @@ position = Vector2(-42, -69)
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=377445764]
-position = Vector2(-38.163, -60.7476)
+position = Vector2(0, 0)
 rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1316602386]
 visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=866111797]
 visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.083, 0.083)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card2/CardBg/CharacterStatic/Plant1002WallNutBowling" unique_id=1197965782]
 libraries/ = SubResource("AnimationLibrary_7lapw")
@@ -7596,11 +7597,11 @@ scale = Vector2(0.4, 0.4)
 scale = Vector2(2, 2)
 
 [node name="BowlingCenter" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body" unique_id=2140350927]
-position = Vector2(0, -25)
+position = Vector2(-1.25, -26.7791)
 scale = Vector2(0.99999994, 0.99999994)
 
 [node name="BodyCorrect" type="Node2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter" unique_id=1317932905]
-position = Vector2(0, 25.000004)
+position = Vector2(0, 0)
 scale = Vector2(1.0000001, 1.0000001)
 
 [node name="_ground" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1148731280]
@@ -7612,25 +7613,25 @@ position = Vector2(-42.5, -69.5)
 centered = false
 
 [node name="Anim_face" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1698650326]
-position = Vector2(-38.663, -61.2476)
+position = Vector2(0, 0)
 rotation = -0.0454682
-scale = Vector2(0.7, 0.68937)
-texture = ExtResource("51_ocwvu")
-centered = false
+scale = Vector2(0.0754, 0.0754)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twitch" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=762902328]
 visible = false
-position = Vector2(-14.5894, -8.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("52_dc0c5")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.0754, 0.0754)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="Anim_blink_twice" type="Sprite2D" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling/Body/BowlingCenter/BodyCorrect" unique_id=1570846155]
 visible = false
-position = Vector2(-15.7894, -22.3159)
-scale = Vector2(0.7, 0.7)
-texture = ExtResource("53_vm05c")
-centered = false
+position = Vector2(0, 0)
+scale = Vector2(0.0754, 0.0754)
+texture = ExtResource("153_wrecking")
+centered = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="PlantCards3/Card3/CardBg/CharacterStatic/Plant1003WallNutBowling" unique_id=1810795647]
 libraries/ = SubResource("AnimationLibrary_7lapw")
