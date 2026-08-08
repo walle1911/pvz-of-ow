@@ -6,10 +6,6 @@ class_name Plant052BonkChoyRamattra
 
 const SEQUENCE_BASE_PATH := "res://assets/image/plant/070_bonk_choy/frame_sequences"
 const STATE_IDLE := &"idle"
-const STATE_WATERED := &"watered"
-const STATE_PLANT_FOOD_START := &"plant_food_start"
-const STATE_PLANT_FOOD := &"plant_food"
-const STATE_PLANT_FOOD_END := &"plant_food_end"
 const ATTACK_STATE_FRONT := &"attack_1"
 const ATTACK_STATE_BACK := &"attack_2"
 const ATTACK_STATE_FRONT_UPPERCUT := &"attack_4"
@@ -31,10 +27,6 @@ const FRAME_COUNTS := {
 	ATTACK_STATE_BACK: 10,
 	ATTACK_STATE_FRONT_UPPERCUT: 15,
 	ATTACK_STATE_BACK_UPPERCUT: 15,
-	STATE_PLANT_FOOD_START: 30,
-	STATE_PLANT_FOOD: 30,
-	STATE_PLANT_FOOD_END: 10,
-	STATE_WATERED: 15,
 }
 
 const STATE_ANCHORS := {
@@ -43,10 +35,6 @@ const STATE_ANCHORS := {
 	ATTACK_STATE_BACK: Vector2(280.5, 318.0),
 	ATTACK_STATE_FRONT_UPPERCUT: Vector2(144.0, 323.0),
 	ATTACK_STATE_BACK_UPPERCUT: Vector2(180.0, 323.0),
-	STATE_PLANT_FOOD_START: Vector2(153.0, 171.0),
-	STATE_PLANT_FOOD: Vector2(282.5, 505.0),
-	STATE_PLANT_FOOD_END: Vector2(154.5, 171.0),
-	STATE_WATERED: Vector2(138.5, 179.0),
 }
 
 const STATE_SCALES := {
@@ -64,12 +52,11 @@ const ATTACK_HIT_FRAMES := {
 	ATTACK_STATE_BACK_UPPERCUT: 5,
 }
 
-const PLANT_FOOD_HIT_FRAMES := [6, 12, 18, 24]
+static var _shared_frames := {}
 
 @export var attack_value := 15
 @export var uppercut_attack_multiplier := 2.0
 @export_range(1, 99, 1) var normal_attacks_before_uppercut := 15
-@export var plant_food_attack_value := 45
 @export var frame_time := 0.033
 @export var frame_scale := 0.55
 @export_group("动画平滑")
@@ -77,34 +64,31 @@ const PLANT_FOOD_HIT_FRAMES := [6, 12, 18, 24]
 @export_range(0.0, 1.0, 0.05) var idle_frame_blend_strength := 1.0
 @export_group("动画状态")
 @export var is_attack := false
-@export var is_plant_food := false
 
 var _frames := {}
 var _state: StringName = STATE_IDLE
 var _frame_index := 0
 var _frame_elapsed := 0.0
 var _is_looping := true
-var _sequence_queue := []
 var _attack_side := SIDE_FRONT
 var _has_hit_current_attack := false
-var _plant_food_hits_done := {}
 var _speed_product := 1.0
 var _attack_speed_multiplier_sources:Dictionary[int, float] = {}
-var _is_frames_loaded := false
+var _loaded_states := {}
 var _normal_attack_streak_side := 0
 var _normal_attack_streak_count := 0
 var _frame_blend_sprite: Sprite2D = null
 
 
 func ready_norm() -> void:
-	_ensure_frames_loaded()
+	_ensure_frames_loaded([STATE_IDLE])
 	super()
 	_play_state_loop(STATE_IDLE)
 	detect_component.need_judge = true
 
 
 func ready_show() -> void:
-	## 选关页和图鉴展示只需 idle，不应为未提供的 watered 帧反复报错。
+	## 选关页和图鉴展示只需加载 idle。
 	_ensure_frames_loaded([STATE_IDLE])
 	super()
 	detect_component.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
@@ -112,7 +96,7 @@ func ready_show() -> void:
 
 
 func ready_garden() -> void:
-	_ensure_frames_loaded()
+	_ensure_frames_loaded([STATE_IDLE])
 	super()
 	detect_component.disable_component(ComponentNormBase.E_IsEnableFactor.InitType)
 	_play_state_loop(STATE_IDLE)
@@ -162,36 +146,18 @@ func get_attack_speed_multiplier() -> float:
 
 
 func play_plant_food():
-	if is_death or is_plant_food:
-		return
-
-	is_plant_food = true
-	is_attack = false
-	_reset_normal_attack_streak()
-	_sequence_queue = [STATE_PLANT_FOOD, STATE_PLANT_FOOD_END]
-	_play_state_once(STATE_PLANT_FOOD_START)
-
-
-func satisfy_need(item: GardenManager.E_NeedItem):
-	var should_play_watered := false
-	if is_instance_valid(garden_component):
-		should_play_watered = character_init_type == E_CharacterInitType.IsGarden \
-				and item == GardenManager.E_NeedItem.WateringCan \
-				and garden_component.curr_need_item == GardenManager.E_NeedItem.WateringCan
-
-	super(item)
-
-	if should_play_watered and not is_plant_food:
-		is_attack = false
-		_reset_normal_attack_streak()
-		_play_state_once(STATE_WATERED)
+	pass
 
 
 func _ensure_frames_loaded(states: Array = FRAME_COUNTS.keys()):
-	if _is_frames_loaded:
-		return
-
 	for state in states:
+		if _loaded_states.has(state):
+			continue
+		if _shared_frames.has(state):
+			_frames[state] = _shared_frames[state]
+			_loaded_states[state] = true
+			continue
+
 		var textures := []
 		var frame_count: int = FRAME_COUNTS[state]
 		for frame_number in range(frame_count):
@@ -201,24 +167,24 @@ func _ensure_frames_loaded(states: Array = FRAME_COUNTS.keys()):
 				push_warning("菜问帧丢失: " + path)
 				continue
 			textures.append(texture)
+		_shared_frames[state] = textures
 		_frames[state] = textures
-
-	_is_frames_loaded = true
+		_loaded_states[state] = true
 
 
 func _on_detect_can_attack():
-	if is_attack or is_plant_food or _state == STATE_WATERED:
+	if is_attack:
 		return
 	_start_next_attack()
 
 
 func _on_detect_not_can_attack():
-	if not is_attack and not is_plant_food and _state != STATE_WATERED:
+	if not is_attack:
 		_play_state_loop(STATE_IDLE)
 
 
 func _start_next_attack(preferred_side := 0):
-	if is_plant_food or is_death:
+	if is_death:
 		return
 	var target := _get_attack_target(preferred_side)
 	if target == null and preferred_side != 0:
@@ -236,6 +202,7 @@ func _start_next_attack(preferred_side := 0):
 
 
 func _play_state_loop(state: StringName):
+	_ensure_frames_loaded([state])
 	_state = state
 	_frame_index = 0
 	_frame_elapsed = 0.0
@@ -247,13 +214,12 @@ func _play_state_loop(state: StringName):
 
 
 func _play_state_once(state: StringName):
+	_ensure_frames_loaded([state])
 	_state = state
 	_frame_index = 0
 	_frame_elapsed = 0.0
 	_is_looping = false
 	_has_hit_current_attack = false
-	if state == STATE_PLANT_FOOD:
-		_plant_food_hits_done.clear()
 	_apply_frame()
 
 
@@ -352,17 +318,9 @@ func _handle_frame_events():
 		if _frame_index >= ATTACK_HIT_FRAMES[_state]:
 			_has_hit_current_attack = true
 			_attack_once()
-	elif _state == STATE_PLANT_FOOD:
-		for hit_frame: int in PLANT_FOOD_HIT_FRAMES:
-			if _frame_index >= hit_frame and not _plant_food_hits_done.has(hit_frame):
-				_plant_food_hits_done[hit_frame] = true
-				_plant_food_hit_once()
 
 
 func _on_state_finished():
-	if not _sequence_queue.is_empty():
-		_play_state_once(_sequence_queue.pop_front())
-		return
 
 	if _is_attack_state(_state):
 		if _is_normal_attack_state(_state):
@@ -374,15 +332,6 @@ func _on_state_finished():
 			_start_next_attack(_attack_side)
 		else:
 			_resume_idle_or_attack()
-		return
-
-	if _state == STATE_PLANT_FOOD_END:
-		is_plant_food = false
-		_resume_idle_or_attack()
-		return
-
-	if _state == STATE_WATERED:
-		_resume_idle_or_attack()
 		return
 
 	_play_state_loop(STATE_IDLE)
@@ -482,17 +431,3 @@ func _attack_once():
 	var attack_multiplier := uppercut_attack_multiplier if _is_uppercut_attack_state(_state) else 1.0
 	var final_attack_value := int(round(attack_value * attack_multiplier * get_attack_damage_multiplier()))
 	target.be_attacked_bullet(final_attack_value, BulletRegistry.AttackMode.Real, true, true)
-
-
-func _plant_food_hit_once():
-	var final_attack_value := int(round(plant_food_attack_value * get_attack_damage_multiplier()))
-	var all_enemy_can_be_attacked := detect_component.get_all_enemy_can_be_attacked()
-	if all_enemy_can_be_attacked.is_empty():
-		return
-
-	SoundManager.play_other_SFX(&"bonk")
-	for enemy: Character000Base in all_enemy_can_be_attacked:
-		if enemy is Zombie000Base:
-			var zombie := enemy as Zombie000Base
-			if is_instance_valid(zombie):
-				zombie.be_attacked_bullet(final_attack_value, BulletRegistry.AttackMode.Real, true, true)
