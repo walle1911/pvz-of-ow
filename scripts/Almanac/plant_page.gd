@@ -7,15 +7,13 @@ const ALMANAC_CARD_SLOT_SIZE := Vector2(52, 78)
 const CARDS_PER_NORMAL_PAGE := 48
 const OW_SPECIAL_PLANT_TYPES := [
 	CharacterRegistry.PlantType.P1001WallNutBowling,
-	CharacterRegistry.PlantType.P1002WallNutBowlingBomb,
-	CharacterRegistry.PlantType.P1003WallNutBowlingBig,
 ]
 
 ## 卡片父节点
 @onready var card_grid_container: GridContainer = $CardGridContainer
 @onready var almanac_character_show_panel: AlmanacCharacterShowPanel = $AlmanacCharacterShowPanel
-@onready var previous_page_button: Button = $PreviousPageButton
-@onready var next_page_button: Button = $NextPageButton
+@onready var previous_page_button: BaseButton = $PreviousPageButton
+@onready var next_page_button: BaseButton = $NextPageButton
 @onready var page_label: Label = $PageLabel
 
 var plant_pages: Array = []

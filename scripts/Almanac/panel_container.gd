@@ -2,6 +2,9 @@ extends Panel
 class_name AlmanacCharacterShowPanel
 ## 图鉴植物信息描述
 
+const LORD_HAMMOND_RIDER := preload("res://scenes/bullet/lord_hammond_rider.tscn")
+const ALMANAC_BOWLING_ROTATION_SPEED := 5.0
+
 const CharacterBgMap = {
 	"Day": preload("res://assets/image/Almanac/Almanac_GroundDay.jpg"),
 	"Ice":preload("res://assets/image/Almanac/Almanac_GroundIce.jpg"),
@@ -83,6 +86,12 @@ const ZOMBIE_NAME_TEXTURE_MAP = {
 
 ## 正在展示的角色
 var show_character:Character000Base
+var almanac_rotating_node: Node2D
+
+
+func _process(delta: float) -> void:
+	if is_instance_valid(almanac_rotating_node):
+		almanac_rotating_node.rotation += ALMANAC_BOWLING_ROTATION_SPEED * delta
 
 ## 更新图鉴植物信息
 func almanac_update_plant_panel(curr_plant_type:CharacterRegistry.PlantType):
@@ -121,6 +130,16 @@ func special_plant_update_pos(new_show_plant:Plant000Base):
 	match new_show_plant.plant_type:
 		CharacterRegistry.PlantType.P048CobCannonEmre, CharacterRegistry.PlantType.P547CobCannon:
 			new_show_plant.position = Vector2(60,130)
+		CharacterRegistry.PlantType.P052BonkChoyRamattra:
+			new_show_plant.position = Vector2(100,135)
+		CharacterRegistry.PlantType.P024TallNutSigma:
+			new_show_plant.position = Vector2(100,140)
+		CharacterRegistry.PlantType.P1001WallNutBowling:
+			new_show_plant.position = Vector2(100,132)
+			almanac_rotating_node = new_show_plant.get_node_or_null(^"Body/BodyCorrect") as Node2D
+			var hammond_rider := LORD_HAMMOND_RIDER.instantiate() as Node2D
+			hammond_rider.position = Vector2(-4, -54)
+			new_show_plant.add_child(hammond_rider)
 		CharacterRegistry.PlantType.P018SquashDoomfist:
 			var animation_tree := new_show_plant.get_node_or_null(^"AnimationTree") as AnimationTree
 			if is_instance_valid(animation_tree):
@@ -157,6 +176,7 @@ func get_almanac_character_data(group_name: String, character_registry_name: Str
 	}
 
 func create_zombie(curr_zombie_type:CharacterRegistry.ZombieType):
+	almanac_rotating_node = null
 	var zombie_scene = Global.character_registry.get_zombie_info(curr_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieScenes)
 	var new_show_zombie:Zombie000Base = zombie_scene.instantiate()
 	var zombie_init_para:Dictionary = {Zombie000Base.E_ZInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsShow}
@@ -171,8 +191,18 @@ func create_zombie(curr_zombie_type:CharacterRegistry.ZombieType):
 ## 生成的特殊僵尸修改位置
 func special_zombie_update_pos(new_show_zombie:Zombie000Base):
 	match new_show_zombie.zombie_type:
-		CharacterRegistry.ZombieType.Z024GargantuarReinhardt, CharacterRegistry.ZombieType.Z025GargantuarBob, CharacterRegistry.ZombieType.Z523Gargantuar:
-			new_show_zombie.position = Vector2(100,200)
+		CharacterRegistry.ZombieType.Z013ZomboniShion:
+			new_show_zombie.position = Vector2(78, 158)
+			new_show_zombie.scale = Vector2.ONE * 0.72
+		CharacterRegistry.ZombieType.Z024GargantuarReinhardt:
+			new_show_zombie.position = Vector2(100, 174)
+			new_show_zombie.scale = Vector2.ONE * 0.78
+		CharacterRegistry.ZombieType.Z025GargantuarBob:
+			new_show_zombie.position = Vector2(100, 174)
+			new_show_zombie.scale = Vector2.ONE * 0.84
+		CharacterRegistry.ZombieType.Z523Gargantuar:
+			new_show_zombie.position = Vector2(100, 174)
+			new_show_zombie.scale = Vector2.ONE * 0.78
 		CharacterRegistry.ZombieType.Z009DancingZombieLucio, CharacterRegistry.ZombieType.Z010BackupDancerLucio:
 			play_almanac_dance.call_deferred(new_show_zombie)
 

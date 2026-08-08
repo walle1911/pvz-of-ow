@@ -8,7 +8,8 @@ const OPTION_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/Sele
 const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png")
 const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png")
 const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
-const STORE_LABEL_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
+const DEVELOPER_IMPORT_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImport.png")
+const DEVELOPER_IMPORT_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImportHighlight.png")
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
@@ -28,6 +29,9 @@ const STORE_LABEL_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 @onready var option_button: TextureButton = $BG_Right/Option/TextureButton
 @onready var help_button: TextureButton = $BG_Right/Option/TextureButton2
 @onready var store_button: TextureButton = $BG_Right/Item/TextureButton3
+@onready var garden_button: TextureButton = $BG_Right/Item/TextureButton
+@onready var gift_button: TextureButton = $BG_Right/CustomButton
+@onready var overwatch_logo: TextureRect = $OverwatchLogo
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
@@ -70,6 +74,7 @@ var mode_dialog_context := "adventure"
 func _ready() -> void:
 	_apply_level_workshop_button_transform()
 	_setup_developer_buttons()
+	_hide_unavailable_start_menu_items()
 	normal_level_workshop_texture = LEVEL_WORKSHOP_NORMAL_TEXTURE
 	if Engine.is_editor_hint():
 		_apply_editor_menu_preview()
@@ -79,6 +84,7 @@ func _ready() -> void:
 	$Cloud/AnimationPlayer.play("Idle")
 	$BG_Right/Leaf/AnimationPlayer.play("Idle")
 	$AnimationPlayer.play("Idle")
+	_play_overwatch_logo_intro()
 
 	SoundManager.setup_ui_start_menu_sound(self)
 	SoundManager.play_bgm(bgm)
@@ -90,6 +96,40 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	adventure_mode_dialog.normal_mode_selected.connect(_start_normal_adventure)
 	adventure_mode_dialog.chessboard_mode_selected.connect(_start_chessboard_adventure)
+
+
+func _hide_unavailable_start_menu_items() -> void:
+	## 由运行时代码统一隐藏，避免场景在编辑器中重新保存后恢复显示和点击区域。
+	garden_button.hide()
+	garden_button.process_mode = Node.PROCESS_MODE_DISABLED
+	gift_button.hide()
+	gift_button.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _play_overwatch_logo_intro() -> void:
+	var rest_position := overwatch_logo.position
+	overwatch_logo.pivot_offset = overwatch_logo.size * 0.5
+	overwatch_logo.position = rest_position + Vector2(-190.0, 18.0)
+	overwatch_logo.rotation_degrees = -8.0
+	overwatch_logo.scale = Vector2(0.88, 0.88)
+	overwatch_logo.modulate.a = 0.0
+
+	var intro_tween := overwatch_logo.create_tween()
+	intro_tween.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+	intro_tween.tween_property(overwatch_logo, ^"position", rest_position, 1.6)
+	intro_tween.parallel().tween_property(overwatch_logo, ^"rotation_degrees", 0.0, 1.4)
+	intro_tween.parallel().tween_property(overwatch_logo, ^"scale", Vector2.ONE, 1.4)
+	intro_tween.parallel().tween_property(overwatch_logo, ^"modulate:a", 1.0, 0.45)
+	intro_tween.tween_callback(_start_overwatch_logo_idle.bind(rest_position))
+
+
+func _start_overwatch_logo_idle(rest_position: Vector2) -> void:
+	var idle_tween := overwatch_logo.create_tween().set_loops()
+	idle_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	idle_tween.tween_property(overwatch_logo, ^"position", rest_position + Vector2(0.0, -6.0), 2.2)
+	idle_tween.parallel().tween_property(overwatch_logo, ^"rotation_degrees", 1.5, 2.2)
+	idle_tween.tween_property(overwatch_logo, ^"position", rest_position + Vector2(0.0, 4.0), 2.2)
+	idle_tween.parallel().tween_property(overwatch_logo, ^"rotation_degrees", -1.0, 2.2)
 
 func _apply_level_workshop_button_transform() -> void:
 	level_workshop_button.position = level_workshop_button_position
@@ -181,26 +221,11 @@ func _apply_developer_mode(enabled: bool) -> void:
 
 
 func _apply_developer_store_button(enabled: bool) -> void:
-	var import_label := store_button.get_node_or_null("DeveloperImportLabel") as Label
-	if import_label == null:
-		import_label = Label.new()
-		import_label.name = "DeveloperImportLabel"
-		import_label.position = Vector2(80, 17)
-		import_label.size = Vector2(50, 31)
-		import_label.rotation_degrees = -10.0
-		import_label.pivot_offset = import_label.size * 0.5
-		import_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		import_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		import_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		import_label.add_theme_font_override("font", STORE_LABEL_FONT)
-		import_label.add_theme_font_size_override("font_size", 22)
-		import_label.add_theme_color_override("font_color", Color(0.035, 0.025, 0.02, 1))
-		var paper_style := StyleBoxFlat.new()
-		paper_style.bg_color = Color(0.89, 0.87, 0.74, 1)
-		import_label.add_theme_stylebox_override("normal", paper_style)
-		import_label.text = "导入"
-		store_button.add_child(import_label)
-	import_label.visible = enabled
+	store_button.visible = enabled
+	store_button.texture_normal = DEVELOPER_IMPORT_TEXTURE
+	store_button.texture_pressed = DEVELOPER_IMPORT_HOVER_TEXTURE
+	store_button.texture_hover = DEVELOPER_IMPORT_HOVER_TEXTURE
+	_apply_texture_alpha_click_mask(store_button)
 	store_button.tooltip_text = "导入开发者包" if enabled else ""
 
 

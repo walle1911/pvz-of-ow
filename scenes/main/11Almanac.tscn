@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://colkdhubp27eq"]
+[gd_scene load_steps=27 format=3 uid="uid://colkdhubp27eq"]
 
 [ext_resource type="Script" uid="uid://b16fmyyjt3mej" path="res://scripts/Almanac/main_almanac.gd" id="1_fstyb"]
 [ext_resource type="Theme" uid="uid://em12la0rqibq" path="res://data/PVZ_theme.tres" id="1_pt714"]
@@ -23,6 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://bagfkp2e8yej3" path="res://assets/image/Almanac/Almanac_ZombieBack.jpg" id="18_ji74r"]
 [ext_resource type="Script" uid="uid://bb1xg8pc7k07h" path="res://scripts/Almanac/zombie_page.gd" id="20_u1nrc"]
 [ext_resource type="Texture2D" uid="uid://ccpgan6lpyb76" path="res://assets/image/Almanac/Almanac_ZombieCard.png" id="54_lse7w"]
+[ext_resource type="Texture2D" uid="uid://om7aubyyu3le" path="res://assets/image/ui/ui_level/SeedChooser_Button2.png" id="55_page"]
+[ext_resource type="Texture2D" uid="uid://cx854vkq3n8gs" path="res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png" id="56_page_hover"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fi68g"]
 
@@ -229,14 +231,39 @@ offset_bottom = 264.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="PreviousPageButton" type="Button" parent="PlantPage"]
+[node name="PreviousPageButton" type="TextureButton" parent="PlantPage"]
 layout_mode = 0
 offset_left = 190.0
 offset_top = 565.0
 offset_right = 270.0
 offset_bottom = 594.0
 mouse_default_cursor_shape = 2
+texture_normal = ExtResource("55_page")
+texture_pressed = ExtResource("56_page_hover")
+texture_hover = ExtResource("56_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="PlantPage/PreviousPageButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_colors/font_outline_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/outline_size = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("12_jlxhy")
+theme_override_font_sizes/font_size = 16
 text = "上一页"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PageLabel" type="Label" parent="PlantPage"]
 layout_mode = 0
@@ -252,14 +279,39 @@ theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NextPageButton" type="Button" parent="PlantPage"]
+[node name="NextPageButton" type="TextureButton" parent="PlantPage"]
 layout_mode = 0
 offset_left = 352.0
 offset_top = 565.0
 offset_right = 432.0
 offset_bottom = 594.0
 mouse_default_cursor_shape = 2
+texture_normal = ExtResource("55_page")
+texture_pressed = ExtResource("56_page_hover")
+texture_hover = ExtResource("56_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="PlantPage/NextPageButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_colors/font_outline_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/outline_size = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("12_jlxhy")
+theme_override_font_sizes/font_size = 16
 text = "下一页"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ReturnButton" type="TextureButton" parent="PlantPage"]
 layout_mode = 1
@@ -347,14 +399,39 @@ offset_bottom = 251.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="PreviousPageButton" type="Button" parent="ZombiePage"]
+[node name="PreviousPageButton" type="TextureButton" parent="ZombiePage"]
 layout_mode = 0
 offset_left = 190.0
 offset_top = 565.0
 offset_right = 270.0
 offset_bottom = 594.0
 mouse_default_cursor_shape = 2
+texture_normal = ExtResource("55_page")
+texture_pressed = ExtResource("56_page_hover")
+texture_hover = ExtResource("56_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="ZombiePage/PreviousPageButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_colors/font_outline_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/outline_size = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("12_jlxhy")
+theme_override_font_sizes/font_size = 16
 text = "上一页"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PageLabel" type="Label" parent="ZombiePage"]
 layout_mode = 0
@@ -370,14 +447,39 @@ theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="NextPageButton" type="Button" parent="ZombiePage"]
+[node name="NextPageButton" type="TextureButton" parent="ZombiePage"]
 layout_mode = 0
 offset_left = 352.0
 offset_top = 565.0
 offset_right = 432.0
 offset_bottom = 594.0
 mouse_default_cursor_shape = 2
+texture_normal = ExtResource("55_page")
+texture_pressed = ExtResource("56_page_hover")
+texture_hover = ExtResource("56_page_hover")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="ZombiePage/NextPageButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_colors/font_outline_color = Color(0.164706, 0.164706, 0.352941, 1)
+theme_override_constants/paragraph_spacing = 0
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/outline_size = 1
+theme_override_constants/shadow_outline_size = 0
+theme_override_fonts/font = ExtResource("12_jlxhy")
+theme_override_font_sizes/font_size = 16
 text = "下一页"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CharacterBg" parent="ZombiePage/AlmanacCharacterShowPanel" index="0"]
 offset_left = 64.0
@@ -461,9 +563,9 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -178.0
+offset_left = -258.0
 offset_top = -32.0
-offset_right = -89.0
+offset_right = -169.0
 offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
