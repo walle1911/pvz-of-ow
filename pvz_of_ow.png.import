@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxvlqvahfmjaa"
-path="res://.godot/imported/pvz_icon.png-cb605520e4a81ed162230c9543543ada.ctex"
+uid="uid://bkhfekeabbq0i"
+path="res://.godot/imported/pvz_of_ow.png-6e71cda38163d5c2a469f61c3322e97d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://pvz_icon.png"
-dest_files=["res://.godot/imported/pvz_icon.png-cb605520e4a81ed162230c9543543ada.ctex"]
+source_file="res://pvz_of_ow.png"
+dest_files=["res://.godot/imported/pvz_of_ow.png-6e71cda38163d5c2a469f61c3322e97d.ctex"]
 
 [params]
 
