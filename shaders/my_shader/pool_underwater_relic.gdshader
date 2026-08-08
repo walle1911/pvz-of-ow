@@ -22,10 +22,12 @@ void fragment() {
 	submerged = mix(submerged, underwater_tint.rgb, tint_strength);
 	float idle_pulse = 0.5 + 0.5 * sin(TIME * 0.63 + UV.y * 3.6 + sin(UV.x * 6.0) * 0.3);
 	float alpha_wave = mix(1.0 - idle_alpha_variation, 1.0, idle_pulse);
-	// 本体只在光珠足够亮时显现；光珠转暗后，本体会更早退回水下。
-	float body_reveal = smoothstep(0.24, 0.52, glow_amount);
-	vec3 final_color = mix(submerged, glow_tint.rgb, glow_amount);
-	float final_alpha = mix(underwater_alpha * alpha_wave, 0.24, body_reveal);
+	// 亮珠先保留一丝微光，再用幂曲线快速冲向峰值，避免长时间处于接近的亮度。
+	float glow_curve = pow(clamp(glow_amount, 0.0, 1.0), 2.15);
+	// 本体在亮珠已经出现后才显现；退场时在亮珠的微光尾巴前先完全消失。
+	float body_reveal = smoothstep(0.10, 0.52, glow_amount);
+	vec3 final_color = mix(submerged, glow_tint.rgb, glow_curve);
+	float body_alpha_scale = mix(underwater_alpha * alpha_wave, 0.30, body_reveal) * body_reveal;
 
 	// 只向外扩 2 个纹理像素的轮廓金光，贴着角色存在，不污染整片水面。
 	vec2 halo_texel = TEXTURE_PIXEL_SIZE * 1.8;
@@ -36,8 +38,8 @@ void fragment() {
 		}
 	}
 	float close_halo = max(0.0, dilated_alpha - relic.a * 0.35);
-	float body_alpha = relic.a * final_alpha;
-	float halo_alpha = close_halo * body_reveal * 0.08;
+	float body_alpha = relic.a * body_alpha_scale;
+	float halo_alpha = close_halo * body_reveal * 0.10;
 	vec3 halo_color = mix(glow_tint.rgb, vec3(1.0, 0.93, 0.70), 0.45);
 	vec3 output_color = mix(halo_color, final_color, relic.a);
 	COLOR = vec4(output_color, max(body_alpha, halo_alpha));

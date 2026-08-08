@@ -12,7 +12,8 @@ float orb(vec2 uv, vec2 center, float radius) {
 void fragment() {
 	// 这层比原图四周多 16 像素余量，让光珠能组成完整的纵向椭圆环。
 	const float ORB_RADIUS = 0.0584;
-	float glow_phase = smoothstep(0.02, 0.58, glow_amount);
+	float raw_glow = clamp(glow_amount, 0.0, 1.0);
+	float glow_phase = smoothstep(0.02, 0.58, raw_glow);
 	float orb_radius = ORB_RADIUS * mix(0.55, 1.30, glow_phase);
 	float orbs = 0.0;
 	float cores = 0.0;
@@ -43,5 +44,9 @@ void fragment() {
 	float water_flicker = 0.98 + 0.02 * sin(TIME * 0.75);
 	vec3 warm_white_core = vec3(1.0, 0.96, 0.82);
 	vec3 orb_color = mix(glow_tint.rgb, warm_white_core, clamp(cores, 0.0, 1.0));
-	COLOR = vec4(orb_color, clamp(orbs, 0.0, 1.0) * glow_amount * water_flicker * 0.80);
+	// 低亮度阶段只留一丝引子，高亮阶段陡峭冲顶；退场时保留微光尾巴。
+	float faint_glow = smoothstep(0.0, 0.12, raw_glow) * 0.10;
+	float bright_glow = pow(raw_glow, 2.25);
+	float glow_intensity = max(faint_glow, bright_glow);
+	COLOR = vec4(orb_color, clamp(orbs, 0.0, 1.0) * glow_intensity * water_flicker * 0.95);
 }

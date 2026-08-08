@@ -21,6 +21,7 @@ var start_minizombie :float = 142
 var end_minizombie :float = -4
 ## 小僵尸的当前位置
 var curr_minizombie : float
+var _last_notified_progress := -1.0
 ## 进度条开始位置，用于生成旗帜
 var start_flag = start_minizombie + 6
 ## 进度条结束位置，用于生成旗帜
@@ -119,6 +120,7 @@ func _process(delta):
 		texture_progress_bar.value = chase_value
 		curr_minizombie = start_minizombie + chase_value * (end_minizombie - start_minizombie) * 0.01
 		mini_zombie.position.x = curr_minizombie
+		_notify_progress_updated(chase_value)
 
 	else:
 		# 如果非常接近，直接设为相等
@@ -128,3 +130,12 @@ func _process(delta):
 			texture_progress_bar.value = chase_value
 			curr_minizombie = start_minizombie + chase_value * (end_minizombie - start_minizombie) * 0.01
 			mini_zombie.position.x = curr_minizombie
+			_notify_progress_updated(chase_value)
+
+
+func _notify_progress_updated(progress: float) -> void:
+	if is_equal_approx(progress, _last_notified_progress):
+		return
+	_last_notified_progress = progress
+	## 水池河底贴图跟随进度条中实际移动的僵尸脑袋，而不是旗帜位置。
+	EventBus.push_event("main_game_progress_bar_value_updated", [progress])
