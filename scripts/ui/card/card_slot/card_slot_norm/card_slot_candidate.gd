@@ -2,6 +2,8 @@ extends TextureRect
 ## 待选卡槽
 class_name CardSlotCandidate
 
+const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
+
 ## 所有卡片页面的父节点
 @onready var all_card_page: Control = $AllCardPage
 ## 卡片Grid
@@ -214,7 +216,12 @@ func _adventure_card_lock_active() -> bool:
 
 
 func _is_adventure_plant_available(plant_type: CharacterRegistry.PlantType) -> bool:
-	return Global.main_game.game_para.available_plant_types.has(plant_type)
+	return RewardCardRuntime.is_plant_available_in_level(
+		int(plant_type),
+		Global.main_game.game_para.level_id,
+		Global.main_game.game_para.available_plant_types.has(plant_type),
+		Global.main_game.game_para.special_reward_card_source_dir
+	)
 
 
 ## 上一页

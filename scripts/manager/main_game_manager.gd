@@ -1,6 +1,10 @@
 extends Node2D
 class_name MainGameManager
 
+const BOSS_DIALOG_BACKGROUND := preload("res://assets/image/ui/ui_main_game_menu/UI_BG/dialog_BG.png")
+const BOSS_DIALOG_BUTTON := preload("res://assets/image/ui/ui_main_game_menu/UI_BG/button_BG.png")
+const BOSS_DIALOG_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
+
 #region 游戏测试
 @export_group("测试相关")
 ## 游戏时测试方便修改阳光数
@@ -150,6 +154,13 @@ var curr_game_round = 1:
 
 ## 初始化时是否存档
 var is_save_game_data_on_init:=false
+
+## Boss 追加战只在本局完成普通波次后进入，不重新加载场景，因此植物、卡槽和阳光状态天然保留。
+var boss_normal_flow_completed := false
+var boss_battle_started := false
+var boss_battle_finished := false
+var boss_choice_layer: Control
+var active_boss: Zombie000Base
 
 #endregion
 
@@ -526,6 +537,273 @@ func create_trophy(glo_pos:Vector2):
 	else:
 		throw_to(trophy, trophy.position - Vector2(randf_range(-50,50), 0))
 
+
+func _should_offer_boss_challenge() -> bool:
+	return game_para.boss_enabled and not boss_normal_flow_completed \
+		and not boss_battle_started and not boss_battle_finished
+
+
+func _begin_boss_choice() -> void:
+	boss_normal_flow_completed = true
+	## 此时普通奖杯和普通奖励卡已全部领取，移除留在临时层中的奖杯展示节点。
+	for child in canvas_layer_temp.get_children():
+		if child is Trophy:
+			child.queue_free()
+	## 普通奖励已经写入存档；后续奖杯只展示 Boss 的额外奖励。
+	game_para.reward_plant_types.clear()
+	game_para.reward_plant_type = -1
+	## Boss 死亡后由专用回调决定何时生成额外奖励奖杯。
+	zombie_manager.is_end_wave = false
+	zombie_manager.check_zombie_end_wave_timer.stop()
+	if is_instance_valid(zombie_manager.multi_round_end_wave_timer):
+		zombie_manager.multi_round_end_wave_timer.stop()
+	_show_boss_choice()
+
+
+func _show_boss_choice() -> void:
+	if is_instance_valid(boss_choice_layer):
+		return
+	TreePauseManager.start_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
+	boss_choice_layer = Control.new()
+	boss_choice_layer.name = "BossChallengeChoice"
+	boss_choice_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	boss_choice_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_choice_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	boss_choice_layer.z_index = 200
+	canvas_layer_ui.add_child(boss_choice_layer)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.0, 0.0, 0.0, 0.62)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_choice_layer.add_child(shade)
+	var panel := TextureRect.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-260, -260)
+	panel.size = Vector2(520, 520)
+	panel.texture = BOSS_DIALOG_BACKGROUND
+	panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	panel.stretch_mode = TextureRect.STRETCH_SCALE
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_choice_layer.add_child(panel)
+	## 按深色区域的实际边界排版；不用裁切，确保每个元素自身完整显示。
+	var dark_content := Control.new()
+	dark_content.position = Vector2(60, 135)
+	dark_content.size = Vector2(400, 245)
+	panel.add_child(dark_content)
+	var title := Label.new()
+	title.position = Vector2(10, 0)
+	title.size = Vector2(380, 38)
+	title.text = "额 外 挑 战"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", Color("f3e7ba"))
+	title.add_theme_color_override("font_outline_color", Color("252033"))
+	title.add_theme_constant_override("outline_size", 4)
+	dark_content.add_child(title)
+	var description := Label.new()
+	description.position = Vector2(10, 38)
+	description.size = Vector2(380, 38)
+	description.text = "普通奖杯与奖励已经领取，是否继续挑战？"
+	description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	description.add_theme_font_size_override("font_size", 17)
+	description.add_theme_color_override("font_color", Color("e8e1cc"))
+	dark_content.add_child(description)
+	_add_boss_choice_card(dark_content, false, int(game_para.boss_zombie_type), Vector2(109, 90), "BOSS")
+	_add_boss_choice_card(dark_content, true, int(game_para.boss_reward_plant_type), Vector2(224, 90), "额外奖励")
+	var hint := Label.new()
+	hint.position = Vector2(8, 207)
+	hint.size = Vector2(384, 30)
+	hint.text = "跳过不会影响下一关解锁"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hint.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	hint.add_theme_font_size_override("font_size", 15)
+	hint.add_theme_color_override("font_color", Color("d7c89e"))
+	dark_content.add_child(hint)
+	var battle_note := Label.new()
+	battle_note.position = Vector2(68, 388)
+	battle_note.size = Vector2(384, 34)
+	battle_note.text = "挑战时保留当前植物，Boss 登场前会放行全部小推车"
+	battle_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	battle_note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	battle_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	battle_note.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	battle_note.add_theme_font_size_override("font_size", 15)
+	battle_note.add_theme_color_override("font_color", Color("d7c89e"))
+	panel.add_child(battle_note)
+	panel.add_child(_boss_dialog_button("跳过挑战", Vector2(73, 412), _skip_boss_challenge))
+	panel.add_child(_boss_dialog_button("进入 Boss 房", Vector2(277, 412), _start_boss_battle))
+
+
+func _add_boss_choice_card(parent: Control, is_plant: bool, type_id: int, pos: Vector2, caption: String) -> void:
+	var prefabs: Dictionary = AllCards.all_plant_card_prefabs if is_plant else AllCards.all_zombie_card_prefabs
+	if not prefabs.has(type_id):
+		return
+	var caption_label := Label.new()
+	caption_label.position = pos + Vector2(-25, -30)
+	caption_label.size = Vector2(115, 24)
+	caption_label.text = caption
+	caption_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caption_label.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	caption_label.add_theme_font_size_override("font_size", 16)
+	caption_label.add_theme_color_override("font_color", Color("f0d98f"))
+	parent.add_child(caption_label)
+	var card := (prefabs[type_id] as Card).duplicate() as Card
+	card.position = pos
+	card.scale = Vector2.ONE * 1.35
+	card.process_mode = Node.PROCESS_MODE_DISABLED
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(card)
+	var cost := card.get_node_or_null("CardBg/Cost") as Label
+	if cost != null:
+		cost.visible = false
+	var progress := card.get_node_or_null("ProgressBar") as ProgressBar
+	if progress != null:
+		progress.visible = false
+	var card_button := card.get_node_or_null("Button") as Button
+	if card_button != null:
+		card_button.disabled = true
+		card_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _boss_dialog_button(text_value: String, pos: Vector2, callback: Callable) -> TextureButton:
+	var button := TextureButton.new()
+	button.position = pos
+	button.size = Vector2(170, 52)
+	button.texture_normal = BOSS_DIALOG_BUTTON
+	button.texture_hover = BOSS_DIALOG_BUTTON
+	button.texture_pressed = BOSS_DIALOG_BUTTON
+	button.ignore_texture_size = true
+	button.stretch_mode = TextureButton.STRETCH_SCALE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.text = text_value
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_color", Color("2c1c0b"))
+	button.add_child(label)
+	button.pressed.connect(callback)
+	return button
+
+
+func _dismiss_boss_choice() -> void:
+	if is_instance_valid(boss_choice_layer):
+		boss_choice_layer.queue_free()
+	boss_choice_layer = null
+	TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
+
+
+func _skip_boss_challenge() -> void:
+	boss_battle_finished = true
+	_dismiss_boss_choice()
+	_finish_main_game_transition()
+
+
+func _start_boss_battle() -> void:
+	if boss_battle_started:
+		return
+	boss_battle_started = true
+	_dismiss_boss_choice()
+	var boss_type := game_para.boss_zombie_type
+	if not CharacterRegistry.ZombieInfo.has(boss_type):
+		push_error("Boss 僵尸未登记：%s" % str(boss_type))
+		_skip_boss_challenge()
+		return
+	## 先用无碰撞的展示替身在右侧介绍 Boss；镜头回到左侧后再放行小推车。
+	main_game_progress = E_MainGameProgress.PREPARE
+	camera_2d.process_mode = Node.PROCESS_MODE_ALWAYS
+	TreePauseManager.start_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
+	var boss_preview := zombie_manager.zombie_show_in_start.create_show_zombie(
+		boss_type,
+		zombie_manager.zombie_show_in_start.show_zombie_panel,
+	)
+	await camera_2d.move_look_zombie()
+	await get_tree().create_timer(1.0, true).timeout
+	await camera_2d.move_back_ori()
+	if is_instance_valid(boss_preview):
+		boss_preview.queue_free()
+	## 真实 Boss 尚未生成，因此小推车驶离时不会误伤 Boss。
+	await _release_all_lawn_movers_before_boss()
+	if not is_inside_tree() or boss_battle_finished:
+		return
+	var boss_row_type: CharacterRegistry.ZombieRowType = Global.character_registry.get_zombie_info(
+		boss_type,
+		CharacterRegistry.ZombieInfoAttribute.ZombieRowType,
+	)
+	var wave_creator := zombie_manager.zombie_wave_manager.zombie_wave_create_manager
+	var lane := wave_creator.zombie_choose_row_system.select_spawn_row(boss_row_type)
+	lane = clampi(lane, 0, zombie_manager.all_zombie_rows.size() - 1)
+	var zombie_parent := zombie_manager.all_zombie_rows[lane]
+	var zombie_init_para := {
+		Zombie000Base.E_ZInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsNorm,
+		Zombie000Base.E_ZInitAttr.Lane: lane,
+		Zombie000Base.E_ZInitAttr.CurrWave: game_para.max_wave,
+	}
+	var spawn_position := zombie_parent.zombie_create_position.global_position + Vector2(20, 0)
+	active_boss = zombie_manager.create_norm_zombie(boss_type, zombie_parent, zombie_init_para, spawn_position)
+	active_boss.signal_character_death.connect(_on_boss_defeated.bind(active_boss), CONNECT_ONE_SHOT)
+	camera_2d.process_mode = Node.PROCESS_MODE_INHERIT
+	TreePauseManager.end_tree_pause(TreePauseManager.E_PauseFactor.GameOver)
+	main_game_progress = E_MainGameProgress.MAIN_GAME
+	print("Boss 房开始：", _boss_zombie_name(), "，第 ", lane + 1, " 行")
+
+
+func _release_all_lawn_movers_before_boss() -> void:
+	var lawn_mover_manager := game_item_manager.gim_lawn_mover
+	for lawn_mover in lawn_mover_manager.all_lawn_movers:
+		if not is_instance_valid(lawn_mover):
+			continue
+		## Boss 入场阶段保持全局暂停，只允许小推车完成退场。
+		lawn_mover.process_mode = Node.PROCESS_MODE_ALWAYS
+		if not lawn_mover.is_moving:
+			lawn_mover._start_mower()
+	## 等待原有移动脚本自然驶出并 queue_free，保证 Boss 登场时场上已无小推车。
+	while lawn_mover_manager.all_lawn_movers.any(
+		func(lawn_mover): return is_instance_valid(lawn_mover)
+	):
+		await get_tree().process_frame
+
+
+func _on_boss_defeated(boss: Zombie000Base) -> void:
+	if boss_battle_finished or boss != active_boss:
+		return
+	boss_battle_finished = true
+	active_boss = null
+	var boss_reward := int(game_para.boss_reward_plant_type) as CharacterRegistry.PlantType
+	game_para.reward_plant_types.clear()
+	if int(boss_reward) > 0:
+		game_para.reward_plant_types.append(boss_reward)
+	game_para.reward_plant_type = int(boss_reward)
+	call_deferred("create_trophy", boss.global_position)
+
+
+func _boss_zombie_name() -> String:
+	if CharacterRegistry.ZombieInfo.has(game_para.boss_zombie_type):
+		return str(Global.character_registry.get_zombie_info(
+			game_para.boss_zombie_type,
+			CharacterRegistry.ZombieInfoAttribute.ZombieName,
+		))
+	return "未知 Boss"
+
+
+func _boss_reward_plant_name() -> String:
+	var boss_reward := int(game_para.boss_reward_plant_type) as CharacterRegistry.PlantType
+	if int(boss_reward) > 0:
+		return str(Global.character_registry.get_plant_info(
+			boss_reward,
+			CharacterRegistry.PlantInfoAttribute.PlantName,
+		))
+	return "未设置"
+
 ## 奖杯抛出
 func throw_to(node:Node2D, target_pos: Vector2, duration: float = 1.0):
 	main_game_progress = E_MainGameProgress.GAME_OVER
@@ -551,6 +829,14 @@ func win_main_game():
 	Engine.time_scale = Global.time_scale
 
 	update_level_state_data_success()
+	## Boss 邀请必须等普通奖杯被点击、普通奖励卡被领取后才出现。
+	if _should_offer_boss_challenge():
+		_begin_boss_choice()
+		return
+	_finish_main_game_transition()
+
+
+func _finish_main_game_transition() -> void:
 	## 多轮游戏，重置主游戏数据
 	if game_para.game_round != 1:
 		re_main_game()
@@ -647,8 +933,16 @@ func update_level_state_data_success():
 	if reward_plants.is_empty() and int(game_para.reward_plant_type) >= 0:
 		reward_plants.append(int(game_para.reward_plant_type) as CharacterRegistry.PlantType)
 	if not reward_plants.is_empty():
-		curr_level_state_data["RewardPlants"] = reward_plants
-		curr_level_state_data["RewardPlant"] = int(reward_plants[0])
+		var all_earned_rewards: Array[CharacterRegistry.PlantType] = []
+		for value in curr_level_state_data.get("RewardPlants", []):
+			var existing_reward := int(value) as CharacterRegistry.PlantType
+			if int(existing_reward) > 0 and not all_earned_rewards.has(existing_reward):
+				all_earned_rewards.append(existing_reward)
+		for reward_plant in reward_plants:
+			if not all_earned_rewards.has(reward_plant):
+				all_earned_rewards.append(reward_plant)
+		curr_level_state_data["RewardPlants"] = all_earned_rewards
+		curr_level_state_data["RewardPlant"] = int(all_earned_rewards[0])
 	for reward_plant in reward_plants:
 		if not Global.global_game_state.curr_plant.has(reward_plant):
 			Global.global_game_state.curr_plant.append(reward_plant)

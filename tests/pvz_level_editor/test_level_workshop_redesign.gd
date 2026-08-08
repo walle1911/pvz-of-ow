@@ -265,6 +265,17 @@ func _run() -> void:
 	assert(new_cone_holder.get_node_or_null("CardStateBadge") != null)
 	assert((new_cone_holder.get_node("CardStateBadge/Label") as Label).text == "新")
 	new_cone_holder.free()
+	workshop.level["bossConfig"] = {
+		"enabled": true,
+		"zombieType": int(CharacterRegistry.ZombieType.Z002ConeTalon),
+		"rewardPlant": int(CharacterRegistry.PlantType.P003CherryBombJunkrat),
+	}
+	var boss_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z002ConeTalon)) as Control
+	assert((boss_cone_holder.get_node("CardStateBadge/Label") as Label).text == "boss")
+	assert((boss_cone_holder.get_child(0) as CanvasItem).modulate == Color.WHITE)
+	boss_cone_holder.free()
+	workshop.call("_refresh_road_zombies")
+	assert(workshop.preview_zombie_keys.values().has(str(int(CharacterRegistry.ZombieType.Z002ConeTalon))))
 	assert(not workshop.previous_formal_level_button.disabled)
 	assert(not workshop.next_formal_level_button.disabled)
 	assert(str(workshop.level.get("editorMode", "")) == "simple")

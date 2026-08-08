@@ -69,6 +69,7 @@
 	"simpleBaseZombieType": 500,
 	"simpleFlagCount": 1,
 	"simpleFlagZombieType": 501,
+	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
 	"simpleZombieIntroWaves": {
 

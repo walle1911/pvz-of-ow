@@ -1,6 +1,8 @@
 extends CardBase
 class_name Card
 
+const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
+
 @onready var character_static: Node2D = $CardBg/CharacterStatic
 @onready var short_cut: Label = $ShortCut
 @onready var button: Button = $Button
@@ -289,6 +291,9 @@ func judge_sun_enough(curr_sun_value):
 func judge_card_ready():
 	# 阳光充足 且 卡片冷却完成
 	if is_sun_enough and not _is_cooling:
+		if not _is_reward_card_allowed_in_current_level():
+			card_not_can_click()
+			return
 		## 紫卡并且不能种植
 		if is_purple_card and not is_chessboard_reveal_reward and not plant_condition.judge_purple_card_can_plant(Global.main_game.plant_cell_manager.all_plant_cells, card_plant_type):
 			card_not_can_click()
@@ -416,6 +421,9 @@ func _on_button_pressed() -> void:
 
 	## 如果时主游戏场景,并且游戏中
 	if is_instance_valid(Global.main_game) and Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME:
+		if not _is_reward_card_allowed_in_current_level():
+			SoundManager.play_other_SFX("buzzer")
+			return
 		## 可以点击
 		if is_can_click:
 			EventBus.push_event("main_game_click_card", [self])
@@ -423,6 +431,21 @@ func _on_button_pressed() -> void:
 			SoundManager.play_other_SFX("buzzer")
 	else:
 		signal_card_click.emit()
+
+
+func _is_reward_card_allowed_in_current_level() -> bool:
+	if card_plant_type == CharacterRegistry.PlantType.Null:
+		return true
+	if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.game_para):
+		return true
+	if not Global.main_game.game_para.adventure_card_lock_active:
+		return true
+	return RewardCardRuntime.is_plant_available_in_level(
+		int(card_plant_type),
+		Global.main_game.game_para.level_id,
+		Global.main_game.game_para.available_plant_types.has(card_plant_type),
+		Global.main_game.game_para.special_reward_card_source_dir
+	)
 
 ## 快捷键设置
 func set_shortcut(i:int):

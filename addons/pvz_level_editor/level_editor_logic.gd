@@ -56,6 +56,9 @@ static func example_level() -> Dictionary:
 		"forcedPlants": [],
 		"rewardPlant": -1,
 		"rewardPlants": [],
+		"specialRewardCardLevels": {},
+		## Boss 战在普通波次结束后才出现；跳过仍按普通通关处理。
+		"bossConfig": {"enabled": false, "zombieType": 523, "rewardPlant": -1},
 		"environmentConfig": {
 			"initialTombstones": 0,
 			"tombstoneSpawns": false,
@@ -122,7 +125,7 @@ static func make_group(
 static func normalize_level(source: Dictionary) -> Dictionary:
 	var result: Dictionary = source.duplicate(true)
 	var defaults := example_level()
-	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleOnceFinalZombies", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
+	for key in ["schemaVersion", "id", "name", "mapConfig", "playerConfig", "workshopMode", "editorMode", "simpleWaveCount", "simpleBaseZombieType", "simpleFlagZombieType", "simpleZombiePool", "simpleOnceFinalZombies", "zombieRefreshSpeedMultiplier", "chessboardConfig", "availablePlants", "plantSelectionEnabled", "freePlantSelection", "forcedPlants", "rewardPlant", "rewardPlants", "specialRewardCardLevels", "bossConfig", "environmentConfig", "waves", "winConditions", "loseConditions", "randomSeed"]:
 		if not result.has(key):
 			result[key] = defaults[key].duplicate(true) if defaults[key] is Array or defaults[key] is Dictionary else defaults[key]
 	var map: Dictionary = result.get("mapConfig", {})
@@ -220,6 +223,38 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["rewardPlants"] = normalized_reward_plants
 	## 保留首张奖励的旧字段，供尚未迁移的外部关卡工具读取。
 	result["rewardPlant"] = normalized_reward_plants[0] if not normalized_reward_plants.is_empty() else -1
+	var normalized_special_reward_levels: Dictionary = {}
+	var source_special_reward_levels = result.get("specialRewardCardLevels", {})
+	if source_special_reward_levels is Dictionary:
+		for plant_key in source_special_reward_levels:
+			var plant_type := int(plant_key)
+			if plant_type <= 0 or not normalized_reward_plants.has(plant_type):
+				continue
+			var level_ids: Array[String] = []
+			var raw_level_ids = source_special_reward_levels[plant_key]
+			if raw_level_ids is Array:
+				for raw_level_id in raw_level_ids:
+					var level_id := str(raw_level_id).strip_edges()
+					if not level_id.is_empty() and not level_ids.has(level_id):
+						level_ids.append(level_id)
+			if not level_ids.is_empty():
+				normalized_special_reward_levels[str(plant_type)] = level_ids
+	result["specialRewardCardLevels"] = normalized_special_reward_levels
+	var boss_config: Dictionary = result.get("bossConfig", {})
+	boss_config["enabled"] = bool(boss_config.get("enabled", false))
+	boss_config["zombieType"] = int(boss_config.get("zombieType", 523))
+	boss_config["rewardPlant"] = int(boss_config.get("rewardPlant", -1))
+	result["bossConfig"] = boss_config
+	## Boss 是普通流程结束后的独立挑战，不能同时留在自然池或波次配置中。
+	if bool(boss_config["enabled"]):
+		var boss_zombie_type := int(boss_config["zombieType"])
+		(result["simpleZombiePool"] as Array).erase(boss_zombie_type)
+		(result["simpleOnceFinalZombies"] as Array).erase(boss_zombie_type)
+		for wave in result.get("waves", []):
+			var spawn_groups: Array = (wave as Dictionary).get("spawnGroups", [])
+			(wave as Dictionary)["spawnGroups"] = spawn_groups.filter(func(group):
+				return int((group as Dictionary).get("zombieType", 0)) != boss_zombie_type
+			)
 	result["freePlantSelection"] = bool(result.get("freePlantSelection", true))
 	var environment: Dictionary = result.get("environmentConfig", {})
 	environment["initialTombstones"] = maxi(0, int(environment.get("initialTombstones", 0)))
@@ -311,6 +346,29 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 		if not CharacterRegistry.PlantInfo.has(reward_plant):
 			issues.append(issue("error", "奖励卡牌未在植物注册表中登记", "rewardPlants"))
 			break
+	var special_reward_levels = level.get("specialRewardCardLevels", {})
+	if special_reward_levels is not Dictionary:
+		issues.append(issue("error", "限定奖励卡配置格式错误", "specialRewardCardLevels"))
+	else:
+		for plant_key in special_reward_levels:
+			var special_plant_type := int(plant_key)
+			var level_ids = special_reward_levels[plant_key]
+			if not reward_plant_types(level).has(special_plant_type):
+				issues.append(issue("error", "限定奖励卡必须同时是本关奖励卡", "specialRewardCardLevels/%s" % str(plant_key)))
+			if not level_ids is Array or level_ids.is_empty():
+				issues.append(issue("error", "限定奖励卡至少需要指定一个可用关卡", "specialRewardCardLevels/%s" % str(plant_key)))
+			elif level_ids.any(func(value): return str(value).strip_edges().is_empty()):
+				issues.append(issue("error", "限定奖励卡的关卡 ID 不能为空", "specialRewardCardLevels/%s" % str(plant_key)))
+	var boss_config = level.get("bossConfig", {})
+	if boss_config is not Dictionary:
+		issues.append(issue("error", "Boss 关配置格式错误", "bossConfig"))
+	elif bool(boss_config.get("enabled", false)):
+		var boss_zombie_type := int(boss_config.get("zombieType", 0))
+		var boss_reward_plant := int(boss_config.get("rewardPlant", -1))
+		if not CharacterRegistry.ZombieInfo.has(boss_zombie_type):
+			issues.append(issue("error", "Boss 僵尸未在角色注册表中登记", "bossConfig/zombieType"))
+		if not CharacterRegistry.PlantInfo.has(boss_reward_plant):
+			issues.append(issue("error", "Boss 额外奖励植物未在注册表中登记", "bossConfig/rewardPlant"))
 	if bool(level.get("plantSelectionEnabled", false)):
 		var available_plants: Array = level.get("availablePlants", [])
 		if available_plants.is_empty():
@@ -462,6 +520,24 @@ static func reward_plant_types(level: Dictionary) -> Array[int]:
 		var plant_type := int(value)
 		if plant_type >= 0 and not result.has(plant_type):
 			result.append(plant_type)
+	return result
+
+
+static func special_reward_card_levels(level: Dictionary) -> Dictionary:
+	var result: Dictionary = {}
+	var source = level.get("specialRewardCardLevels", {})
+	if source is not Dictionary:
+		return result
+	for plant_key in source:
+		var plant_type := int(plant_key)
+		var level_ids: Array[String] = []
+		if source[plant_key] is Array:
+			for value in source[plant_key]:
+				var level_id := str(value).strip_edges()
+				if not level_id.is_empty() and not level_ids.has(level_id):
+					level_ids.append(level_id)
+		if plant_type > 0 and not level_ids.is_empty():
+			result[str(plant_type)] = level_ids
 	return result
 
 

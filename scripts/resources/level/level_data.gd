@@ -103,6 +103,14 @@ var adventure_card_lock_active := false
 ## 通关后掉落并解锁的新卡；reward_plant_type 保留首张奖励以兼容旧逻辑。
 var reward_plant_type := -1
 var reward_plant_types: Array[CharacterRegistry.PlantType] = []
+## 限定奖励卡配置：植物类型字符串 -> 允许使用的关卡 ID 数组。
+var special_reward_card_levels: Dictionary = {}
+## 限定卡规则所属的关卡目录，确保正式与开发者配置互不串用。
+var special_reward_card_source_dir := ""
+## 工坊 Boss 追加战：普通波次结束后由玩家选择挑战或跳过。
+var boss_enabled := false
+var boss_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z523Gargantuar
+var boss_reward_plant_type := -1
 var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
 var sod_rollout_rows := 0

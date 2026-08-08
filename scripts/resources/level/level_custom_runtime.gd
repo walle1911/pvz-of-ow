@@ -4,6 +4,7 @@ class_name LevelCustomRuntime
 const LevelJsonRuntimeScript := preload("res://scripts/resources/level/level_json_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
+const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 
 const ZOMBIE_TYPE_IDS := {
 	"normal": 500,
@@ -83,6 +84,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		timeline_duration = maxf(timeline_duration, float(event.get("time", 0.0)))
 
 	var game_para := ResourceLevelData.new()
+	game_para.level_id = str(level.get("formalPresetId", level.get("id", "test")))
 	var player_config: Dictionary = level.get("playerConfig", {})
 	game_para.start_sun = int(player_config.get("initialSun", 50))
 	game_para.sun_drop_speed_multiplier = float(player_config.get("sunDropSpeed", 1.0))
@@ -152,12 +154,34 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		if CharacterRegistry.PlantInfo.has(reward_plant):
 			game_para.reward_plant_types.append(reward_plant as CharacterRegistry.PlantType)
 	game_para.reward_plant_type = int(game_para.reward_plant_types[0]) if not game_para.reward_plant_types.is_empty() else -1
+	game_para.special_reward_card_levels = Logic.special_reward_card_levels(level)
+	var special_reward_source_dir := ""
+	match str(level.get("_adventureLevelSource", "")):
+		"formal":
+			special_reward_source_dir = "res://data/formal_adventure_levels"
+		"developer":
+			special_reward_source_dir = "res://data/adventure_levels"
+	game_para.special_reward_card_source_dir = special_reward_source_dir
+	var boss_config: Dictionary = level.get("bossConfig", {})
+	game_para.boss_enabled = bool(boss_config.get("enabled", false))
+	game_para.boss_zombie_type = int(boss_config.get("zombieType", CharacterRegistry.ZombieType.Z523Gargantuar)) as CharacterRegistry.ZombieType
+	game_para.boss_reward_plant_type = int(boss_config.get("rewardPlant", -1))
 	if game_para.adventure_card_lock_active:
 		for value in level.get("availablePlants", []):
 			var plant_type := int(value) as CharacterRegistry.PlantType
 			if not CharacterRegistry.PlantInfo.has(plant_type):
 				continue
+			## 限定卡不能借由普通关卡卡池混入；只由目标关卡下面的独立投放逻辑加入。
+			if RewardCardRuntime.is_plant_limited(int(plant_type), special_reward_source_dir):
+				continue
 			game_para.available_plant_types.append(plant_type)
+		## 仅目标关卡主动投放已获得的限定卡。
+		for limited_plant_type in RewardCardRuntime.limited_plant_types_for_level(game_para.level_id, special_reward_source_dir):
+			var plant_type := limited_plant_type as CharacterRegistry.PlantType
+			if CharacterRegistry.PlantInfo.has(plant_type) \
+			and Global.global_game_state.curr_plant.has(plant_type) \
+			and not game_para.available_plant_types.has(plant_type):
+				game_para.available_plant_types.append(plant_type)
 		var card_limit := _formal_adventure_card_limit(str(level.get("formalPresetId", "")))
 		game_para.max_choosed_card_num = maxi(1, mini(card_limit, game_para.available_plant_types.size()))
 		var forced_plants: Array[CharacterRegistry.PlantType] = []

@@ -6,6 +6,7 @@ const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd"
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const FormalLevelStore := preload("res://scripts/resources/level/adventure_level_store.gd")
+const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 const FRONT_LAWN := preload("res://assets/image/background/background1.jpg")
 const NIGHT_LAWN := preload("res://assets/image/background/background2.jpg")
 const POOL_LAWN := preload("res://assets/image/background/background3.jpg")
@@ -70,6 +71,7 @@ const UNSELECTED_CARD_MODULATE := Color(0.55, 0.55, 0.55, 0.72)
 const ACTIVE_SOURCE_BUTTON_MODULATE := Color(0.67, 0.62, 0.56, 1.0)
 const ACTIVE_SOURCE_BUTTON_OFFSET_Y := 4.0
 const CARD_CONTEXT_EDIT_GLOBAL := 0
+const CARD_CONTEXT_SET_SPECIAL_REWARD := 1
 
 enum TimelineMode { NORMAL, PLACE_FLAG }
 enum CatalogMode { SPAWN_ZOMBIES, REWARD_CARDS }
@@ -150,6 +152,7 @@ var saved_level_snapshot := ""
 var pending_unsaved_action := Callable()
 var unsaved_changes_dialog: ConfirmationDialog
 var reward_conflict_dialog: ConfirmationDialog
+var special_reward_card_dialog: Window
 var formal_sync_dialog_layer: Control
 
 
@@ -558,8 +561,8 @@ func _close_cover_characters_dialog() -> void:
 	cover_dialog_layer = null
 
 
-func _add_cover_settings_button(dialog: Control) -> void:
-	var button := _texture_button("", Vector2(76, 464), Vector2(468, 38), DIALOG_BUTTON, DIALOG_BUTTON, func(): pass, 16)
+func _add_cover_settings_button(dialog: Control, button_position := Vector2(76, 464)) -> void:
+	var button := _texture_button("", button_position, Vector2(468, 38), DIALOG_BUTTON, DIALOG_BUTTON, func(): pass, 16)
 	button.pressed.connect(_open_cover_characters_dialog.bind(button))
 	dialog.add_child(button)
 	_update_cover_settings_button(button)
@@ -1784,7 +1787,8 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		and AdventurePresets.POOL_ONLY_ZOMBIES.has(zombie_type) \
 		and not ["pool", "fog"].has(str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
 	card.tooltip_text = (
-		"当前基础僵尸，固定参与刷怪" if required_simple_zombie
+		"Boss 僵尸；点击打开 Boss 关设置" if _is_boss_zombie(zombie_type)
+		else "当前基础僵尸，固定参与刷怪" if required_simple_zombie
 		else "该僵尸只能用于泳池或雾夜地图" if pool_map_required
 		else "简易自然波次暂不支持该僵尸" if not simple_supported
 		else "选择%s（在旗帜波按蹦极机制登场）" % _zombie_name(str(zombie_type)) \
@@ -1795,18 +1799,23 @@ func _make_zombie_card(zombie_type: int) -> Control:
 	var selected := required_simple_zombie or (
 		_simple_zombie_pool().has(zombie_type) if _is_simple_mode()
 		else not _find_group(level["waves"][selected_wave], str(zombie_type)).is_empty()
-	)
+	) or _is_boss_zombie(zombie_type)
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
 	_force_font_recursive(card)
 	var button := card.get_node_or_null("Button") as Button
 	if button != null:
 		for connection in button.pressed.get_connections():
 			button.pressed.disconnect(connection.callable)
-		button.disabled = not simple_supported
-		button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
+		button.disabled = not simple_supported and not _is_boss_zombie(zombie_type)
+		if _is_boss_zombie(zombie_type):
+			button.pressed.connect(_open_boss_settings_window)
+		else:
+			button.pressed.connect((_select_simple_zombie if _is_simple_mode() else _open_zombie_quantity_dialog).bind(str(zombie_type)))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("zombie", zombie_type))
 	holder.add_child(card)
-	if _is_formal_first_appearance_zombie(zombie_type):
+	if _is_boss_zombie(zombie_type):
+		_add_card_state_badge(holder, "boss", Color("8d65c7"))
+	elif _is_formal_first_appearance_zombie(zombie_type):
 		_add_card_state_badge(holder, "新", Color("d77835"))
 	if not simple_role.is_empty():
 		_add_simple_role_checkbox(holder, zombie_type, simple_role)
@@ -1833,6 +1842,17 @@ func _is_formal_first_appearance_zombie(zombie_type: int) -> bool:
 		if Logic._cover_zombie_types(previous_level).has(zombie_type):
 			return false
 	return not [101, 501].has(zombie_type)
+
+
+func _is_boss_zombie(zombie_type: int) -> bool:
+	var boss_config: Dictionary = level.get("bossConfig", {})
+	return bool(boss_config.get("enabled", false)) \
+		and int(boss_config.get("zombieType", -1)) == zombie_type
+
+
+func _configured_boss_zombie_type() -> int:
+	var boss_config: Dictionary = level.get("bossConfig", {})
+	return int(boss_config.get("zombieType", -1)) if bool(boss_config.get("enabled", false)) else -1
 
 
 func _add_simple_role_checkbox(holder: Control, zombie_type: int, role: String) -> void:
@@ -1867,14 +1887,29 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	var normal_available_mode: bool = Global.level_workshop_edit_mode == "normal"
 	var formal_reward_mode := normal_available_mode and FormalLevelStore.is_formal_preset_id(formal_preset_id)
 	var is_current_reward := formal_reward_mode and _formal_reward_plants().has(type_id)
+	var special_reward_levels := _special_reward_card_levels(type_id)
+	var limited_card := is_plant and RewardCardRuntime.is_plant_limited(type_id, _limited_card_source_dir())
+	var limited_target := limited_card and RewardCardRuntime.is_plant_allowed_in_level(
+		type_id,
+		formal_preset_id,
+		_limited_card_source_dir()
+	)
+	var limited_unavailable := limited_card and not limited_target and not is_current_reward
 	var selected := (_selected_available_plants().has(type_id) or is_current_reward) if normal_available_mode else \
 		(level["chessboardConfig"].get("plantCardPool" if is_plant else "zombieCardPool", []) as Array).has(type_id)
 	var locked: bool = normal_available_mode and locked_available_plant_types.has(type_id)
+	if limited_unavailable:
+		selected = false
+		locked = false
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
-	if locked:
+	if limited_unavailable:
+		card.tooltip_text = "限定卡不在本关投放，不能加入本关卡池"
+	elif locked:
 		card.tooltip_text = "此前已获得的植物；本关必定可选且不能取消"
 	elif is_current_reward:
 		card.tooltip_text = "本关通关奖励；点击取消"
+		if not special_reward_levels.is_empty():
+			card.tooltip_text = "限定奖励卡：仅可在 %d 个指定关卡使用；右键可编辑" % special_reward_levels.size()
 	elif formal_reward_mode:
 		card.tooltip_text = "添加为本关通关奖励"
 	elif normal_available_mode:
@@ -1894,7 +1929,11 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	elif locked:
 		_add_card_state_glow(holder, Color("69a956"))
 	if is_current_reward:
-		_add_card_state_badge(holder, "奖", Color("e69a16"))
+		_add_card_state_badge(holder, "奖", Color("e69a16"), Vector2(20, 0), "CardStateBadge")
+		if not special_reward_levels.is_empty():
+			_add_card_state_badge(holder, "限", Color("8d65c7"), Vector2(20, 24), "CardStateBadgeLimited")
+	elif limited_target:
+		_add_card_state_badge(holder, "限", Color("8d65c7"), Vector2(20, 0), "CardStateBadge")
 	return holder
 
 
@@ -1921,10 +1960,10 @@ func _add_card_state_glow(holder: Control, color: Color, opacity: float = 0.72) 
 		card.z_index = 1
 
 
-func _add_card_state_badge(holder: Control, text: String, color: Color) -> void:
+func _add_card_state_badge(holder: Control, text: String, color: Color, position: Vector2 = Vector2(20, 0), badge_name := "CardStateBadge") -> void:
 	var badge := TextureRect.new()
-	badge.name = "CardStateBadge"
-	badge.position = Vector2(20, 0)
+	badge.name = badge_name
+	badge.position = position
 	badge.size = Vector2(42, 25)
 	badge.texture = PAGE_BUTTON
 	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -1959,6 +1998,10 @@ func _on_workshop_card_gui_input(event: InputEvent, kind: String, type_id: int) 
 		_force_font_recursive(card_context_menu)
 	card_context_menu.clear()
 	card_context_menu.add_item("编辑全局数值", CARD_CONTEXT_EDIT_GLOBAL)
+	if context_card_kind == "plant" \
+		and FormalLevelStore.is_formal_preset_id(formal_preset_id) \
+		and _formal_reward_plants().has(context_card_type):
+		card_context_menu.add_item("设置限定使用关卡", CARD_CONTEXT_SET_SPECIAL_REWARD)
 	card_context_menu.position = Vector2i(get_viewport().get_mouse_position())
 	card_context_menu.popup()
 	get_viewport().set_input_as_handled()
@@ -1966,6 +2009,9 @@ func _on_workshop_card_gui_input(event: InputEvent, kind: String, type_id: int) 
 
 func _on_card_context_menu_pressed(item_id: int) -> void:
 	if context_card_type < 0:
+		return
+	if item_id == CARD_CONTEXT_SET_SPECIAL_REWARD:
+		_open_special_reward_card_dialog(context_card_type)
 		return
 	if item_id != CARD_CONTEXT_EDIT_GLOBAL:
 		return
@@ -1987,6 +2033,9 @@ func _on_card_context_menu_pressed(item_id: int) -> void:
 
 func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	if Global.level_workshop_edit_mode == "normal":
+		if is_plant and _is_limited_card_unavailable_here(type_id):
+			status_label.text = "限定卡仅在指定关卡投放，不能加入本关卡池"
+			return
 		if FormalLevelStore.is_formal_preset_id(formal_preset_id):
 			if locked_available_plant_types.has(type_id):
 				status_label.text = "这张卡此前已获得，本关必定可选，不能取消"
@@ -2032,6 +2081,19 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	_refresh_card_page()
 
 
+func _limited_card_source_dir() -> String:
+	## 工坊编辑成品关时读取开发者关卡配置；正式游玩会在运行参数中改用正式目录。
+	return "res://data/adventure_levels"
+
+
+func _is_limited_card_unavailable_here(type_id: int) -> bool:
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
+		return false
+	return RewardCardRuntime.is_plant_limited(type_id, _limited_card_source_dir()) \
+		and not RewardCardRuntime.is_plant_allowed_in_level(type_id, formal_preset_id, _limited_card_source_dir()) \
+		and not _formal_reward_plants().has(type_id)
+
+
 func _set_formal_reward_plant(type_id: int) -> void:
 	var rewards := _formal_reward_plants()
 	if not rewards.has(type_id):
@@ -2049,6 +2111,146 @@ func _formal_reward_plants() -> Array[int]:
 func _set_formal_reward_plants(rewards: Array[int]) -> void:
 	level["rewardPlants"] = rewards.duplicate()
 	level["rewardPlant"] = rewards[0] if not rewards.is_empty() else -1
+	var special_reward_levels: Dictionary = level.get("specialRewardCardLevels", {})
+	for plant_key in special_reward_levels.keys():
+		if not rewards.has(int(plant_key)):
+			special_reward_levels.erase(plant_key)
+	level["specialRewardCardLevels"] = special_reward_levels
+
+
+func _special_reward_card_levels(type_id: int) -> Array[String]:
+	var result: Array[String] = []
+	var special_reward_levels: Dictionary = level.get("specialRewardCardLevels", {})
+	var raw_level_ids = special_reward_levels.get(str(type_id), [])
+	if raw_level_ids is Array:
+		for value in raw_level_ids:
+			var level_id := str(value).strip_edges()
+			if not level_id.is_empty() and not result.has(level_id):
+				result.append(level_id)
+	return result
+
+
+func _set_special_reward_card_levels(type_id: int, level_ids: Array[String]) -> void:
+	var special_reward_levels: Dictionary = level.get("specialRewardCardLevels", {})
+	if level_ids.is_empty():
+		special_reward_levels.erase(str(type_id))
+	else:
+		special_reward_levels[str(type_id)] = level_ids.duplicate()
+	level["specialRewardCardLevels"] = special_reward_levels
+
+
+func _open_special_reward_card_dialog(type_id: int) -> void:
+	if not FormalLevelStore.is_formal_preset_id(formal_preset_id) or not _formal_reward_plants().has(type_id):
+		status_label.text = "请先将这张植物卡加入本关通关奖励，再设置限定使用关卡。"
+		return
+	if is_instance_valid(special_reward_card_dialog):
+		special_reward_card_dialog.popup_centered()
+		return
+	var dialog := Window.new()
+	dialog.name = "SpecialRewardCardDialog"
+	dialog.title = "设置限定奖励卡：%s" % _plant_name(type_id)
+	dialog.size = Vector2i(640, 540)
+	dialog.min_size = Vector2i(520, 420)
+	dialog.transient = true
+	dialog.exclusive = true
+	dialog.close_requested.connect(dialog.queue_free)
+	dialog.tree_exited.connect(func():
+		if special_reward_card_dialog == dialog:
+			special_reward_card_dialog = null
+	)
+	add_child(dialog)
+	special_reward_card_dialog = dialog
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 18)
+	margin.add_theme_constant_override("margin_top", 16)
+	margin.add_theme_constant_override("margin_right", 18)
+	margin.add_theme_constant_override("margin_bottom", 16)
+	dialog.add_child(margin)
+	var layout := VBoxContainer.new()
+	layout.add_theme_constant_override("separation", 8)
+	margin.add_child(layout)
+	var description := Label.new()
+	description.text = "选择这张奖励卡允许使用的关卡；未勾选的关卡不会显示这张卡。"
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.custom_minimum_size.y = 32
+	layout.add_child(description)
+	var error_label := Label.new()
+	error_label.modulate = Color("f0a0a0")
+	error_label.custom_minimum_size.y = 22
+	layout.add_child(error_label)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	layout.add_child(scroll)
+	var level_list := VBoxContainer.new()
+	level_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	level_list.add_theme_constant_override("separation", 3)
+	scroll.add_child(level_list)
+	var selected_ids := _special_reward_card_levels(type_id)
+	var known_ids: Array[String] = []
+	for preset in AdventurePresets.list_formal_presets("normal"):
+		var preset_id := str(preset.get("id", ""))
+		if preset_id.is_empty() or known_ids.has(preset_id):
+			continue
+		known_ids.append(preset_id)
+		_add_special_reward_level_check(level_list, preset_id, _formal_level_display_name(preset_id), selected_ids)
+	for draft in DraftStore.list_drafts():
+		var draft_id := str(draft.get("id", ""))
+		if draft_id.is_empty() or known_ids.has(draft_id):
+			continue
+		known_ids.append(draft_id)
+		_add_special_reward_level_check(level_list, draft_id, "自制关卡  ·  %s" % str(draft.get("name", draft_id)), selected_ids)
+	## 保留旧配置中可能来自自制关卡的目标 ID，避免打开编辑器时丢失。
+	for selected_id in selected_ids:
+		if not known_ids.has(selected_id):
+			_add_special_reward_level_check(level_list, selected_id, selected_id, selected_ids)
+
+	var footer := HBoxContainer.new()
+	footer.custom_minimum_size.y = 38
+	footer.alignment = BoxContainer.ALIGNMENT_END
+	layout.add_child(footer)
+	var cancel_button := Button.new()
+	cancel_button.text = "取消"
+	cancel_button.custom_minimum_size.x = 100
+	cancel_button.pressed.connect(dialog.queue_free)
+	footer.add_child(cancel_button)
+	var confirm_button := Button.new()
+	confirm_button.text = "确认保存"
+	confirm_button.custom_minimum_size.x = 110
+	confirm_button.pressed.connect(func():
+		var chosen_ids: Array[String] = []
+		for child in level_list.get_children():
+			var check := child as CheckButton
+			if is_instance_valid(check) and check.button_pressed:
+				chosen_ids.append(str(check.get_meta("level_id", "")))
+		if chosen_ids.is_empty():
+			error_label.text = "至少选择一个可用关卡。"
+			return
+		_set_special_reward_card_levels(type_id, chosen_ids)
+		_changed("已设置 %s 只能在 %d 个指定关卡使用" % [_plant_name(type_id), chosen_ids.size()])
+		_refresh_card_page()
+		dialog.queue_free()
+	)
+	footer.add_child(confirm_button)
+	_force_font_recursive(dialog)
+	dialog.popup_centered()
+
+
+func _add_special_reward_level_check(parent: Control, level_id: String, label_text: String, selected_ids: Array[String]) -> void:
+	var check := CheckButton.new()
+	check.text = label_text
+	check.button_pressed = selected_ids.has(level_id)
+	check.set_meta("level_id", level_id)
+	check.custom_minimum_size.y = 30
+	parent.add_child(check)
+
+
+func _formal_level_display_name(preset_id: String) -> String:
+	var level_source := AdventurePresets.build_level(preset_id, true)
+	return "%s  ·  %s" % [preset_id, str(level_source.get("name", preset_id))]
 
 
 func _later_formal_reward_conflicts(type_id: int) -> Array[Dictionary]:
@@ -2081,6 +2283,9 @@ func _clear_later_duplicate_formal_rewards(type_id: int) -> Dictionary:
 		later_rewards.erase(type_id)
 		later_level["rewardPlants"] = later_rewards
 		later_level["rewardPlant"] = later_rewards[0] if not later_rewards.is_empty() else -1
+		var later_special_rewards: Dictionary = later_level.get("specialRewardCardLevels", {})
+		later_special_rewards.erase(str(type_id))
+		later_level["specialRewardCardLevels"] = later_special_rewards
 		var result := FormalLevelStore.save_developer_level(later_level, preset_id)
 		if result["ok"]:
 			cleared_names.append(str(conflict.get("name", preset_id)))
@@ -2452,7 +2657,9 @@ func _refresh_stage_heading() -> void:
 func _refresh_road_zombies() -> void:
 	_clear_preview_zombies()
 	var wave: Dictionary = level["waves"][selected_wave]
-	var total := _wave_zombie_type_count(wave) if _is_simple_mode() else _wave_total_count(wave)
+	var boss_zombie := _configured_boss_zombie_type()
+	var total := (_wave_zombie_type_count(wave) if _is_simple_mode() else _wave_total_count(wave)) \
+		+ (1 if boss_zombie > 0 else 0)
 	road_title.text = ("本关允许僵尸 · 马路预览 · %d 种" % total) if _is_simple_mode() else ("当前阶段 · 马路预览 · 共 %d 只" % total)
 	road_hint.visible = total == 0 or total > PREVIEW_MAX_ZOMBIES
 	if total == 0:
@@ -2464,7 +2671,11 @@ func _refresh_road_zombies() -> void:
 	random.seed = int(level.get("randomSeed", 1)) + selected_wave * 7919
 	var index := 0
 	var shown_types: Dictionary = {}
-	for group in wave.get("spawnGroups", []):
+	var preview_groups: Array = (wave.get("spawnGroups", []) as Array).duplicate(true)
+	if boss_zombie > 0:
+		## Boss 永远占用一个预览名额，不能被普通僵尸数量上限挤掉。
+		preview_groups.push_front({"zombieType": str(boss_zombie), "count": 1})
+	for group in preview_groups:
 		var zombie_key := str(group.get("zombieType", "500"))
 		if _is_simple_mode() and shown_types.has(_zombie_type_id(zombie_key)):
 			continue
@@ -2487,7 +2698,12 @@ func _on_preview_hit_layer_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var hovered_zombie := _preview_zombie_at((event as InputEventMouseMotion).position)
 		preview_hit_layer.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if hovered_zombie != null else Control.CURSOR_ARROW
-		preview_hit_layer.tooltip_text = "" if hovered_zombie == null else (("点击设置%s" if _is_simple_mode() else "点击删除一个%s") % _zombie_name(str(preview_zombie_keys.get(hovered_zombie.get_instance_id(), "500"))))
+		if hovered_zombie == null:
+			preview_hit_layer.tooltip_text = ""
+		else:
+			var hovered_key := str(preview_zombie_keys.get(hovered_zombie.get_instance_id(), "500"))
+			preview_hit_layer.tooltip_text = ("点击打开 Boss 关设置" if _is_boss_zombie(_zombie_type_id(hovered_key)) \
+				else (("点击设置%s" if _is_simple_mode() else "点击删除一个%s") % _zombie_name(hovered_key)))
 		return
 	if not event is InputEventMouseButton:
 		return
@@ -2499,6 +2715,10 @@ func _on_preview_hit_layer_input(event: InputEvent) -> void:
 		return
 	var zombie_key := str(preview_zombie_keys.get(clicked_zombie.get_instance_id(), ""))
 	if zombie_key.is_empty():
+		return
+	if _is_boss_zombie(_zombie_type_id(zombie_key)):
+		_open_boss_settings_window()
+		preview_hit_layer.accept_event()
 		return
 	if _is_simple_mode():
 		_open_simple_zombie_dialog(zombie_key)
@@ -2663,7 +2883,7 @@ func _open_level_settings() -> void:
 	shade.mouse_filter = Control.MOUSE_FILTER_STOP
 	quantity_dialog_layer.add_child(shade)
 	var dialog := TextureRect.new()
-	## 顶部标题与主界面的“菜单”基线对齐，同时仍让弹窗完整落在 600 高的画布内。
+	## 石碑保持原位，只将内部标题、正文和固定底栏整体下移。
 	dialog.position = Vector2(223, 20)
 	dialog.size = Vector2(620, 580)
 	dialog.texture = DIALOG_BACKGROUND
@@ -2671,64 +2891,81 @@ func _open_level_settings() -> void:
 	dialog.stretch_mode = TextureRect.STRETCH_SCALE
 	dialog.mouse_filter = Control.MOUSE_FILTER_STOP
 	quantity_dialog_layer.add_child(dialog)
-	var title := _paper_label("简易关卡设置" if _is_simple_mode() else "进阶关卡设置", Vector2(90, 28), Vector2(440, 48), 29, Color("f3e7ba"))
+	var title := _paper_label("简易关卡设置" if _is_simple_mode() else "进阶关卡设置", Vector2(90, 66), Vector2(440, 48), 29, Color("f3e7ba"))
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_outline_color", Color("25263b"))
 	title.add_theme_constant_override("outline_size", 4)
 	dialog.add_child(title)
+	var settings_parent: Control = dialog
+	if _is_simple_mode():
+		## 按深色区域的安全内边距排版；不使用裁切，所有控件必须自身完整落入区域。
+		var settings_content := Control.new()
+		settings_content.position = Vector2(101, 155)
+		settings_content.size = Vector2(420, 320)
+		dialog.add_child(settings_content)
+		settings_parent = settings_content
 	if loaded_source_kind == "template" and FormalLevelStore.is_formal_preset_id(formal_preset_id):
-		title.position.x = 48.0
+		title.position.x = 123.0
 		title.size.x = 374.0
 		var sync_callback := func():
 			_close_quantity_dialog()
 			_request_leave_with_unsaved_check(_open_formal_sync_dialog)
-		dialog.add_child(_texture_button("批量同步", Vector2(438, 34), Vector2(132, 38), DIALOG_BUTTON, DIALOG_BUTTON, sync_callback, 15))
-	var name_input := _settings_line(dialog, "关卡名称", Vector2(76, 78), str(level["name"]))
-	name_input.size.x = 456
-	_add_cover_settings_button(dialog)
+		var sync_position := Vector2(288, 0) if _is_simple_mode() else Vector2(438, 62)
+		settings_parent.add_child(_texture_button("批量同步", sync_position, Vector2(124 if _is_simple_mode() else 132, 30 if _is_simple_mode() else 38), DIALOG_BUTTON, DIALOG_BUTTON, sync_callback, 15))
+	var name_position := Vector2.ZERO if _is_simple_mode() else Vector2(76, 106)
+	var name_input := _settings_line(settings_parent, "关卡名称", name_position, str(level["name"]))
+	name_input.size.x = 278 if _is_simple_mode() else 340
+	var boss_position := Vector2(288, 33) if _is_simple_mode() else Vector2(438, 133)
+	settings_parent.add_child(_texture_button("Boss关设置", boss_position, Vector2(124 if _is_simple_mode() else 132, 30 if _is_simple_mode() else 38), DIALOG_BUTTON, DIALOG_BUTTON, _open_boss_settings_window, 15))
 	if _is_simple_mode():
-		_build_simple_level_settings(dialog, name_input)
+		_add_cover_settings_button(dialog)
+		_build_simple_level_settings(settings_parent, name_input, dialog)
 		return
-	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 150), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
-	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 150), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
-	var cooldown := _settings_spin(dialog, "冷却时长倍率", Vector2(76, 222), 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
+	_add_cover_settings_button(dialog)
+	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 178), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
+	var sun_speed := _settings_spin(dialog, "天降阳光速度倍率", Vector2(322, 178), 0.1, 10.0, float(level["playerConfig"].get("sunDropSpeed", 1.0)), 0.1)
+	var cooldown := _settings_spin(dialog, "冷却时长倍率", Vector2(76, 250), 0.0, 10.0, float(level["playerConfig"].get("cooldownMultiplier", 1.0)), 0.05)
 	var chessboard: Dictionary = level.get("chessboardConfig", {})
 	var mine_count: SpinBox
 	var plant_probability: SpinBox
 	var enemy_probability: SpinBox
 	if str(level.get("workshopMode", "normal")) == "chessboard":
-		var chess_title := _paper_label("棋盘格专属", Vector2(76, 294), Vector2(468, 30), 20, Color("e9d28a"))
+		var chess_title := _paper_label("棋盘格专属", Vector2(76, 322), Vector2(468, 30), 20, Color("e9d28a"))
 		chess_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		dialog.add_child(chess_title)
-		mine_count = _settings_spin(dialog, "地雷数量上限", Vector2(76, 330), 0, 45, int(chessboard.get("mineCount", 8)), 1)
-		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 330), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
-		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 402), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
+		mine_count = _settings_spin(dialog, "地雷数量上限", Vector2(76, 358), 0, 45, int(chessboard.get("mineCount", 8)), 1)
+		plant_probability = _settings_spin(dialog, "植物卡概率", Vector2(322, 358), 0.0, 1.0, float(chessboard.get("plantCardProbability", 0.25)), 0.01)
+		enemy_probability = _settings_spin(dialog, "敌对僵尸概率", Vector2(322, 430), 0.0, 1.0, float(chessboard.get("enemyZombieProbability", 0.30)), 0.01)
 	var save_callback := func():
 		_save_level_settings(name_input, sun, sun_speed, cooldown, chessboard, mine_count, plant_probability, enemy_probability)
-	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+	dialog.add_child(_texture_button("取消", Vector2(145, 538), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
+	dialog.add_child(_texture_button("确认", Vector2(333, 538), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
 
 
-func _build_simple_level_settings(dialog: Control, name_input: LineEdit) -> void:
-	var map_picker := _settings_option(dialog, "地图", Vector2(76, 150))
+func _build_simple_level_settings(dialog: Control, name_input: LineEdit, footer_parent: Control) -> void:
+	var map_picker := _settings_option(dialog, "地图", Vector2(0, 70))
+	map_picker.size.x = 200
 	for map_name in SIMPLE_MAP_NAMES:
 		map_picker.add_item(map_name)
 	var current_map := str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn"))
 	map_picker.select(maxi(0, SIMPLE_MAP_TYPES.find(current_map)))
-	var refresh_speed := _settings_spin(dialog, "僵尸刷新速度倍率", Vector2(322, 150), 0.1, 5.0, float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.05)
-	var sun := _settings_spin(dialog, "开局阳光", Vector2(76, 222), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
-	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(76, 292), Vector2(468, 72), 14, Color("d7bd80"))
+	var refresh_speed := _settings_spin(dialog, "僵尸刷新速度倍率", Vector2(220, 70), 0.1, 5.0, float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.05)
+	refresh_speed.size.x = 200
+	var sun := _settings_spin(dialog, "开局阳光", Vector2(50, 140), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
+	sun.size.x = 200
+	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(0, 202), Vector2(412, 34), 14, Color("d7bd80"))
 	plant_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dialog.add_child(plant_hint)
-	var special_title := _paper_label("地图特殊设定", Vector2(76, 374), Vector2(468, 28), 20, Color("e9d28a"))
+	var special_title := _paper_label("地图特殊设定", Vector2(0, 238), Vector2(412, 26), 19, Color("e9d28a"))
 	special_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dialog.add_child(special_title)
 	var environment: Dictionary = level.get("environmentConfig", {})
 	var tombstones_enabled := bool(environment.get("tombstoneSpawns", false))
-	var tombstone_checkbox := _settings_checkbox(dialog, "启用墓碑", Vector2(76, 410), tombstones_enabled)
-	var tombstone_count := _settings_spin(dialog, "初始墓碑数量", Vector2(322, 402), 0, 45, int(environment.get("initialTombstones", 0)), 1)
+	var tombstone_checkbox := _settings_checkbox(dialog, "启用墓碑", Vector2(0, 268), tombstones_enabled)
+	var tombstone_count := _settings_spin(dialog, "初始墓碑数量", Vector2(220, 260), 0, 45, int(environment.get("initialTombstones", 0)), 1)
+	tombstone_count.size.x = 200
 	var bungee_enabled := bool(environment.get("bungee", false))
-	var bungee_checkbox := _settings_checkbox(dialog, "启用蹦极大波", Vector2(76, 410), bungee_enabled)
+	var bungee_checkbox := _settings_checkbox(dialog, "启用蹦极大波", Vector2(0, 268), bungee_enabled)
 	tombstone_checkbox.toggled.connect(func(checked: bool):
 		_set_checkbox_texture(tombstone_checkbox, checked)
 		tombstone_count.editable = checked
@@ -2736,9 +2973,6 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit) -> void
 	bungee_checkbox.toggled.connect(func(checked: bool):
 		_set_checkbox_texture(bungee_checkbox, checked)
 	)
-	var no_special := _paper_label("该地图没有需要手动启用的原版特殊机制", Vector2(76, 410), Vector2(468, 34), 15, Color("d7bd80"))
-	no_special.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	dialog.add_child(no_special)
 	var refresh_special_visibility := func(index: int):
 		var map_type: String = SIMPLE_MAP_TYPES[clampi(index, 0, SIMPLE_MAP_TYPES.size() - 1)]
 		var is_night := map_type == "night_lawn"
@@ -2746,7 +2980,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit) -> void
 		tombstone_checkbox.visible = is_night
 		_set_settings_field_visible(tombstone_count, is_night)
 		bungee_checkbox.visible = is_roof
-		no_special.visible = not is_night and not is_roof
+		special_title.visible = is_night or is_roof
 		tombstone_count.editable = tombstone_checkbox.button_pressed
 	map_picker.item_selected.connect(refresh_special_visibility)
 	refresh_special_visibility.call(map_picker.selected)
@@ -2779,8 +3013,144 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit) -> void
 		_close_quantity_dialog()
 		_changed("简易关卡设置已保存")
 		_refresh_wave()
-	dialog.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
-	dialog.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+	footer_parent.add_child(_texture_button("取消", Vector2(145, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, _close_quantity_dialog, 17))
+	footer_parent.add_child(_texture_button("确认", Vector2(333, 510), Vector2(142, 42), DIALOG_BUTTON, DIALOG_BUTTON, save_callback, 17))
+
+
+func _open_boss_settings_window() -> void:
+	var window := Window.new()
+	window.name = "BossLevelSettings"
+	window.title = "Boss 关设置"
+	window.size = Vector2i(600, 420)
+	window.min_size = Vector2i(520, 390)
+	window.transient = true
+	window.exclusive = true
+	window.close_requested.connect(window.queue_free)
+	add_child(window)
+
+	var title := Label.new()
+	title.position = Vector2(24, 18)
+	title.size = Vector2(552, 30)
+	title.text = "普通波次完成后，可选择挑战 Boss 或直接解锁下一关。"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	window.add_child(title)
+	var enabled := CheckButton.new()
+	enabled.position = Vector2(32, 62)
+	enabled.size = Vector2(260, 36)
+	enabled.text = "将本关设为 Boss 关"
+	var saved_config: Dictionary = level.get("bossConfig", {})
+	enabled.button_pressed = bool(saved_config.get("enabled", false))
+	window.add_child(enabled)
+
+	var zombie_label := Label.new()
+	zombie_label.position = Vector2(48, 118)
+	zombie_label.size = Vector2(500, 28)
+	zombie_label.text = "Boss 僵尸"
+	window.add_child(zombie_label)
+	var zombie_picker := OptionButton.new()
+	zombie_picker.position = Vector2(48, 148)
+	zombie_picker.size = Vector2(504, 36)
+	var current_zombie := int(saved_config.get("zombieType", CharacterRegistry.ZombieType.Z523Gargantuar))
+	for zombie_type in zombie_card_order:
+		var item_index := zombie_picker.item_count
+		zombie_picker.add_item("%03d · %s" % [int(zombie_type), _zombie_name(str(zombie_type))])
+		zombie_picker.set_item_metadata(item_index, int(zombie_type))
+		if int(zombie_type) == current_zombie:
+			zombie_picker.select(item_index)
+	window.add_child(zombie_picker)
+
+	var reward_label := Label.new()
+	reward_label.position = Vector2(48, 204)
+	reward_label.size = Vector2(500, 28)
+	reward_label.text = "击败 Boss 的额外奖励"
+	window.add_child(reward_label)
+	var reward_picker := OptionButton.new()
+	reward_picker.position = Vector2(48, 234)
+	reward_picker.size = Vector2(504, 36)
+	reward_picker.add_item("请选择一张植物奖励")
+	reward_picker.set_item_metadata(0, -1)
+	var current_reward := int(saved_config.get("rewardPlant", -1))
+	for entry in reward_card_order:
+		var plant_type := int((entry as Dictionary).get("id", -1))
+		if plant_type <= 0:
+			continue
+		var item_index := reward_picker.item_count
+		reward_picker.add_item("%03d · %s" % [plant_type, _plant_name(plant_type)])
+		reward_picker.set_item_metadata(item_index, plant_type)
+		if plant_type == current_reward:
+			reward_picker.select(item_index)
+	window.add_child(reward_picker)
+
+	var hint := Label.new()
+	hint.position = Vector2(48, 286)
+	hint.size = Vector2(504, 36)
+	hint.text = "Boss 房不会重新加载场景：场上存活植物、阳光与卡牌状态会原样保留。"
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	window.add_child(hint)
+	var error_label := Label.new()
+	error_label.position = Vector2(48, 324)
+	error_label.size = Vector2(504, 24)
+	error_label.modulate = Color("f0a0a0")
+	window.add_child(error_label)
+	var update_inputs := func(is_enabled: bool):
+		zombie_label.visible = is_enabled
+		zombie_picker.visible = is_enabled
+		reward_label.visible = is_enabled
+		reward_picker.visible = is_enabled
+		hint.visible = is_enabled
+	enabled.toggled.connect(update_inputs)
+	update_inputs.call(enabled.button_pressed)
+
+	var footer := HBoxContainer.new()
+	footer.position = Vector2(246, 360)
+	footer.size = Vector2(306, 42)
+	footer.alignment = BoxContainer.ALIGNMENT_END
+	footer.add_theme_constant_override("separation", 12)
+	window.add_child(footer)
+	var cancel_button := Button.new()
+	cancel_button.text = "取消"
+	cancel_button.custom_minimum_size = Vector2(100, 40)
+	cancel_button.pressed.connect(window.queue_free)
+	footer.add_child(cancel_button)
+	var confirm_button := Button.new()
+	confirm_button.text = "确认保存"
+	confirm_button.custom_minimum_size = Vector2(120, 40)
+	confirm_button.pressed.connect(func():
+		var boss_reward := int(reward_picker.get_item_metadata(reward_picker.selected))
+		if enabled.button_pressed and boss_reward <= 0:
+			error_label.text = "启用 Boss 关时必须选择一张额外奖励植物。"
+			return
+		var boss_zombie := int(zombie_picker.get_item_metadata(zombie_picker.selected))
+		level["bossConfig"] = {
+			"enabled": enabled.button_pressed,
+			"zombieType": boss_zombie,
+			"rewardPlant": boss_reward if enabled.button_pressed else -1,
+		}
+		if enabled.button_pressed:
+			_remove_boss_from_normal_flow(boss_zombie)
+		_changed("已%s Boss 关%s" % ["启用" if enabled.button_pressed else "关闭", "：%s" % _zombie_name(str(boss_zombie)) if enabled.button_pressed else ""])
+		_refresh_card_page()
+		_refresh_wave()
+		window.queue_free()
+	)
+	footer.add_child(confirm_button)
+	_force_font_recursive(window)
+	window.popup_centered()
+
+
+func _remove_boss_from_normal_flow(boss_zombie: int) -> void:
+	var simple_pool: Array = level.get("simpleZombiePool", [])
+	simple_pool.erase(boss_zombie)
+	level["simpleZombiePool"] = simple_pool
+	var once_final: Array = level.get("simpleOnceFinalZombies", [])
+	once_final.erase(boss_zombie)
+	level["simpleOnceFinalZombies"] = once_final
+	for wave in level.get("waves", []):
+		var spawn_groups: Array = (wave as Dictionary).get("spawnGroups", [])
+		(wave as Dictionary)["spawnGroups"] = spawn_groups.filter(func(group):
+			return _zombie_type_id((group as Dictionary).get("zombieType", "0")) != boss_zombie
+		)
 
 
 func _save_level_settings(name_input: LineEdit, sun: SpinBox, sun_speed: SpinBox, cooldown: SpinBox, chessboard: Dictionary, mine_count: SpinBox, plant_probability: SpinBox, enemy_probability: SpinBox) -> void:
@@ -3614,7 +3984,9 @@ func _playtest() -> void:
 		status_label.text = "无法试玩：%s" % built["error"]
 		return
 	var game_para: ResourceLevelData = built["game_para"]
-	game_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "trial_%s" % str(level.get("id", "level")))
+	## 试玩仍使用正式预设 ID 参与限定卡判定；trial_ 仅用于隔离试玩存档。
+	var playtest_level_id := str(level.get("formalPresetId", level.get("id", "level")))
+	game_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "trial_%s" % playtest_level_id)
 	var global := get_node("/root/Global")
 	global.game_para = game_para
 	global.developer_level_adjustments_active = true

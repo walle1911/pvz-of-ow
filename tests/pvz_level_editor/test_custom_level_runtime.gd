@@ -2,6 +2,7 @@ extends Node
 
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const FormalStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 
 func _ready() -> void:
@@ -20,6 +21,37 @@ func _ready() -> void:
 		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 		CharacterRegistry.PlantType.P002SunflowerMercy,
 	])
+	var special_reward_type := int(CharacterRegistry.PlantType.P547CobCannon)
+	var special_reward_level := Logic.example_level()
+	special_reward_level["id"] = "special_reward_source"
+	special_reward_level["rewardPlants"] = [special_reward_type]
+	special_reward_level["specialRewardCardLevels"] = {str(special_reward_type): ["adventure_1_1", "adventure_1_2"]}
+	var special_reward_built := Runtime.build_game_para(special_reward_level)
+	assert(special_reward_built["ok"], special_reward_built["error"])
+	var special_reward_para := special_reward_built["game_para"] as ResourceLevelData
+	assert(special_reward_para.special_reward_card_levels == {str(special_reward_type): ["adventure_1_1", "adventure_1_2"]})
+	assert(Logic.validate_level(special_reward_level).all(func(issue): return issue["severity"] != "error"))
+	var boss_level := Logic.example_level()
+	boss_level["bossConfig"] = {
+		"enabled": true,
+		"zombieType": int(CharacterRegistry.ZombieType.Z002ConeTalon),
+		"rewardPlant": int(CharacterRegistry.PlantType.P003CherryBombJunkrat),
+	}
+	boss_level["simpleZombiePool"] = [
+		int(CharacterRegistry.ZombieType.Z000NormTalon),
+		int(CharacterRegistry.ZombieType.Z002ConeTalon),
+	]
+	var boss_built := Runtime.build_game_para(boss_level)
+	assert(boss_built["ok"], boss_built["error"])
+	var boss_para := boss_built["game_para"] as ResourceLevelData
+	assert(boss_para.boss_enabled)
+	assert(boss_para.boss_zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon)
+	assert(boss_para.boss_reward_plant_type == int(CharacterRegistry.PlantType.P003CherryBombJunkrat))
+	assert(not boss_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z002ConeTalon))
+	assert(Logic.validate_level(boss_level).all(func(issue): return issue["severity"] != "error"))
+	var invalid_boss_level := boss_level.duplicate(true)
+	invalid_boss_level["bossConfig"]["rewardPlant"] = -1
+	assert(Logic.validate_level(invalid_boss_level).any(func(issue): return issue["path"] == "bossConfig/rewardPlant"))
 	var legacy_reward_level := Logic.example_level()
 	legacy_reward_level["rewardPlant"] = int(CharacterRegistry.PlantType.P003CherryBombJunkrat)
 	legacy_reward_level.erase("rewardPlants")

@@ -2,6 +2,8 @@ extends Control
 ## 正常卡槽
 class_name CardSlotNorm
 
+const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
+
 ## 临时卡片存放节点，避免卡片被挡住
 @onready var temporary_card: Control = $TemporaryCard
 ## 待选卡槽
@@ -162,6 +164,15 @@ func _get_zombie_card_prefab(zombie_type: CharacterRegistry.ZombieType) -> Card:
 func _on_card_click(card:Card):
 	if not _is_valid_card(card):
 		return
+	if Global.main_game.game_para.adventure_card_lock_active \
+		and card.card_plant_type != CharacterRegistry.PlantType.Null \
+		and not RewardCardRuntime.is_plant_available_in_level(
+			int(card.card_plant_type),
+			Global.main_game.game_para.level_id,
+			Global.main_game.game_para.available_plant_types.has(card.card_plant_type),
+			Global.main_game.game_para.special_reward_card_source_dir
+		):
+		return
 	## 非选卡阶段直接返回
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
@@ -193,6 +204,15 @@ func _on_card_click(card:Card):
 ## 游戏选卡阶段时，模仿者卡片被点击
 func _on_imitater_card_click(card:Card):
 	if not _is_valid_card(card):
+		return
+	if Global.main_game.game_para.adventure_card_lock_active \
+		and card.card_plant_type != CharacterRegistry.PlantType.Null \
+		and not RewardCardRuntime.is_plant_available_in_level(
+			int(card.card_plant_type),
+			Global.main_game.game_para.level_id,
+			Global.main_game.game_para.available_plant_types.has(card.card_plant_type),
+			Global.main_game.game_para.special_reward_card_source_dir
+		):
 		return
 	## 非选卡阶段直接返回
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\

@@ -89,9 +89,6 @@
 	"simpleFlagZombieType": 101,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 20,
-	"simpleZombieIntroWaves": {
-		"104": 11
-	},
 	"simpleZombiePool": [
 		100,
 		104,
@@ -100,6 +97,11 @@
 	],
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
+	"specialRewardCardLevels": {
+		"504": [
+			"adventure_1_10"
+		]
+	},
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		27.74,
