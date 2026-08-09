@@ -1382,11 +1382,11 @@ sun_cost = 150
 [node name="CardBg" parent="PlantCards/Card3" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant053CherryBombJunkrat" type="Node2D" parent="PlantCards/Card3/CardBg/CharacterStatic" index="0" unique_id=1513017236]
+[node name="Plant003CherryBombJunkrat" type="Node2D" parent="PlantCards/Card3/CardBg/CharacterStatic" index="0" unique_id=1513017236]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card3/CardBg/CharacterStatic/Plant053CherryBombJunkrat" unique_id=472294907]
+[node name="card" type="Sprite2D" parent="PlantCards/Card3/CardBg/CharacterStatic/Plant003CherryBombJunkrat" unique_id=472294907]
 position = Vector2(0, -26.49)
 scale = Vector2(0.68, 0.68)
 texture = ExtResource("384_b70e6")
@@ -1454,15 +1454,15 @@ sun_cost = 50
 [node name="CardBg" parent="PlantCards/Card5" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant054SquashDoomfist" type="Node2D" parent="PlantCards/Card5/CardBg/CharacterStatic" index="0" unique_id=882358735]
+[node name="Plant018SquashDoomfist" type="Node2D" parent="PlantCards/Card5/CardBg/CharacterStatic" index="0" unique_id=882358735]
 position = Vector2(1, 16)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card5/CardBg/CharacterStatic/Plant054SquashDoomfist" unique_id=1366826225]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card5/CardBg/CharacterStatic/Plant018SquashDoomfist" unique_id=1366826225]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card5/CardBg/CharacterStatic/Plant054SquashDoomfist" unique_id=771105281]
+[node name="card" type="Sprite2D" parent="PlantCards/Card5/CardBg/CharacterStatic/Plant018SquashDoomfist" unique_id=771105281]
 position = Vector2(-1.83, -31.54)
 scale = Vector2(0.44, 0.44)
 texture = ExtResource("385_cnu4l")
@@ -1479,11 +1479,11 @@ sun_cost = 175
 [node name="CardBg" parent="PlantCards/Card6" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant055SnowPeaMei" type="Node2D" parent="PlantCards/Card6/CardBg/CharacterStatic" index="0" unique_id=1051485453]
+[node name="Plant006SnowPeaMei" type="Node2D" parent="PlantCards/Card6/CardBg/CharacterStatic" index="0" unique_id=1051485453]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card6/CardBg/CharacterStatic/Plant055SnowPeaMei" unique_id=1782819714]
+[node name="card" type="Sprite2D" parent="PlantCards/Card6/CardBg/CharacterStatic/Plant006SnowPeaMei" unique_id=1782819714]
 position = Vector2(3.72, -28.64)
 scale = Vector2(0.69, 0.69)
 texture = ExtResource("386_vxcot")
@@ -1498,15 +1498,15 @@ card_plant_type = 41
 cool_time = 50.0
 sun_cost = 250
 
-[node name="Plant056GatlingPeaBastion" type="Node2D" parent="PlantCards/Card7/CardBg/CharacterStatic" index="0" unique_id=1206660031]
+[node name="Plant041GatlingPeaBastion" type="Node2D" parent="PlantCards/Card7/CardBg/CharacterStatic" index="0" unique_id=1206660031]
 position = Vector2(1, 14)
 scale = Vector2(0.45, 0.45)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card7/CardBg/CharacterStatic/Plant056GatlingPeaBastion" unique_id=425128318]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card7/CardBg/CharacterStatic/Plant041GatlingPeaBastion" unique_id=425128318]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card7/CardBg/CharacterStatic/Plant056GatlingPeaBastion" unique_id=1422708187]
+[node name="card" type="Sprite2D" parent="PlantCards/Card7/CardBg/CharacterStatic/Plant041GatlingPeaBastion" unique_id=1422708187]
 position = Vector2(2.6, -31.51)
 scale = Vector2(0.69, 0.69)
 texture = ExtResource("387_odne4")
@@ -1524,15 +1524,15 @@ sun_cost = 175
 [node name="CardBg" parent="PlantCards/Card8" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant057TallNutSigma" type="Node2D" parent="PlantCards/Card8/CardBg/CharacterStatic" index="0" unique_id=1224786756]
+[node name="Plant024TallNutSigma" type="Node2D" parent="PlantCards/Card8/CardBg/CharacterStatic" index="0" unique_id=1224786756]
 position = Vector2(1, 14)
 scale = Vector2(0.3, 0.3)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card8/CardBg/CharacterStatic/Plant057TallNutSigma" unique_id=1008717847]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card8/CardBg/CharacterStatic/Plant024TallNutSigma" unique_id=1008717847]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card8/CardBg/CharacterStatic/Plant057TallNutSigma" unique_id=1390533123]
+[node name="card" type="Sprite2D" parent="PlantCards/Card8/CardBg/CharacterStatic/Plant024TallNutSigma" unique_id=1390533123]
 position = Vector2(17.97, -47.27)
 scale = Vector2(0.91, 0.91)
 texture = ExtResource("387_aber1")
@@ -1573,15 +1573,15 @@ sun_cost = 125
 [node name="CardBg" parent="PlantCards/Card10" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant059JalapenoVendetta" type="Node2D" parent="PlantCards/Card10/CardBg/CharacterStatic" index="0" unique_id=413358892]
+[node name="Plant021JalapenoVendetta" type="Node2D" parent="PlantCards/Card10/CardBg/CharacterStatic" index="0" unique_id=413358892]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card10/CardBg/CharacterStatic/Plant059JalapenoVendetta" unique_id=398210056]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card10/CardBg/CharacterStatic/Plant021JalapenoVendetta" unique_id=398210056]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card10/CardBg/CharacterStatic/Plant059JalapenoVendetta" unique_id=103488855]
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card10/CardBg/CharacterStatic/Plant021JalapenoVendetta" unique_id=103488855]
 position = Vector2(1.34, -29.5)
 scale = Vector2(0.79, 0.79)
 texture = ExtResource("389_30d3l")
@@ -1598,11 +1598,11 @@ sun_cost = 300
 [node name="CardBg" parent="PlantCards/Card11" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant060MelonPultAshe" type="Node2D" parent="PlantCards/Card11/CardBg/CharacterStatic" index="0" unique_id=279462891]
+[node name="Plant040MelonPultAshe" type="Node2D" parent="PlantCards/Card11/CardBg/CharacterStatic" index="0" unique_id=279462891]
 position = Vector2(9, 14)
 scale = Vector2(0.45, 0.45)
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card11/CardBg/CharacterStatic/Plant060MelonPultAshe" unique_id=1365334563]
+[node name="card" type="Sprite2D" parent="PlantCards/Card11/CardBg/CharacterStatic/Plant040MelonPultAshe" unique_id=1365334563]
 position = Vector2(-18.36, -35.38)
 scale = Vector2(0.71, 0.71)
 texture = ExtResource("390_mlr8r")
@@ -1653,15 +1653,15 @@ sun_cost = 125
 [node name="CardBg" parent="PlantCards/Card13" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant062DoomShroomDVA" type="Node2D" parent="PlantCards/Card13/CardBg/CharacterStatic" index="0" unique_id=1515196970]
+[node name="Plant016DoomShroomDVA" type="Node2D" parent="PlantCards/Card13/CardBg/CharacterStatic" index="0" unique_id=1515196970]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card13/CardBg/CharacterStatic/Plant062DoomShroomDVA" unique_id=217656192]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card13/CardBg/CharacterStatic/Plant016DoomShroomDVA" unique_id=217656192]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Card" type="Sprite2D" parent="PlantCards/Card13/CardBg/CharacterStatic/Plant062DoomShroomDVA" unique_id=2144617128]
+[node name="Card" type="Sprite2D" parent="PlantCards/Card13/CardBg/CharacterStatic/Plant016DoomShroomDVA" unique_id=2144617128]
 position = Vector2(2.66, -28.9)
 scale = Vector2(0.68, 0.68)
 texture = ExtResource("388_junvc")
@@ -1676,15 +1676,15 @@ card_plant_type = 43
 cool_time = 50.0
 sun_cost = 150
 
-[node name="Plant063GloomShroomMoira" type="Node2D" parent="PlantCards/Card14/CardBg/CharacterStatic" index="0" unique_id=2057364492]
+[node name="Plant043GloomShroomMoira" type="Node2D" parent="PlantCards/Card14/CardBg/CharacterStatic" index="0" unique_id=2057364492]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant063GloomShroomMoira" unique_id=595449863]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant043GloomShroomMoira" unique_id=595449863]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant063GloomShroomMoira" unique_id=2125213594]
+[node name="card" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant043GloomShroomMoira" unique_id=2125213594]
 position = Vector2(0, -31.67)
 scale = Vector2(0.76, 0.76)
 texture = ExtResource("393_10mhf")
@@ -1702,11 +1702,11 @@ sun_cost = 0
 [node name="CardBg" parent="PlantCards/Card15" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant064SeaShroomWuyang" type="Node2D" parent="PlantCards/Card15/CardBg/CharacterStatic" index="0" unique_id=707833785]
+[node name="Plant025SeaShroomWuyang" type="Node2D" parent="PlantCards/Card15/CardBg/CharacterStatic" index="0" unique_id=707833785]
 position = Vector2(1, 8)
 scale = Vector2(0.5, 0.5)
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card15/CardBg/CharacterStatic/Plant064SeaShroomWuyang" unique_id=1567126280]
+[node name="card" type="Sprite2D" parent="PlantCards/Card15/CardBg/CharacterStatic/Plant025SeaShroomWuyang" unique_id=1567126280]
 position = Vector2(2.74, -10.22)
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("394_bh1la")
@@ -1723,15 +1723,15 @@ sun_cost = 75
 [node name="CardBg" parent="PlantCards/Card16" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant065FumeShroomRoadhog" type="Node2D" parent="PlantCards/Card16/CardBg/CharacterStatic" index="0" unique_id=1575096657]
+[node name="Plant011FumeShroomRoadhog" type="Node2D" parent="PlantCards/Card16/CardBg/CharacterStatic" index="0" unique_id=1575096657]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card16/CardBg/CharacterStatic/Plant065FumeShroomRoadhog" unique_id=777934674]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card16/CardBg/CharacterStatic/Plant011FumeShroomRoadhog" unique_id=777934674]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card16/CardBg/CharacterStatic/Plant065FumeShroomRoadhog" unique_id=1289890653]
+[node name="card" type="Sprite2D" parent="PlantCards/Card16/CardBg/CharacterStatic/Plant011FumeShroomRoadhog" unique_id=1289890653]
 position = Vector2(4.6, -24.43)
 scale = Vector2(0.77, 0.77)
 texture = ExtResource("388_vxcot")
@@ -1747,15 +1747,15 @@ card_plant_type = 32
 [node name="CardBg" parent="PlantCards/Card17" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant066MagnetShroomSombra" type="Node2D" parent="PlantCards/Card17/CardBg/CharacterStatic" index="0" unique_id=1973276448]
+[node name="Plant032MagnetShroomSombra" type="Node2D" parent="PlantCards/Card17/CardBg/CharacterStatic" index="0" unique_id=1973276448]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card17/CardBg/CharacterStatic/Plant066MagnetShroomSombra" unique_id=740100383]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card17/CardBg/CharacterStatic/Plant032MagnetShroomSombra" unique_id=740100383]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card17/CardBg/CharacterStatic/Plant066MagnetShroomSombra" unique_id=279160601]
+[node name="card" type="Sprite2D" parent="PlantCards/Card17/CardBg/CharacterStatic/Plant032MagnetShroomSombra" unique_id=279160601]
 position = Vector2(-0.81, -29.03)
 scale = Vector2(0.43, 0.43)
 texture = ExtResource("396_qpl0k")
@@ -1772,16 +1772,16 @@ sun_cost = 75
 [node name="CardBg" parent="PlantCards/Card18" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant067CoffeeBeanAna" type="Node2D" parent="PlantCards/Card18/CardBg/CharacterStatic" index="0" unique_id=1161247170]
+[node name="Plant036CoffeeBeanAna" type="Node2D" parent="PlantCards/Card18/CardBg/CharacterStatic" index="0" unique_id=1161247170]
 position = Vector2(1, 21)
 scale = Vector2(0.5, 0.5)
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card18/CardBg/CharacterStatic/Plant067CoffeeBeanAna" unique_id=2066411017]
+[node name="card" type="Sprite2D" parent="PlantCards/Card18/CardBg/CharacterStatic/Plant036CoffeeBeanAna" unique_id=2066411017]
 position = Vector2(6.53, -43.18)
 scale = Vector2(0.94, 0.94)
 texture = ExtResource("397_hnpw6")
 
-[node name="Hi" type="Sprite2D" parent="PlantCards/Card18/CardBg/CharacterStatic/Plant067CoffeeBeanAna" unique_id=1174486568]
+[node name="Hi" type="Sprite2D" parent="PlantCards/Card18/CardBg/CharacterStatic/Plant036CoffeeBeanAna" unique_id=1174486568]
 visible = false
 position = Vector2(0, -26.74)
 scale = Vector2(0.69, 0.69)
@@ -1799,15 +1799,15 @@ sun_cost = 25
 [node name="CardBg" parent="PlantCards/Card19" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="ScaredyShroomWidowmaker" type="Node2D" parent="PlantCards/Card19/CardBg/CharacterStatic" index="0" unique_id=358332812]
+[node name="Plant014ScaredyShroomWidowmaker" type="Node2D" parent="PlantCards/Card19/CardBg/CharacterStatic" index="0" unique_id=358332812]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/ScaredyShroomWidowmaker" unique_id=980005720]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/Plant014ScaredyShroomWidowmaker" unique_id=980005720]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="card" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/ScaredyShroomWidowmaker" unique_id=1690901821]
+[node name="card" type="Sprite2D" parent="PlantCards/Card19/CardBg/CharacterStatic/Plant014ScaredyShroomWidowmaker" unique_id=1690901821]
 position = Vector2(-2.23, -29.92)
 texture = ExtResource("389_knh0l")
 
@@ -1824,15 +1824,15 @@ sun_cost = 75
 [node name="CardBg" parent="PlantCards/Card20" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Plant069HypnoShroomJuno" type="Node2D" parent="PlantCards/Card20/CardBg/CharacterStatic" index="0" unique_id=14135683]
+[node name="Plant013HypnoShroomJuno" type="Node2D" parent="PlantCards/Card20/CardBg/CharacterStatic" index="0" unique_id=14135683]
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Shadow" type="Sprite2D" parent="PlantCards/Card20/CardBg/CharacterStatic/Plant069HypnoShroomJuno" unique_id=1206724896]
+[node name="Shadow" type="Sprite2D" parent="PlantCards/Card20/CardBg/CharacterStatic/Plant013HypnoShroomJuno" unique_id=1206724896]
 visible = false
 texture = ExtResource("98_ev02b")
 
-[node name="Card" type="Sprite2D" parent="PlantCards/Card20/CardBg/CharacterStatic/Plant069HypnoShroomJuno" unique_id=799997130]
+[node name="Card" type="Sprite2D" parent="PlantCards/Card20/CardBg/CharacterStatic/Plant013HypnoShroomJuno" unique_id=799997130]
 position = Vector2(1.49, -28.94)
 scale = Vector2(1.02, 1.02)
 texture = ExtResource("389_3fnx5")
@@ -7858,11 +7858,11 @@ sun_cost = 50
 [node name="CardBg" parent="ZombieCards/Card11" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Zombie501Norm" type="Node2D" parent="ZombieCards/Card11/CardBg/CharacterStatic" index="0" unique_id=1823686351]
+[node name="Zombie001NormTalon" type="Node2D" parent="ZombieCards/Card11/CardBg/CharacterStatic" index="0" unique_id=1823686351]
 position = Vector2(2, 17)
 scale = Vector2(0.3, 0.3)
 
-[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card11/CardBg/CharacterStatic/Zombie501Norm" unique_id=318479850]
+[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card11/CardBg/CharacterStatic/Zombie001NormTalon" unique_id=318479850]
 position = Vector2(-5.07, -50.14)
 scale = Vector2(0.31, 0.31)
 texture = ExtResource("423_7qkq4")
@@ -8270,7 +8270,7 @@ sun_cost = 75
 [node name="CardBg" parent="ZombieCards/Card13" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card13/CardBg/CharacterStatic" index="0" unique_id=1414293157]
+[node name="Zombie003ConeTalon" type="Sprite2D" parent="ZombieCards/Card13/CardBg/CharacterStatic" index="0" unique_id=1414293157]
 scale = Vector2(0.09, 0.09)
 texture = ExtResource("455_wwsoh")
 
@@ -8287,11 +8287,11 @@ sun_cost = 125
 [node name="CardBg" parent="ZombieCards/Card14" index="0"]
 texture = ExtResource("3_m4n4y")
 
-[node name="Zombie505Bucket" type="Node2D" parent="ZombieCards/Card14/CardBg/CharacterStatic" index="0" unique_id=1262853925]
+[node name="Zombie005BucketTalon" type="Node2D" parent="ZombieCards/Card14/CardBg/CharacterStatic" index="0" unique_id=1262853925]
 position = Vector2(2, 17)
 scale = Vector2(0.3, 0.3)
 
-[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card14/CardBg/CharacterStatic/Zombie505Bucket" unique_id=1002615767]
+[node name="Sprite2D" type="Sprite2D" parent="ZombieCards/Card14/CardBg/CharacterStatic/Zombie005BucketTalon" unique_id=1002615767]
 position = Vector2(-6.23, -57.48)
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("456_vgh2t")
@@ -10565,95 +10565,95 @@ card_zombie_type = 511
 cool_time = 0.0
 sun_cost = 50
 
-[node name="Zombie501Norm" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic" index="0" unique_id=1943351718]
+[node name="Zombie511Duckytube" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic" index="0" unique_id=1943351718]
 position = Vector2(2, 16)
 scale = Vector2(0.3, 0.3)
 
-[node name="Shadow" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm" unique_id=1362851305]
+[node name="Shadow" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube" unique_id=1362851305]
 visible = false
 position = Vector2(-7.62939e-06, 0)
 texture = ExtResource("98_ev02b")
 
-[node name="Body" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm" unique_id=782348644]
+[node name="Body" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube" unique_id=782348644]
 
-[node name="BodyCorrect" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body" unique_id=468223592]
+[node name="BodyCorrect" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body" unique_id=468223592]
 position = Vector2(-56, -116)
 
-[node name="_ground" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=2066419024]
+[node name="_ground" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=2066419024]
 visible = false
 position = Vector2(-9.8, 40)
 centered = false
 
-[node name="Anim_innerarm" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1799227459]
+[node name="Anim_innerarm" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1799227459]
 
-[node name="Anim_innerarm3" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_innerarm" unique_id=832982573]
+[node name="Anim_innerarm3" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_innerarm" unique_id=832982573]
 position = Vector2(24.4, 81.2)
 rotation = 6.181956
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_33")
 centered = false
 
-[node name="Anim_innerarm2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_innerarm" unique_id=1150369464]
+[node name="Anim_innerarm2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_innerarm" unique_id=1150369464]
 position = Vector2(23.8, 67.1)
 rotation = 6.181956
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_35")
 centered = false
 
-[node name="Anim_innerarm1" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_innerarm" unique_id=1718172486]
+[node name="Anim_innerarm1" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_innerarm" unique_id=1718172486]
 position = Vector2(23.9, 47.1)
 rotation = 6.181956
 texture = ExtResource("talon12_36")
 centered = false
 
-[node name="Zombie_flaghand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=191271737]
+[node name="Zombie_flaghand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=191271737]
 visible = false
 
-[node name="Zombie_flaghand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_flaghand" unique_id=1785343265]
+[node name="Zombie_flaghand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_flaghand" unique_id=1785343265]
 position = Vector2(-9.2, 50.1)
 rotation = 5.72468
 scale = Vector2(0.799, 0.799)
 texture = ExtResource("talon12_37")
 centered = false
 
-[node name="Zombie_flag" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1960551998]
+[node name="Zombie_flag" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1960551998]
 visible = false
 
-[node name="Zombie_flagpole" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_flag" unique_id=1147037568]
+[node name="Zombie_flagpole" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_flag" unique_id=1147037568]
 position = Vector2(5.14366, -6.54261)
 rotation = -0.609648
 texture = ExtResource("talon12_39")
 
-[node name="Zombie_flag" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_flag" unique_id=961547047]
+[node name="Zombie_flag" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_flag" unique_id=961547047]
 position = Vector2(7.14365, -6.54261)
 rotation = -0.609648
 texture = ExtResource("201_i5ktd")
 
-[node name="Zombie_innerarm_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1897238336]
+[node name="Zombie_innerarm_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1897238336]
 visible = false
 
-[node name="Zombie_innerarm_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_innerarm_screendoor" unique_id=730486429]
+[node name="Zombie_innerarm_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_innerarm_screendoor" unique_id=730486429]
 position = Vector2(1, 48.4)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_38")
 centered = false
 
-[node name="Zombie_neck" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=862264981]
+[node name="Zombie_neck" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=862264981]
 position = Vector2(29.4, 34)
 rotation = 0.001745
 scale = Vector2(0.838, 0.798)
 texture = ExtResource("talon12_40")
 centered = false
 
-[node name="Anim_head" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1046509024]
+[node name="Anim_head" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1046509024]
 
-[node name="Anim_head1" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_head" unique_id=1764914385]
+[node name="Anim_head1" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_head" unique_id=1764914385]
 position = Vector2(6.7, 8.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_41")
 centered = false
 
-[node name="ZombieSeaweed3" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_head/Anim_head1" unique_id=1935035679]
+[node name="ZombieSeaweed3" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_head/Anim_head1" unique_id=1935035679]
 visible = false
 position = Vector2(37.74846, 1.6264629)
 rotation = 3.4291744
@@ -10662,7 +10662,7 @@ skew = 0.258848
 texture = ExtResource("talon12_01")
 hframes = 4
 
-[node name="ZombieSeaweed2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_head/Anim_head1" unique_id=1446922358]
+[node name="ZombieSeaweed2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_head/Anim_head1" unique_id=1446922358]
 visible = false
 position = Vector2(11.63475, 39.863945)
 rotation = -0.0735175
@@ -10671,59 +10671,59 @@ texture = ExtResource("talon12_01")
 hframes = 4
 frame = 3
 
-[node name="leg" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1571106956]
+[node name="leg" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1571106956]
 
-[node name="Zombie_innerleg_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=1346480360]
+[node name="Zombie_innerleg_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=1346480360]
 position = Vector2(44.1, 76.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_02")
 centered = false
 
-[node name="Zombie_innerleg_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=1860272684]
+[node name="Zombie_innerleg_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=1860272684]
 position = Vector2(31.6, 90.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_03")
 centered = false
 
-[node name="Zombie_innerleg_foot" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=576165525]
+[node name="Zombie_innerleg_foot" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=576165525]
 position = Vector2(35.3, 105.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_04")
 centered = false
 
-[node name="Zombie_outerleg_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=1106755278]
+[node name="Zombie_outerleg_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=1106755278]
 position = Vector2(54.8, 67.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_06")
 centered = false
 
-[node name="Zombie_outerleg_foot" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=994829437]
+[node name="Zombie_outerleg_foot" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=994829437]
 position = Vector2(44.6, 109.3)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_07")
 centered = false
 
-[node name="Zombie_outerleg_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/leg" unique_id=1429752559]
+[node name="Zombie_outerleg_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/leg" unique_id=1429752559]
 position = Vector2(60.4, 93.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_09")
 centered = false
 
-[node name="Zombie_body" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=242162536]
+[node name="Zombie_body" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=242162536]
 position = Vector2(28.9, 33.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_11")
 centered = false
 
-[node name="Zombie_duckytube" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=2115185701]
+[node name="Zombie_duckytube" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=2115185701]
 
-[node name="Zombie_duckytube" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_duckytube" unique_id=1246910966]
+[node name="Zombie_duckytube" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_duckytube" unique_id=1246910966]
 position = Vector2(-0.1, 45.8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_16")
 centered = false
 
-[node name="ZombieSeaweed" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_duckytube/Zombie_duckytube" unique_id=1980690257]
+[node name="ZombieSeaweed" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_duckytube/Zombie_duckytube" unique_id=1980690257]
 visible = false
 position = Vector2(78.2833, 30.9555)
 rotation = -0.0735175
@@ -10731,7 +10731,7 @@ scale = Vector2(0.913, 0.631)
 texture = ExtResource("talon12_01")
 hframes = 4
 
-[node name="ZombieSeaweed2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_duckytube/Zombie_duckytube" unique_id=1264191760]
+[node name="ZombieSeaweed2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_duckytube/Zombie_duckytube" unique_id=1264191760]
 visible = false
 position = Vector2(35.2998, 39.1556)
 rotation = -0.0735175
@@ -10740,105 +10740,105 @@ texture = ExtResource("talon12_01")
 hframes = 4
 frame = 3
 
-[node name="Zombie_whitewater" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=498715337]
+[node name="Zombie_whitewater" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=498715337]
 
-[node name="Zombie_whitewater" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_whitewater" unique_id=1629378243]
+[node name="Zombie_whitewater" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_whitewater" unique_id=1629378243]
 visible = false
 position = Vector2(21.6, 80)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_19")
 centered = false
 
-[node name="Zombie_tie" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=991102368]
+[node name="Zombie_tie" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=991102368]
 
-[node name="Zombie_tie" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_tie" unique_id=796698696]
+[node name="Zombie_tie" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_tie" unique_id=796698696]
 position = Vector2(23.8, 50.9)
 rotation = 6.134832
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_13")
 centered = false
 
-[node name="Anim_head2" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1327340732]
+[node name="Anim_head2" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1327340732]
 
-[node name="Anim_head2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_head2" unique_id=832987431]
+[node name="Anim_head2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_head2" unique_id=832987431]
 position = Vector2(13.5, 40.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_15")
 centered = false
 
-[node name="Anim_tongue" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1225477662]
+[node name="Anim_tongue" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1225477662]
 
-[node name="Anim_tongue" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_tongue" unique_id=390368265]
+[node name="Anim_tongue" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_tongue" unique_id=390368265]
 position = Vector2(20.4, 43)
 rotation = 6.208136
 scale = Vector2(0.799, 0.673)
 texture = ExtResource("216_xlckl")
 centered = false
 
-[node name="Zombie_mustache" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1591385992]
+[node name="Zombie_mustache" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1591385992]
 visible = false
 
-[node name="Zombie_mustache" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_mustache" unique_id=1749501642]
+[node name="Zombie_mustache" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_mustache" unique_id=1749501642]
 position = Vector2(4.6, 31)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_18")
 centered = false
 
-[node name="Anim_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1404024458]
+[node name="Anim_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1404024458]
 visible = false
 
-[node name="Anim_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_screendoor" unique_id=1977501777]
+[node name="Anim_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_screendoor" unique_id=1977501777]
 position = Vector2(-2.2, 32.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_21")
 centered = false
 
-[node name="Zombie_innerarm_screendoor_hand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=843232003]
+[node name="Zombie_innerarm_screendoor_hand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=843232003]
 visible = false
 
-[node name="Zombie_innerarm_screendoor_hand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_innerarm_screendoor_hand" unique_id=278452962]
+[node name="Zombie_innerarm_screendoor_hand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_innerarm_screendoor_hand" unique_id=278452962]
 position = Vector2(-2.7, 48.6)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_22")
 centered = false
 
-[node name="Zombie_outerarm_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=963724921]
+[node name="Zombie_outerarm_screendoor" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=963724921]
 visible = false
 
-[node name="Zombie_outerarm_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_outerarm_screendoor" unique_id=679401529]
+[node name="Zombie_outerarm_screendoor" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_outerarm_screendoor" unique_id=679401529]
 position = Vector2(33, 44)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_23")
 centered = false
 
-[node name="Zombie_outerarm_hand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1902292266]
+[node name="Zombie_outerarm_hand" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1902292266]
 
-[node name="Zombie_outerarm_hand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_outerarm_hand" unique_id=1129034125]
+[node name="Zombie_outerarm_hand" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_outerarm_hand" unique_id=1129034125]
 position = Vector2(32.9, 83.1)
 rotation = 6.230825
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_25")
 centered = false
 
-[node name="Zombie_whitewater2" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1416948931]
+[node name="Zombie_whitewater2" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1416948931]
 
-[node name="Zombie_whitewater2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_whitewater2" unique_id=482767932]
+[node name="Zombie_whitewater2" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_whitewater2" unique_id=482767932]
 visible = false
 position = Vector2(21.6, 80)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_19")
 centered = false
 
-[node name="Zombie_outerarm_upper" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=910376458]
+[node name="Zombie_outerarm_upper" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=910376458]
 
-[node name="Zombie_outerarm_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_outerarm_upper" unique_id=1304688802]
+[node name="Zombie_outerarm_upper" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_outerarm_upper" unique_id=1304688802]
 position = Vector2(42.7, 42.5)
 rotation = 6.230825
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_26")
 centered = false
 
-[node name="ZombieSeaweed4" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper" unique_id=540961209]
+[node name="ZombieSeaweed4" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_outerarm_upper/Zombie_outerarm_upper" unique_id=540961209]
 visible = false
 position = Vector2(5.29361, 12.3143)
 rotation = -0.971483
@@ -10848,43 +10848,43 @@ texture = ExtResource("talon12_01")
 hframes = 4
 frame = 1
 
-[node name="Zombie_outerarm_lower" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=190826143]
+[node name="Zombie_outerarm_lower" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=190826143]
 
-[node name="Zombie_outerarm_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Zombie_outerarm_lower" unique_id=175177691]
+[node name="Zombie_outerarm_lower" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Zombie_outerarm_lower" unique_id=175177691]
 position = Vector2(36.3, 66)
 rotation = 6.230825
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_27")
 centered = false
 
-[node name="Anim_hair" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=1859476314]
+[node name="Anim_hair" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=1859476314]
 
-[node name="Anim_hair" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_hair" unique_id=260275529]
+[node name="Anim_hair" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_hair" unique_id=260275529]
 position = Vector2(2.6, 6.2)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_28")
 centered = false
 
-[node name="Anim_cone" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=832547918]
+[node name="Anim_cone" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=832547918]
 visible = false
 
-[node name="Anim_cone" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_cone" unique_id=959532681]
+[node name="Anim_cone" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_cone" unique_id=959532681]
 position = Vector2(13.1, -18.7)
 rotation = 0.087266
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_29")
 centered = false
 
-[node name="Anim_bucket" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect" unique_id=940406872]
+[node name="Anim_bucket" type="Node2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect" unique_id=940406872]
 visible = false
 
-[node name="Anim_bucket" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_bucket" unique_id=1313970124]
+[node name="Anim_bucket" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_bucket" unique_id=1313970124]
 position = Vector2(1.5, -8)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("talon12_30")
 centered = false
 
-[node name="ZombieSeaweed4" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie501Norm/Body/BodyCorrect/Anim_bucket/Anim_bucket" unique_id=1139784353]
+[node name="ZombieSeaweed4" type="Sprite2D" parent="ZombieCards2/Card11/CardBg/CharacterStatic/Zombie511Duckytube/Body/BodyCorrect/Anim_bucket/Anim_bucket" unique_id=1139784353]
 visible = false
 position = Vector2(45.716, 28.664928)
 rotation = -0.971483
