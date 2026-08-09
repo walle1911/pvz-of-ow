@@ -106,6 +106,8 @@ func _configure_moved_chessboard_levels() -> void:
 		button.activate_runtime_level(MOVED_CHESSBOARD_LEVELS[index])
 		button.get_node("TextureButton/Label").text = MOVED_CHESSBOARD_NAMES[index]
 		_configure_chessboard_cover(button, index)
+	for index in range(MOVED_CHESSBOARD_LEVELS.size(), empty_buttons.size()):
+		empty_buttons[index].visible = false
 
 
 func _configure_chessboard_cover(button: ChooseLevelButton, variant: int) -> void:

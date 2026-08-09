@@ -93,8 +93,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -1.0
-offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -103,14 +101,14 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -333.0
-offset_top = 123.0
-offset_right = 338.0
-offset_bottom = 508.0
+offset_left = -365.0
+offset_top = 99.0
+offset_right = 367.0
+offset_bottom = 568.0
 grow_horizontal = 2
-theme_override_constants/h_separation = 49
-theme_override_constants/v_separation = 20
-columns = 6
+theme_override_constants/h_separation = 53
+theme_override_constants/v_separation = 3
+columns = 5
 
 [node name="ChooseLevelButton" parent="AllPage/GridContainer" instance=ExtResource("4_gtn0x")]
 layout_mode = 2
