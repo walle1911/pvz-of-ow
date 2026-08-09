@@ -47,7 +47,8 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_snow_pea_mei.gd": {
 		"close_spray_distance": "distance", "close_spray_max_distance": "distance",
-		"close_spray_hits_to_freeze": "positive_int", "close_spray_freeze_time": "seconds",
+		"close_spray_freeze_chance": "probability", "close_spray_freeze_time": "seconds",
+		"close_spray_refreeze_cooldown": "seconds",
 	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_sea_shroom_wuyang.gd": {
 		"direct_attack_damage": "damage", "direct_attack_interval": "seconds",

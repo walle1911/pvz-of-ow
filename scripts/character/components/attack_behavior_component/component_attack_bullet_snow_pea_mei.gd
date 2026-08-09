@@ -8,10 +8,12 @@ class_name AttackComponentBulletSnowPeaMei
 @export_range(0.0, 2000.0, 1.0, "suffix:px") var close_spray_distance := 200.0
 ## 寒冰喷雾子弹的最大飞行距离。
 @export_range(0.0, 2000.0, 1.0, "suffix:px") var close_spray_max_distance := 200.0
-## 同一只僵尸累计受到多少次喷雾攻击后被冻结。
-@export_range(1, 100, 1) var close_spray_hits_to_freeze := 4
-## 达到所需命中次数后，僵尸被冻结的持续时间。
+## 每次近距离喷雾命中时触发冻结的概率。
+@export_range(0.0, 1.0, 0.01) var close_spray_freeze_chance := 0.35
+## 概率判定成功后，僵尸被冻结的持续时间。
 @export_range(0.0, 60.0, 0.1, "suffix:s") var close_spray_freeze_time := 3.0
+## 一次冻结触发后，同一只僵尸再次参与冻结判定前的冷却时间。
+@export_range(0.0, 60.0, 0.1, "suffix:s") var close_spray_refreeze_cooldown := 8.0
 @export var close_spray_bullet_type:BulletRegistry.BulletType = BulletRegistry.BulletType.Bullet017SnowFume
 
 
@@ -29,8 +31,9 @@ func _shoot_bullet():
 		_mark_bullet_source_for_recording(bullet)
 		if bullet is Bullet017SnowFume:
 			bullet.max_distance = close_spray_max_distance
-			bullet.hits_to_freeze = close_spray_hits_to_freeze
+			bullet.freeze_chance = close_spray_freeze_chance
 			bullet.freeze_time = close_spray_freeze_time
+			bullet.refreeze_cooldown = close_spray_refreeze_cooldown
 
 		var bullet_paras = get_bullet_paras(
 			markers_2d_bullet[i].global_position,
