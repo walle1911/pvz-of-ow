@@ -234,6 +234,9 @@ func start_loot_pot():
 	## 如果还没有角色虚影，初始化角色虚影
 	if character_static == null:
 		character_static_init()
+	if character_static == null:
+		push_warning("罐子中的角色没有可用卡牌预览，已保持罐子遮挡")
+		return
 	is_can_loot_pot = true
 	scary_pot_front.visible = false
 	character_static.visible = true
@@ -255,10 +258,17 @@ func end_loot_pot():
 func character_static_init():
 	## 固定随机结果
 	if is_fixed_res:
+		var card_prefab: Card
 		if curr_plant_type != CharacterRegistry.PlantType.Null:
-			character_static = AllCards.all_plant_card_prefabs[curr_plant_type].character_static.duplicate()
+			if AllCards.all_plant_card_prefabs.has(curr_plant_type):
+				card_prefab = AllCards.all_plant_card_prefabs[curr_plant_type]
 		elif curr_zombie_type != CharacterRegistry.ZombieType.Null:
-			character_static = AllCards.all_zombie_card_prefabs[curr_zombie_type].character_static.duplicate()
+			if AllCards.all_zombie_card_prefabs.has(curr_zombie_type):
+				card_prefab = AllCards.all_zombie_card_prefabs[curr_zombie_type]
+		if card_prefab == null:
+			push_warning("无法为固定罐子创建角色预览，植物=%s，僵尸=%s" % [curr_plant_type, curr_zombie_type])
+			return
+		character_static = card_prefab.character_static.duplicate()
 		character_container.add_child(character_static)
 		character_static.position = Vector2(0,0)
 	else:
@@ -277,8 +287,11 @@ func character_static_init():
 func update_res_random_character_static():
 	match pot_type:
 		E_PotType.Random:
-			var p_plant_zombie:=randf()
-			if p_plant_zombie <=0.5:
+			if all_plant_character_statics.is_empty() and all_zombie_character_statics.is_empty():
+				return
+			var choose_plant := all_zombie_character_statics.is_empty() \
+				or (not all_plant_character_statics.is_empty() and randf() <= 0.5)
+			if choose_plant:
 				curr_plant_type = all_plant_character_statics.keys().pick_random()
 				curr_zombie_type = CharacterRegistry.ZombieType.Null
 				character_static = all_plant_character_statics[curr_plant_type]
@@ -287,15 +300,22 @@ func update_res_random_character_static():
 				curr_zombie_type = all_zombie_character_statics.keys().pick_random()
 				character_static = all_zombie_character_statics[curr_zombie_type]
 		E_PotType.Plant:
+			if all_plant_character_statics.is_empty():
+				return
 			curr_plant_type = all_plant_character_statics.keys().pick_random()
 			character_static = all_plant_character_statics[curr_plant_type]
 		E_PotType.Zombie:
+			if all_zombie_character_statics.is_empty():
+				return
 			curr_zombie_type = all_zombie_character_statics.keys().pick_random()
 			character_static = all_zombie_character_statics[curr_zombie_type]
 
 ## 结果随机罐子初始化植物虚影
 func character_static_init_res_random_plant():
 	for plant_type:CharacterRegistry.PlantType in Global.global_read_data.whitelist_plant_types_with_pot:
+		if not AllCards.all_plant_card_prefabs.has(plant_type):
+			push_warning("随机罐子跳过缺少卡牌预览的植物: %s" % plant_type)
+			continue
 		all_plant_character_statics[plant_type] = AllCards.all_plant_card_prefabs[plant_type].character_static.duplicate()
 		character_container.add_child(all_plant_character_statics[plant_type])
 		all_plant_character_statics[plant_type].position = Vector2(0,0)
@@ -306,6 +326,9 @@ func character_static_init_res_random_zombie():
 	var curr_zomebi_row_type:CharacterRegistry.ZombieRowType = Global.main_game.zombie_manager.all_zombie_rows[plant_cell.row_col.x].zombie_row_type
 	## 从白名单生成所有的僵尸虚影
 	for zombie_type:CharacterRegistry.ZombieType in Global.global_read_data.whitelist_refresh_zombie_types_with_zombie_row_type[curr_zomebi_row_type]:
+		if not AllCards.all_zombie_card_prefabs.has(zombie_type):
+			push_warning("随机罐子跳过缺少卡牌预览的僵尸: %s" % zombie_type)
+			continue
 		all_zombie_character_statics[zombie_type] = AllCards.all_zombie_card_prefabs[zombie_type].character_static.duplicate()
 		character_container.add_child(all_zombie_character_statics[zombie_type])
 		all_zombie_character_statics[zombie_type].position = Vector2(0,0)

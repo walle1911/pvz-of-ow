@@ -118,6 +118,7 @@ const LEGACY_PLANT_TYPE_MAP := {
 	46: CharacterRegistry.PlantType.P545GoldMagnet,
 	47: CharacterRegistry.PlantType.P546SpikeRock,
 	48: CharacterRegistry.PlantType.P547CobCannon,
+	49: CharacterRegistry.PlantType.P549PeaShooterDoubleReverse,
 	52: CharacterRegistry.PlantType.P002SunflowerMercy,
 	53: CharacterRegistry.PlantType.P003CherryBombJunkrat,
 	54: CharacterRegistry.PlantType.P018SquashDoomfist,
