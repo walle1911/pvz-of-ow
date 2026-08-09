@@ -22,15 +22,26 @@ var _hair_default_material: Material
 var _hair_clip_active := false
 var _hair_saved_use_parent_material: bool
 
-## “打地鼠”模式专用：沿格子掘进；旋转出土期间一锤死，完全落地后三锤死。
+## “打地鼠”模式专用：默认从右向左钻地；鼠标压住时逃跑，移开后出土。
 var is_hammer_grid_mode := false
 var _hammer_route_running := false
 var _hammer_is_emerging := false
+var _hammer_has_escaped_mouse := false
+var _hammer_escape_steps_left := 0
+var _hammer_grid_steps_traveled := 0
+var _hammer_mouse_clear_elapsed := 0.0
 var _hammer_hit_count := 0
 var _hammer_anim_speed_before_emerge := 0.8
-const HAMMER_HITS_TO_KILL := 3
-const HAMMER_GRID_STEP_TIME := 0.42
-const HAMMER_EMERGE_ANIM_SPEED_MULTIPLIER := 1.75
+var _hammer_emerge_speed_boost_active := false
+const HAMMER_EMERGING_HITS_TO_KILL := 1
+const HAMMER_EMERGED_HITS_TO_KILL := 5
+const HAMMER_ESCAPE_STEP_TIME := 0.24
+const HAMMER_MOUSE_TRIGGER_RADIUS := 110.0
+const HAMMER_ESCAPE_STEPS_RANGE := Vector2i(1, 3)
+const HAMMER_MOUSE_CLEAR_TIME := 1.0
+const HAMMER_MAX_GRID_STEPS := 15
+const HAMMER_EMERGE_SPEED_FACTOR := 0.7
+const HAMMER_EMERGE_ANIM_SPEED_MULTIPLIER := 1.75 * HAMMER_EMERGE_SPEED_FACTOR
 
 
 ## 是否可以触发小推车 只有掘土状态下失去铁器道具的矿工可以触发
@@ -61,6 +72,7 @@ func ready_norm_signal_connect():
 
 	## 死亡时掘土结束
 	hp_component.signal_hp_component_death.connect(dig_end)
+	hp_component.signal_hp_component_death.connect(_stop_hammer_grid_movement_on_death)
 
 ## 每帧判断是否到达最后一格
 func _process(_delta: float) -> void:
@@ -82,10 +94,10 @@ func _process(_delta: float) -> void:
 ## 必须在角色加入场景树前调用，使 ready_norm 能停用原本从右向左的连续移动。
 func enable_hammer_grid_mode() -> void:
 	is_hammer_grid_mode = true
-	## 保留 Zombie_digger_up 旋转分支；动画末帧的 dig_up_end 是完全落地的权威时点。
+	## 保留 Zombie_digger_up 旋转分支；身体上升 Tween 结束是完全出土的权威时点。
 	is_norm_end = true
 
-## 从最右格开始，在相邻格之间随机掘进；路径至少包含横向和纵向移动。
+## 从最右格开始向左钻；被鼠标压住时改为向远离鼠标的相邻格逃跑。
 func start_hammer_grid_route(start_cell_pos:Vector2i) -> void:
 	if not is_hammer_grid_mode or _hammer_route_running:
 		return
@@ -97,48 +109,119 @@ func _run_hammer_grid_route(start_cell_pos:Vector2i) -> void:
 	if not is_instance_valid(Global.main_game) or is_death:
 		return
 
-	var route := _build_hammer_grid_route(start_cell_pos)
-	for next_cell_pos in route:
+	var current_cell_pos := start_cell_pos
+	var previous_cell_pos := Vector2i(-1, -1)
+	while is_dig:
 		if is_death or not is_dig:
 			return
+
+		var mouse_is_over := _is_mouse_over_digger()
+		if mouse_is_over:
+			_hammer_mouse_clear_elapsed = 0.0
+		if mouse_is_over and _hammer_escape_steps_left == 0:
+			_hammer_has_escaped_mouse = true
+			_hammer_escape_steps_left = randi_range(HAMMER_ESCAPE_STEPS_RANGE.x, HAMMER_ESCAPE_STEPS_RANGE.y)
+
+		var is_escaping := _hammer_escape_steps_left > 0
+		var next_cell_pos:Vector2i
+		var step_time := 0.0
+		if is_escaping:
+			next_cell_pos = _choose_hammer_escape_cell(current_cell_pos, previous_cell_pos)
+			step_time = HAMMER_ESCAPE_STEP_TIME
+		else:
+			## 无论是否躲避过鼠标，非逃跑阶段都恢复普通模式的从右向左钻行。
+			next_cell_pos = current_cell_pos + Vector2i(0, -1)
+			if not _hammer_grid_neighbors(current_cell_pos).has(next_cell_pos):
+				## 抵达当前移动方向的边界时出土；被追赶过仍需确认鼠标持续远离。
+				if _hammer_has_escaped_mouse and not await _wait_for_mouse_clear_before_emerge():
+					continue
+				dig_end()
+				return
+
+		if next_cell_pos.x < 0:
+			await get_tree().create_timer(0.1, false).timeout
+			continue
 		_update_hammer_grid_lane(next_cell_pos.x)
 		var plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[next_cell_pos.x][next_cell_pos.y]
 		var target_pos := Vector2(
 			plant_cell.global_position.x + plant_cell.size.x * 0.5,
 			Global.main_game.zombie_manager.all_zombie_rows[next_cell_pos.x].zombie_create_position.global_position.y
 		)
-		var tween := create_tween()
-		tween.tween_property(self, ^"global_position", target_pos, HAMMER_GRID_STEP_TIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		await tween.finished
-
-	if is_death or not is_dig:
-		return
-	await get_tree().create_timer(0.35, false).timeout
-	if not is_death:
-		dig_end()
-
-func _build_hammer_grid_route(start_cell_pos:Vector2i) -> Array[Vector2i]:
-	var route:Array[Vector2i] = []
-	var current := start_cell_pos
-	var previous := Vector2i(-1, -1)
-	var step_count := randi_range(5, 8)
-	for step_i in range(step_count):
-		var candidates := _hammer_grid_neighbors(current)
-		if candidates.size() > 1:
-			candidates.erase(previous)
-		## 第一段强制横向进入草坪，第二段优先纵向，让上下移动稳定可见。
-		var next_pos:Vector2i
-		if step_i == 0 and current.y > 0:
-			next_pos = current + Vector2i(0, -1)
-		elif step_i == 1:
-			var vertical_candidates := candidates.filter(func(pos:Vector2i): return pos.x != current.x)
-			next_pos = vertical_candidates.pick_random() if not vertical_candidates.is_empty() else candidates.pick_random()
+		if is_escaping:
+			var tween := create_tween()
+			tween.tween_property(self, ^"global_position", target_pos, step_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			await tween.finished
 		else:
-			next_pos = candidates.pick_random()
-		previous = current
-		current = next_pos
-		route.append(current)
-	return route
+			## 普通钻地逐帧沿用 MoveComponent 当前速度，以便鼠标靠近时立即中断并加速逃跑。
+			if not await _move_normally_until_target_or_mouse(target_pos):
+				continue
+		previous_cell_pos = current_cell_pos
+		current_cell_pos = next_cell_pos
+		if is_escaping:
+			_hammer_escape_steps_left -= 1
+		_hammer_grid_steps_traveled += 1
+		if _hammer_grid_steps_traveled >= HAMMER_MAX_GRID_STEPS:
+			dig_end()
+			return
+
+func _move_normally_until_target_or_mouse(target_pos:Vector2) -> bool:
+	while global_position.distance_to(target_pos) > 0.5:
+		if _is_mouse_over_digger():
+			_hammer_mouse_clear_elapsed = 0.0
+			return false
+		await get_tree().process_frame
+		var delta := get_process_delta_time()
+		var move_distance := maxf(move_component.curr_speed, 1.0) * delta
+		global_position = global_position.move_toward(target_pos, move_distance)
+		if _hammer_has_escaped_mouse:
+			_hammer_mouse_clear_elapsed += delta
+			if _hammer_mouse_clear_elapsed >= HAMMER_MOUSE_CLEAR_TIME:
+				dig_end()
+				return false
+	return true
+
+func _is_mouse_over_digger() -> bool:
+	return zombie_digger_dig.global_position.distance_to(get_global_mouse_position()) <= HAMMER_MOUSE_TRIGGER_RADIUS
+
+## 鼠标必须连续远离一段时间；期间重新靠近会取消本次出土并继续逃跑。
+func _wait_for_mouse_clear_before_emerge() -> bool:
+	while _hammer_mouse_clear_elapsed < HAMMER_MOUSE_CLEAR_TIME:
+		if is_death or not is_dig:
+			return false
+		if _is_mouse_over_digger():
+			_hammer_mouse_clear_elapsed = 0.0
+			return false
+		await get_tree().process_frame
+		_hammer_mouse_clear_elapsed += get_process_delta_time()
+	return true
+
+func _stop_hammer_grid_movement_on_death() -> void:
+	if not is_hammer_grid_mode:
+		return
+	_hammer_route_running = false
+	move_component.disable_component(ComponentNormBase.E_IsEnableFactor.Death)
+
+## 每走一格都重新读取鼠标位置，优先选择离锤子最远的相邻格。
+func _choose_hammer_escape_cell(current:Vector2i, previous:Vector2i) -> Vector2i:
+	var candidates := _hammer_grid_neighbors(current)
+	if candidates.is_empty():
+		return Vector2i(-1, -1)
+	if candidates.size() > 1:
+		candidates.erase(previous)
+
+	var mouse_pos := get_global_mouse_position()
+	var farthest_cells:Array[Vector2i] = []
+	var farthest_distance_squared := -1.0
+	for candidate in candidates:
+		var plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[candidate.x][candidate.y]
+		var cell_center := plant_cell.global_position + plant_cell.size * 0.5
+		var distance_squared := cell_center.distance_squared_to(mouse_pos)
+		if distance_squared > farthest_distance_squared + 0.01:
+			farthest_distance_squared = distance_squared
+			farthest_cells.assign([candidate])
+		elif is_equal_approx(distance_squared, farthest_distance_squared):
+			farthest_cells.append(candidate)
+	return farthest_cells.pick_random()
 
 func _hammer_grid_neighbors(cell_pos:Vector2i) -> Array[Vector2i]:
 	var neighbors:Array[Vector2i] = []
@@ -163,18 +246,19 @@ func _update_hammer_grid_lane(new_lane:int) -> void:
 	signal_lane_update.emit()
 	reparent(Global.main_game.zombie_manager.all_zombie_rows[lane], true)
 
-## 普通关卡保持原锤击逻辑；旋转出土期一锤死，完全落地后第三锤死。
+## 普通关卡保持原锤击逻辑；地下不可锤，仅旋转出土期一锤死，完全出土后第五锤死。
 func be_attacked_hammer(attack_value:int):
 	if not is_hammer_grid_mode:
 		return super(attack_value)
 	if is_dig or is_death:
 		return hp_component.is_death
 	if _hammer_is_emerging:
-		hp_component.Hp_loss(hp_component.get_all_hp(), BulletRegistry.AttackMode.Norm, true, true)
-		body.body_light()
-		return hp_component.is_death
+		return _apply_hammer_grid_hit(HAMMER_EMERGING_HITS_TO_KILL)
+	return _apply_hammer_grid_hit(HAMMER_EMERGED_HITS_TO_KILL)
+
+func _apply_hammer_grid_hit(hits_to_kill:int) -> bool:
 	_hammer_hit_count += 1
-	var hits_left := HAMMER_HITS_TO_KILL - _hammer_hit_count
+	var hits_left := hits_to_kill - _hammer_hit_count
 	var damage:int = hp_component.get_all_hp()
 	if hits_left > 0:
 		damage = ceili(float(damage) / float(hits_left + 1))
@@ -209,11 +293,17 @@ func dig_end():
 			var animation_tree := (anim_component as AnimComponentNorm).animation_tree
 			_hammer_anim_speed_before_emerge = animation_tree.get(&"parameters/TimeScale/scale")
 			anim_component.update_anim_speed_scale(_hammer_anim_speed_before_emerge * HAMMER_EMERGE_ANIM_SPEED_MULTIPLIER)
+			_hammer_emerge_speed_boost_active = true
 		is_dig = false
 		_reset_hair_clip()
 		move_component.update_move_mode(MoveComponent.E_MoveMode.Ground)
-		await zombie_up_from_ground()
+		## 出土动画和身体上升同步按当前速度降低 30%。
+		await zombie_up_from_ground(1.0 / HAMMER_EMERGE_SPEED_FACTOR if is_hammer_grid_mode else 1.0)
 		is_up_end = true
+		## 身体完全露出即结束一锤阶段；后续原地眩晕仍属于完全出土，按五锤计数。
+		if is_hammer_grid_mode and _hammer_is_emerging:
+			_hammer_is_emerging = false
+			_hammer_hit_count = 0
 
 
 ## 失去铁器道具
@@ -235,6 +325,10 @@ func loss_iron_item():
 ## 绝地结束出土结束(动画调用)
 func dig_up_end():
 	attack_component.enable_component(ComponentNormBase.E_IsEnableFactor.DownGround)
-	if is_hammer_grid_mode and _hammer_is_emerging:
+	if is_hammer_grid_mode:
 		_hammer_is_emerging = false
+		## 地下格子路线曾以 GameMode 因子禁用普通位移；眩晕/出土动画结束后恢复行走。
+		move_component.enable_component(ComponentNormBase.E_IsEnableFactor.GameMode)
+	if is_hammer_grid_mode and _hammer_emerge_speed_boost_active:
+		_hammer_emerge_speed_boost_active = false
 		anim_component.update_anim_speed_scale(_hammer_anim_speed_before_emerge)

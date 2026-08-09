@@ -171,7 +171,7 @@ layout_mode = 2
 curr_level_data_game_para = ExtResource("5_mrsyh")
 
 [node name="Label" parent="AllPage/GridContainer/ChooseLevelButton/TextureButton" index="0"]
-text = "小小破坏球"
+text = "小小哈蒙德"
 
 [node name="Panel" type="Panel" parent="AllPage/GridContainer/ChooseLevelButton"]
 clip_children = 1

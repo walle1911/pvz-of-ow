@@ -14,6 +14,7 @@ class_name Hammer
 @export var sun_value := 25
 ## 锤子是否正在使用
 var is_used := false
+var _mouse_inside_window := true
 
 func _ready() -> void:
 	EventBus.subscribe("main_game_progress_update", _on_main_game_progress_update)
@@ -29,15 +30,32 @@ func _on_main_game_progress_update(curr_main_game_progress:MainGameManager.E_Mai
 @warning_ignore("unused_parameter")
 func _process(delta):
 	if is_used:
+		## 其他 UI 的 mouse_exited 回调也可能隐藏鼠标；离开窗口后在这里确保系统鼠标可见。
+		if not _mouse_inside_window:
+			if Input.mouse_mode != Input.MOUSE_MODE_VISIBLE:
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			return
 		# 跟随鼠标移动
 		position = get_global_mouse_position()
 
 func set_is_used(value):
 	is_used = value
-	if is_used:
-		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	_update_system_cursor_visibility()
+
+func _notification(what:int) -> void:
+	match what:
+		NOTIFICATION_WM_MOUSE_ENTER:
+			_mouse_inside_window = true
+			_update_system_cursor_visibility.call_deferred()
+		NOTIFICATION_WM_MOUSE_EXIT:
+			_mouse_inside_window = false
+			_update_system_cursor_visibility.call_deferred()
+		NOTIFICATION_APPLICATION_FOCUS_IN, NOTIFICATION_APPLICATION_FOCUS_OUT:
+			_update_system_cursor_visibility.call_deferred()
+
+func _update_system_cursor_visibility() -> void:
+	var should_hide := is_used and _mouse_inside_window and get_window().has_focus()
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN if should_hide else Input.MOUSE_MODE_VISIBLE)
 
 
 func _input(event):
@@ -118,4 +136,3 @@ func hammer_zombie():
 	get_parent().add_child(new_pow)
 	await get_tree().create_timer(0.5).timeout
 	new_pow.queue_free()
-

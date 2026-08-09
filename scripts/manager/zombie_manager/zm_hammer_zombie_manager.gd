@@ -55,7 +55,7 @@ var speed_zombie_max := 2.0
 
 ## 探奇矿工不经过墓碑，直接在地下沿草坪格移动。
 const VENTURE_DIGGER_START_WAVE := 0
-const VENTURE_DIGGER_SPAWN_CHANCE := 0.30
+const VENTURE_DIGGER_SPAWN_CHANCE := 0.25
 
 
 ## 波次刷新信号,给zombie_manager,删除魅惑僵尸，更新是否为最后一波
