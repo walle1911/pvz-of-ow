@@ -257,6 +257,7 @@ script_list_meta = {
 "res://scripts/choose_level/choose_level.gd": [-1, -1],
 "res://scripts/choose_level/choose_level_button.gd": [-1, -1],
 "res://scripts/choose_level/choose_level_button_customize.gd": [-1, -1],
+"res://scripts/choose_level/hammer_venture_cover.gd": [-1, -1],
 "res://scripts/consts/const_level_data.gd": [-1, -1],
 "res://scripts/crazy_dave/crazy_dave.gd": [-1, -1],
 "res://scripts/crazy_dave/crazy_dave_panel.gd": [-1, -1],

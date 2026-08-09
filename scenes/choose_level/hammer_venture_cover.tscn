@@ -1,0 +1,113 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" uid="uid://8iu8x6e6ci80" path="res://scenes/character/zombie/zombie_018_digger_zombie_venture.tscn" id="1_venture"]
+[ext_resource type="Script" path="res://scripts/choose_level/hammer_venture_cover.gd" id="2_cover_script"]
+[ext_resource type="Texture2D" uid="uid://bqtnl31pv3rv3" path="res://assets/reanim/Hammer_3.png" id="3_hammer3"]
+[ext_resource type="Texture2D" uid="uid://qtifu6lsmq6x" path="res://assets/reanim/hammer_1.png" id="4_hammer1"]
+[ext_resource type="Texture2D" uid="uid://dweon5ml8otw5" path="res://assets/reanim/Hammer_2.png" id="5_hammer2"]
+[ext_resource type="Texture2D" uid="uid://uh50cdkqdl67" path="res://assets/image/background/background1.jpg" id="6_actual_lawn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_actual_lawn"]
+atlas = ExtResource("6_actual_lawn")
+region = Rect2(326, 171, 336, 303)
+
+[sub_resource type="Animation" id="Animation_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Hammer:position")
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(52, 18)]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hammer:rotation")
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.55]
+}
+
+[sub_resource type="Animation" id="Animation_dodge"]
+resource_name = "HammerSwing"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath("Hammer:position")
+tracks/0/interp = 1
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.42, 0.58, 1.2),
+"transitions": PackedFloat32Array(0.7, 0.35, 0.65, 0.7),
+"update": 0,
+"values": [Vector2(52, 18), Vector2(48, 23), Vector2(52, 18), Vector2(52, 18)]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hammer:rotation")
+tracks/1/interp = 1
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.42, 0.58, 1.2),
+"transitions": PackedFloat32Array(0.7, 0.25, 0.65, 0.7),
+"update": 0,
+"values": [-0.55, 0.42, -0.55, -0.55]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cover"]
+_data = {
+&"HammerSwing": SubResource("Animation_dodge"),
+&"RESET": SubResource("Animation_reset")
+}
+
+[node name="HammerVentureCover" type="Node2D"]
+script = ExtResource("2_cover_script")
+
+[node name="ActualLawnCells" type="Sprite2D" parent="."]
+position = Vector2(2, 5)
+scale = Vector2(0.25, 0.191419)
+texture = SubResource("AtlasTexture_actual_lawn")
+centered = false
+
+[node name="DiggerAnchor" type="Node2D" parent="."]
+position = Vector2(37, 35)
+z_index = 1
+
+[node name="DiggerZombie" parent="DiggerAnchor" instance=ExtResource("1_venture")]
+scale = Vector2(0.24, 0.24)
+character_init_type = 1
+
+[node name="Hammer" type="Node2D" parent="."]
+position = Vector2(52, 18)
+rotation = -0.55
+scale = Vector2(0.31, 0.31)
+z_index = 2
+
+[node name="Body" type="Node2D" parent="Hammer"]
+position = Vector2(-62, -11)
+
+[node name="Hammer_3" type="Sprite2D" parent="Hammer/Body"]
+position = Vector2(57.9, -19.3)
+rotation = 1.11527
+scale = Vector2(0.797, 0.797)
+texture = ExtResource("3_hammer3")
+centered = false
+
+[node name="Hammer_2" type="Sprite2D" parent="Hammer/Body"]
+position = Vector2(74.6, -29.3)
+rotation = 1.11527
+scale = Vector2(0.797, 0.797)
+texture = ExtResource("4_hammer1")
+centered = false
+
+[node name="Hammer1" type="Sprite2D" parent="Hammer/Body"]
+position = Vector2(65.3, 4.1)
+rotation = 1.11527
+scale = Vector2(0.797, 0.797)
+texture = ExtResource("5_hammer2")
+centered = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_cover")
+}
+autoplay = "HammerSwing"
