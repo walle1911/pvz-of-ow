@@ -12,7 +12,7 @@ func _run() -> void:
 	add_child(workshop)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var potato_mine := int(CharacterRegistry.PlantType.P504PotatoMine)
+	var potato_mine := int(CharacterRegistry.PlantType.P505PotatoMine)
 
 	workshop.call("_load_preset_for_edit", "adventure_1_9")
 	var source_holder := workshop.call("_make_reward_card", {"id": potato_mine, "is_plant": true}) as Control

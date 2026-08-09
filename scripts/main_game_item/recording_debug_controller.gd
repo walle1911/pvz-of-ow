@@ -18,10 +18,10 @@ const TOTAL_FREEZE_GROUPS := 6
 const GROUP_SYNC_INTERVAL := 0.1
 const TALON_WAVE_SPAWN_INTERVAL_RANGE := Vector2(0.3, 0.65)
 const TALON_WAVE_ZOMBIE_TYPES: Array[CharacterRegistry.ZombieType] = [
-	CharacterRegistry.ZombieType.Z000NormTalon,
-	CharacterRegistry.ZombieType.Z002ConeTalon,
-	CharacterRegistry.ZombieType.Z001FlagTalon,
-	CharacterRegistry.ZombieType.Z004BucketTalon,
+	CharacterRegistry.ZombieType.Z001NormTalon,
+	CharacterRegistry.ZombieType.Z003ConeTalon,
+	CharacterRegistry.ZombieType.Z002FlagTalon,
+	CharacterRegistry.ZombieType.Z005BucketTalon,
 ]
 const FROZEN_DESATURATION := 0.8
 const FROZEN_BRIGHTNESS := 0.9
@@ -2206,7 +2206,7 @@ func _add_zombie_during_freeze() -> void:
 	)
 	var zombie_row: ZombieRow = main_game.zombie_manager.all_zombie_rows[lane]
 	var plant_cell: PlantCell = cells[lane][col]
-	if not plant_cell.can_common_zombie and zombie_type != CharacterRegistry.ZombieType.Z520Bungi:
+	if not plant_cell.can_common_zombie and zombie_type != CharacterRegistry.ZombieType.Z521Bungi:
 		_feedback("第 %d 行第 %d 列不能放置普通僵尸。" % [lane + 1, col + 1])
 		return
 	if required_row_type != CharacterRegistry.ZombieRowType.Both and required_row_type != zombie_row.zombie_row_type:

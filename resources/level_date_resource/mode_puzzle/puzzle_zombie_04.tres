@@ -13,16 +13,16 @@ is_lawn_mover = false
 look_show_zombie = false
 can_choosed_card = false
 monster_mode = 0
-zombie_refresh_types = Array[int]([500, 502, 503, 504, 505, 506, 507, 508])
+zombie_refresh_types = Array[int]([501, 503, 504, 505, 506, 507, 508, 509])
 start_sun = 300
-pre_choosed_card_list_zombie = Array[int]([500, 503, 517])
+pre_choosed_card_list_zombie = Array[int]([501, 504, 518])
 is_zombie_mode = true
 all_plants_weight_on_zombie_mode = Dictionary[int, int]({
-500: 1,
 501: 1,
-504: 1,
-522: 1,
-528: 1
+502: 1,
+505: 1,
+523: 1,
+529: 1
 })
 is_bowling_stripe = true
 plant_cell_col_j = 3

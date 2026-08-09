@@ -11,7 +11,7 @@ func _ready() -> void:
 
 
 func _run() -> void:
-	var plant_type := int(CharacterRegistry.PlantType.P504PotatoMine)
+	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
 	var source_dir := "res://data/adventure_levels"
 	## 回归直接进入 2-1 的路径：限定卡不依赖奖励存档，只由目标关卡主动投放。
 	var direct_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))

@@ -6,12 +6,12 @@ const AdventurePresets := preload("res://scripts/resources/level/adventure_level
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 
 const ZOMBIE_TYPE_IDS := {
-	"normal": 500,
-	"conehead": 502,
-	"buckethead": 504,
-	"football": 507,
-	"digger": 517,
-	"gargantuar": 523,
+	"normal": 501,
+	"conehead": 503,
+	"buckethead": 505,
+	"football": 508,
+	"digger": 518,
+	"gargantuar": 524,
 }
 
 ## 把工坊 JSON 转为主游戏现有的 ResourceLevelData，并生成逐阶段的相对刷怪计划。
@@ -59,7 +59,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	var schedule: Array[Dictionary] = []
 	var active_rows := _active_lawn_rows(level)
 	for event in source_schedule:
-		var zombie_type := _zombie_type_id(event.get("zombieType", "500"))
+		var zombie_type := _zombie_type_id(event.get("zombieType", "501"))
 		if not CharacterRegistry.ZombieInfo.has(zombie_type):
 			return _failure(level, "僵尸类型 %d 未在角色注册表中登记" % zombie_type)
 		if workshop_mode == "normal" and zombie_type <= 0:
@@ -106,7 +106,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		float((level.get("mapConfig", {}) as Dictionary).get("columns", 9))
 	)
 	if str(level.get("formalPresetId", "")) == "adventure_1_1":
-		game_para.opening_battlefield_zombie_type = CharacterRegistry.ZombieType.Z500Norm
+		game_para.opening_battlefield_zombie_type = CharacterRegistry.ZombieType.Z501Norm
 	game_para.custom_original_timing = bool(level.get("strictOriginalTiming", false))
 	game_para.custom_minimum_wave_time = float(level.get("minimumWaveTime", 6.0))
 	game_para.custom_early_refresh_delay = float(level.get("earlyRefreshDelay", 0.0))
@@ -117,8 +117,8 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	if is_simple_mode:
 		## 简易关卡沿用自然波次管理器，并在管理器初始化时按权重预生成整关波表。
 		game_para.custom_simple_original_mode = true
-		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon)) as CharacterRegistry.ZombieType
-		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon)) as CharacterRegistry.ZombieType
+		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z001NormTalon)) as CharacterRegistry.ZombieType
+		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z002FlagTalon)) as CharacterRegistry.ZombieType
 		var allowed_types := _simple_allowed_zombie_types(
 			level.get("simpleZombiePool", []),
 			level.get("waves", []),
@@ -163,7 +163,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.special_reward_card_source_dir = special_reward_source_dir
 	var boss_config: Dictionary = level.get("bossConfig", {})
 	game_para.boss_enabled = bool(boss_config.get("enabled", false))
-	game_para.boss_zombie_type = int(boss_config.get("zombieType", CharacterRegistry.ZombieType.Z523Gargantuar)) as CharacterRegistry.ZombieType
+	game_para.boss_zombie_type = int(boss_config.get("zombieType", CharacterRegistry.ZombieType.Z524Gargantuar)) as CharacterRegistry.ZombieType
 	game_para.boss_reward_plant_type = int(boss_config.get("rewardPlant", -1))
 	if game_para.adventure_card_lock_active:
 		for value in level.get("availablePlants", []):
@@ -198,7 +198,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	game_para.is_bungi = bool(environment.get("bungee", false)) or (
 		is_simple_mode and _contains_zombie_type(
 			level.get("simpleZombiePool", []),
-			CharacterRegistry.ZombieType.Z520Bungi
+			CharacterRegistry.ZombieType.Z521Bungi
 		)
 	)
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
@@ -225,17 +225,17 @@ static func _simple_allowed_zombie_types(
 	explicit_pool: Array,
 	stages: Array,
 	map_type: String,
-	base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
+	base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001NormTalon
 ) -> Array[CharacterRegistry.ZombieType]:
 	var types: Array[CharacterRegistry.ZombieType] = [base_zombie_type]
 	var source_values: Array = explicit_pool.duplicate()
 	if source_values.is_empty():
 		for stage in stages:
 			for entry in (stage as Dictionary).get("spawnGroups", []):
-				source_values.append((entry as Dictionary).get("zombieType", "500"))
+				source_values.append((entry as Dictionary).get("zombieType", "501"))
 	for value in source_values:
 		var zombie_type := _zombie_type_id(value) as CharacterRegistry.ZombieType
-		if zombie_type == CharacterRegistry.ZombieType.Z520Bungi:
+		if zombie_type == CharacterRegistry.ZombieType.Z521Bungi:
 			continue
 		if zombie_type != base_zombie_type and _original_zombie_weight(int(zombie_type)) <= 0:
 			continue
@@ -265,7 +265,7 @@ static func _simple_once_final_zombie_types(
 		var zombie_type := _zombie_type_id(entry) as CharacterRegistry.ZombieType
 		if zombie_type == base_zombie_type or zombie_type == flag_zombie_type:
 			continue
-		if zombie_type == CharacterRegistry.ZombieType.Z520Bungi:
+		if zombie_type == CharacterRegistry.ZombieType.Z521Bungi:
 			continue
 		if not CharacterRegistry.ZombieInfo.has(zombie_type):
 			continue
@@ -287,8 +287,8 @@ static func _automatic_simple_intro_waves(
 			continue
 		var intro_wave := int(max_wave / 2.0) + 1
 		if zombie_type in [
-			CharacterRegistry.ZombieType.Z516Balloon,
-			CharacterRegistry.ZombieType.Z517Digger,
+			CharacterRegistry.ZombieType.Z517Balloon,
+			CharacterRegistry.ZombieType.Z518Digger,
 			CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 		]:
 			intro_wave = 7
@@ -311,7 +311,7 @@ static func _apply_chessboard_config(game_para: ResourceLevelData, level: Dictio
 	game_para.chessboard_enemy_zombie_probability = float(config.get("enemyZombieProbability", 0.30))
 	for value in config.get("plantCardPool", []):
 		var plant_type := int(value) as CharacterRegistry.PlantType
-		if int(plant_type) >= 500 and int(plant_type) < 1000 and (game_para.available_plant_types.is_empty() or game_para.available_plant_types.has(plant_type)):
+		if _is_original_plant_type(plant_type) and (game_para.available_plant_types.is_empty() or game_para.available_plant_types.has(plant_type)):
 			game_para.chessboard_plant_card_pool.append(plant_type)
 
 
@@ -328,7 +328,12 @@ static func _zombie_type_id(value) -> int:
 	var text := str(value)
 	if text.is_valid_int():
 		return int(text)
-	return int(ZOMBIE_TYPE_IDS.get(text, 500))
+	return int(ZOMBIE_TYPE_IDS.get(text, 501))
+
+
+static func _is_original_plant_type(plant_type: CharacterRegistry.PlantType) -> bool:
+	return (int(plant_type) >= 500 and int(plant_type) < 1000) \
+		or plant_type == CharacterRegistry.PlantType.P1499Imitater
 
 
 static func _active_lawn_rows(level: Dictionary) -> Array[int]:

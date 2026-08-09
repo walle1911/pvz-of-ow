@@ -64,59 +64,59 @@ enum PlantType {
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
 	P052BonkChoyRamattra = 52,
-	P053ImitaterEcho = 53,
+	P999ImitaterEcho = 999,
 
 	## 后移的原版植物
-	P500PeaShooterSingle = 500,
-	P501SunFlower,
-	P502CherryBomb,
-	P503WallNut,
-	P504PotatoMine = 504,
-	P505SnowPea,
-	P506Chomper,
-	P507PeaShooterDouble,
-	P508PuffShroom,
-	P509SunShroom,
-	P510FumeShroom,
-	P511GraveBuster,
-	P512HypnoShroom,
-	P513ScaredyShroom,
-	P514IceShroom,
-	P515DoomShroom,
-	P516LilyPad,
-	P517Squash,
-	P518ThreePeater,
-	P519TangleKelp,
-	P520Jalapeno,
-	P521Caltrop,
-	P522TorchWood,
-	P523TallNut,
-	P524SeaShroom,
-	P525Plantern,
-	P526Cactus,
-	P527Blover,
-	P528SplitPea,
-	P529StarFruit,
-	P530Pumpkin,
-	P531MagnetShroom,
-	P532CabbagePult,
-	P533FlowerPot,
-	P534CornPult,
-	P535CoffeeBean,
-	P536Garlic,
-	P537UmbrellaLeaf,
-	P538MariGold,
-	P539MelonPult,
-	P540GatlingPea,
-	P541TwinSunFlower,
-	P542GloomShroom,
-	P543Cattail,
-	P544WinterMelon,
-	P545GoldMagnet,
-	P546SpikeRock,
-	P547CobCannon,
-	P548Imitater,
-	P549PeaShooterDoubleReverse,
+	P501PeaShooterSingle = 501,
+	P502SunFlower,
+	P503CherryBomb,
+	P504WallNut,
+	P505PotatoMine,
+	P506SnowPea,
+	P507Chomper,
+	P508PeaShooterDouble,
+	P509PuffShroom,
+	P510SunShroom,
+	P511FumeShroom,
+	P512GraveBuster,
+	P513HypnoShroom,
+	P514ScaredyShroom,
+	P515IceShroom,
+	P516DoomShroom,
+	P517LilyPad,
+	P518Squash,
+	P519ThreePeater,
+	P520TangleKelp,
+	P521Jalapeno,
+	P522Caltrop,
+	P523TorchWood,
+	P524TallNut,
+	P525SeaShroom,
+	P526Plantern,
+	P527Cactus,
+	P528Blover,
+	P529SplitPea,
+	P530StarFruit,
+	P531Pumpkin,
+	P532MagnetShroom,
+	P533CabbagePult,
+	P534FlowerPot,
+	P535CornPult,
+	P536CoffeeBean,
+	P537Garlic,
+	P538UmbrellaLeaf,
+	P539MariGold,
+	P540MelonPult,
+	P541GatlingPea,
+	P542TwinSunFlower,
+	P543GloomShroom,
+	P544Cattail,
+	P545WinterMelon,
+	P546GoldMagnet,
+	P547SpikeRock,
+	P548CobCannon,
+	P1499Imitater = 1499,
+	P549PeaShooterDoubleReverse = 549,
 
 	## 发芽
 	P1000Sprout = 1000,
@@ -155,38 +155,38 @@ enum ZombieType {
 	Z027ImpTorbjorn = 27,
 	Z028ImpAshe = 28,
 
-	## Talon 僵尸（文件序号保持 000/001/002/004，运行时避开 Null = 0）
-	Z000NormTalon = 100,
-	Z001FlagTalon = 101,
-	Z002ConeTalon = 102,
-	Z004BucketTalon = 104,
+	## Talon 改版僵尸占用对应原版僵尸编号
+	Z001NormTalon = 1,
+	Z002FlagTalon = 2,
+	Z003ConeTalon = 3,
+	Z005BucketTalon = 5,
 
 	## 后移的原版僵尸
-	Z500Norm = 500,
-	Z501Flag,
-	Z502Cone,
-	Z503PoleVaulter,
-	Z504Bucket,
-	Z505Paper,
-	Z506ScreenDoor,
-	Z507Football,
-	Z508Jackson,
-	Z509Dancer,
-	Z510Duckytube,
-	Z511Snorkle,
-	Z512Zamboni,
-	Z513Bobsled,
-	Z514Dolphinrider,
-	Z515Jackbox,
-	Z516Balloon,
-	Z517Digger,
-	Z518Pogo,
-	Z519Yeti,
-	Z520Bungi,
-	Z521Ladder,
-	Z522Catapult,
-	Z523Gargantuar,
-	Z524Imp,
+	Z501Norm = 501,
+	Z502Flag,
+	Z503Cone,
+	Z504PoleVaulter,
+	Z505Bucket,
+	Z506Paper,
+	Z507ScreenDoor,
+	Z508Football,
+	Z509Jackson,
+	Z510Dancer,
+	Z511Duckytube,
+	Z512Snorkle,
+	Z513Zamboni,
+	Z514Bobsled,
+	Z515Dolphinrider,
+	Z516Jackbox,
+	Z517Balloon,
+	Z518Digger,
+	Z519Pogo,
+	Z520Yeti,
+	Z521Bungi,
+	Z522Ladder,
+	Z523Catapult,
+	Z524Gargantuar,
+	Z525Imp,
 
 	Z1001BobsledSingle=1001,	## 单个雪橇车僵尸
 	}
@@ -213,363 +213,363 @@ enum ZombieInfoAttribute{
 
 ## 紫卡植物种植前置植物（一个紫卡可对应多个可叠加的前置植物）
 @export var AllPrePlantPurple:Dictionary[PlantType, Array]= {
-	PlantType.P540GatlingPea:[PlantType.P507PeaShooterDouble],
-	PlantType.P541TwinSunFlower:[PlantType.P002SunflowerMercy, PlantType.P501SunFlower],
-	PlantType.P542GloomShroom:[PlantType.P011FumeShroomRoadhog, PlantType.P510FumeShroom],
-	PlantType.P543Cattail:[PlantType.P516LilyPad],
-	PlantType.P544WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P539MelonPult],
-	PlantType.P545GoldMagnet:[PlantType.P032MagnetShroomSombra, PlantType.P531MagnetShroom],
-	PlantType.P546SpikeRock:[PlantType.P022CaltropHazard, PlantType.P521Caltrop],
-	PlantType.P547CobCannon:[PlantType.P534CornPult],
+	PlantType.P541GatlingPea:[PlantType.P508PeaShooterDouble],
+	PlantType.P542TwinSunFlower:[PlantType.P002SunflowerMercy, PlantType.P502SunFlower],
+	PlantType.P543GloomShroom:[PlantType.P011FumeShroomRoadhog, PlantType.P511FumeShroom],
+	PlantType.P544Cattail:[PlantType.P517LilyPad],
+	PlantType.P545WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P540MelonPult],
+	PlantType.P546GoldMagnet:[PlantType.P032MagnetShroomSombra, PlantType.P532MagnetShroom],
+	PlantType.P547SpikeRock:[PlantType.P022CaltropHazard, PlantType.P522Caltrop],
+	PlantType.P548CobCannon:[PlantType.P535CornPult],
 }
 
 const PlantInfo = {
-	PlantType.P500PeaShooterSingle: {
+	PlantType.P501PeaShooterSingle: {
 		PlantInfoAttribute.PlantName: "PeaShooterSingle",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_500_pea_shooter_single.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_501_pea_shooter_single.tscn"
 		},
-	PlantType.P501SunFlower: {
+	PlantType.P502SunFlower: {
 		PlantInfoAttribute.PlantName: "SunFlower",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_501_sun_flower.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_502_sun_flower.tscn"
 		},
-	PlantType.P502CherryBomb: {
+	PlantType.P503CherryBomb: {
 		PlantInfoAttribute.PlantName: "CherryBomb",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_502_cherry_bomb.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_503_cherry_bomb.tscn"
 		},
-	PlantType.P503WallNut: {
+	PlantType.P504WallNut: {
 		PlantInfoAttribute.PlantName: "WallNut",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_503_wall_nut.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_504_wall_nut.tscn"
 		},
-	PlantType.P504PotatoMine: {
+	PlantType.P505PotatoMine: {
 		PlantInfoAttribute.PlantName: "PotatoMine",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/005_potato_mine.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_504_potato_mine.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_505_potato_mine.tscn"
 		},
-	PlantType.P505SnowPea: {
+	PlantType.P506SnowPea: {
 		PlantInfoAttribute.PlantName: "SnowPea",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 175,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_505_snow_pea.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_506_snow_pea.tscn"
 		},
-	PlantType.P506Chomper: {
+	PlantType.P507Chomper: {
 		PlantInfoAttribute.PlantName: "Chomper",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_506_chomper.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_507_chomper.tscn"
 		},
-	PlantType.P507PeaShooterDouble: {
+	PlantType.P508PeaShooterDouble: {
 		PlantInfoAttribute.PlantName: "PeaShooterDouble",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_507_pea_shooter_double.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_508_pea_shooter_double.tscn"
 		},
 		#
-	PlantType.P508PuffShroom: {
+	PlantType.P509PuffShroom: {
 		PlantInfoAttribute.PlantName: "PuffShroom",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_508_puff.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_509_puff.tscn"
 		},
-	PlantType.P509SunShroom: {
+	PlantType.P510SunShroom: {
 		PlantInfoAttribute.PlantName: "SunShroom",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_509_sun_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_510_sun_shroom.tscn"
 		},
-	PlantType.P510FumeShroom: {
+	PlantType.P511FumeShroom: {
 		PlantInfoAttribute.PlantName: "FumeShroom",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_510_fume_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_511_fume_shroom.tscn"
 		},
-	PlantType.P511GraveBuster: {
+	PlantType.P512GraveBuster: {
 		PlantInfoAttribute.PlantName: "GraveBuster",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/012_grave_buster.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_511_grave_buster.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_512_grave_buster.tscn"
 		},
-	PlantType.P512HypnoShroom: {
+	PlantType.P513HypnoShroom: {
 		PlantInfoAttribute.PlantName: "HypnoShroom",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_512_hypno_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_513_hypno_shroom.tscn"
 		},
-	PlantType.P513ScaredyShroom: {
+	PlantType.P514ScaredyShroom: {
 		PlantInfoAttribute.PlantName: "ScaredyShroom",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_513_scaredy_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_514_scaredy_shroom.tscn"
 		},
-	PlantType.P514IceShroom: {
+	PlantType.P515IceShroom: {
 		PlantInfoAttribute.PlantName: "IceShroom",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_514_ice_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_515_ice_shroom.tscn"
 		},
-	PlantType.P515DoomShroom: {
+	PlantType.P516DoomShroom: {
 		PlantInfoAttribute.PlantName: "DoomShroom",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_515_doom_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_516_doom_shroom.tscn"
 		},
-	PlantType.P516LilyPad: {
+	PlantType.P517LilyPad: {
 		PlantInfoAttribute.PlantName: "LilyPad",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/017_lily_pad.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_516_lily_pad.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_517_lily_pad.tscn"
 		},
-	PlantType.P517Squash: {
+	PlantType.P518Squash: {
 		PlantInfoAttribute.PlantName: "Squash",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_517_squash.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_518_squash.tscn"
 		},
-	PlantType.P518ThreePeater: {
+	PlantType.P519ThreePeater: {
 		PlantInfoAttribute.PlantName: "ThreePeater",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 325,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_518_three_peater.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_519_three_peater.tscn"
 		},
-	PlantType.P519TangleKelp: {
+	PlantType.P520TangleKelp: {
 		PlantInfoAttribute.PlantName: "TangleKelp",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/020_tanglekelp.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_519_tanglekelp.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_520_tanglekelp.tscn"
 		},
-	PlantType.P520Jalapeno: {
+	PlantType.P521Jalapeno: {
 		PlantInfoAttribute.PlantName: "Jalapeno",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_520_jalapeno.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_521_jalapeno.tscn"
 		},
-	PlantType.P521Caltrop: {
+	PlantType.P522Caltrop: {
 		PlantInfoAttribute.PlantName: "Caltrop",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/022_caltrop.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_521_caltrop.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_522_caltrop.tscn"
 		},
-	PlantType.P522TorchWood: {
+	PlantType.P523TorchWood: {
 		PlantInfoAttribute.PlantName: "TorchWood",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 175,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_522_torch_wood.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_523_torch_wood.tscn"
 		},
-	PlantType.P523TallNut: {
+	PlantType.P524TallNut: {
 		PlantInfoAttribute.PlantName: "TallNut",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 175,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_523_tall_nut.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_524_tall_nut.tscn"
 		},
 
-	PlantType.P524SeaShroom: {
+	PlantType.P525SeaShroom: {
 		PlantInfoAttribute.PlantName: "SeaShroom",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/020_tanglekelp.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_524_sea_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_525_sea_shroom.tscn"
 		},
-	PlantType.P525Plantern: {
+	PlantType.P526Plantern: {
 		PlantInfoAttribute.PlantName: "Plantern",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_525_plantern.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_526_plantern.tscn"
 		},
-	PlantType.P526Cactus: {
+	PlantType.P527Cactus: {
 		PlantInfoAttribute.PlantName: "Cactus",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_526_cactus.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_527_cactus.tscn"
 		},
-	PlantType.P527Blover: {
+	PlantType.P528Blover: {
 		PlantInfoAttribute.PlantName: "Blover",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_527_blover.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_528_blover.tscn"
 		},
-	PlantType.P528SplitPea: {
+	PlantType.P529SplitPea: {
 		PlantInfoAttribute.PlantName: "SplitPea",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_528_split_pea.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_529_split_pea.tscn"
 		},
-	PlantType.P529StarFruit: {
+	PlantType.P530StarFruit: {
 		PlantInfoAttribute.PlantName: "StarFruit",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_529_star_fruit.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_530_star_fruit.tscn"
 		},
-	PlantType.P530Pumpkin: {
+	PlantType.P531Pumpkin: {
 		PlantInfoAttribute.PlantName: "Pumpkin",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/031_Pumpkin.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_530_pumpkin.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_531_pumpkin.tscn"
 		},
-	PlantType.P531MagnetShroom: {
+	PlantType.P532MagnetShroom: {
 		PlantInfoAttribute.PlantName: "MagnetShroom",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_531_magnet_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_532_magnet_shroom.tscn"
 		},
 
-	PlantType.P532CabbagePult: {
+	PlantType.P533CabbagePult: {
 		PlantInfoAttribute.PlantName: "CabbagePult",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_532_cabbage_pult.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_533_cabbage_pult.tscn"
 		},
-	PlantType.P533FlowerPot: {
+	PlantType.P534FlowerPot: {
 		PlantInfoAttribute.PlantName: "FlowerPot",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 25,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/034_flower_pot.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_533_flower_pot.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_534_flower_pot.tscn"
 		},
-	PlantType.P534CornPult: {
+	PlantType.P535CornPult: {
 		PlantInfoAttribute.PlantName: "CornPult",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_534_corn_pult.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_535_corn_pult.tscn"
 		},
-	PlantType.P535CoffeeBean: {
+	PlantType.P536CoffeeBean: {
 		PlantInfoAttribute.PlantName: "CoffeeBean",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 75,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/036_coffee_bean.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_535_coffee_bean.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_536_coffee_bean.tscn"
 		},
-	PlantType.P536Garlic: {
+	PlantType.P537Garlic: {
 		PlantInfoAttribute.PlantName: "Garlic",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_536_garlic.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_537_garlic.tscn"
 		},
-	PlantType.P537UmbrellaLeaf: {
+	PlantType.P538UmbrellaLeaf: {
 		PlantInfoAttribute.PlantName: "UmbrellaLeaf",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 100,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_537_umbrella_leaf.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_538_umbrella_leaf.tscn"
 		},
-	PlantType.P538MariGold: {
+	PlantType.P539MariGold: {
 		PlantInfoAttribute.PlantName: "MariGold",
 		PlantInfoAttribute.CoolTime: 30.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_538_mari_gold.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_539_mari_gold.tscn"
 		},
-	PlantType.P539MelonPult: {
+	PlantType.P540MelonPult: {
 		PlantInfoAttribute.PlantName: "MelonPult",
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 300,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_539_melon_pult.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_540_melon_pult.tscn"
 		},
 
-	PlantType.P540GatlingPea: {
+	PlantType.P541GatlingPea: {
 		PlantInfoAttribute.PlantName: "GatlingPea",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 250,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_540_gatling_pea.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_541_gatling_pea.tscn"
 		},
 
-	PlantType.P541TwinSunFlower: {
+	PlantType.P542TwinSunFlower: {
 		PlantInfoAttribute.PlantName: "TwinSunFlower",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_541_twin_sun_flower.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_542_twin_sun_flower.tscn"
 		},
 
-	PlantType.P542GloomShroom: {
+	PlantType.P543GloomShroom: {
 		PlantInfoAttribute.PlantName: "GloomShroom",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_542_gloom_shroom.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_543_gloom_shroom.tscn"
 		},
 
-	PlantType.P543Cattail: {
+	PlantType.P544Cattail: {
 		PlantInfoAttribute.PlantName: "Cattail",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 225,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_543_cattail.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_544_cattail.tscn"
 		},
 
-	PlantType.P544WinterMelon: {
+	PlantType.P545WinterMelon: {
 		PlantInfoAttribute.PlantName: "WinterMelon",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_544_winter_melon.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_545_winter_melon.tscn"
 		},
 
-	PlantType.P545GoldMagnet: {
+	PlantType.P546GoldMagnet: {
 		PlantInfoAttribute.PlantName: "GoldMagnet",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 50,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_545_gold_magnet.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_546_gold_magnet.tscn"
 		},
 
-	PlantType.P546SpikeRock: {
+	PlantType.P547SpikeRock: {
 		PlantInfoAttribute.PlantName: "SpikeRock",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 125,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_purple.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_546_spike_rock.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_547_spike_rock.tscn"
 		},
 
-	PlantType.P547CobCannon: {
+	PlantType.P548CobCannon: {
 		PlantInfoAttribute.PlantName: "CobCannon",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 500,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/048_cob_cannon.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_547_cob_cannon.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_548_cob_cannon.tscn"
 		},
 
 	PlantType.P549PeaShooterDoubleReverse: {
@@ -657,12 +657,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_040_melon_pult_ashe.tscn"
 		},
-	PlantType.P053ImitaterEcho:{
+	PlantType.P999ImitaterEcho:{
 		PlantInfoAttribute.PlantName: "Imitater_Echo",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/999_imitater.tres",
-		PlantInfoAttribute.PlantScenes :  "res://scenes/character/plant/plant_053_imitater_echo.tscn"
+		PlantInfoAttribute.PlantScenes :  "res://scenes/character/plant/plant_999_imitater_echo.tscn"
 		},
 
 	PlantType.P016DoomShroomDVA: {
@@ -792,12 +792,12 @@ const PlantInfo = {
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_048_cob_cannon_emre.tscn"
 		},
 	## 模仿者
-	PlantType.P548Imitater:{
+	PlantType.P1499Imitater:{
 		PlantInfoAttribute.PlantName: "Imitater",
 		PlantInfoAttribute.CoolTime: 50.0,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/999_imitater.tres",
-		PlantInfoAttribute.PlantScenes :  "res://scenes/character/plant/plant_548_imitater.tscn"
+		PlantInfoAttribute.PlantScenes :  "res://scenes/character/plant/plant_1499_imitater.tscn"
 		},
 
 
@@ -929,208 +929,208 @@ func _get_developer_plant_registry_value(scene_path:String, property_name:String
 #region 僵尸
 ## 僵尸信息
 const ZombieInfo = {
-	ZombieType.Z000NormTalon:{
+	ZombieType.Z001NormTalon:{
 		ZombieInfoAttribute.ZombieName: "ZombieNormTalon",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_000_norm_talon.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_001_norm_talon.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z001FlagTalon:{
+	ZombieType.Z002FlagTalon:{
 		ZombieInfoAttribute.ZombieName: "ZombieFlagTalon",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_001_flag_talon.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_002_flag_talon.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z002ConeTalon:{
+	ZombieType.Z003ConeTalon:{
 		ZombieInfoAttribute.ZombieName: "ZombieConeTalon",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_002_cone_talon.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_003_cone_talon.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z004BucketTalon:{
+	ZombieType.Z005BucketTalon:{
 		ZombieInfoAttribute.ZombieName: "ZombieBucketTalon",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_004_bucket_talon.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_005_bucket_talon.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z500Norm:{
+	ZombieType.Z501Norm:{
 		ZombieInfoAttribute.ZombieName: "ZombieNorm",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_500_norm.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_501_norm.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z501Flag:{
+	ZombieType.Z502Flag:{
 		ZombieInfoAttribute.ZombieName: "ZombieFlag",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_501_flag.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_502_flag.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z502Cone:{
+	ZombieType.Z503Cone:{
 		ZombieInfoAttribute.ZombieName: "ZombieCone",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_502_cone.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_503_cone.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z503PoleVaulter:{
+	ZombieType.Z504PoleVaulter:{
 		ZombieInfoAttribute.ZombieName: "ZombiePoleVaulter",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_503_pole_vaulter.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_504_pole_vaulter.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z504Bucket:{
+	ZombieType.Z505Bucket:{
 		ZombieInfoAttribute.ZombieName: "ZombieBucket",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_504_bucket.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_505_bucket.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
 
-	ZombieType.Z505Paper:{
+	ZombieType.Z506Paper:{
 		ZombieInfoAttribute.ZombieName: "ZombiePaper",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_505_paper.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_506_paper.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z506ScreenDoor:{
+	ZombieType.Z507ScreenDoor:{
 		ZombieInfoAttribute.ZombieName: "ZombieScreenDoor",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_506_screendoor.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_507_screendoor.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z507Football:{
+	ZombieType.Z508Football:{
 		ZombieInfoAttribute.ZombieName: "ZombieFootball",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 175,
-		ZombieInfoAttribute.ZombieScenes: "res://scenes/character/zombie/zombie_507_football.tscn",
+		ZombieInfoAttribute.ZombieScenes: "res://scenes/character/zombie/zombie_508_football.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z508Jackson:{
+	ZombieType.Z509Jackson:{
 		ZombieInfoAttribute.ZombieName: "ZombieJackson",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 300,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_508_jackson.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_509_jackson.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z509Dancer:{
+	ZombieType.Z510Dancer:{
 		ZombieInfoAttribute.ZombieName: "ZombieDancer",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_509_dancer.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_510_dancer.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z510Duckytube:{
+	ZombieType.Z511Duckytube:{
 		ZombieInfoAttribute.ZombieName: "ZombieDuckytube",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_510_duckytube.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_511_duckytube.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Pool
 	},
-	ZombieType.Z511Snorkle:{
+	ZombieType.Z512Snorkle:{
 		ZombieInfoAttribute.ZombieName: "ZombieSnorkle",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_511_snorkle.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_512_snorkle.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Pool
 	},
-	ZombieType.Z512Zamboni:{
+	ZombieType.Z513Zamboni:{
 		ZombieInfoAttribute.ZombieName: "ZombieZamboni",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 250,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_512_zamboni.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_513_zamboni.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z513Bobsled:{
+	ZombieType.Z514Bobsled:{
 		ZombieInfoAttribute.ZombieName: "ZombieBobsled",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 200,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_513_bobsled.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_514_bobsled.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z514Dolphinrider:{
+	ZombieType.Z515Dolphinrider:{
 		ZombieInfoAttribute.ZombieName: "ZombieDolphinrider",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 150,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_514_dolphinrider.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_515_dolphinrider.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Pool
 	},
-	ZombieType.Z515Jackbox:{
+	ZombieType.Z516Jackbox:{
 		ZombieInfoAttribute.ZombieName: "ZombieJackbox",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_515_jackbox.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_516_jackbox.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z516Balloon:{
+	ZombieType.Z517Balloon:{
 		ZombieInfoAttribute.ZombieName: "ZombieBallon",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 75,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_516_balloon.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_517_balloon.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z517Digger:{
+	ZombieType.Z518Digger:{
 		ZombieInfoAttribute.ZombieName: "ZombieDigger",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_517_digger.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_518_digger.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z518Pogo:{
+	ZombieType.Z519Pogo:{
 		ZombieInfoAttribute.ZombieName: "ZombiePogo",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_518_pogo.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_519_pogo.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z519Yeti:{
+	ZombieType.Z520Yeti:{
 		ZombieInfoAttribute.ZombieName: "ZombieYeti",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 100,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_519_yeti.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_520_yeti.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z520Bungi:{
+	ZombieType.Z521Bungi:{
 		ZombieInfoAttribute.ZombieName: "ZombieBungi",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 125,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_520_bungi.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_521_bungi.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Both
 	},
-	ZombieType.Z521Ladder:{
+	ZombieType.Z522Ladder:{
 		ZombieInfoAttribute.ZombieName: "ZombieLadder",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 150,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_521_ladder.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_522_ladder.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z522Catapult:{
+	ZombieType.Z523Catapult:{
 		ZombieInfoAttribute.ZombieName: "ZombieCatapult",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 200,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_522_catapult.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_523_catapult.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z523Gargantuar:{
+	ZombieType.Z524Gargantuar:{
 		ZombieInfoAttribute.ZombieName: "ZombieGargantuar",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 300,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_523_gargantuar.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_524_gargantuar.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
-	ZombieType.Z524Imp:{
+	ZombieType.Z525Imp:{
 		ZombieInfoAttribute.ZombieName: "ZombieImp",
 		ZombieInfoAttribute.CoolTime: 0.0,
 		ZombieInfoAttribute.SunCost: 50,
-		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_524_imp.tscn",
+		ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_525_imp.tscn",
 		ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 	},
 

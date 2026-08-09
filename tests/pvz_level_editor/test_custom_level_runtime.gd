@@ -21,7 +21,7 @@ func _ready() -> void:
 		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 		CharacterRegistry.PlantType.P002SunflowerMercy,
 	])
-	var special_reward_type := int(CharacterRegistry.PlantType.P547CobCannon)
+	var special_reward_type := int(CharacterRegistry.PlantType.P548CobCannon)
 	var special_reward_level := Logic.example_level()
 	special_reward_level["id"] = "special_reward_source"
 	special_reward_level["rewardPlants"] = [special_reward_type]
@@ -34,20 +34,20 @@ func _ready() -> void:
 	var boss_level := Logic.example_level()
 	boss_level["bossConfig"] = {
 		"enabled": true,
-		"zombieType": int(CharacterRegistry.ZombieType.Z002ConeTalon),
+		"zombieType": int(CharacterRegistry.ZombieType.Z003ConeTalon),
 		"rewardPlant": int(CharacterRegistry.PlantType.P003CherryBombJunkrat),
 	}
 	boss_level["simpleZombiePool"] = [
-		int(CharacterRegistry.ZombieType.Z000NormTalon),
-		int(CharacterRegistry.ZombieType.Z002ConeTalon),
+		int(CharacterRegistry.ZombieType.Z001NormTalon),
+		int(CharacterRegistry.ZombieType.Z003ConeTalon),
 	]
 	var boss_built := Runtime.build_game_para(boss_level)
 	assert(boss_built["ok"], boss_built["error"])
 	var boss_para := boss_built["game_para"] as ResourceLevelData
 	assert(boss_para.boss_enabled)
-	assert(boss_para.boss_zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon)
+	assert(boss_para.boss_zombie_type == CharacterRegistry.ZombieType.Z003ConeTalon)
 	assert(boss_para.boss_reward_plant_type == int(CharacterRegistry.PlantType.P003CherryBombJunkrat))
-	assert(not boss_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z002ConeTalon))
+	assert(not boss_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z003ConeTalon))
 	assert(Logic.validate_level(boss_level).all(func(issue): return issue["severity"] != "error"))
 	var invalid_boss_level := boss_level.duplicate(true)
 	invalid_boss_level["bossConfig"]["rewardPlant"] = -1
@@ -82,7 +82,7 @@ func _ready() -> void:
 	assert(simple_para.custom_simple_original_mode)
 	assert(simple_para.custom_initial_wave_delay == 0.25)
 	assert(simple_para.opening_first_zombie_advance_cells == 7.5)
-	assert(simple_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
+	assert(simple_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z501Norm)
 	assert(simple_para.zombie_refresh_speed_multiplier == 2.0)
 	assert(ZombieWaveRefreshManager.scaled_refresh_duration(simple_para.custom_initial_wave_delay, simple_para.zombie_refresh_speed_multiplier) == 0.125)
 	assert(ZombieWaveRefreshManager.scaled_refresh_duration(25.0, simple_para.zombie_refresh_speed_multiplier) == 12.5)
@@ -91,28 +91,28 @@ func _ready() -> void:
 	assert(simple_para.custom_spawn_schedule.is_empty())
 	assert(simple_para.custom_stage_schedule.is_empty())
 	assert(simple_para.custom_flag_data.is_empty())
-	assert(simple_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z000NormTalon)
-	assert(simple_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z001FlagTalon)
+	assert(simple_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z001NormTalon)
+	assert(simple_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z002FlagTalon)
 	assert(simple_para.zombie_refresh_types == [
-		CharacterRegistry.ZombieType.Z000NormTalon,
-		CharacterRegistry.ZombieType.Z002ConeTalon,
-		CharacterRegistry.ZombieType.Z004BucketTalon,
+		CharacterRegistry.ZombieType.Z001NormTalon,
+		CharacterRegistry.ZombieType.Z003ConeTalon,
+		CharacterRegistry.ZombieType.Z005BucketTalon,
 	])
 	assert(simple_para.simple_zombie_intro_waves == {
-		int(CharacterRegistry.ZombieType.Z002ConeTalon): 11,
-		int(CharacterRegistry.ZombieType.Z004BucketTalon): 11,
+		int(CharacterRegistry.ZombieType.Z003ConeTalon): 11,
+		int(CharacterRegistry.ZombieType.Z005BucketTalon): 11,
 	})
 	var alternate_roles := simple_level.duplicate(true)
-	alternate_roles["simpleBaseZombieType"] = int(CharacterRegistry.ZombieType.Z500Norm)
-	alternate_roles["simpleFlagZombieType"] = int(CharacterRegistry.ZombieType.Z501Flag)
+	alternate_roles["simpleBaseZombieType"] = int(CharacterRegistry.ZombieType.Z501Norm)
+	alternate_roles["simpleFlagZombieType"] = int(CharacterRegistry.ZombieType.Z502Flag)
 	var alternate_built := Runtime.build_game_para(alternate_roles)
 	assert(alternate_built["ok"], alternate_built["error"])
 	var alternate_para := alternate_built["game_para"] as ResourceLevelData
-	assert(alternate_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
-	assert(alternate_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z501Flag)
-	assert(alternate_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z500Norm))
-	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z000NormTalon] == 1)
-	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z000NormTalon] == 4000)
+	assert(alternate_para.simple_base_zombie_type == CharacterRegistry.ZombieType.Z501Norm)
+	assert(alternate_para.simple_flag_zombie_type == CharacterRegistry.ZombieType.Z502Flag)
+	assert(alternate_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z501Norm))
+	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z001NormTalon] == 1)
+	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z001NormTalon] == 4000)
 	## 原版同帧创建整波，靠屏幕右侧出生距离错开入场；旗帜波再整体后移 40。
 	assert(ZombieWaveCreateManager.original_spawn_x_offset(8, 20, 0) == 0.0)
 	assert(ZombieWaveCreateManager.original_spawn_x_offset(8, 20, 39) == 39.0)
@@ -132,7 +132,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var opening_show := opening_scene.zombie_manager.zombie_show_in_start.opening_battlefield_zombie as Zombie000Base
 	assert(is_instance_valid(opening_show))
-	assert(opening_show.zombie_type == CharacterRegistry.ZombieType.Z500Norm)
+	assert(opening_show.zombie_type == CharacterRegistry.ZombieType.Z501Norm)
 	assert(opening_scene.zombie_manager.curr_zombie_num == 0)
 	var opening_show_position := opening_show.global_position
 	await get_tree().create_timer(0.2, false).timeout
@@ -166,9 +166,9 @@ func _ready() -> void:
 		stage["spawnGroups"] = []
 	var normal_only_built := Runtime.build_game_para(normal_only_level)
 	assert(normal_only_built["ok"], normal_only_built["error"])
-	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z000NormTalon])
-	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z510Duckytube] == 1)
-	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z510Duckytube] == 3600)
+	assert((normal_only_built["game_para"] as ResourceLevelData).zombie_refresh_types == [CharacterRegistry.ZombieType.Z001NormTalon])
+	assert(ZombieWaveCreateManager.zombie_power[CharacterRegistry.ZombieType.Z511Duckytube] == 1)
+	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z511Duckytube] == 3600)
 	assert(ZombieWaveCreateManager.zombie_weights_ori[CharacterRegistry.ZombieType.Z020ZombieYetiWinston] == 300)
 	## 1-1～3-10 工坊曲线必须全部可构建，自动推导的首秀表也必须闭合。
 	for world in range(1, 4):
@@ -291,8 +291,8 @@ func _ready() -> void:
 	workshop.queue_free()
 	await get_tree().process_frame
 	game_para.custom_spawn_schedule = [
-		{"time": 0.0, "zombie_type": 500, "lane": 0, "stage_index": 0},
-		{"time": 0.1, "zombie_type": 502, "lane": 3, "stage_index": 0},
+		{"time": 0.0, "zombie_type": 501, "lane": 0, "stage_index": 0},
+		{"time": 0.1, "zombie_type": 503, "lane": 3, "stage_index": 0},
 	]
 	game_para.custom_stage_schedule = [{
 		"stage_index": 0,

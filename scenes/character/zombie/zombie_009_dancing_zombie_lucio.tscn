@@ -1230,7 +1230,7 @@ _data = {
 &"walk": ExtResource("31_0lp1b")
 }
 
-[node name="Zombie508Jackson" unique_id=2124402437 instance=ExtResource("1_y18o3")]
+[node name="Zombie509Jackson" unique_id=2124402437 instance=ExtResource("1_y18o3")]
 script = ExtResource("2_fumvv")
 num_moon_walk = 2
 backup_dancer_type = 10

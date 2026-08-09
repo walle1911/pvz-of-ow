@@ -36,7 +36,7 @@
 [ext_resource type="BitMap" uid="uid://bc7yq02xscrlr" path="res://assets/image/ui/ui_level/Almanac_CloseButton_Mask.png" id="32_j5lj8"]
 [ext_resource type="Resource" uid="uid://dqxv6yam6pxi2" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_01.tres" id="32_sq4rf"]
 [ext_resource type="Texture2D" uid="uid://om7aubyyu3le" path="res://assets/image/ui/ui_level/SeedChooser_Button2.png" id="33_271bd"]
-[ext_resource type="PackedScene" uid="uid://b72u5kwdpw4te" path="res://scenes/character/zombie/zombie_500_norm.tscn" id="33_e1q4d"]
+[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_501_norm.tscn" id="33_e1q4d"]
 [ext_resource type="Resource" uid="uid://bh0puif1ptahk" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_02.tres" id="34_5lle5"]
 [ext_resource type="Texture2D" uid="uid://cx854vkq3n8gs" path="res://assets/image/ui/ui_level/SeedChooser_Button2_Glow.png" id="34_n6nq4"]
 [ext_resource type="Resource" uid="uid://p3d5n8xnah0m" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_03.tres" id="35_0wo60"]
@@ -45,7 +45,7 @@
 [ext_resource type="Resource" uid="uid://b65u01tpi7ije" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_06.tres" id="38_dfvnb"]
 [ext_resource type="Resource" uid="uid://0xpi7ulb3x8x" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_07.tres" id="39_37oen"]
 [ext_resource type="Resource" uid="uid://b5oxrfwynij8w" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_08.tres" id="40_tddj0"]
-[ext_resource type="PackedScene" uid="uid://bwxutun8ivr0e" path="res://scenes/character/zombie/zombie_510_duckytube.tscn" id="41_u6pe2"]
+[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_511_duckytube.tscn" id="41_u6pe2"]
 [ext_resource type="Resource" uid="uid://bfhysk7avvlya" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_09.tres" id="42_jf455"]
 [ext_resource type="Resource" uid="uid://ch4wk6rox02pr" path="res://resources/level_date_resource/mode_puzzle/puzzle_zombie_10.tres" id="43_jf455"]
 
@@ -1201,7 +1201,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1244,7 +1244,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton2/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton2/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1287,7 +1287,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1331,7 +1331,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton4/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton4/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1374,7 +1374,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton5/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton5/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1417,7 +1417,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton6/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton6/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1460,7 +1460,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton7/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton7/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1503,7 +1503,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("18_tc5th")
 
-[node name="Zombie510Duckytube" parent="AllPage/GridContainer2/ChooseLevelButton8/Panel/TextureRect" instance=ExtResource("41_u6pe2")]
+[node name="Zombie511Duckytube" parent="AllPage/GridContainer2/ChooseLevelButton8/Panel/TextureRect" instance=ExtResource("41_u6pe2")]
 position = Vector2(100.662636, 101.02415)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1546,7 +1546,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("28_qk5vr")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton9/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton9/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1
@@ -1590,7 +1590,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("11_37oen")
 
-[node name="Zombie500Norm" parent="AllPage/GridContainer2/ChooseLevelButton10/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
+[node name="Zombie501Norm" parent="AllPage/GridContainer2/ChooseLevelButton10/Panel/TextureRect" instance=ExtResource("33_e1q4d")]
 position = Vector2(93.995995, 102.69081)
 scale = Vector2(0.7, 0.7)
 character_init_type = 1

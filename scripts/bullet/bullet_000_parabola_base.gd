@@ -70,7 +70,7 @@ func _physics_process(delta: float) -> void:
 func attack_once(enemy:Character000Base):
 	## 攻击植物时,若周围有叶子保护伞
 	if enemy is Plant000Base:
-		var all_umbrella_surrounding:Array[Plant000Base] = enemy.plant_cell.get_plant_surrounding(CharacterRegistry.PlantType.P537UmbrellaLeaf)
+		var all_umbrella_surrounding:Array[Plant000Base] = enemy.plant_cell.get_plant_surrounding(CharacterRegistry.PlantType.P538UmbrellaLeaf)
 		if not all_umbrella_surrounding.is_empty():
 			for p:Plant038UmbrellaLeaf in all_umbrella_surrounding:
 				p.activete_umbrella()

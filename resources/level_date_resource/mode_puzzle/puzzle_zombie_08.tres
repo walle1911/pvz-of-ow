@@ -5,49 +5,49 @@
 
 [sub_resource type="Resource" id="Resource_7w3rb"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(3, 1)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_fdrr7"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(3, 2)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_clk7j"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(3, 3)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_wj2vu"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(3, 4)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_s53qs"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(4, 1)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_1bvvj"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(4, 2)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_vjb8i"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(4, 3)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
 [sub_resource type="Resource" id="Resource_lvdka"]
 script = ExtResource("1_s53qs")
-plant_type = 516
+plant_type = 517
 plant_cell_pos = Vector2i(4, 4)
 metadata/_custom_type_script = "uid://bke3sg5otco7s"
 
@@ -63,13 +63,13 @@ all_pre_plant_data = Array[ExtResource("1_s53qs")]([SubResource("Resource_7w3rb"
 look_show_zombie = false
 can_choosed_card = false
 monster_mode = 0
-zombie_refresh_types = Array[int]([500, 502, 503, 504, 505, 506, 507, 508])
-start_sun = 100
-pre_choosed_card_list_zombie = Array[int]([500, 502, 504])
+zombie_refresh_types = Array[int]([501, 503, 504, 505, 506, 507, 508, 509])
+start_sun = 1
+pre_choosed_card_list_zombie = Array[int]([501, 503, 505])
 is_zombie_mode = true
 all_plants_weight_on_zombie_mode = Dictionary[int, int]({
-500: 1,
-501: 1
+501: 1,
+502: 1
 })
 is_bowling_stripe = true
 plant_cell_col_j = 3

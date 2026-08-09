@@ -90,11 +90,11 @@ func duplicate_runtime() -> ResourceLevelData:
 @export var max_wave := 30
 ## 僵尸种类刷新列表 多轮游戏且自然出怪 自动更新自然出怪列表
 @export var zombie_refresh_types: Array[CharacterRegistry.ZombieType] = [
-	CharacterRegistry.ZombieType.Z500Norm, # 普通僵尸
-	#CharacterRegistry.ZombieType.Z501Flag, # 旗帜僵尸
-	CharacterRegistry.ZombieType.Z502Cone, # 路障僵尸
-	CharacterRegistry.ZombieType.Z503PoleVaulter, # 撑杆僵尸
-	CharacterRegistry.ZombieType.Z504Bucket, # 铁桶僵尸
+	CharacterRegistry.ZombieType.Z501Norm, # 普通僵尸
+	#CharacterRegistry.ZombieType.Z502Flag, # 旗帜僵尸
+	CharacterRegistry.ZombieType.Z503Cone, # 路障僵尸
+	CharacterRegistry.ZombieType.Z504PoleVaulter, # 撑杆僵尸
+	CharacterRegistry.ZombieType.Z505Bucket, # 铁桶僵尸
 ]
 ## 工坊关卡的兼容刷怪索引；是否为空也用于区分正式关卡和工坊关卡。
 var custom_spawn_schedule: Array[Dictionary] = []
@@ -105,8 +105,8 @@ var custom_flag_data: Array[Dictionary] = []
 ## 简易关卡在开战前预生成自然波次，并保留权重衰减、旗帜数量和出生偏移规则。
 var custom_simple_original_mode := false
 ## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
-var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z000NormTalon
-var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001FlagTalon
+var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001NormTalon
+var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z002FlagTalon
 ## 根据此前冒险关卡自动推导的首次登场波次（僵尸类型 -> 1-based 波次）；
 ## 到达首秀波时优先插入，并在最终波按原版新僵尸规则再次插入。
 var simple_zombie_intro_waves: Dictionary = {}
@@ -125,7 +125,7 @@ var special_reward_card_levels: Dictionary = {}
 var special_reward_card_source_dir := ""
 ## 工坊 Boss 追加战：普通波次结束后由玩家选择挑战或跳过。
 var boss_enabled := false
-var boss_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z523Gargantuar
+var boss_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z524Gargantuar
 var boss_reward_plant_type := -1
 var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
@@ -283,7 +283,7 @@ var save_game_data_main_game: ResourceSaveGameMainGame
 
 ## 游戏开始会根据参数初始化一些硬性的参数。
 ## 卡槽: 传送带禁止选卡、禁止天降阳光。预选卡用 0 补全。
-## 出怪: 正常模式下刷新列表会按白名单过滤；禁止在列表中写 Z520Bungi，应使用 is_bungi。
+## 出怪: 正常模式下刷新列表会按白名单过滤；禁止在列表中写 Z521Bungi，应使用 is_bungi。
 func init_para() -> void:
 	_migrate_legacy_character_type_ids()
 	_apply_card_mode_constraints()
@@ -505,7 +505,7 @@ func delete_game_data():
 var whitelist_refresh_zombie_types: Array[CharacterRegistry.ZombieType] = []
 
 ## 根据白名单过滤出怪类型列表。
-## 不修改入参 zombie_types，返回新数组。若列表中含 Z520Bungi，会将本资源的 is_bungi 设为 true。
+## 不修改入参 zombie_types，返回新数组。若列表中含 Z521Bungi，会将本资源的 is_bungi 设为 true。
 func filter_invalid_zombie_refresh_types(
 	zombie_types: Array[CharacterRegistry.ZombieType],
 	curr_whitelist_refresh_zombie_types: Array[CharacterRegistry.ZombieType]
@@ -521,8 +521,8 @@ func filter_invalid_zombie_refresh_types(
 			)
 			is_err = true
 			continue
-		if zt == CharacterRegistry.ZombieType.Z520Bungi:
-			print("warning: 出怪刷新列表禁止使用 Z520Bungi ,已修改为选择 is_bungi 参数")
+		if zt == CharacterRegistry.ZombieType.Z521Bungi:
+			print("warning: 出怪刷新列表禁止使用 Z521Bungi ,已修改为选择 is_bungi 参数")
 			is_bungi = true
 			is_err = true
 			continue

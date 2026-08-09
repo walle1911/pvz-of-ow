@@ -1,2 +1,0 @@
-extends Plant044Cattail
-class_name Plant051CattailSierra

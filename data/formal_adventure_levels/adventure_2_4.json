@@ -17,7 +17,7 @@
 		6,
 		52,
 		23,
-		504,
+		505,
 		14,
 		11,
 		43,
@@ -31,14 +31,14 @@
 			2.0,
 			3.0,
 			4.0,
-			504.0,
+			505.0,
 			6.0,
-			506.0,
 			507.0,
 			508.0,
 			509.0,
+			510.0,
 			11.0,
-			511.0,
+			512.0,
 			52.0
 		],
 		"plantCardProbability": 0.25,
@@ -91,21 +91,21 @@
 	"rewardPlant": -1,
 	"rewardPlants": [],
 	"schemaVersion": 1.0,
-	"simpleBaseZombieType": 100,
+	"simpleBaseZombieType": 1,
 	"simpleFlagCount": 1,
-	"simpleFlagZombieType": 101,
+	"simpleFlagZombieType": 2,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
 	"simpleZombieIntroWaves": {
-		"508": 6
+		"509": 6
 	},
 	"simpleZombiePool": [
-		100,
-		102,
-		508,
+		1,
+		3,
+		509,
+		507,
 		506,
-		505,
-		104
+		5
 	],
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
@@ -142,7 +142,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -166,7 +166,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -190,7 +190,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -214,7 +214,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -238,7 +238,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -262,7 +262,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -295,7 +295,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -319,7 +319,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -343,7 +343,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -367,7 +367,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -391,7 +391,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -415,7 +415,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -448,7 +448,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -472,7 +472,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -496,7 +496,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -520,7 +520,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -544,7 +544,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -568,7 +568,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -601,7 +601,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -625,7 +625,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -649,7 +649,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -673,7 +673,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -697,7 +697,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -721,7 +721,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -754,7 +754,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -778,7 +778,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -802,7 +802,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -826,7 +826,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -850,7 +850,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -874,7 +874,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -907,7 +907,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -931,7 +931,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -955,7 +955,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -979,7 +979,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -1003,7 +1003,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -1027,7 +1027,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -1060,7 +1060,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -1084,7 +1084,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -1108,7 +1108,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -1132,7 +1132,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -1156,7 +1156,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -1180,7 +1180,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -1213,7 +1213,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -1237,7 +1237,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -1261,7 +1261,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -1285,7 +1285,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -1309,7 +1309,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -1333,7 +1333,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -1366,7 +1366,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -1390,7 +1390,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -1414,7 +1414,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -1438,7 +1438,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -1462,7 +1462,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -1486,7 +1486,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "interval",
@@ -1519,7 +1519,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "100"
+					"zombieType": "1"
 				},
 				{
 					"count": 1,
@@ -1543,7 +1543,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "102"
+					"zombieType": "3"
 				},
 				{
 					"count": 1,
@@ -1567,7 +1567,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "508"
+					"zombieType": "509"
 				},
 				{
 					"count": 1,
@@ -1591,7 +1591,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "506"
+					"zombieType": "507"
 				},
 				{
 					"count": 1,
@@ -1615,7 +1615,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "505"
+					"zombieType": "506"
 				},
 				{
 					"count": 1,
@@ -1639,7 +1639,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "104"
+					"zombieType": "5"
 				}
 			],
 			"stageType": "flag",

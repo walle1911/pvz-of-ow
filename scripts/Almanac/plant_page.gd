@@ -41,7 +41,8 @@ func _build_plant_pages() -> Array:
 		var is_regular_ow_plant := int(plant_type) > 0 and int(plant_type) < 500
 		if is_regular_ow_plant or OW_SPECIAL_PLANT_TYPES.has(plant_type):
 			ow_plant_types.append(plant_type)
-		elif int(plant_type) >= 500 and int(plant_type) < 1000:
+		elif (int(plant_type) >= 500 and int(plant_type) < 1000) \
+		or plant_type == CharacterRegistry.PlantType.P1499Imitater:
 			normal_plant_types.append(plant_type)
 
 	var pages: Array = []

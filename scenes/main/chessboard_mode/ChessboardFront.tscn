@@ -10,7 +10,7 @@
 game_para = ExtResource("2_mevug")
 
 [node name="ZombieWaveManager" parent="Manager/ZombieManager" index="0"]
-zombie_type_candidate_tombstone = Array[int]([500, 502, 504])
+zombie_type_candidate_tombstone = Array[int]([501, 503, 505])
 
 [node name="PanelZombieGoHome" parent="CanvasLayerBG/Background/Home/Door/DoorDown" index="4"]
 offset_left = 92.0

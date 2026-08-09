@@ -11,6 +11,6 @@ game_BGM = 2
 monster_mode = 0
 zombie_multy = 10
 max_wave = 10
-zombie_refresh_types = Array[int]([511])
+zombie_refresh_types = Array[int]([512])
 start_sun = 6460
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

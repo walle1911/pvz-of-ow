@@ -4261,7 +4261,7 @@ _data = {
 &"walk": ExtResource("29_026lm")
 }
 
-[node name="Zombie509Dancer" unique_id=515053598 instance=ExtResource("1_h22tp")]
+[node name="Zombie510Dancer" unique_id=515053598 instance=ExtResource("1_h22tp")]
 script = ExtResource("2_82atn")
 disco_interval_min = 0.12
 disco_interval_max = 0.28

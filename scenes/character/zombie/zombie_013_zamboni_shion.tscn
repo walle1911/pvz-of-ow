@@ -1358,7 +1358,7 @@ nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_pmmng")
 nodes/TimeScale/position = Vector2(200, 60)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"StateMachine"]
 
-[node name="Zombie512Zamboni" unique_id=591183374 instance=ExtResource("1_cvyhe")]
+[node name="Zombie513Zamboni" unique_id=591183374 instance=ExtResource("1_cvyhe")]
 script = ExtResource("2_tjtkh")
 is_caltrop = false
 zombie_type = 13

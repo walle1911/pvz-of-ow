@@ -45,7 +45,7 @@ Number 用 `PlantType` 枚举值（如 MelonPultAshe 枚举 =40，场景用 `pla
 
 #### 3.1 PlantType 枚举
 
-在 OW 变体区块（`P500PeaShooterSingle` 上方）添加：
+在 OW 变体区块（`P501PeaShooterSingle` 上方）添加：
 
 ```gdscript
 P040MelonPultAshe = 40,
@@ -62,7 +62,7 @@ P040MelonPultAshe = 40,
 若原型在 `AllPrePlantPurple` 中有前置植物关系，新变体复制一份：
 
 ```gdscript
-PlantType.P544WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P539MelonPult],
+PlantType.P545WinterMelon:[PlantType.P040MelonPultAshe, PlantType.P540MelonPult],
 ```
 
 ### 4. 添加到 `global_game_state.gd`
@@ -268,7 +268,7 @@ HOME=/tmp /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --qui
 
 ### 成功案例：植物杂交动画迁移
 
-案例：`plant_042_twin_sun_flower_illari.tscn` 右侧花头替换为原版豌豆射手模块，来源为 `plant_500_pea_shooter_single.tscn`。
+案例：`plant_042_twin_sun_flower_illari.tscn` 右侧花头替换为原版豌豆射手模块，来源为 `plant_501_pea_shooter_single.tscn`。
 
 核心原则：不要把杂交部件拆成几张 Sprite 手搓动画。若目标是复用原版生命感，应把原版部件当成完整动画模块迁移，只在目标场景外层做位置、缩放和连接关系适配。
 

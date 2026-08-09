@@ -8,7 +8,8 @@ class_name SaveService
 ## 与 Global 根下的 GlobalGameState 同级，用 % 引用，避免依赖 get_parent() 类型
 @onready var global_game_state: GlobalGameState = %GlobalGameState
 
-const SaveGameVersion := "20260706"
+const SaveGameVersion := "20260809"
+const DISPLACED_CHARACTER_ID_SAVE_VERSION := "20260706"
 const SaveGameFileName := "GlobalSaveGame.json"
 ## 主游戏关卡等存档子目录名（单点定义）。其它脚本请用 `SaveService.MAIN_GAME_SAVE_DIR_NAME` 或 `Global.save_service.MAIN_GAME_SAVE_DIR_NAME`，勿复制字符串。
 const MAIN_GAME_SAVE_DIR_NAME := "main_game_saves_data"
@@ -126,54 +127,54 @@ func load_selected_cards() -> void:
 
 func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 	var legacy_plant_type_map := {
-		1: CharacterRegistry.PlantType.P500PeaShooterSingle,
-		2: CharacterRegistry.PlantType.P501SunFlower,
-		3: CharacterRegistry.PlantType.P502CherryBomb,
+		1: CharacterRegistry.PlantType.P501PeaShooterSingle,
+		2: CharacterRegistry.PlantType.P502SunFlower,
+		3: CharacterRegistry.PlantType.P503CherryBomb,
 		4: CharacterRegistry.PlantType.P004WallNutBrigitte,
-		5: CharacterRegistry.PlantType.P504PotatoMine,
-		6: CharacterRegistry.PlantType.P505SnowPea,
-		7: CharacterRegistry.PlantType.P506Chomper,
-		8: CharacterRegistry.PlantType.P507PeaShooterDouble,
-		9: CharacterRegistry.PlantType.P508PuffShroom,
-		10: CharacterRegistry.PlantType.P509SunShroom,
-		11: CharacterRegistry.PlantType.P510FumeShroom,
-		12: CharacterRegistry.PlantType.P511GraveBuster,
-		13: CharacterRegistry.PlantType.P512HypnoShroom,
-		14: CharacterRegistry.PlantType.P513ScaredyShroom,
-		15: CharacterRegistry.PlantType.P514IceShroom,
-		16: CharacterRegistry.PlantType.P515DoomShroom,
-		17: CharacterRegistry.PlantType.P516LilyPad,
-		18: CharacterRegistry.PlantType.P517Squash,
-		19: CharacterRegistry.PlantType.P518ThreePeater,
-		20: CharacterRegistry.PlantType.P519TangleKelp,
-		21: CharacterRegistry.PlantType.P520Jalapeno,
-		22: CharacterRegistry.PlantType.P521Caltrop,
-		23: CharacterRegistry.PlantType.P522TorchWood,
-		24: CharacterRegistry.PlantType.P523TallNut,
-		25: CharacterRegistry.PlantType.P524SeaShroom,
-		26: CharacterRegistry.PlantType.P525Plantern,
-		27: CharacterRegistry.PlantType.P526Cactus,
-		28: CharacterRegistry.PlantType.P527Blover,
-		29: CharacterRegistry.PlantType.P528SplitPea,
-		30: CharacterRegistry.PlantType.P529StarFruit,
-		31: CharacterRegistry.PlantType.P530Pumpkin,
-		32: CharacterRegistry.PlantType.P531MagnetShroom,
-		33: CharacterRegistry.PlantType.P532CabbagePult,
-		34: CharacterRegistry.PlantType.P533FlowerPot,
-		35: CharacterRegistry.PlantType.P534CornPult,
-		36: CharacterRegistry.PlantType.P535CoffeeBean,
-		37: CharacterRegistry.PlantType.P536Garlic,
-		38: CharacterRegistry.PlantType.P537UmbrellaLeaf,
-		39: CharacterRegistry.PlantType.P538MariGold,
-		40: CharacterRegistry.PlantType.P539MelonPult,
-		41: CharacterRegistry.PlantType.P540GatlingPea,
-		42: CharacterRegistry.PlantType.P541TwinSunFlower,
-		43: CharacterRegistry.PlantType.P542GloomShroom,
-		44: CharacterRegistry.PlantType.P543Cattail,
-		45: CharacterRegistry.PlantType.P544WinterMelon,
-		46: CharacterRegistry.PlantType.P545GoldMagnet,
-		47: CharacterRegistry.PlantType.P546SpikeRock,
-		48: CharacterRegistry.PlantType.P547CobCannon,
+		5: CharacterRegistry.PlantType.P505PotatoMine,
+		6: CharacterRegistry.PlantType.P506SnowPea,
+		7: CharacterRegistry.PlantType.P507Chomper,
+		8: CharacterRegistry.PlantType.P508PeaShooterDouble,
+		9: CharacterRegistry.PlantType.P509PuffShroom,
+		10: CharacterRegistry.PlantType.P510SunShroom,
+		11: CharacterRegistry.PlantType.P511FumeShroom,
+		12: CharacterRegistry.PlantType.P512GraveBuster,
+		13: CharacterRegistry.PlantType.P513HypnoShroom,
+		14: CharacterRegistry.PlantType.P514ScaredyShroom,
+		15: CharacterRegistry.PlantType.P515IceShroom,
+		16: CharacterRegistry.PlantType.P516DoomShroom,
+		17: CharacterRegistry.PlantType.P517LilyPad,
+		18: CharacterRegistry.PlantType.P518Squash,
+		19: CharacterRegistry.PlantType.P519ThreePeater,
+		20: CharacterRegistry.PlantType.P520TangleKelp,
+		21: CharacterRegistry.PlantType.P521Jalapeno,
+		22: CharacterRegistry.PlantType.P522Caltrop,
+		23: CharacterRegistry.PlantType.P523TorchWood,
+		24: CharacterRegistry.PlantType.P524TallNut,
+		25: CharacterRegistry.PlantType.P525SeaShroom,
+		26: CharacterRegistry.PlantType.P526Plantern,
+		27: CharacterRegistry.PlantType.P527Cactus,
+		28: CharacterRegistry.PlantType.P528Blover,
+		29: CharacterRegistry.PlantType.P529SplitPea,
+		30: CharacterRegistry.PlantType.P530StarFruit,
+		31: CharacterRegistry.PlantType.P531Pumpkin,
+		32: CharacterRegistry.PlantType.P532MagnetShroom,
+		33: CharacterRegistry.PlantType.P533CabbagePult,
+		34: CharacterRegistry.PlantType.P534FlowerPot,
+		35: CharacterRegistry.PlantType.P535CornPult,
+		36: CharacterRegistry.PlantType.P536CoffeeBean,
+		37: CharacterRegistry.PlantType.P537Garlic,
+		38: CharacterRegistry.PlantType.P538UmbrellaLeaf,
+		39: CharacterRegistry.PlantType.P539MariGold,
+		40: CharacterRegistry.PlantType.P540MelonPult,
+		41: CharacterRegistry.PlantType.P541GatlingPea,
+		42: CharacterRegistry.PlantType.P542TwinSunFlower,
+		43: CharacterRegistry.PlantType.P543GloomShroom,
+		44: CharacterRegistry.PlantType.P544Cattail,
+		45: CharacterRegistry.PlantType.P545WinterMelon,
+		46: CharacterRegistry.PlantType.P546GoldMagnet,
+		47: CharacterRegistry.PlantType.P547SpikeRock,
+		48: CharacterRegistry.PlantType.P548CobCannon,
 		52: CharacterRegistry.PlantType.P002SunflowerMercy,
 		53: CharacterRegistry.PlantType.P003CherryBombJunkrat,
 		54: CharacterRegistry.PlantType.P018SquashDoomfist,
@@ -183,7 +184,7 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		58: CharacterRegistry.PlantType.P044CattailJetpackCat,
 		59: CharacterRegistry.PlantType.P021JalapenoVendetta,
 		60: CharacterRegistry.PlantType.P040MelonPultAshe,
-		61: CharacterRegistry.PlantType.P053ImitaterEcho,
+		61: CharacterRegistry.PlantType.P999ImitaterEcho,
 		62: CharacterRegistry.PlantType.P016DoomShroomDVA,
 		63: CharacterRegistry.PlantType.P043GloomShroomMoira,
 		64: CharacterRegistry.PlantType.P025SeaShroomWuyang,
@@ -195,34 +196,34 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		71: CharacterRegistry.PlantType.P037GarlicMauga,
 		72: CharacterRegistry.PlantType.P022CaltropHazard,
 		73: CharacterRegistry.PlantType.P020TangleKelpMizuki,
-		999: CharacterRegistry.PlantType.P548Imitater,
+		999: CharacterRegistry.PlantType.P1499Imitater,
 	}
 	var legacy_zombie_type_map := {
-		1: CharacterRegistry.ZombieType.Z500Norm,
-		2: CharacterRegistry.ZombieType.Z501Flag,
-		3: CharacterRegistry.ZombieType.Z502Cone,
-		4: CharacterRegistry.ZombieType.Z503PoleVaulter,
-		5: CharacterRegistry.ZombieType.Z504Bucket,
-		6: CharacterRegistry.ZombieType.Z505Paper,
-		7: CharacterRegistry.ZombieType.Z506ScreenDoor,
-		8: CharacterRegistry.ZombieType.Z507Football,
-		9: CharacterRegistry.ZombieType.Z508Jackson,
-		10: CharacterRegistry.ZombieType.Z509Dancer,
-		11: CharacterRegistry.ZombieType.Z510Duckytube,
-		12: CharacterRegistry.ZombieType.Z511Snorkle,
-		13: CharacterRegistry.ZombieType.Z512Zamboni,
-		14: CharacterRegistry.ZombieType.Z513Bobsled,
-		15: CharacterRegistry.ZombieType.Z514Dolphinrider,
-		16: CharacterRegistry.ZombieType.Z515Jackbox,
-		17: CharacterRegistry.ZombieType.Z516Balloon,
-		18: CharacterRegistry.ZombieType.Z517Digger,
-		19: CharacterRegistry.ZombieType.Z518Pogo,
-		20: CharacterRegistry.ZombieType.Z519Yeti,
-		21: CharacterRegistry.ZombieType.Z520Bungi,
-		22: CharacterRegistry.ZombieType.Z521Ladder,
-		23: CharacterRegistry.ZombieType.Z522Catapult,
-		24: CharacterRegistry.ZombieType.Z523Gargantuar,
-		25: CharacterRegistry.ZombieType.Z524Imp,
+		1: CharacterRegistry.ZombieType.Z501Norm,
+		2: CharacterRegistry.ZombieType.Z502Flag,
+		3: CharacterRegistry.ZombieType.Z503Cone,
+		4: CharacterRegistry.ZombieType.Z504PoleVaulter,
+		5: CharacterRegistry.ZombieType.Z505Bucket,
+		6: CharacterRegistry.ZombieType.Z506Paper,
+		7: CharacterRegistry.ZombieType.Z507ScreenDoor,
+		8: CharacterRegistry.ZombieType.Z508Football,
+		9: CharacterRegistry.ZombieType.Z509Jackson,
+		10: CharacterRegistry.ZombieType.Z510Dancer,
+		11: CharacterRegistry.ZombieType.Z511Duckytube,
+		12: CharacterRegistry.ZombieType.Z512Snorkle,
+		13: CharacterRegistry.ZombieType.Z513Zamboni,
+		14: CharacterRegistry.ZombieType.Z514Bobsled,
+		15: CharacterRegistry.ZombieType.Z515Dolphinrider,
+		16: CharacterRegistry.ZombieType.Z516Jackbox,
+		17: CharacterRegistry.ZombieType.Z517Balloon,
+		18: CharacterRegistry.ZombieType.Z518Digger,
+		19: CharacterRegistry.ZombieType.Z519Pogo,
+		20: CharacterRegistry.ZombieType.Z520Yeti,
+		21: CharacterRegistry.ZombieType.Z521Bungi,
+		22: CharacterRegistry.ZombieType.Z522Ladder,
+		23: CharacterRegistry.ZombieType.Z523Catapult,
+		24: CharacterRegistry.ZombieType.Z524Gargantuar,
+		25: CharacterRegistry.ZombieType.Z525Imp,
 		26: CharacterRegistry.ZombieType.Z024GargantuarReinhardt,
 		27: CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 		28: CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
@@ -232,7 +233,8 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		32: CharacterRegistry.ZombieType.Z013ZomboniShion,
 		33: CharacterRegistry.ZombieType.Z025GargantuarBob,
 	}
-	var should_migrate_legacy_ids := save_version != SaveGameVersion
+	var should_migrate_displaced_ids := save_version == DISPLACED_CHARACTER_ID_SAVE_VERSION
+	var should_migrate_legacy_ids := save_version not in [SaveGameVersion, DISPLACED_CHARACTER_ID_SAVE_VERSION]
 	if not should_migrate_legacy_ids:
 		for card_data in cards:
 			if not card_data is Dictionary:
@@ -257,15 +259,21 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 			if raw_plant is Dictionary or raw_plant is Array:
 				continue
 			var plant_type := int(raw_plant)
-			var should_migrate_plant_id := should_migrate_legacy_ids or not GlobalUtils.is_current_plant_type(plant_type)
-			migrated_card["plant_type"] = legacy_plant_type_map.get(plant_type, plant_type) if should_migrate_plant_id else plant_type
+			if should_migrate_displaced_ids:
+				migrated_card["plant_type"] = _migrate_displaced_plant_type(plant_type)
+			else:
+				var should_migrate_plant_id := should_migrate_legacy_ids or not GlobalUtils.is_current_plant_type(plant_type)
+				migrated_card["plant_type"] = legacy_plant_type_map.get(plant_type, plant_type) if should_migrate_plant_id else plant_type
 		if migrated_card.has("zombie_type"):
 			var raw_zombie: Variant = migrated_card["zombie_type"]
 			if raw_zombie is Dictionary or raw_zombie is Array:
 				continue
 			var zombie_type := int(raw_zombie)
-			var should_migrate_zombie_id := should_migrate_legacy_ids or not GlobalUtils.is_current_zombie_type(zombie_type)
-			migrated_card["zombie_type"] = legacy_zombie_type_map.get(zombie_type, zombie_type) if should_migrate_zombie_id else zombie_type
+			if should_migrate_displaced_ids:
+				migrated_card["zombie_type"] = _migrate_displaced_zombie_type(zombie_type)
+			else:
+				var should_migrate_zombie_id := should_migrate_legacy_ids or not GlobalUtils.is_current_zombie_type(zombie_type)
+				migrated_card["zombie_type"] = legacy_zombie_type_map.get(zombie_type, zombie_type) if should_migrate_zombie_id else zombie_type
 		var raw_final_plant: Variant = migrated_card.get("plant_type", CharacterRegistry.PlantType.Null)
 		var raw_final_zombie: Variant = migrated_card.get("zombie_type", CharacterRegistry.ZombieType.Null)
 		if raw_final_plant is Dictionary or raw_final_plant is Array:
@@ -284,6 +292,29 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 			migrated_card.erase("is_imitater")
 			migrated.append(migrated_card)
 	return migrated
+
+
+func _migrate_displaced_plant_type(plant_type: int) -> int:
+	if plant_type >= 500 and plant_type <= 547:
+		return plant_type + 1
+	if plant_type == 548:
+		return int(CharacterRegistry.PlantType.P1499Imitater)
+	return plant_type
+
+
+func _migrate_displaced_zombie_type(zombie_type: int) -> int:
+	match zombie_type:
+		100:
+			return int(CharacterRegistry.ZombieType.Z001NormTalon)
+		101:
+			return int(CharacterRegistry.ZombieType.Z002FlagTalon)
+		102:
+			return int(CharacterRegistry.ZombieType.Z003ConeTalon)
+		104:
+			return int(CharacterRegistry.ZombieType.Z005BucketTalon)
+	if zombie_type >= 500 and zombie_type <= 524:
+		return zombie_type + 1
+	return zombie_type
 
 func _save_json(data: Dictionary, path: String) -> bool:
 	var file := FileAccess.open(path, FileAccess.WRITE)

@@ -3,14 +3,14 @@ class_name ResourcePlantConditionCobCannon
 
 ## 玉米加农炮判定是否可以种植
 func judge_special_plants_condition(plant_cell:PlantCell) -> bool:
-	if get_preplant_purple(plant_cell, CharacterRegistry.PlantType.P547CobCannon) != null:
+	if get_preplant_purple(plant_cell, CharacterRegistry.PlantType.P548CobCannon) != null:
 		return true
 	return false
 
 ## 判段是否存在紫卡预种植植物,并且不存在南瓜壳
 func _judge_pre_plant(plant_cell:PlantCell) -> bool:
 	return is_instance_valid(plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]) \
-	and plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm].plant_type == CharacterRegistry.PlantType.P534CornPult \
+	and plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm].plant_type == CharacterRegistry.PlantType.P535CornPult \
 	and not is_instance_valid(plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Shell])
 
 ## 获取当前格子紫卡预种植植物

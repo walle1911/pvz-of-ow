@@ -11,7 +11,7 @@ var animation_origin_speed:float
 ## 舞王入场滑步次数
 @export var num_moon_walk := 2
 ## 该舞王召唤的伴舞类型，变体场景可单独覆盖。
-@export var backup_dancer_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z509Dancer
+@export var backup_dancer_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z510Dancer
 ## 伴舞僵尸编号,舞王为-1
 var dancer_id:int= -1
 #region 重写父类的方法

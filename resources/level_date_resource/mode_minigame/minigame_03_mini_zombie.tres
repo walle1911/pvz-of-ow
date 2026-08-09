@@ -13,20 +13,20 @@ can_choosed_card = false
 is_mini_zombie = true
 zombie_multy = 10
 max_wave = 20
-zombie_refresh_types = Array[int]([508, 500, 502, 503, 504, 506, 507, 515, 514, 503])
+zombie_refresh_types = Array[int]([509, 501, 503, 504, 505, 507, 508, 516, 515, 504])
 card_mode = 2
 all_card_plant_type_probability = Dictionary[int, int]({
-500: 2,
-502: 1,
-503: 2,
-505: 2,
-507: 2,
-516: 5,
-517: 1,
-518: 2,
-520: 1,
-522: 2,
-543: 1
+501: 2,
+503: 1,
+504: 2,
+506: 2,
+508: 2,
+517: 5,
+518: 1,
+519: 2,
+521: 1,
+523: 2,
+544: 1
 })
 card_order_plant = Dictionary[int, int]({
 1: 516,

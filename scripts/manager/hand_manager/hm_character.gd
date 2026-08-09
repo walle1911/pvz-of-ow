@@ -137,8 +137,8 @@ func click_card(card:Card) -> bool:
 	if character_type == CharacterRegistry.CharacterType.Plant:
 		## 记住上一个非模仿者植物类型
 		if not curr_card.is_imitater\
-			and curr_card.card_plant_type != CharacterRegistry.PlantType.P548Imitater\
-			and curr_card.card_plant_type != CharacterRegistry.PlantType.P053ImitaterEcho:
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P1499Imitater\
+			and curr_card.card_plant_type != CharacterRegistry.PlantType.P999ImitaterEcho:
 			last_non_imitater_plant_type = curr_card.card_plant_type
 
 		plant_condition = Global.character_registry.get_plant_info(curr_card.card_plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
@@ -167,7 +167,7 @@ func click_card(card:Card) -> bool:
 	else:
 		zombie_row_type = Global.character_registry.get_zombie_info(curr_card.card_zombie_type, CharacterRegistry.ZombieInfoAttribute.ZombieRowType)
 		## 静态僵尸以及僵尸虚影
-		if curr_card.card_zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon:
+		if curr_card.card_zombie_type == CharacterRegistry.ZombieType.Z003ConeTalon:
 			character_child = _wrap_cone_talon_card_sprite(character_static_copy, character_child)
 		else:
 			character_child.scale = Vector2.ONE
@@ -201,7 +201,7 @@ func _wrap_cone_talon_card_sprite(character_static_copy:Node2D, card_sprite:Node
 
 func _normalize_ow_zombie_preview(character_root:Node2D, zombie_type:CharacterRegistry.ZombieType) -> void:
 	## 500 起是原版僵尸，其卡图本来就按实战尺寸制作；只校正 OW/Talon 卡图。
-	if zombie_type <= CharacterRegistry.ZombieType.Null or zombie_type >= CharacterRegistry.ZombieType.Z500Norm:
+	if zombie_type <= CharacterRegistry.ZombieType.Null or zombie_type >= CharacterRegistry.ZombieType.Z501Norm:
 		return
 
 	var sprite_bounds:Array[Rect2] = []
@@ -218,7 +218,7 @@ func _normalize_ow_zombie_preview(character_root:Node2D, zombie_type:CharacterRe
 	var preview_max_height := OW_ZOMBIE_PREVIEW_MAX_HEIGHT
 	## 路障海鸥僵尸使用 250x473 的整张卡图，不能按巨型/旗帜僵尸的上限显示。
 	## 140px 与普通 Talon 的实战预选体型一致。
-	if zombie_type == CharacterRegistry.ZombieType.Z002ConeTalon:
+	if zombie_type == CharacterRegistry.ZombieType.Z003ConeTalon:
 		preview_max_height = OW_CONE_TALON_PREVIEW_MAX_HEIGHT
 
 	var preview_scale := 1.0
@@ -606,7 +606,7 @@ func _update_cell_shadow(plant_cell:PlantCell, curr_characte_static_shadow:Node2
 	## 僵尸
 	else:
 		## 如果当前格子不能种植僵尸(蹦极除外)
-		if not plant_cell.can_common_zombie and curr_card.card_zombie_type != CharacterRegistry.ZombieType.Z520Bungi:
+		if not plant_cell.can_common_zombie and curr_card.card_zombie_type != CharacterRegistry.ZombieType.Z521Bungi:
 			return false
 		## 如果不是双地形
 		if zombie_row_type != CharacterRegistry.ZombieRowType.Both:
@@ -682,10 +682,10 @@ func click_cell(plant_cell:PlantCell):
 		if curr_card.card_plant_type != 0:
 			var plant_type := curr_card.card_plant_type
 			var is_imitater := curr_card.is_imitater
-			var imitater_variant := CharacterRegistry.PlantType.P053ImitaterEcho  # 默认改版模仿者
+			var imitater_variant := CharacterRegistry.PlantType.P999ImitaterEcho  # 默认改版模仿者
 			## 如果卡牌是模仿者本体（没有指定模仿目标），复制上一次选中的植物
 			if not is_imitater\
-				and (plant_type == CharacterRegistry.PlantType.P548Imitater or plant_type == CharacterRegistry.PlantType.P053ImitaterEcho)\
+				and (plant_type == CharacterRegistry.PlantType.P1499Imitater or plant_type == CharacterRegistry.PlantType.P999ImitaterEcho)\
 				and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
 				imitater_variant = plant_type  # 记住具体变体
 				plant_type = last_non_imitater_plant_type
@@ -731,11 +731,11 @@ func exit_status():
 func _fix_body_correct_from_game_scene(plant_child: Node2D, plant_type: CharacterRegistry.PlantType) -> void:
 	## 土豆雷卡牌预览已经烘焙为出土完成帧；真实场景的默认坐标是出土动画
 	## 起始帧，不能覆盖卡图中的最终碎石布局。
-	if plant_type == CharacterRegistry.PlantType.P504PotatoMine:
+	if plant_type == CharacterRegistry.PlantType.P505PotatoMine:
 		return
 	## Echo 的实战 Anim_idle 初始缩放由 AnimationTree 从近零值驱动；把该初始值
 	## 覆盖到卡牌静态图后，会让鼠标手持贴图看起来完全消失。
-	if plant_type == CharacterRegistry.PlantType.P053ImitaterEcho:
+	if plant_type == CharacterRegistry.PlantType.P999ImitaterEcho:
 		return
 	if not _game_body_correct_cache.has(plant_type):
 		_game_body_correct_cache[plant_type] = _make_game_body_correct_snapshot(plant_type)
@@ -849,9 +849,9 @@ func _click_cell_column(plant_cell:PlantCell):
 				var _plant_cell:PlantCell = Global.main_game.plant_cell_manager.all_plant_cells[i][plant_cell.row_col.y]
 				var _plant_type := curr_card.card_plant_type
 				var _is_imitater := curr_card.is_imitater
-				var _imitater_variant := CharacterRegistry.PlantType.P053ImitaterEcho  # 默认改版模仿者
+				var _imitater_variant := CharacterRegistry.PlantType.P999ImitaterEcho  # 默认改版模仿者
 				if not _is_imitater\
-					and (_plant_type == CharacterRegistry.PlantType.P548Imitater or _plant_type == CharacterRegistry.PlantType.P053ImitaterEcho)\
+					and (_plant_type == CharacterRegistry.PlantType.P1499Imitater or _plant_type == CharacterRegistry.PlantType.P999ImitaterEcho)\
 					and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
 					_imitater_variant = _plant_type  # 记住具体变体
 					_plant_type = last_non_imitater_plant_type

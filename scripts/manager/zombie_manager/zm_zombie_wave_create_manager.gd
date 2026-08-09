@@ -21,47 +21,47 @@ var range_num_bungi:Vector2i = Vector2i(3,5)
 @onready var zombie_choose_row_system: ZombieChooseRowSystem = %ZombieChooseRowSystem
 ## 定义每个僵尸的战力值
 const zombie_power = {
-	CharacterRegistry.ZombieType.Z000NormTalon: 1,
+	CharacterRegistry.ZombieType.Z001NormTalon: 1,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 5,
 	CharacterRegistry.ZombieType.Z010BackupDancerLucio: 1,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 7,
-	CharacterRegistry.ZombieType.Z001FlagTalon: 1,	# 黑爪旗帜战力
-	CharacterRegistry.ZombieType.Z002ConeTalon: 2,
-	CharacterRegistry.ZombieType.Z004BucketTalon: 4,
-	CharacterRegistry.ZombieType.Z500Norm: 1,		# 普僵战力
-	CharacterRegistry.ZombieType.Z501Flag: 1,		# 旗帜战力
-	CharacterRegistry.ZombieType.Z502Cone: 2,		# 路障战力
-	CharacterRegistry.ZombieType.Z503PoleVaulter: 2,	# 撑杆战力
-	CharacterRegistry.ZombieType.Z504Bucket: 4,		# 铁桶战力
+	CharacterRegistry.ZombieType.Z002FlagTalon: 1,	# 黑爪旗帜战力
+	CharacterRegistry.ZombieType.Z003ConeTalon: 2,
+	CharacterRegistry.ZombieType.Z005BucketTalon: 4,
+	CharacterRegistry.ZombieType.Z501Norm: 1,		# 普僵战力
+	CharacterRegistry.ZombieType.Z502Flag: 1,		# 旗帜战力
+	CharacterRegistry.ZombieType.Z503Cone: 2,		# 路障战力
+	CharacterRegistry.ZombieType.Z504PoleVaulter: 2,	# 撑杆战力
+	CharacterRegistry.ZombieType.Z505Bucket: 4,		# 铁桶战力
 
-	CharacterRegistry.ZombieType.Z505Paper: 2,		# 读报战力
-	CharacterRegistry.ZombieType.Z506ScreenDoor: 4,	# 铁门战力
-	CharacterRegistry.ZombieType.Z507Football: 7,	# 橄榄球战力
-	CharacterRegistry.ZombieType.Z508Jackson: 5,		# 舞王战力
-	CharacterRegistry.ZombieType.Z509Dancer: 1,		# 伴舞权重
-	CharacterRegistry.ZombieType.Z510Duckytube: 1,		# 鸭子救生圈僵尸
+	CharacterRegistry.ZombieType.Z506Paper: 2,		# 读报战力
+	CharacterRegistry.ZombieType.Z507ScreenDoor: 4,	# 铁门战力
+	CharacterRegistry.ZombieType.Z508Football: 7,	# 橄榄球战力
+	CharacterRegistry.ZombieType.Z509Jackson: 5,		# 舞王战力
+	CharacterRegistry.ZombieType.Z510Dancer: 1,		# 伴舞权重
+	CharacterRegistry.ZombieType.Z511Duckytube: 1,		# 鸭子救生圈僵尸
 
-	CharacterRegistry.ZombieType.Z511Snorkle: 3,		# 潜水
-	CharacterRegistry.ZombieType.Z512Zamboni: 7,		# 冰车
-	CharacterRegistry.ZombieType.Z513Bobsled: 3,		# 滑雪四兄弟
-	CharacterRegistry.ZombieType.Z514Dolphinrider: 3,# 海豚僵尸
+	CharacterRegistry.ZombieType.Z512Snorkle: 3,		# 潜水
+	CharacterRegistry.ZombieType.Z513Zamboni: 7,		# 冰车
+	CharacterRegistry.ZombieType.Z514Bobsled: 3,		# 滑雪四兄弟
+	CharacterRegistry.ZombieType.Z515Dolphinrider: 3,# 海豚僵尸
 
-	CharacterRegistry.ZombieType.Z515Jackbox: 3,		# 原版小丑
+	CharacterRegistry.ZombieType.Z516Jackbox: 3,		# 原版小丑
 	CharacterRegistry.ZombieType.Z016JackboxReaper: 3,		# 小丑
-	CharacterRegistry.ZombieType.Z516Balloon: 2,		# 气球
-	CharacterRegistry.ZombieType.Z517Digger: 4,		# 原版矿工
+	CharacterRegistry.ZombieType.Z517Balloon: 2,		# 气球
+	CharacterRegistry.ZombieType.Z518Digger: 4,		# 原版矿工
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: 4,		# 矿工
-	CharacterRegistry.ZombieType.Z518Pogo: 4,			# 跳跳
-	CharacterRegistry.ZombieType.Z519Yeti: 4,			# 原版雪人
+	CharacterRegistry.ZombieType.Z519Pogo: 4,			# 跳跳
+	CharacterRegistry.ZombieType.Z520Yeti: 4,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 4,			# 雪人
-	CharacterRegistry.ZombieType.Z520Bungi: 3,
+	CharacterRegistry.ZombieType.Z521Bungi: 3,
 
-	CharacterRegistry.ZombieType.Z521Ladder: 4,		# 扶梯
-	CharacterRegistry.ZombieType.Z522Catapult: 5,		# 投篮
-	CharacterRegistry.ZombieType.Z523Gargantuar: 10,	# 原版伽刚特尔
+	CharacterRegistry.ZombieType.Z522Ladder: 4,		# 扶梯
+	CharacterRegistry.ZombieType.Z523Catapult: 5,		# 投篮
+	CharacterRegistry.ZombieType.Z524Gargantuar: 10,	# 原版伽刚特尔
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 10,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 10,
-	CharacterRegistry.ZombieType.Z524Imp: 1,			# 小鬼
+	CharacterRegistry.ZombieType.Z525Imp: 1,			# 小鬼
 	CharacterRegistry.ZombieType.Z027ImpTorbjorn: 1,
 	CharacterRegistry.ZombieType.Z028ImpAshe: 1,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 3,	# 豌豆射手僵尸(远程)
@@ -72,47 +72,47 @@ const zombie_power = {
 var zombie_weights_base: Dictionary = zombie_weights_ori.duplicate_deep()
 var zombie_weights:Dictionary = zombie_weights_base.duplicate_deep()
 const zombie_weights_ori = {
-	CharacterRegistry.ZombieType.Z000NormTalon: 4000,
+	CharacterRegistry.ZombieType.Z001NormTalon: 4000,
 	CharacterRegistry.ZombieType.Z009DancingZombieLucio: 1000,
 	CharacterRegistry.ZombieType.Z010BackupDancerLucio: 4000,
 	CharacterRegistry.ZombieType.Z013ZomboniShion: 2000,
-	CharacterRegistry.ZombieType.Z001FlagTalon: 1000,
-	CharacterRegistry.ZombieType.Z002ConeTalon: 4000,
-	CharacterRegistry.ZombieType.Z004BucketTalon: 3000,
-	CharacterRegistry.ZombieType.Z500Norm: 4000,			# 普僵权重
-	CharacterRegistry.ZombieType.Z501Flag: 1000,			# 允许在自制自然池中作为普通抽取项
-	CharacterRegistry.ZombieType.Z502Cone: 4000,			# 路障权重
-	CharacterRegistry.ZombieType.Z503PoleVaulter: 2000,	# 撑杆权重
-	CharacterRegistry.ZombieType.Z504Bucket: 3000,		# 铁桶权重
+	CharacterRegistry.ZombieType.Z002FlagTalon: 1000,
+	CharacterRegistry.ZombieType.Z003ConeTalon: 4000,
+	CharacterRegistry.ZombieType.Z005BucketTalon: 3000,
+	CharacterRegistry.ZombieType.Z501Norm: 4000,			# 普僵权重
+	CharacterRegistry.ZombieType.Z502Flag: 1000,			# 允许在自制自然池中作为普通抽取项
+	CharacterRegistry.ZombieType.Z503Cone: 4000,			# 路障权重
+	CharacterRegistry.ZombieType.Z504PoleVaulter: 2000,	# 撑杆权重
+	CharacterRegistry.ZombieType.Z505Bucket: 3000,		# 铁桶权重
 
-	CharacterRegistry.ZombieType.Z505Paper: 1000,		# 读报权重
-	CharacterRegistry.ZombieType.Z506ScreenDoor: 3500,	# 铁门权重
-	CharacterRegistry.ZombieType.Z507Football: 2000,		# 橄榄球权重
-	CharacterRegistry.ZombieType.Z508Jackson: 1000,		# 舞王权重
-	CharacterRegistry.ZombieType.Z509Dancer: 4000,		# 舞王权重
-	CharacterRegistry.ZombieType.Z510Duckytube: 3600,		# 鸭子救生圈僵尸
+	CharacterRegistry.ZombieType.Z506Paper: 1000,		# 读报权重
+	CharacterRegistry.ZombieType.Z507ScreenDoor: 3500,	# 铁门权重
+	CharacterRegistry.ZombieType.Z508Football: 2000,		# 橄榄球权重
+	CharacterRegistry.ZombieType.Z509Jackson: 1000,		# 舞王权重
+	CharacterRegistry.ZombieType.Z510Dancer: 4000,		# 舞王权重
+	CharacterRegistry.ZombieType.Z511Duckytube: 3600,		# 鸭子救生圈僵尸
 
-	CharacterRegistry.ZombieType.Z511Snorkle: 2000,		# 潜水
-	CharacterRegistry.ZombieType.Z512Zamboni: 2000,		# 冰车
-	CharacterRegistry.ZombieType.Z513Bobsled: 2000,		# 滑雪四兄弟
-	CharacterRegistry.ZombieType.Z514Dolphinrider: 1500,	# 海豚僵尸
+	CharacterRegistry.ZombieType.Z512Snorkle: 2000,		# 潜水
+	CharacterRegistry.ZombieType.Z513Zamboni: 2000,		# 冰车
+	CharacterRegistry.ZombieType.Z514Bobsled: 2000,		# 滑雪四兄弟
+	CharacterRegistry.ZombieType.Z515Dolphinrider: 1500,	# 海豚僵尸
 
-	CharacterRegistry.ZombieType.Z515Jackbox: 1000,		# 原版小丑
+	CharacterRegistry.ZombieType.Z516Jackbox: 1000,		# 原版小丑
 	CharacterRegistry.ZombieType.Z016JackboxReaper: 1000,		# 小丑
-	CharacterRegistry.ZombieType.Z516Balloon: 2000,		# 气球
-	CharacterRegistry.ZombieType.Z517Digger: 1000,		# 原版矿工
+	CharacterRegistry.ZombieType.Z517Balloon: 2000,		# 气球
+	CharacterRegistry.ZombieType.Z518Digger: 1000,		# 原版矿工
 	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: 1000,		# 矿工
-	CharacterRegistry.ZombieType.Z518Pogo: 1000,			# 跳跳
-	CharacterRegistry.ZombieType.Z519Yeti: 1,			# 原版雪人
+	CharacterRegistry.ZombieType.Z519Pogo: 1000,			# 跳跳
+	CharacterRegistry.ZombieType.Z520Yeti: 1,			# 原版雪人
 	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: 300,			# Winston 雪人：Boss 级低频单位，不沿用原版彩蛋的极低权重
-	CharacterRegistry.ZombieType.Z520Bungi: 1000,		# 简易工坊会转交旗帜波蹦极机制，不走道路出生
+	CharacterRegistry.ZombieType.Z521Bungi: 1000,		# 简易工坊会转交旗帜波蹦极机制，不走道路出生
 
-	CharacterRegistry.ZombieType.Z521Ladder: 1000,		# 扶梯
-	CharacterRegistry.ZombieType.Z522Catapult: 1500,	# 投篮
-	CharacterRegistry.ZombieType.Z523Gargantuar: 1500,	# 原版伽刚特尔
+	CharacterRegistry.ZombieType.Z522Ladder: 1000,		# 扶梯
+	CharacterRegistry.ZombieType.Z523Catapult: 1500,	# 投篮
+	CharacterRegistry.ZombieType.Z524Gargantuar: 1500,	# 原版伽刚特尔
 	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: 1500,	# 伽刚特尔
 	CharacterRegistry.ZombieType.Z025GargantuarBob: 1500,
-	CharacterRegistry.ZombieType.Z524Imp: 4000,
+	CharacterRegistry.ZombieType.Z525Imp: 4000,
 	CharacterRegistry.ZombieType.Z027ImpTorbjorn: 4000,
 	CharacterRegistry.ZombieType.Z028ImpAshe: 4000,
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: 1500,	# 豌豆射手僵尸
@@ -241,7 +241,7 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 			## 强制选行仍记入历史，让第 3 只起继续使用原平滑随机算法。
 			zombie_choose_row_system.on_zombie_spawned(lane)
 		## 雪橇车僵尸
-		elif zombie_type == CharacterRegistry.ZombieType.Z513Bobsled:
+		elif zombie_type == CharacterRegistry.ZombieType.Z514Bobsled:
 			## 计算冰道权重
 			if special_base_weight.is_empty():
 				for row_ice_road:Array[IceRoad] in zombie_manager.all_ice_roads:
@@ -252,7 +252,7 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 				print(special_base_weight)
 			## 如果没有冰道
 			if GlobalUtils.sum_arr(special_base_weight) == 0:
-				zombie_type = CharacterRegistry.ZombieType.Z512Zamboni
+				zombie_type = CharacterRegistry.ZombieType.Z513Zamboni
 				lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType])
 			else:
 				lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType], special_base_weight)
@@ -282,7 +282,7 @@ func create_custom_timeline_zombie(event: Dictionary) -> Zombie000Base:
 	var lane := clampi(int(event.get("lane", 0)), 0, zombie_manager.all_zombie_rows.size() - 1)
 	if natural_created_count == 0 and opening_first_zombie_lane >= 0:
 		lane = opening_first_zombie_lane
-	var zombie_type: CharacterRegistry.ZombieType = int(event.get("zombie_type", CharacterRegistry.ZombieType.Z500Norm)) as CharacterRegistry.ZombieType
+	var zombie_type: CharacterRegistry.ZombieType = int(event.get("zombie_type", CharacterRegistry.ZombieType.Z501Norm)) as CharacterRegistry.ZombieType
 	return wave_create_zombie(zombie_type, lane, int(event.get("stage_index", 0)))
 
 
@@ -435,7 +435,7 @@ func _update_weights(wave: int):
 			print("更新权重")
 			wave = 25
 
-		for norm_type in [CharacterRegistry.ZombieType.Z000NormTalon, CharacterRegistry.ZombieType.Z500Norm]:
+		for norm_type in [CharacterRegistry.ZombieType.Z001NormTalon, CharacterRegistry.ZombieType.Z501Norm]:
 			var norm_weight := scaled_decay_weight(
 				int(zombie_weights_base[norm_type]),
 				int(zombie_weights_ori[norm_type]),
@@ -445,7 +445,7 @@ func _update_weights(wave: int):
 			zombie_weights[norm_type] = norm_weight
 			if norm_type in zombie_manager.zombie_refresh_types:
 				zombie_choose_random_pool.update_item_weight(norm_type, norm_weight, false)
-		for cone_type in [CharacterRegistry.ZombieType.Z002ConeTalon, CharacterRegistry.ZombieType.Z502Cone]:
+		for cone_type in [CharacterRegistry.ZombieType.Z003ConeTalon, CharacterRegistry.ZombieType.Z503Cone]:
 			var cone_weight := scaled_decay_weight(
 				int(zombie_weights_base[cone_type]),
 				int(zombie_weights_ori[cone_type]),
@@ -585,7 +585,7 @@ func _simple_zombie_is_unlocked(zombie_type: CharacterRegistry.ZombieType, wave:
 
 func _is_yeti_type(zombie_type: CharacterRegistry.ZombieType) -> bool:
 	return zombie_type in [
-		CharacterRegistry.ZombieType.Z519Yeti,
+		CharacterRegistry.ZombieType.Z520Yeti,
 		CharacterRegistry.ZombieType.Z020ZombieYetiWinston,
 	]
 
@@ -605,13 +605,13 @@ func _simple_intro_wave(zombie_type: CharacterRegistry.ZombieType) -> int:
 func _plain_zombie_type() -> CharacterRegistry.ZombieType:
 	if zombie_manager.game_para.custom_simple_original_mode:
 		return zombie_manager.game_para.simple_base_zombie_type
-	return CharacterRegistry.ZombieType.Z500Norm
+	return CharacterRegistry.ZombieType.Z501Norm
 
 
 func _flag_zombie_type() -> CharacterRegistry.ZombieType:
 	if zombie_manager.game_para.custom_simple_original_mode:
 		return zombie_manager.game_para.simple_flag_zombie_type
-	return CharacterRegistry.ZombieType.Z001FlagTalon
+	return CharacterRegistry.ZombieType.Z002FlagTalon
 
 #endregion
 
@@ -643,7 +643,7 @@ func spawn_sea_weed_zombies():
 		print("无水路,无法生成珊瑚僵尸")
 		return
 
-	var zombie_type_sea_weed_list :Array= [CharacterRegistry.ZombieType.Z500Norm, CharacterRegistry.ZombieType.Z502Cone, CharacterRegistry.ZombieType.Z504Bucket]
+	var zombie_type_sea_weed_list :Array= [CharacterRegistry.ZombieType.Z501Norm, CharacterRegistry.ZombieType.Z503Cone, CharacterRegistry.ZombieType.Z505Bucket]
 
 	for i in range(3):
 		var zombie_type:CharacterRegistry.ZombieType = zombie_type_sea_weed_list.pick_random()
@@ -675,7 +675,7 @@ func spawn_bungi_zombies():
 		}
 
 		zombie_manager.create_norm_zombie(
-			CharacterRegistry.ZombieType.Z520Bungi,
+			CharacterRegistry.ZombieType.Z521Bungi,
 			zombie_manager.all_zombie_rows[plant_cell.row_col.x],
 			zombie_init_para,
 			Vector2(plant_cell.global_position.x + plant_cell.size.x/2,

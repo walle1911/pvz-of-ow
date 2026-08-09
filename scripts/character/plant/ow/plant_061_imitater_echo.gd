@@ -79,7 +79,7 @@ func update_imitater():
 		_create_imitater_zombie()
 	## plant_cell创造植物,该函数会先等待一帧,当前模仿者死亡后创建
 	elif imitater_plant_type != CharacterRegistry.PlantType.Null and is_instance_valid(plant_cell):
-		plant_cell.imitater_create_plant(imitater_plant_type, true, CharacterRegistry.PlantType.P053ImitaterEcho)
+		plant_cell.imitater_create_plant(imitater_plant_type, true, CharacterRegistry.PlantType.P999ImitaterEcho)
 	if is_instance_valid(imitater_effect) and is_instance_valid(imitater_effect.owner) and is_instance_valid(imitater_effect.owner.get_parent()):
 		imitater_effect.visible = true
 		imitater_effect.z_index += 1

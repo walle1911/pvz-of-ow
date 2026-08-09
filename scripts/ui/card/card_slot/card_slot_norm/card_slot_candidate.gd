@@ -111,7 +111,7 @@ func _collect_plant_cards() -> Array[Card]:
 			if _adventure_card_lock_active() and not _is_adventure_plant_available(card.card_plant_type):
 				continue
 			# 非冒险锁定的棋盘格场景也只提供 500+ 的原版植物。
-			if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(card.card_plant_type) < 500 or int(card.card_plant_type) >= 1000):
+			if not _adventure_card_lock_active() and _is_chessboard_mode() and not _is_original_plant_type(card.card_plant_type):
 				continue
 			ordered_cards.append(card)
 	return ordered_cards
@@ -173,7 +173,7 @@ func _init_card_slot_candidate_imitater():
 		var plant_type = Global.global_game_state.curr_plant[idx]
 		if _adventure_card_lock_active() and not _is_adventure_plant_available(plant_type):
 			continue
-		if not _adventure_card_lock_active() and _is_chessboard_mode() and (int(plant_type) < 500 or int(plant_type) >= 1000):
+		if not _adventure_card_lock_active() and _is_chessboard_mode() and not _is_original_plant_type(plant_type):
 			continue
 		if not AllCards.all_plant_card_prefabs.has(plant_type):
 			continue
@@ -208,6 +208,11 @@ func _init_card_slot_candidate_imitater():
 func _is_chessboard_mode() -> bool:
 	var scene := get_tree().current_scene
 	return scene != null and scene.get_node_or_null(^"ChessboardMode") != null
+
+
+func _is_original_plant_type(plant_type: CharacterRegistry.PlantType) -> bool:
+	return (int(plant_type) >= 500 and int(plant_type) < 1000) \
+		or plant_type == CharacterRegistry.PlantType.P1499Imitater
 
 
 func _adventure_card_lock_active() -> bool:

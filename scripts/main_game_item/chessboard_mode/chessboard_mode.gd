@@ -105,7 +105,7 @@ const BOARD_QUOTAS := [
 ]
 const NATURAL_SPEED_BY_MAJOR := [1.0, 1.0, 1.03, 1.07, 1.12, 1.18, 1.25, 1.35]
 const AQUATIC_REWARD_PLANTS := [20, 25, 44]
-const PLANT_REWARD_TYPES := [1, 2, 3, 4, 6, 11, 13, 14, 16, 18, 19, 20, 21, 22, 23, 24, 25, 27, 31, 32, 36, 37, 38, 40, 41, 43, 44, 48, 52, 53]
+const PLANT_REWARD_TYPES := [1, 2, 3, 4, 6, 11, 13, 14, 16, 18, 19, 20, 21, 22, 23, 24, 25, 27, 31, 32, 36, 37, 38, 40, 41, 43, 44, 48, 52, 999]
 
 
 func _ready() -> void:
@@ -148,9 +148,9 @@ func _init_ow_result_candidates() -> void:
 		for type_value:int in PLANT_REWARD_TYPES:
 			ow_plant_candidates.append(type_value as CharacterRegistry.PlantType)
 		ow_zombie_candidates.assign([
-			CharacterRegistry.ZombieType.Z000NormTalon,
-			CharacterRegistry.ZombieType.Z002ConeTalon,
-			CharacterRegistry.ZombieType.Z004BucketTalon,
+			CharacterRegistry.ZombieType.Z001NormTalon,
+			CharacterRegistry.ZombieType.Z003ConeTalon,
+			CharacterRegistry.ZombieType.Z005BucketTalon,
 			CharacterRegistry.ZombieType.Z026PeashooterZombie,
 			CharacterRegistry.ZombieType.Z018DiggerZombieVenture,
 			CharacterRegistry.ZombieType.Z016JackboxReaper,
@@ -166,7 +166,7 @@ func _init_ow_result_candidates() -> void:
 	var config := Global.main_game.game_para
 	var plant_source: Array = config.available_plant_types if not config.available_plant_types.is_empty() else Global.global_game_state.curr_plant
 	for plant_type: CharacterRegistry.PlantType in plant_source:
-		if int(plant_type) >= 500 and int(plant_type) < 1000 and (has_pool_cells or not _is_pool_only_plant(plant_type)):
+		if _is_original_plant_type(plant_type) and (has_pool_cells or not _is_pool_only_plant(plant_type)):
 			ow_plant_candidates.append(plant_type)
 	for zombie_type: CharacterRegistry.ZombieType in Global.main_game.game_para.zombie_refresh_types:
 		if int(zombie_type) >= 500 and int(zombie_type) < 1000:
@@ -196,6 +196,11 @@ func _is_pool_only_plant(plant_type: CharacterRegistry.PlantType) -> bool:
 	var supports_water := bool(condition.plant_condition & (8 | 16))
 	var supports_non_water := bool(condition.plant_condition & (2 | 4 | 32))
 	return supports_water and not supports_non_water
+
+
+func _is_original_plant_type(plant_type: CharacterRegistry.PlantType) -> bool:
+	return (int(plant_type) >= 500 and int(plant_type) < 1000) \
+		or plant_type == CharacterRegistry.PlantType.P1499Imitater
 
 
 func _connect_reveal_cells() -> void:
@@ -568,7 +573,7 @@ func _awaken_night_plant_in_cell(cell: PlantCell) -> void:
 func _spawn_mature_cross_potato_mine(cell: PlantCell) -> void:
 	## 棋盘地雷是独立事件，不登记到 plant_in_cell，因此不会占玩家的正常植物槽位。
 	var plant_scene:PackedScene = Global.character_registry.get_plant_info(
-		CharacterRegistry.PlantType.P504PotatoMine,
+		CharacterRegistry.PlantType.P505PotatoMine,
 		CharacterRegistry.PlantInfoAttribute.PlantScenes
 	)
 	var plant := plant_scene.instantiate() as Plant005PotatoMine
@@ -829,7 +834,7 @@ func _plant_major_weight(plant_type:int, major:int) -> float:
 
 func _plant_strength(plant_type:int) -> int:
 	if plant_type in [3, 16, 21, 40, 41, 43, 44, 48]: return 2
-	if plant_type in [6, 13, 18, 19, 23, 24, 27, 31, 32, 38, 52, 53]: return 1
+	if plant_type in [6, 13, 18, 19, 23, 24, 27, 31, 32, 38, 52, 999]: return 1
 	return 0
 
 func _weighted_zombie_pick(table:Dictionary, cell:PlantCell, _friendly:bool) -> CharacterRegistry.ZombieType:
@@ -846,7 +851,7 @@ func _weighted_zombie_pick(table:Dictionary, cell:PlantCell, _friendly:bool) -> 
 
 func _zombie_strength(zombie_type:int) -> int:
 	if zombie_type in [20, 24, 25]: return 2
-	if zombie_type in [104, 26, 18, 16, 9, 13]: return 1
+	if zombie_type in [5, 26, 18, 16, 9, 13]: return 1
 	return 0
 
 func _subrank_multiplier(strength:int) -> float:

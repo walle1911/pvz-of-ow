@@ -5,19 +5,19 @@ const NumericalPolicy := preload("res://scripts/resources/numerical_adjustment_p
 
 ## 解谜模式保留改版僵尸的外观和机制，但公共战斗数值以对应原版场景为准。
 const ORIGINAL_SCENE_BY_REWORKED_TYPE := {
-	CharacterRegistry.ZombieType.Z000NormTalon: "res://scenes/character/zombie/zombie_500_norm.tscn",
-	CharacterRegistry.ZombieType.Z001FlagTalon: "res://scenes/character/zombie/zombie_501_flag.tscn",
-	CharacterRegistry.ZombieType.Z002ConeTalon: "res://scenes/character/zombie/zombie_502_cone.tscn",
-	CharacterRegistry.ZombieType.Z004BucketTalon: "res://scenes/character/zombie/zombie_504_bucket.tscn",
-	CharacterRegistry.ZombieType.Z009DancingZombieLucio: "res://scenes/character/zombie/zombie_508_jackson.tscn",
-	CharacterRegistry.ZombieType.Z013ZomboniShion: "res://scenes/character/zombie/zombie_512_zamboni.tscn",
-	CharacterRegistry.ZombieType.Z016JackboxReaper: "res://scenes/character/zombie/zombie_515_jackbox.tscn",
-	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: "res://scenes/character/zombie/zombie_517_digger.tscn",
-	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: "res://scenes/character/zombie/zombie_519_yeti.tscn",
-	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: "res://scenes/character/zombie/zombie_523_gargantuar.tscn",
-	CharacterRegistry.ZombieType.Z025GargantuarBob: "res://scenes/character/zombie/zombie_523_gargantuar.tscn",
-	CharacterRegistry.ZombieType.Z027ImpTorbjorn: "res://scenes/character/zombie/zombie_524_imp.tscn",
-	CharacterRegistry.ZombieType.Z028ImpAshe: "res://scenes/character/zombie/zombie_524_imp.tscn",
+	CharacterRegistry.ZombieType.Z001NormTalon: "res://scenes/character/zombie/zombie_501_norm.tscn",
+	CharacterRegistry.ZombieType.Z002FlagTalon: "res://scenes/character/zombie/zombie_502_flag.tscn",
+	CharacterRegistry.ZombieType.Z003ConeTalon: "res://scenes/character/zombie/zombie_503_cone.tscn",
+	CharacterRegistry.ZombieType.Z005BucketTalon: "res://scenes/character/zombie/zombie_505_bucket.tscn",
+	CharacterRegistry.ZombieType.Z009DancingZombieLucio: "res://scenes/character/zombie/zombie_509_jackson.tscn",
+	CharacterRegistry.ZombieType.Z013ZomboniShion: "res://scenes/character/zombie/zombie_513_zamboni.tscn",
+	CharacterRegistry.ZombieType.Z016JackboxReaper: "res://scenes/character/zombie/zombie_516_jackbox.tscn",
+	CharacterRegistry.ZombieType.Z018DiggerZombieVenture: "res://scenes/character/zombie/zombie_518_digger.tscn",
+	CharacterRegistry.ZombieType.Z020ZombieYetiWinston: "res://scenes/character/zombie/zombie_520_yeti.tscn",
+	CharacterRegistry.ZombieType.Z024GargantuarReinhardt: "res://scenes/character/zombie/zombie_524_gargantuar.tscn",
+	CharacterRegistry.ZombieType.Z025GargantuarBob: "res://scenes/character/zombie/zombie_524_gargantuar.tscn",
+	CharacterRegistry.ZombieType.Z027ImpTorbjorn: "res://scenes/character/zombie/zombie_525_imp.tscn",
+	CharacterRegistry.ZombieType.Z028ImpAshe: "res://scenes/character/zombie/zombie_525_imp.tscn",
 }
 
 static var _shared_values_cache: Dictionary[String, Dictionary] = {}

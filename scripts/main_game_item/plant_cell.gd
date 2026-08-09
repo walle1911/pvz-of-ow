@@ -150,7 +150,7 @@ func plant_be_flattened():
 
 #region 植物(僵尸)种植(死亡)
 ## 模仿者创建植物
-func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho):
+func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho):
 	await get_tree().process_frame
 	var plant = create_plant(plant_type, false, is_plant_start_effect, true, false, imitater_variant)
 	return plant
@@ -159,7 +159,7 @@ func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_star
 ##[is_plant_start_effect:bool] 是否有种植特效
 ##[is_imitater_material:bool] 是否为模仿者材质
 ##[is_zombie_mode:bool] 是否为我是僵尸模式
-func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P053ImitaterEcho, pre_ready_data:Dictionary = {}) -> Plant000Base:
+func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is_plant_start_effect:=true, is_imitater_material:=false, is_zombie_mode:=false, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho, pre_ready_data:Dictionary = {}) -> Plant000Base:
 	var plant_condition:ResourcePlantCondition
 	var plant :Plant000Base
 	plant_condition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
@@ -186,7 +186,7 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 	## 创建植物
 	if is_imitater:
 		## 创建植物
-		#plant_condition = Global.character_registry.get_plant_info(CharacterRegistry.PlantType.P548Imitater, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
+		#plant_condition = Global.character_registry.get_plant_info(CharacterRegistry.PlantType.P1499Imitater, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 		plant = Global.character_registry.get_plant_info(imitater_variant, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
 		## 根据变体类型正确赋值（999 和 61 是平级类，不能互转）
 		if plant is Plant999Imitater:
@@ -305,7 +305,7 @@ func spawn_dva_baby_doom_shroom(source_global_position:Vector2, baby_grow_time:f
 		false,
 		false,
 		false,
-		CharacterRegistry.PlantType.P053ImitaterEcho,
+		CharacterRegistry.PlantType.P999ImitaterEcho,
 		{
 			"is_baby_growing": true,
 			"can_launch_baby": false,
@@ -360,7 +360,7 @@ func one_plant_free(plant:Plant000Base):
 		add_child(plant_container_node[CharacterRegistry.PlacePlantInCell.Shell])
 		plant_container_node[CharacterRegistry.PlacePlantInCell.Shell].global_position = plant_postion_node_ori_global_position[CharacterRegistry.PlacePlantInCell.Shell]
 	## 玉米加农炮只有后轮plantcell发射信号更新植物数据
-	if plant.plant_type == CharacterRegistry.PlantType.P547CobCannon:
+	if plant.plant_type == CharacterRegistry.PlantType.P548CobCannon:
 		if plant.plant_cell == self:
 			signal_plant_free.emit(self, plant.plant_type)
 	else:
@@ -722,7 +722,7 @@ func _load_game_data_create_plant(game_data_plant):
 		false,
 		game_data_plant["is_imitater_material"],
 		false,
-		CharacterRegistry.PlantType.P053ImitaterEcho,
+		CharacterRegistry.PlantType.P999ImitaterEcho,
 		game_data_plant
 	)
 	if plant != null:

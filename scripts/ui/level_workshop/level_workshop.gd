@@ -28,12 +28,12 @@ const FLAG_PARTS := preload("res://assets/image/ui/ui_progress_bar/FlagMeterPart
 const WORKSHOP_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 
 const ZOMBIE_TYPE_IDS := {
-	"normal": 500,
-	"conehead": 502,
-	"buckethead": 504,
-	"football": 507,
-	"digger": 517,
-	"gargantuar": 523,
+	"normal": 501,
+	"conehead": 503,
+	"buckethead": 505,
+	"football": 508,
+	"digger": 518,
+	"gargantuar": 524,
 }
 const ZOMBIE_NAMES := {
 	"normal": "普通僵尸",
@@ -59,12 +59,12 @@ const FLAG_CENTER_RIGHT := 150.0
 const SIMPLE_MAP_TYPES := ["front_lawn", "night_lawn", "pool", "fog", "roof"]
 const SIMPLE_MAP_NAMES := ["白天草坪", "夜晚草坪", "泳池", "雾夜", "屋顶"]
 const SIMPLE_BASE_ZOMBIE_CANDIDATES := [
-	CharacterRegistry.ZombieType.Z000NormTalon,
-	CharacterRegistry.ZombieType.Z500Norm,
+	CharacterRegistry.ZombieType.Z001NormTalon,
+	CharacterRegistry.ZombieType.Z501Norm,
 ]
 const SIMPLE_FLAG_ZOMBIE_CANDIDATES := [
-	CharacterRegistry.ZombieType.Z001FlagTalon,
-	CharacterRegistry.ZombieType.Z501Flag,
+	CharacterRegistry.ZombieType.Z002FlagTalon,
+	CharacterRegistry.ZombieType.Z502Flag,
 ]
 const UNSELECTED_CARD_MODULATE := Color(0.55, 0.55, 0.55, 0.72)
 const ACTIVE_SOURCE_BUTTON_MODULATE := Color(0.67, 0.62, 0.56, 1.0)
@@ -1788,7 +1788,7 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		else "该僵尸只能用于泳池或雾夜地图" if pool_map_required
 		else "简易自然波次暂不支持该僵尸" if not simple_supported
 		else "选择%s（在旗帜波按蹦极机制登场）" % _zombie_name(str(zombie_type)) \
-			if _is_simple_mode() and zombie_type == int(CharacterRegistry.ZombieType.Z520Bungi)
+			if _is_simple_mode() and zombie_type == int(CharacterRegistry.ZombieType.Z521Bungi)
 		else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type))
 	)
 	card.set_process(false)
@@ -1830,14 +1830,14 @@ func _is_formal_first_appearance_zombie(zombie_type: int) -> bool:
 	if not current_zombies.has(zombie_type):
 		return false
 	if preset_index == 0:
-		return not [101, 501].has(zombie_type)
+		return not [2, 502].has(zombie_type)
 	var presets := AdventurePresets.list_presets("normal")
 	for previous_index in preset_index:
 		var previous_id := str((presets[previous_index] as Dictionary).get("id", ""))
 		var previous_level := AdventurePresets.build_level(previous_id, true)
 		if Logic._cover_zombie_types(previous_level).has(zombie_type):
 			return false
-	return not [101, 501].has(zombie_type)
+	return not [2, 502].has(zombie_type)
 
 
 func _is_boss_zombie(zombie_type: int) -> bool:
@@ -2586,7 +2586,7 @@ func _sync_simple_stage_type_pool() -> void:
 		var stage: Dictionary = stages[stage_index]
 		var copied_groups: Array = source_groups.duplicate(true)
 		for group_index in copied_groups.size():
-			var zombie_type := _zombie_type_id((copied_groups[group_index] as Dictionary).get("zombieType", "500"))
+			var zombie_type := _zombie_type_id((copied_groups[group_index] as Dictionary).get("zombieType", "501"))
 			copied_groups[group_index]["id"] = "simple_%d_%d_%d" % [stage_index, zombie_type, group_index]
 		stage["spawnGroups"] = copied_groups
 
@@ -2672,7 +2672,7 @@ func _refresh_road_zombies() -> void:
 		## Boss 永远占用一个预览名额，不能被普通僵尸数量上限挤掉。
 		preview_groups.push_front({"zombieType": str(boss_zombie), "count": 1})
 	for group in preview_groups:
-		var zombie_key := str(group.get("zombieType", "500"))
+		var zombie_key := str(group.get("zombieType", "501"))
 		if _is_simple_mode() and shown_types.has(_zombie_type_id(zombie_key)):
 			continue
 		shown_types[_zombie_type_id(zombie_key)] = true
@@ -2697,7 +2697,7 @@ func _on_preview_hit_layer_input(event: InputEvent) -> void:
 		if hovered_zombie == null:
 			preview_hit_layer.tooltip_text = ""
 		else:
-			var hovered_key := str(preview_zombie_keys.get(hovered_zombie.get_instance_id(), "500"))
+			var hovered_key := str(preview_zombie_keys.get(hovered_zombie.get_instance_id(), "501"))
 			preview_hit_layer.tooltip_text = ("点击打开 Boss 关设置" if _is_boss_zombie(_zombie_type_id(hovered_key)) \
 				else (("点击设置%s" if _is_simple_mode() else "点击删除一个%s") % _zombie_name(hovered_key)))
 		return
@@ -3047,7 +3047,7 @@ func _open_boss_settings_window() -> void:
 	var zombie_picker := OptionButton.new()
 	zombie_picker.position = Vector2(48, 148)
 	zombie_picker.size = Vector2(504, 36)
-	var current_zombie := int(saved_config.get("zombieType", CharacterRegistry.ZombieType.Z523Gargantuar))
+	var current_zombie := int(saved_config.get("zombieType", CharacterRegistry.ZombieType.Z524Gargantuar))
 	for zombie_type in zombie_card_order:
 		var item_index := zombie_picker.item_count
 		zombie_picker.add_item("%03d · %s" % [int(zombie_type), _zombie_name(str(zombie_type))])
@@ -3425,7 +3425,7 @@ func _wave_total_count(wave: Dictionary) -> int:
 func _wave_zombie_type_count(wave: Dictionary) -> int:
 	var types: Dictionary = {}
 	for group in wave.get("spawnGroups", []):
-		types[_zombie_type_id((group as Dictionary).get("zombieType", "500"))] = true
+		types[_zombie_type_id((group as Dictionary).get("zombieType", "501"))] = true
 	return types.size()
 
 
@@ -3460,9 +3460,10 @@ func _refresh_zombie_catalog() -> void:
 	plant_card_prefabs = all_cards.all_plant_card_prefabs.duplicate()
 	for plant_type in plant_card_prefabs.keys():
 		var plant_id := int(plant_type)
-		if Global.level_workshop_edit_mode == "chessboard" and plant_id >= 500 and plant_id < 1000:
+		if Global.level_workshop_edit_mode == "chessboard" and _is_original_plant_type(plant_id):
 			reward_card_order.append({"id": plant_id, "is_plant": true})
-		elif Global.level_workshop_edit_mode == "normal" and plant_id > 0 and plant_id < 1000 \
+		elif Global.level_workshop_edit_mode == "normal" and (plant_id > 0 and plant_id < 1000 \
+		or plant_id == int(CharacterRegistry.PlantType.P1499Imitater)) \
 		and CharacterRegistry.PlantInfo.has(plant_id):
 			reward_card_order.append({"id": plant_id, "is_plant": true})
 	zombie_card_order.sort_custom(func(left, right):
@@ -3493,7 +3494,7 @@ func _sanitize_simple_allowed_pool() -> void:
 	if source_pool.is_empty():
 		for stage in level.get("waves", []):
 			for group in (stage as Dictionary).get("spawnGroups", []):
-				source_pool.append(_zombie_type_id((group as Dictionary).get("zombieType", "500")))
+				source_pool.append(_zombie_type_id((group as Dictionary).get("zombieType", "501")))
 	var once_final: Array = level.get("simpleOnceFinalZombies", [])
 	var filtered_pool: Array[int] = []
 	for value in source_pool:
@@ -3525,13 +3526,13 @@ func _simple_zombie_pool() -> Array[int]:
 
 
 func _simple_base_zombie_type() -> int:
-	var zombie_type := int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z000NormTalon))
-	return zombie_type if SIMPLE_BASE_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z000NormTalon)
+	var zombie_type := int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z001NormTalon))
+	return zombie_type if SIMPLE_BASE_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z001NormTalon)
 
 
 func _simple_flag_zombie_type() -> int:
-	var zombie_type := int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z001FlagTalon))
-	return zombie_type if SIMPLE_FLAG_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z001FlagTalon)
+	var zombie_type := int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z002FlagTalon))
+	return zombie_type if SIMPLE_FLAG_ZOMBIE_CANDIDATES.has(zombie_type) else int(CharacterRegistry.ZombieType.Z002FlagTalon)
 
 
 func _simple_zombie_role(zombie_type: int) -> String:
@@ -3563,7 +3564,12 @@ func _zombie_type_id(value) -> int:
 	var text := str(value)
 	if text.is_valid_int():
 		return int(text)
-	return int(ZOMBIE_TYPE_IDS.get(text, 500))
+	return int(ZOMBIE_TYPE_IDS.get(text, 501))
+
+
+func _is_original_plant_type(plant_type: int) -> bool:
+	return (plant_type >= 500 and plant_type < 1000) \
+		or plant_type == int(CharacterRegistry.PlantType.P1499Imitater)
 
 
 func _zombie_name(zombie_key: String) -> String:
@@ -3583,7 +3589,7 @@ func _plant_name(plant_type: int) -> String:
 func _force_random_lane_rules() -> void:
 	for stage in level.get("waves", []):
 		for group in stage.get("spawnGroups", []):
-			group["zombieType"] = str(_zombie_type_id(group.get("zombieType", "500")))
+			group["zombieType"] = str(_zombie_type_id(group.get("zombieType", "501")))
 			group["laneRule"] = "random"
 
 

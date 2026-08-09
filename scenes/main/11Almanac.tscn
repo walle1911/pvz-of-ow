@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cqdma5cmebu84" path="res://assets/image/Almanac/Almanac_CloseButton.png" id="8_u1nrc"]
 [ext_resource type="Texture2D" uid="uid://gm7pwyw5fmdc" path="res://assets/image/Almanac/Almanac_CloseButtonHighlight.png" id="9_ji74r"]
 [ext_resource type="BitMap" uid="uid://dpjf3mqsip8ql" path="res://assets/image/Almanac/Almanac_CloseButton_Mask.png" id="10_dyjda"]
-[ext_resource type="PackedScene" uid="uid://erkyqptubsya" path="res://scenes/character/zombie/zombie_000_norm_talon.tscn" id="11_2p4k2"]
+[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_001_norm_talon.tscn" id="11_2p4k2"]
 [ext_resource type="Script" uid="uid://parybxg7tb1k" path="res://scripts/ui/PVZ_button_base.gd" id="11_pn30t"]
 [ext_resource type="FontFile" uid="uid://bjnvl0v2ws21u" path="res://assets/fonts/SIMSUN.TTC" id="12_jlxhy"]
 [ext_resource type="Texture2D" uid="uid://bpqvs0x2gh8ya" path="res://assets/image/Almanac/Almanac_PlantBack.jpg" id="12_u1nrc"]
@@ -175,7 +175,7 @@ theme_override_colors/font_color = Color(0, 0.917647, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "查看僵尸"
 
-[node name="Zombie000NormTalon" parent="StartPage/Panel2" instance=ExtResource("11_2p4k2")]
+[node name="Zombie001NormTalon" parent="StartPage/Panel2" instance=ExtResource("11_2p4k2")]
 position = Vector2(157, 141)
 character_init_type = 1
 

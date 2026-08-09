@@ -9,8 +9,8 @@ const LANE_RULES := ["fixed", "random", "weighted"]
 const STAGE_TYPES := ["flag", "interval"]
 const DEFAULT_ZOMBIES := ["normal", "conehead", "buckethead", "football", "digger", "gargantuar"]
 const LEGACY_ZOMBIE_TYPE_IDS := {
-	"normal": 500, "conehead": 502, "buckethead": 504,
-	"football": 507, "digger": 517, "gargantuar": 523,
+	"normal": 501, "conehead": 503, "buckethead": 505,
+	"football": 508, "digger": 518, "gargantuar": 524,
 }
 const LEGACY_PLANT_TYPE_IDS := {
 	"peashooter": 1,
@@ -18,7 +18,7 @@ const LEGACY_PLANT_TYPE_IDS := {
 	"cherrybomb": 3,
 	"wallnut": 4,
 	"snowpea": 6,
-	"lilypad": 516,
+	"lilypad": 517,
 }
 const DEFAULT_PLANTS := ["peashooter", "sunflower", "wallnut", "snowpea", "cherrybomb", "lilypad"]
 const DEFAULT_EVENTS := ["all_waves_cleared", "survive_duration", "protect_plants", "zombie_reaches_house", "sun_below_zero"]
@@ -43,9 +43,9 @@ static func example_level() -> Dictionary:
 		"editorMode": "advanced",
 		"simpleFlagCount": 2,
 		"simpleWaveCount": 20,
-		"simpleBaseZombieType": 100,
-		"simpleFlagZombieType": 101,
-		"simpleZombiePool": [100, 102, 104],
+		"simpleBaseZombieType": 1,
+		"simpleFlagZombieType": 2,
+		"simpleZombiePool": [1, 3, 5],
 		"simpleOnceFinalZombies": [],
 		"zombieRefreshSpeedMultiplier": 1.0,
 		"openingFirstZombieAdvanceCells": 0.0,
@@ -58,7 +58,7 @@ static func example_level() -> Dictionary:
 		"rewardPlants": [],
 		"specialRewardCardLevels": {},
 		## Boss 战在普通波次结束后才出现；跳过仍按普通通关处理。
-		"bossConfig": {"enabled": false, "zombieType": 523, "rewardPlant": -1},
+		"bossConfig": {"enabled": false, "zombieType": 524, "rewardPlant": -1},
 		"environmentConfig": {
 			"initialTombstones": 0,
 			"tombstoneSpawns": false,
@@ -145,10 +145,10 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 	result["simpleFlagCount"] = simple_flag_count
 	## 简易普通关严格按原版常规关卡的一旗十波生成；保留旧字段只为兼容已有草稿。
 	result["simpleWaveCount"] = simple_flag_count * 10
-	var simple_base_zombie_type := int(result.get("simpleBaseZombieType", 100))
-	result["simpleBaseZombieType"] = simple_base_zombie_type if [100, 500].has(simple_base_zombie_type) else 100
-	var simple_flag_zombie_type := int(result.get("simpleFlagZombieType", 101))
-	result["simpleFlagZombieType"] = simple_flag_zombie_type if [101, 501].has(simple_flag_zombie_type) else 101
+	var simple_base_zombie_type := int(result.get("simpleBaseZombieType", 1))
+	result["simpleBaseZombieType"] = simple_base_zombie_type if [1, 501].has(simple_base_zombie_type) else 1
+	var simple_flag_zombie_type := int(result.get("simpleFlagZombieType", 2))
+	result["simpleFlagZombieType"] = simple_flag_zombie_type if [2, 502].has(simple_flag_zombie_type) else 2
 	var normalized_simple_pool: Array[int] = []
 	var source_simple_pool: Array = result.get("simpleZombiePool", []) if source.has("simpleZombiePool") else []
 	if source_simple_pool.is_empty():
@@ -277,7 +277,7 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 			var normalized := make_group("group_%d_%d" % [wave_index + 1, group_index + 1])
 			for key in group:
 				normalized[key] = group[key]
-			normalized["zombieType"] = str(LEGACY_ZOMBIE_TYPE_IDS.get(str(normalized.get("zombieType", "500")), normalized.get("zombieType", "500")))
+			normalized["zombieType"] = str(LEGACY_ZOMBIE_TYPE_IDS.get(str(normalized.get("zombieType", "501")), normalized.get("zombieType", "501")))
 			normalized["laneWeights"] = fit_lane_weights(normalized.get("laneWeights", []), int(map["rows"]))
 			groups[group_index] = normalized
 		wave["spawnGroups"] = groups
@@ -485,7 +485,7 @@ static func recommended_cover_characters(level: Dictionary, previous_level: Dict
 	var previous_zombies := _cover_zombie_types(previous_level)
 	for zombie_type in _cover_zombie_types(level):
 		## 旗帜僵尸由大波机制附带，不作为关卡新登场角色。
-		if [101, 501].has(zombie_type) or previous_zombies.has(zombie_type):
+		if [2, 502].has(zombie_type) or previous_zombies.has(zombie_type):
 			continue
 		result.append({"kind": "zombie", "type": zombie_type})
 		if result.size() >= 3:

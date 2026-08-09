@@ -63,15 +63,15 @@ func _test_card_unlock_curve() -> void:
 			_expect(CharacterRegistry.PlantInfo.has(int(plant_type)), "%d-%d 含未注册植物 %d" % [world, level_number, int(plant_type)])
 
 	var day_mixed: Array = Presets.build_level("adventure_1_6").get("availablePlants", [])
-	_expect(day_mixed.has(504), "1-6 应保留没有 OW 版的原版土豆雷")
+	_expect(day_mixed.has(505), "1-6 应保留没有 OW 版的原版土豆雷")
 	_expect(day_mixed.has(52), "1-5 起应加入 OW 独占的拉玛刹菜")
 	var night_first: Array = Presets.build_level("adventure_2_1").get("availablePlants", [])
-	_expect(night_first.has(508), "2-1 应保留没有 OW 版的原版小喷菇")
+	_expect(night_first.has(509), "2-1 应保留没有 OW 版的原版小喷菇")
 	var roof_first: Array = Presets.build_level("adventure_5_1").get("availablePlants", [])
-	_expect(roof_first.has(532) and roof_first.has(533), "5-1 应提供原版卷心菜和花盆以适配屋顶")
+	_expect(roof_first.has(533) and roof_first.has(534), "5-1 应提供原版卷心菜和花盆以适配屋顶")
 	var final_pool: Array = Presets.build_level("adventure_5_10").get("availablePlants", [])
-	_expect(final_pool.size() == 51, "最终植物池应由 49 个原版槽位、第二 OW 猫尾草和 OW 独占植物组成")
-	_expect(final_pool.has(1) and final_pool.has(504) and final_pool.has(544), "最终池应同时包含 OW 替代、原版基础回退和原版升级回退")
+	_expect(final_pool.size() == 50, "最终植物池应由 49 个原版槽位解析结果和 OW 独占植物组成")
+	_expect(final_pool.has(1) and final_pool.has(505) and final_pool.has(545), "最终池应同时包含 OW 替代、原版基础回退和原版升级回退")
 
 
 func _test_world_card_slot_limits() -> void:
@@ -111,7 +111,7 @@ func _test_zombie_pool_resolution() -> void:
 			var level_types := _level_zombie_types(source)
 			var runtime_types: Array[CharacterRegistry.ZombieType] = (Runtime.build_game_para(source)["game_para"] as ResourceLevelData).zombie_refresh_types
 			var is_cone_unlocked := world > 1 or level_number >= 2
-			_expect(runtime_types.has(CharacterRegistry.ZombieType.Z002ConeTalon) == is_cone_unlocked, "%d-%d 的路障僵尸常驻状态错误" % [world, level_number])
+			_expect(runtime_types.has(CharacterRegistry.ZombieType.Z003ConeTalon) == is_cone_unlocked, "%d-%d 的路障僵尸常驻状态错误" % [world, level_number])
 			for zombie_type in level_types:
 				if not all_seen.has(zombie_type):
 					all_seen.append(zombie_type)
@@ -120,20 +120,20 @@ func _test_zombie_pool_resolution() -> void:
 					_expect(zombie_type != int(original_type), "%d-%d 刷出了已有 OW 替代的原版僵尸 %d" % [world, level_number, zombie_type])
 
 	var day_pole := _level_zombie_types(Presets.build_level("adventure_1_6"))
-	_expect(day_pole.has(503), "1-6 应使用没有 OW 版的原版撑杆僵尸")
+	_expect(day_pole.has(504), "1-6 应使用没有 OW 版的原版撑杆僵尸")
 	var night_dancer := _level_zombie_types(Presets.build_level("adventure_2_8"))
-	_expect(night_dancer.has(9) and not night_dancer.has(508), "2-8 舞王槽位应只使用 OW 卢西奥版本")
+	_expect(night_dancer.has(9) and not night_dancer.has(509), "2-8 舞王槽位应只使用 OW 卢西奥版本")
 	var pool_late := _level_zombie_types(Presets.build_level("adventure_3_8"))
-	_expect(pool_late.has(13) and not pool_late.has(512), "泳池冰车槽位应只使用 OW 紫苑版本")
-	_expect(pool_late.has(513) and pool_late.has(514), "泳池后期应保留没有 OW 版的雪橇和海豚僵尸")
+	_expect(pool_late.has(13) and not pool_late.has(513), "泳池冰车槽位应只使用 OW 紫苑版本")
+	_expect(pool_late.has(514) and pool_late.has(515), "泳池后期应保留没有 OW 版的雪橇和海豚僵尸")
 	var fog_intro := _level_zombie_types(Presets.build_level("adventure_4_3"))
-	_expect(fog_intro.has(16) and not fog_intro.has(515), "雾夜玩偶匣槽位应只使用 OW 死神版本")
-	_expect(fog_intro.has(516), "雾夜应保留没有 OW 版的气球僵尸")
+	_expect(fog_intro.has(16) and not fog_intro.has(516), "雾夜玩偶匣槽位应只使用 OW 死神版本")
+	_expect(fog_intro.has(517), "雾夜应保留没有 OW 版的气球僵尸")
 	var roof_garg := _level_zombie_types(Presets.build_level("adventure_5_8"))
 	_expect(roof_garg.has(24), "5-8 常规巨人槽位应使用 OW 莱因哈特版本")
 	_expect(not roof_garg.has(25), "Bob Boss 不应在 5-10 前进入常规波次")
 	_expect(roof_garg.has(27) and roof_garg.has(28), "5-8 小鬼槽位应包含两个 OW 小鬼版本")
-	_expect(not roof_garg.has(523) and not roof_garg.has(524), "5-8 不应混入已被替代的原版巨人和小鬼")
+	_expect(not roof_garg.has(524) and not roof_garg.has(525), "5-8 不应混入已被替代的原版巨人和小鬼")
 	var final_boss := _level_zombie_types(Presets.build_level("adventure_5_10"))
 	_expect(final_boss.has(25), "5-10 最终关必须出现 Bob Boss")
 	for fallback_type in Presets.NORMAL_SUPPORT_ZOMBIES:
@@ -169,14 +169,14 @@ func _test_environment_tools() -> void:
 	var night: Dictionary = Runtime.build_game_para(Presets.build_level("adventure_2_2"))
 	var night_para: ResourceLevelData = night["game_para"]
 	_expect(night_para.is_have_tombston and night_para.init_tombstone_num > 0, "2-2 应启用墓碑机制")
-	_expect(not night_para.available_plant_types.has(511 as CharacterRegistry.PlantType), "墓碑吞噬者应沿原版节奏在 2-4 才可用")
+	_expect(not night_para.available_plant_types.has(512 as CharacterRegistry.PlantType), "墓碑吞噬者应沿原版节奏在 2-4 才可用")
 	var night_four: Dictionary = Runtime.build_game_para(Presets.build_level("adventure_2_4"))
-	_expect((night_four["game_para"] as ResourceLevelData).available_plant_types.has(511 as CharacterRegistry.PlantType), "2-4 应提供墓碑吞噬者")
+	_expect((night_four["game_para"] as ResourceLevelData).available_plant_types.has(512 as CharacterRegistry.PlantType), "2-4 应提供墓碑吞噬者")
 	var pool: Dictionary = Runtime.build_game_para(Presets.build_level("adventure_3_1"))
-	_expect((pool["game_para"] as ResourceLevelData).available_plant_types.has(516 as CharacterRegistry.PlantType), "3-1 应提供睡莲")
+	_expect((pool["game_para"] as ResourceLevelData).available_plant_types.has(517 as CharacterRegistry.PlantType), "3-1 应提供睡莲")
 	var roof: Dictionary = Runtime.build_game_para(Presets.build_level("adventure_5_1"))
 	var roof_para: ResourceLevelData = roof["game_para"]
-	_expect(roof_para.available_plant_types.has(533 as CharacterRegistry.PlantType), "5-1 起应提供花盆")
+	_expect(roof_para.available_plant_types.has(534 as CharacterRegistry.PlantType), "5-1 起应提供花盆")
 	_expect(roof_para.is_bungi, "5-1 起应启用原版屋顶的蹦极大波机制")
 
 

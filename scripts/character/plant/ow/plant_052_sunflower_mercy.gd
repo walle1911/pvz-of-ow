@@ -15,12 +15,12 @@ class_name Plant052SunflowerMercy
 @export_subgroup("蓝线增伤 | 目标植物类型")
 ## 可以被增伤的目标植物类型列表——在编辑器中手动增删
 @export var damage_boost_target_plant_types:Array[CharacterRegistry.PlantType] = [
-	CharacterRegistry.PlantType.P500PeaShooterSingle,
-	CharacterRegistry.PlantType.P505SnowPea,
-	CharacterRegistry.PlantType.P507PeaShooterDouble,
-	CharacterRegistry.PlantType.P518ThreePeater,
-	CharacterRegistry.PlantType.P528SplitPea,
-	CharacterRegistry.PlantType.P540GatlingPea,
+	CharacterRegistry.PlantType.P501PeaShooterSingle,
+	CharacterRegistry.PlantType.P506SnowPea,
+	CharacterRegistry.PlantType.P508PeaShooterDouble,
+	CharacterRegistry.PlantType.P519ThreePeater,
+	CharacterRegistry.PlantType.P529SplitPea,
+	CharacterRegistry.PlantType.P541GatlingPea,
 	CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
 	CharacterRegistry.PlantType.P041GatlingPeaBastion,
@@ -77,12 +77,12 @@ const ADJACENT_TARGET_OFFSETS:Array[int] = [1, -1]
 ## 本列表与 plant_002_sunflower_mercy.tscn 根节点序列化的目标数组保持一致。
 static func is_blue_line_damage_boost_target_type(target_plant_type:CharacterRegistry.PlantType) -> bool:
 	return target_plant_type in [
-		CharacterRegistry.PlantType.P500PeaShooterSingle,
-		CharacterRegistry.PlantType.P505SnowPea,
-		CharacterRegistry.PlantType.P507PeaShooterDouble,
-		CharacterRegistry.PlantType.P518ThreePeater,
-		CharacterRegistry.PlantType.P528SplitPea,
-		CharacterRegistry.PlantType.P540GatlingPea,
+		CharacterRegistry.PlantType.P501PeaShooterSingle,
+		CharacterRegistry.PlantType.P506SnowPea,
+		CharacterRegistry.PlantType.P508PeaShooterDouble,
+		CharacterRegistry.PlantType.P519ThreePeater,
+		CharacterRegistry.PlantType.P529SplitPea,
+		CharacterRegistry.PlantType.P541GatlingPea,
 		CharacterRegistry.PlantType.P001PeaShooterSoldier76,
 		CharacterRegistry.PlantType.P006SnowPeaMei,
 		CharacterRegistry.PlantType.P041GatlingPeaBastion,

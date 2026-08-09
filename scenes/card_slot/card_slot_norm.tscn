@@ -681,7 +681,7 @@ offset_right = 56.0
 offset_bottom = 82.0
 theme = null
 script = ExtResource("15_0r41g")
-card_plant_type = 53
+card_plant_type = 999
 curr_card_gb = 2
 cool_time = 0.0
 sun_cost = 0
@@ -689,17 +689,17 @@ sun_cost = 0
 [node name="CardBg" parent="CardSlotCandidate/ImitaterBG/CardImitater" index="0"]
 texture = ExtResource("15_v6er4")
 
-[node name="Plant053ImitaterEcho" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic" index="0" unique_id=1198145327]
+[node name="Plant999ImitaterEcho" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic" index="0" unique_id=1198145327]
 position = Vector2(1, 15)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant053ImitaterEcho" unique_id=2060421850]
+[node name="Body" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999ImitaterEcho" unique_id=2060421850]
 script = ExtResource("17_0r41g")
 
-[node name="BodyCorrect" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant053ImitaterEcho/Body" unique_id=1929732417]
+[node name="BodyCorrect" type="Node2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999ImitaterEcho/Body" unique_id=1929732417]
 position = Vector2(-40, -69)
 
-[node name="Anim_idle" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant053ImitaterEcho/Body/BodyCorrect" unique_id=1024171751]
+[node name="Anim_idle" type="Sprite2D" parent="CardSlotCandidate/ImitaterBG/CardImitater/CardBg/CharacterStatic/Plant999ImitaterEcho/Body/BodyCorrect" unique_id=1024171751]
 scale = Vector2(0.82, 0.82)
 texture = ExtResource("25_echo")
 centered = false

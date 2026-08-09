@@ -35,8 +35,8 @@ func _run() -> void:
 	assert(is_instance_valid(ana_card._ana_coffee_mode_toggle))
 	var ana_cooldown := float(Global.character_registry.get_plant_info(36, CharacterRegistry.PlantInfoAttribute.CoolTime))
 	var ana_cost := int(Global.character_registry.get_plant_info(36, CharacterRegistry.PlantInfoAttribute.SunCost))
-	var normal_cooldown := float(Global.character_registry.get_plant_info(535, CharacterRegistry.PlantInfoAttribute.CoolTime))
-	var normal_cost := int(Global.character_registry.get_plant_info(535, CharacterRegistry.PlantInfoAttribute.SunCost))
+	var normal_cooldown := float(Global.character_registry.get_plant_info(536, CharacterRegistry.PlantInfoAttribute.CoolTime))
+	var normal_cost := int(Global.character_registry.get_plant_info(536, CharacterRegistry.PlantInfoAttribute.SunCost))
 	assert(is_equal_approx(ana_card.cool_time, ana_cooldown))
 	assert(ana_card.sun_cost == ana_cost)
 
@@ -44,7 +44,7 @@ func _run() -> void:
 	ana_card.card_cool()
 	ana_card._cool_timer = ana_cooldown - 3.0
 	ana_card._set_ana_coffee_mode(false)
-	assert(ana_card.card_plant_type == CharacterRegistry.PlantType.P535CoffeeBean)
+	assert(ana_card.card_plant_type == CharacterRegistry.PlantType.P536CoffeeBean)
 	assert(is_equal_approx(ana_card.cool_time, normal_cooldown))
 	assert(is_equal_approx(ana_card._cool_timer, normal_cooldown - 3.0))
 	assert(ana_card.sun_cost == normal_cost)

@@ -2,7 +2,7 @@ extends Zombie000Base
 class_name Zombie026PeashooterZombie
 
 ## 豌豆射手僵尸(026)
-## 身体完全复用普通僵尸(zombie_500_norm): 移动/受击/死亡/状态机/行走动画全部继承。
+## 身体完全复用普通僵尸(zombie_501_norm): 移动/受击/死亡/状态机/行走动画全部继承。
 ## 头部复用普通豌豆射手头部(PeashooterHead 场景)，镜像后朝植物方向。
 ## 头部直接挂在 BodyCorrect 下，只继承 Zombie_body 的位置和缩放，
 ## 不继承其旋转，以保持平视并连接身体。

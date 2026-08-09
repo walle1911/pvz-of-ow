@@ -13,5 +13,5 @@ is_fog = true
 is_day = false
 is_day_sun = false
 max_wave = 20
-zombie_refresh_types = Array[int]([500, 501, 502, 504, 511, 514, 515, 516, 517, 518])
+zombie_refresh_types = Array[int]([501, 502, 503, 505, 512, 515, 516, 517, 518, 519])
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

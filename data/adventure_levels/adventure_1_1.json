@@ -66,16 +66,16 @@
 		2
 	],
 	"schemaVersion": 1.0,
-	"simpleBaseZombieType": 500,
+	"simpleBaseZombieType": 501,
 	"simpleFlagCount": 1,
-	"simpleFlagZombieType": 501,
+	"simpleFlagZombieType": 502,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
 	"simpleZombieIntroWaves": {
 
 	},
 	"simpleZombiePool": [
-		500
+		501
 	],
 	"sodLayoutRows": 3.0,
 	"sodRolloutRows": 0.0,
@@ -95,7 +95,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_0_500_0",
+					"id": "simple_0_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -112,7 +112,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "interval",
@@ -128,7 +128,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_1_500_0",
+					"id": "simple_1_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -145,7 +145,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "interval",
@@ -161,7 +161,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_2_500_0",
+					"id": "simple_2_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -178,7 +178,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "interval",
@@ -194,7 +194,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_3_500_0",
+					"id": "simple_3_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -211,7 +211,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "flag",
@@ -227,7 +227,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_4_500_0",
+					"id": "simple_4_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -244,7 +244,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "interval",
@@ -260,7 +260,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_5_500_0",
+					"id": "simple_5_501_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -277,7 +277,7 @@
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "500"
+					"zombieType": "501"
 				}
 			],
 			"stageType": "interval",

@@ -63,7 +63,7 @@ func _run() -> void:
 	assert(workshop.context_card_kind == "zombie")
 	assert(workshop.context_card_type == int(first_zombie_card.card_zombie_type))
 	workshop.card_context_menu.hide()
-	var required_wave_type := int(CharacterRegistry.ZombieType.Z002ConeTalon)
+	var required_wave_type := int(CharacterRegistry.ZombieType.Z003ConeTalon)
 	var simple_pool: Array = workshop.call("_simple_zombie_pool")
 	if not simple_pool.has(required_wave_type):
 		workshop.call("_select_simple_zombie", str(required_wave_type))
@@ -156,20 +156,20 @@ func _run() -> void:
 	assert(workshop.timeline_mode == LevelWorkshop.TimelineMode.NORMAL)
 	assert(workshop.flag_cursor_preview == null or not workshop.flag_cursor_preview.visible)
 	workshop.call("_sanitize_simple_allowed_pool")
-	var required_zombie := int(CharacterRegistry.ZombieType.Z000NormTalon)
+	var required_zombie := int(CharacterRegistry.ZombieType.Z001NormTalon)
 	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(required_zombie)).is_empty())
-	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z500Norm), "base")
-	assert(int(workshop.level["simpleBaseZombieType"]) == int(CharacterRegistry.ZombieType.Z500Norm))
-	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(CharacterRegistry.ZombieType.Z500Norm)).is_empty())
-	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z501Flag), "flag")
-	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z501Flag))
-	var fixed_flag_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z501Flag)) as Control
+	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z501Norm), "base")
+	assert(int(workshop.level["simpleBaseZombieType"]) == int(CharacterRegistry.ZombieType.Z501Norm))
+	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(CharacterRegistry.ZombieType.Z501Norm)).is_empty())
+	workshop.call("_set_simple_zombie_role", int(CharacterRegistry.ZombieType.Z502Flag), "flag")
+	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z502Flag))
+	var fixed_flag_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z502Flag)) as Control
 	assert((fixed_flag_holder.get_child(0) as Card).modulate == Color.WHITE)
-	workshop.call("_select_simple_zombie", str(CharacterRegistry.ZombieType.Z501Flag))
-	var fixed_flag_after_click := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z501Flag)) as Control
+	workshop.call("_select_simple_zombie", str(CharacterRegistry.ZombieType.Z502Flag))
+	var fixed_flag_after_click := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z502Flag)) as Control
 	assert((fixed_flag_after_click.get_child(0) as Card).modulate == Color.WHITE)
-	workshop.call("_delete_simple_zombie", str(CharacterRegistry.ZombieType.Z501Flag))
-	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z501Flag))
+	workshop.call("_delete_simple_zombie", str(CharacterRegistry.ZombieType.Z502Flag))
+	assert(int(workshop.level["simpleFlagZombieType"]) == int(CharacterRegistry.ZombieType.Z502Flag))
 	workshop.call("_set_simple_zombie_role", required_zombie, "base")
 	workshop.call("_delete_simple_zombie", str(required_zombie))
 	assert(not workshop.call("_find_group", workshop.level["waves"][workshop.selected_wave], str(required_zombie)).is_empty())
@@ -233,7 +233,7 @@ func _run() -> void:
 	var opening_playtest := Runtime.build_game_para(workshop.level)
 	assert(opening_playtest["ok"])
 	var opening_para := opening_playtest["game_para"] as ResourceLevelData
-	assert(opening_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z500Norm)
+	assert(opening_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Z501Norm)
 	assert(opening_para.start_sun == 100)
 	assert(is_equal_approx(opening_para.custom_initial_wave_delay, 0.1))
 	assert(is_equal_approx(opening_para.opening_first_zombie_advance_cells, 7.5))
@@ -261,21 +261,21 @@ func _run() -> void:
 
 	workshop.call("_load_preset_for_edit", "adventure_1_2")
 	assert(workshop.formal_preset_id == "adventure_1_2")
-	var new_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z002ConeTalon)) as Control
+	var new_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z003ConeTalon)) as Control
 	assert(new_cone_holder.get_node_or_null("CardStateBadge") != null)
 	assert((new_cone_holder.get_node("CardStateBadge/Label") as Label).text == "新")
 	new_cone_holder.free()
 	workshop.level["bossConfig"] = {
 		"enabled": true,
-		"zombieType": int(CharacterRegistry.ZombieType.Z002ConeTalon),
+		"zombieType": int(CharacterRegistry.ZombieType.Z003ConeTalon),
 		"rewardPlant": int(CharacterRegistry.PlantType.P003CherryBombJunkrat),
 	}
-	var boss_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z002ConeTalon)) as Control
+	var boss_cone_holder := workshop.call("_make_zombie_card", int(CharacterRegistry.ZombieType.Z003ConeTalon)) as Control
 	assert((boss_cone_holder.get_node("CardStateBadge/Label") as Label).text == "boss")
 	assert((boss_cone_holder.get_child(0) as CanvasItem).modulate == Color.WHITE)
 	boss_cone_holder.free()
 	workshop.call("_refresh_road_zombies")
-	assert(workshop.preview_zombie_keys.values().has(str(int(CharacterRegistry.ZombieType.Z002ConeTalon))))
+	assert(workshop.preview_zombie_keys.values().has(str(int(CharacterRegistry.ZombieType.Z003ConeTalon))))
 	assert(not workshop.previous_formal_level_button.disabled)
 	assert(not workshop.next_formal_level_button.disabled)
 	assert(str(workshop.level.get("editorMode", "")) == "simple")
@@ -365,24 +365,24 @@ func _run() -> void:
 	assert(not workshop.clear_cards_button.visible)
 
 	workshop.level = Logic.example_level()
-	workshop.level["simpleZombiePool"] = [int(CharacterRegistry.ZombieType.Z000NormTalon)]
+	workshop.level["simpleZombiePool"] = [int(CharacterRegistry.ZombieType.Z001NormTalon)]
 	workshop.level["waves"] = [Logic.make_wave("wave_redesign", "尺寸测试", 0.0, 10.0, [], "flag")]
 	workshop.selected_wave = 0
 	workshop.call("_refresh_wave")
-	workshop.call("_select_simple_zombie", "500")
+	workshop.call("_select_simple_zombie", "501")
 	assert(workshop.preview_zombies.size() == 2)
 	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 2)
-	assert((workshop.level["simpleZombiePool"] as Array).has(500))
+	assert((workshop.level["simpleZombiePool"] as Array).has(501))
 	assert(not workshop.level.has("simpleZombieIntroWaves"))
-	var selected_zombie_holder: Control = workshop.call("_make_zombie_card", 500)
+	var selected_zombie_holder: Control = workshop.call("_make_zombie_card", 501)
 	assert((selected_zombie_holder.get_child(0) as Card).modulate == Color.WHITE)
 	assert(not ((selected_zombie_holder.get_child(0) as Card).get_node("CardBg/Cost") as Label).visible)
-	workshop.call("_select_simple_zombie", "500")
+	workshop.call("_select_simple_zombie", "501")
 	assert(workshop.preview_zombies.size() == 1)
 	assert((workshop.level["waves"][0]["spawnGroups"] as Array).size() == 1)
-	assert(not (workshop.level["simpleZombiePool"] as Array).has(500))
-	workshop.call("_select_simple_zombie", "500")
-	workshop.call("_open_simple_zombie_dialog", "500")
+	assert(not (workshop.level["simpleZombiePool"] as Array).has(501))
+	workshop.call("_select_simple_zombie", "501")
+	workshop.call("_open_simple_zombie_dialog", "501")
 	assert(workshop.quantity_dialog_layer != null)
 	var required_checkbox: TextureButton
 	for button in workshop.quantity_dialog_layer.find_children("*", "TextureButton", true, false):
@@ -398,12 +398,12 @@ func _run() -> void:
 	assert(workshop.timeline_stages.mouse_filter == Control.MOUSE_FILTER_STOP)
 	workshop.level["waves"][0]["spawnGroups"] = []
 	workshop.call("_refresh_wave")
-	workshop.call("_open_zombie_quantity_dialog", "500")
+	workshop.call("_open_zombie_quantity_dialog", "501")
 	assert(workshop.quantity_dialog_layer != null)
 	workshop.call("_close_quantity_dialog")
 
-	workshop.call("_set_zombie_quantity", "500", 2)
-	workshop.call("_set_zombie_quantity", "502", 1)
+	workshop.call("_set_zombie_quantity", "501", 2)
+	workshop.call("_set_zombie_quantity", "503", 1)
 	var groups: Array = workshop.level["waves"][0]["spawnGroups"]
 	assert(groups.size() == 2)
 	assert(int(groups[0]["count"]) == 2)

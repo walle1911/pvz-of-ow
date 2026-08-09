@@ -197,7 +197,7 @@ func _set_ana_coffee_mode(use_ana:bool) -> void:
 
 	_is_ana_coffee_mode = use_ana
 	var next_plant_type := CharacterRegistry.PlantType.P036CoffeeBeanAna \
-		if use_ana else CharacterRegistry.PlantType.P535CoffeeBean
+		if use_ana else CharacterRegistry.PlantType.P536CoffeeBean
 	card_plant_type = next_plant_type
 	plant_condition = Global.character_registry.get_plant_info(
 		next_plant_type,
@@ -226,16 +226,16 @@ func _set_ana_coffee_mode(use_ana:bool) -> void:
 func _ensure_normal_coffee_preview() -> bool:
 	if is_instance_valid(_normal_coffee_preview_root):
 		return true
-	if not AllCards.all_plant_card_prefabs.has(CharacterRegistry.PlantType.P535CoffeeBean):
+	if not AllCards.all_plant_card_prefabs.has(CharacterRegistry.PlantType.P536CoffeeBean):
 		return false
-	var normal_card := AllCards.all_plant_card_prefabs[CharacterRegistry.PlantType.P535CoffeeBean] as Card
+	var normal_card := AllCards.all_plant_card_prefabs[CharacterRegistry.PlantType.P536CoffeeBean] as Card
 	if not is_instance_valid(normal_card) or not is_instance_valid(normal_card.character_static) \
 		or normal_card.character_static.get_child_count() == 0:
 		return false
 	_normal_coffee_preview_root = normal_card.character_static.get_child(0).duplicate() as Node2D
 	if not is_instance_valid(_normal_coffee_preview_root):
 		return false
-	_normal_coffee_preview_root.name = "Plant535CoffeeBeanCardMode"
+	_normal_coffee_preview_root.name = "Plant536CoffeeBeanCardMode"
 	_normal_coffee_preview_root.visible = false
 	character_static.add_child(_normal_coffee_preview_root)
 	return true

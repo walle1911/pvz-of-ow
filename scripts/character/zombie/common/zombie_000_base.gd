@@ -719,8 +719,8 @@ func _can_show_garlic_grossout(force_grossout:bool = false) -> bool:
 		return false
 	## 原版潜水僵尸和小丑僵尸只发出嫌恶声并换行，不使用这张通用脸。
 	return zombie_type not in [
-		CharacterRegistry.ZombieType.Z511Snorkle,
-		CharacterRegistry.ZombieType.Z515Jackbox,
+		CharacterRegistry.ZombieType.Z512Snorkle,
+		CharacterRegistry.ZombieType.Z516Jackbox,
 	]
 
 

@@ -70,12 +70,12 @@ func _run() -> void:
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_037_garlic_mauga.tscn", ".", "chain_last_stand_duration")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn", ".", "yellow_fume_chance")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_044_cattail_jetpack_cat.tscn", ".", "critical_knockback_distance")
-	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "HpComponent", "max_hp")
-	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "AttackComponent", "init_attack_value_per_min")
+	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "HpComponent", "max_hp")
+	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "AttackComponent", "init_attack_value_per_min")
 	_assert_not_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "is_attack")
-	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", ".", "is_walk")
-	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "DropItemComponent", "drop_coin_rate")
-	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_500_norm.tscn", "DropItemComponent", "drop_coin_silver_glod_diamond_rate")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", ".", "is_walk")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "DropItemComponent", "drop_coin_rate")
+	_assert_not_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "DropItemComponent", "drop_coin_silver_glod_diamond_rate")
 
 	var soldier_path := "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn"
 	var policy_script_rules_loaded: bool = Policy._scene_rules_loaded
@@ -105,7 +105,7 @@ func _run() -> void:
 	assert(Policy.get_rule(snow_attack, "close_spray_freeze_time")["max"] == 60.0)
 	assert(not Policy.validate_value(snow_attack, "close_spray_freeze_time", 61.0)["ok"])
 	snow_pea.free()
-	var normal_zombie := (load("res://scenes/character/zombie/zombie_500_norm.tscn") as PackedScene).instantiate()
+	var normal_zombie := (load("res://scenes/character/zombie/zombie_501_norm.tscn") as PackedScene).instantiate()
 	var drop_item := normal_zombie.get_node("DropItemComponent")
 	assert(Policy.get_rule(drop_item, "drop_coin_rate").is_empty())
 	assert(Policy.get_rule(drop_item, "drop_coin_silver_glod_diamond_rate").is_empty())
@@ -141,7 +141,7 @@ func _run() -> void:
 	assert(is_equal_approx(soldier.get_node("AttackComponent").attack_cd, 0.77))
 	soldier.free()
 
-	var normal_zombie_path := "res://scenes/character/zombie/zombie_500_norm.tscn"
+	var normal_zombie_path := "res://scenes/character/zombie/zombie_501_norm.tscn"
 	var zombie_data := {
 		"version": Store.DATA_VERSION,
 		"characters": {
@@ -188,11 +188,11 @@ func _run() -> void:
 	assert(not legacy_boss_grade_data["characters"][normal_zombie_path]["@registry"].has("zombie_spawn_weight"))
 	var wave_create_manager := ZombieWaveCreateManager.new()
 	wave_create_manager.call("_reset_zombie_weights_from_adjustments")
-	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z500Norm] == 1000)
+	assert(wave_create_manager.zombie_weights[CharacterRegistry.ZombieType.Z501Norm] == 1000)
 	wave_create_manager.free()
 	var normal_zombie_item: Dictionary
 	for item in editor.catalog:
-		if item["kind"] == "zombie" and int(item["id"]) == int(CharacterRegistry.ZombieType.Z500Norm):
+		if item["kind"] == "zombie" and int(item["id"]) == int(CharacterRegistry.ZombieType.Z501Norm):
 			normal_zombie_item = item
 			break
 	assert(not normal_zombie_item.is_empty())

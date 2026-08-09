@@ -14,7 +14,7 @@ class_name ZombieShowInStart
 @export var default_show_zombie_num_range:Vector2i = Vector2i(1,4)
 ## 关卡前展示僵尸生成数量范围(默认不生成旗帜僵尸)
 @export var special_show_zombie_num_range: Dictionary[CharacterRegistry.ZombieType, Vector2i] = {
-	CharacterRegistry.ZombieType.Z501Flag : Vector2i(0,0)
+	CharacterRegistry.ZombieType.Z502Flag : Vector2i(0,0)
 }
 var show_zombies_array :Array[Zombie000Base]
 var opening_battlefield_zombie: Zombie000Base
@@ -44,7 +44,7 @@ func create_prepare_show_zombies():
 			var z = create_show_zombie(zombie_type, show_zombie_panel)
 			show_zombies_array.append(z)
 	if zombie_manager.is_bungi:
-		var z = create_show_zombie(CharacterRegistry.ZombieType.Z520Bungi, show_zombie_panel_2)
+		var z = create_show_zombie(CharacterRegistry.ZombieType.Z521Bungi, show_zombie_panel_2)
 		show_zombies_array.append(z)
 	_create_opening_battlefield_zombie()
 
@@ -68,7 +68,7 @@ func _create_opening_battlefield_zombie() -> void:
 	create_manager.opening_first_zombie_lane = lane
 	var zombie_type := zombie_manager.game_para.opening_battlefield_zombie_type
 	if zombie_type == CharacterRegistry.ZombieType.Null:
-		zombie_type = CharacterRegistry.ZombieType.Z000NormTalon
+		zombie_type = CharacterRegistry.ZombieType.Z001NormTalon
 	if zombie_manager.game_para.opening_battlefield_zombie_type == CharacterRegistry.ZombieType.Null \
 	and not zombie_manager.zombie_refresh_types.has(zombie_type) and not zombie_manager.zombie_refresh_types.is_empty():
 		zombie_type = zombie_manager.zombie_refresh_types[0]

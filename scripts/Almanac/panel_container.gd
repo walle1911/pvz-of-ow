@@ -44,7 +44,7 @@ const PLANT_NAME_TEXTURE_MAP = {
 	CharacterRegistry.PlantType.P044CattailJetpackCat: preload("res://assets/image/Almanac/name_id/猫尾草飞天猫.png"),
 	CharacterRegistry.PlantType.P048CobCannonEmre: preload("res://assets/image/Almanac/name_id/玉米加农炮埃姆雷.png"),
 	CharacterRegistry.PlantType.P052BonkChoyRamattra: preload("res://assets/image/Almanac/name_id/叶问拉玛刹.png"),
-	CharacterRegistry.PlantType.P053ImitaterEcho: preload("res://assets/image/Almanac/name_id/模仿者回声.png"),
+	CharacterRegistry.PlantType.P999ImitaterEcho: preload("res://assets/image/Almanac/name_id/模仿者回声.png"),
 	CharacterRegistry.PlantType.P1001WallNutBowling: preload("res://assets/image/Almanac/name_id/仓鼠保龄球.png"),
 	CharacterRegistry.PlantType.P1002WallNutBowlingBomb: preload("res://assets/image/Almanac/name_id/仓鼠保龄球.png"),
 	CharacterRegistry.PlantType.P1003WallNutBowlingBig: preload("res://assets/image/Almanac/name_id/仓鼠保龄球.png"),
@@ -61,9 +61,9 @@ const ZOMBIE_NAME_TEXTURE_MAP = {
 	CharacterRegistry.ZombieType.Z025GargantuarBob: preload("res://assets/image/Almanac/name_id/巨人僵尸bob.png"),
 	CharacterRegistry.ZombieType.Z026PeashooterZombie: preload("res://assets/image/Almanac/name_id/索杰恩豌豆射手僵尸.png"),
 	CharacterRegistry.ZombieType.Z028ImpAshe: preload("res://assets/image/Almanac/name_id/小鬼艾什.png"),
-	CharacterRegistry.ZombieType.Z000NormTalon: preload("res://assets/image/Almanac/name_id/talon普通僵尸.png"),
-	CharacterRegistry.ZombieType.Z002ConeTalon: preload("res://assets/image/Almanac/name_id/talon路障僵尸.png"),
-	CharacterRegistry.ZombieType.Z004BucketTalon: preload("res://assets/image/Almanac/name_id/talon铁桶僵尸.png"),
+	CharacterRegistry.ZombieType.Z001NormTalon: preload("res://assets/image/Almanac/name_id/talon普通僵尸.png"),
+	CharacterRegistry.ZombieType.Z003ConeTalon: preload("res://assets/image/Almanac/name_id/talon路障僵尸.png"),
+	CharacterRegistry.ZombieType.Z005BucketTalon: preload("res://assets/image/Almanac/name_id/talon铁桶僵尸.png"),
 }
 
 ## 背景
@@ -128,7 +128,7 @@ func create_plant(curr_plant_type:CharacterRegistry.PlantType):
 ## 生成的特殊植物修改位置
 func special_plant_update_pos(new_show_plant:Plant000Base):
 	match new_show_plant.plant_type:
-		CharacterRegistry.PlantType.P048CobCannonEmre, CharacterRegistry.PlantType.P547CobCannon:
+		CharacterRegistry.PlantType.P048CobCannonEmre, CharacterRegistry.PlantType.P548CobCannon:
 			new_show_plant.position = Vector2(60,130)
 		CharacterRegistry.PlantType.P052BonkChoyRamattra:
 			new_show_plant.position = Vector2(100,135)
@@ -200,7 +200,7 @@ func special_zombie_update_pos(new_show_zombie:Zombie000Base):
 		CharacterRegistry.ZombieType.Z025GargantuarBob:
 			new_show_zombie.position = Vector2(100, 174)
 			new_show_zombie.scale = Vector2.ONE * 0.84
-		CharacterRegistry.ZombieType.Z523Gargantuar:
+		CharacterRegistry.ZombieType.Z524Gargantuar:
 			new_show_zombie.position = Vector2(100, 174)
 			new_show_zombie.scale = Vector2.ONE * 0.78
 		CharacterRegistry.ZombieType.Z009DancingZombieLucio, CharacterRegistry.ZombieType.Z010BackupDancerLucio:
