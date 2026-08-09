@@ -7,6 +7,7 @@ const ALMANAC_CARD_SLOT_SIZE := Vector2(52, 78)
 const CARDS_PER_NORMAL_PAGE := 48
 const OW_SPECIAL_PLANT_TYPES := [
 	CharacterRegistry.PlantType.P1001WallNutBowling,
+	CharacterRegistry.PlantType.P999ImitaterEcho,
 ]
 
 ## 卡片父节点

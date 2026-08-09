@@ -1198,11 +1198,18 @@ scale = Vector2(0.6, 0.6)
 character_init_type = 1
 
 [node name="MainMenu" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = 669.0
-offset_top = 527.0
-offset_right = 758.0
-offset_bottom = 553.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -144.0
+offset_top = -32.0
+offset_right = -55.0
+offset_bottom = -6.0
+grow_horizontal = 0
+grow_vertical = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("40_mfip2")
 texture_pressed = ExtResource("41_5u2b0")

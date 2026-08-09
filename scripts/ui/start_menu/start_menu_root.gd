@@ -10,6 +10,8 @@ const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/Select
 const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
 const DEVELOPER_IMPORT_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImport.png")
 const DEVELOPER_IMPORT_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImportHighlight.png")
+const BUFF_BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
+const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.gdshader")
 
 @onready var dialog: Dialog = $Dialog
 @export var bgm:AudioStream
@@ -32,11 +34,42 @@ const DEVELOPER_IMPORT_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_
 @onready var garden_button: TextureButton = $BG_Right/Item/TextureButton
 @onready var gift_button: TextureButton = $BG_Right/CustomButton
 @onready var overwatch_logo: TextureRect = $OverwatchLogo
+@onready var flight_layer: Control = $Cloud
+@onready var flight_formation: Control = $Cloud/FlightFormation
+@onready var flying_cat_group: Control = $Cloud/FlightFormation/FlyingCatGroup
+@onready var flying_cat: TextureRect = $Cloud/FlightFormation/FlyingCatGroup/FlyingCat
+@onready var flying_cat_companion: TextureRect = $Cloud/FlightFormation/FlyingCatGroup/FlyingCat/Companion
+@onready var soft_flight_group: Control = $Cloud/FlightFormation/SoftFlightGroup
+@onready var soft_flight_leader: TextureRect = $Cloud/FlightFormation/SoftFlightGroup/SoftFlightLeader
+@onready var soft_flight_partner: TextureRect = $Cloud/FlightFormation/SoftFlightGroup/SoftFlightPartner
+@onready var pharah_beam_anchor: Marker2D = $Cloud/FlightFormation/SoftFlightGroup/SoftFlightLeader/DamageBoostTargetAnchor
+@onready var mercy_beam_anchor: Marker2D = $Cloud/FlightFormation/SoftFlightGroup/SoftFlightPartner/DamageBoostSourceAnchor
+@onready var mercy_beam_direction_anchor: Marker2D = $Cloud/FlightFormation/SoftFlightGroup/SoftFlightPartner/DamageBoostSourceDirection
+@onready var flying_cat_companion_landing_marker: Marker2D = $OWLawnGroup/FlyingCatCompanionLandingMarker
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
 var developer_button_hover_tweens: Dictionary = {}
 var mode_dialog_context := "adventure"
+var flight_formation_start_position := Vector2.ZERO
+var flight_formation_horizontal_bounds := Vector2.ZERO
+var flight_formation_motion_started := false
+var soft_flight_damage_boost_beam: BuffBeam2D
+var flying_cat_companion_start_position := Vector2.ZERO
+var flying_cat_companion_start_scale := Vector2.ONE
+var flying_cat_companion_swing_tween: Tween
+var flying_cat_companion_drop_trigger_x := 0.0
+var flying_cat_companion_dropped := false
+var flying_cat_companion_landed := false
+var flying_cat_companion_drop_carrier: Node2D
+var flying_cat_companion_velocity := Vector2.ZERO
+var flying_cat_companion_drop_pivot_global_position := Vector2.ZERO
+var flying_cat_companion_drop_target_global_position := Vector2.ZERO
+var flying_cat_companion_drop_start_scale := Vector2.ONE
+var flying_cat_companion_drop_final_scale := Vector2.ONE
+var flying_cat_companion_drop_start_rotation := 0.0
+var flying_cat_companion_drop_elapsed := 0.0
+var flying_cat_companion_drop_duration := 1.0
 
 @export_group("按钮对齐预览")
 @export var show_both_menus_for_alignment := false:
@@ -69,6 +102,18 @@ var mode_dialog_context := "adventure"
 		if is_node_ready():
 			_apply_level_workshop_button_transform()
 
+@export_group("飞行编队")
+## 编队每秒向左移动的编辑器坐标距离。只控制整体速度，不控制成员出场时机。
+@export_range(1.0, 500.0, 1.0, "suffix:px/s") var flight_formation_speed := 100.0
+
+@export_subgroup("第一组 | 下方图片自由落体")
+@export_range(0.0, 2000.0, 10.0, "suffix:px/s²") var flying_cat_companion_gravity := 520.0
+## 相对于下方图片脱落瞬间的实际视觉尺寸，坠落过程中整体缩小到 90%。
+@export_range(0.1, 1.5, 0.01) var flying_cat_companion_landing_scale := 0.9
+## 在整体缩放之外额外横向压缩到 90%，让坠落图片稍微变瘦。
+@export_range(0.1, 1.5, 0.01) var flying_cat_companion_landing_width_scale := 0.9
+@export_range(-180.0, 180.0, 1.0, "suffix:°") var flying_cat_companion_landing_rotation_degrees := 90.0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -84,6 +129,8 @@ func _ready() -> void:
 	$Cloud/AnimationPlayer.play("Idle")
 	$BG_Right/Leaf/AnimationPlayer.play("Idle")
 	$AnimationPlayer.play("Idle")
+	_setup_flying_decoration_motion()
+	_start_flight_formation_motion()
 	_play_overwatch_logo_intro()
 
 	SoundManager.setup_ui_start_menu_sound(self)
@@ -130,6 +177,265 @@ func _start_overwatch_logo_idle(rest_position: Vector2) -> void:
 	idle_tween.parallel().tween_property(overwatch_logo, ^"rotation_degrees", 1.5, 2.2)
 	idle_tween.tween_property(overwatch_logo, ^"position", rest_position + Vector2(0.0, 4.0), 2.2)
 	idle_tween.parallel().tween_property(overwatch_logo, ^"rotation_degrees", -1.0, 2.2)
+
+
+func _setup_flying_decoration_motion() -> void:
+	flight_formation.visible = true
+	flying_cat_group.visible = true
+	soft_flight_group.visible = true
+	var flying_cat_rest_y := flying_cat.position.y
+	var bob_tween := flying_cat.create_tween().set_loops()
+	bob_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	bob_tween.tween_property(flying_cat, ^"position:y", flying_cat_rest_y - 10.0, 1.8)
+	bob_tween.tween_property(flying_cat, ^"position:y", flying_cat_rest_y + 10.0, 1.8)
+	flying_cat_companion_start_position = flying_cat_companion.position
+	flying_cat_companion_start_scale = flying_cat_companion.scale
+	_start_flying_cat_companion_swing()
+	_setup_soft_flight_pair_motion()
+
+
+func _start_flying_cat_companion_swing() -> void:
+	## 以上边缘中央作为钩爪抓点，让下半身像吊坠一样左右摆动。
+	flying_cat_companion.pivot_offset = Vector2(
+		flying_cat_companion.size.x * 0.5,
+		flying_cat_companion.size.y * 0.17
+	)
+	flying_cat_companion.rotation_degrees = -8.0
+	flying_cat_companion_swing_tween = flying_cat_companion.create_tween().set_loops()
+	flying_cat_companion_swing_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	flying_cat_companion_swing_tween.tween_property(flying_cat_companion, ^"rotation_degrees", 8.0, 1.05)
+	flying_cat_companion_swing_tween.tween_property(flying_cat_companion, ^"rotation_degrees", -8.0, 1.05)
+
+
+func _setup_soft_flight_pair_motion() -> void:
+	var leader_rest_y := soft_flight_leader.position.y
+	var partner_rest_y := soft_flight_partner.position.y
+	soft_flight_leader.pivot_offset = soft_flight_leader.size * 0.5
+	soft_flight_leader.rotation_degrees = -2.5
+	var leader_bob := soft_flight_leader.create_tween().set_loops()
+	leader_bob.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	leader_bob.tween_property(soft_flight_leader, ^"position:y", leader_rest_y - 12.0, 1.35)
+	leader_bob.parallel().tween_property(soft_flight_leader, ^"rotation_degrees", 2.5, 1.35)
+	leader_bob.tween_property(soft_flight_leader, ^"position:y", leader_rest_y + 12.0, 1.35)
+	leader_bob.parallel().tween_property(soft_flight_leader, ^"rotation_degrees", -2.5, 1.35)
+
+	soft_flight_partner.pivot_offset = soft_flight_partner.size * 0.5
+	soft_flight_partner.rotation_degrees = 4.0
+	var partner_bob := soft_flight_partner.create_tween().set_loops()
+	partner_bob.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	partner_bob.tween_property(soft_flight_partner, ^"position:y", partner_rest_y + 17.0, 1.9)
+	partner_bob.parallel().tween_property(soft_flight_partner, ^"rotation_degrees", -5.0, 1.9)
+	partner_bob.tween_property(soft_flight_partner, ^"position:y", partner_rest_y - 17.0, 1.9)
+	partner_bob.parallel().tween_property(soft_flight_partner, ^"rotation_degrees", 4.0, 1.9)
+	_setup_soft_flight_damage_boost_effect()
+
+
+func _setup_soft_flight_damage_boost_effect() -> void:
+	soft_flight_damage_boost_beam = BUFF_BEAM_SCENE.instantiate()
+	soft_flight_damage_boost_beam.name = "MercyPharahDamageBoostBeam"
+	soft_flight_damage_boost_beam.beam_width = 7.0
+	soft_flight_damage_boost_beam.curve_height = -3.0
+	soft_flight_damage_boost_beam.point_count = 32
+	soft_flight_damage_boost_beam.z_index_override = 0
+	soft_flight_group.add_child(soft_flight_damage_boost_beam)
+	soft_flight_group.move_child(soft_flight_damage_boost_beam, 0)
+
+	var glow_overlay := TextureRect.new()
+	glow_overlay.name = "PharahWeaponGlow"
+	glow_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow_overlay.texture = soft_flight_leader.texture
+	glow_overlay.expand_mode = soft_flight_leader.expand_mode
+	glow_overlay.stretch_mode = soft_flight_leader.stretch_mode
+	glow_overlay.flip_h = soft_flight_leader.flip_h
+	## 保持在 Cloud 分支的默认层级，确保 BG_Right 墓碑始终遮挡整个特效。
+	glow_overlay.z_index = 0
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = PHARAH_WEAPON_GLOW_SHADER
+	glow_overlay.material = glow_material
+	soft_flight_leader.add_child(glow_overlay)
+
+
+func _update_soft_flight_damage_boost_effect() -> void:
+	if not is_instance_valid(soft_flight_damage_boost_beam):
+		return
+	var source_local:Vector2 = soft_flight_damage_boost_beam.to_local(mercy_beam_anchor.global_position)
+	var direction_local:Vector2 = soft_flight_damage_boost_beam.to_local(mercy_beam_direction_anchor.global_position)
+	var target_local:Vector2 = soft_flight_damage_boost_beam.to_local(pharah_beam_anchor.global_position)
+	var source_tangent := direction_local - source_local
+	soft_flight_damage_boost_beam.set_start_tangent(source_tangent, minf(source_tangent.length(), 4.0))
+	soft_flight_damage_boost_beam.set_endpoints(source_local, target_local)
+
+
+func _start_flight_formation_motion() -> void:
+	## 起点完全采用编辑器中 FlightFormation 的位置，不在运行时重新计算或覆盖。
+	flight_formation_start_position = flight_formation.position
+	flight_formation_horizontal_bounds = _get_flight_group_horizontal_bounds(flight_formation)
+	_update_flying_cat_companion_drop_trigger()
+	flight_formation_motion_started = true
+
+
+func _update_flying_cat_companion_drop_trigger() -> void:
+	var first_group_bounds := _get_flight_group_horizontal_bounds(flying_cat_group)
+	first_group_bounds += Vector2(flying_cat_group.position.x, flying_cat_group.position.x)
+	var first_group_exit_x := _flight_layer_x(-80.0) - first_group_bounds.y
+	flying_cat_companion_drop_trigger_x = lerpf(
+		flight_formation_start_position.x,
+		first_group_exit_x,
+		0.5
+	)
+
+
+func _drop_flying_cat_companion() -> void:
+	if flying_cat_companion_dropped:
+		return
+	flying_cat_companion_dropped = true
+	if is_instance_valid(flying_cat_companion_swing_tween):
+		flying_cat_companion_swing_tween.kill()
+	var takeoff_transform := flying_cat_companion.get_global_transform()
+	var takeoff_center_global:Vector2 = takeoff_transform * (flying_cat_companion.size * 0.5)
+
+	## 独立 Node2D 载体的原点就是贴图视觉中心；后续位置、旋转和缩放不再受 Control
+	## 重挂父级后的锚点/偏移影响。
+	flying_cat_companion_drop_carrier = Node2D.new()
+	flying_cat_companion_drop_carrier.name = "FlyingCatCompanionDropCarrier"
+	add_child(flying_cat_companion_drop_carrier)
+	flying_cat_companion_drop_carrier.global_position = takeoff_center_global
+	flying_cat_companion_drop_carrier.global_rotation = takeoff_transform.get_rotation()
+	flying_cat_companion_drop_carrier.global_scale = takeoff_transform.get_scale()
+	flying_cat_companion.reparent(flying_cat_companion_drop_carrier, false)
+	flying_cat_companion.position = -flying_cat_companion.size * 0.5
+	flying_cat_companion.rotation = 0.0
+	flying_cat_companion.scale = Vector2.ONE
+	flying_cat_companion.pivot_offset = Vector2.ZERO
+
+	flying_cat_companion_drop_pivot_global_position = \
+		flying_cat_companion_drop_carrier.global_position
+	flying_cat_companion_drop_target_global_position = flying_cat_companion_landing_marker.global_position
+	flying_cat_companion_drop_start_scale = flying_cat_companion_drop_carrier.scale
+	## 以脱离小猫瞬间的实际屏幕尺寸为基准，坠落时整体缩小并额外横向压缩。
+	## 不能再使用 Companion 的局部 scale，否则父节点缩放会被重复计算，造成落地反而变小。
+	flying_cat_companion_drop_final_scale = \
+		flying_cat_companion_drop_start_scale \
+		* flying_cat_companion_landing_scale \
+		* Vector2(flying_cat_companion_landing_width_scale, 1.0)
+	flying_cat_companion_drop_start_rotation = flying_cat_companion_drop_carrier.rotation
+	flying_cat_companion_drop_elapsed = 0.0
+	flying_cat_companion_landed = false
+
+	## 竖直初速度为零，由落点高度反求落地时间，再反求恒定水平速度。
+	var gravity := maxf(flying_cat_companion_gravity, 1.0)
+	var fall_height := maxf(
+		flying_cat_companion_drop_target_global_position.y \
+			- flying_cat_companion_drop_pivot_global_position.y,
+		1.0
+	)
+	flying_cat_companion_drop_duration = maxf(sqrt(2.0 * fall_height / gravity), 0.35)
+	var horizontal_distance := flying_cat_companion_drop_target_global_position.x \
+		- flying_cat_companion_drop_pivot_global_position.x
+	flying_cat_companion_velocity = Vector2(
+		horizontal_distance / flying_cat_companion_drop_duration,
+		0.0
+	)
+
+
+func _update_flying_cat_companion_free_fall(delta:float) -> void:
+	if not flying_cat_companion_dropped or flying_cat_companion_landed:
+		return
+	var remaining_time := flying_cat_companion_drop_duration - flying_cat_companion_drop_elapsed
+	var physics_delta := minf(delta, maxf(remaining_time, 0.0))
+	var gravity_step := Vector2(0.0, flying_cat_companion_gravity)
+	flying_cat_companion_drop_pivot_global_position += \
+		flying_cat_companion_velocity * physics_delta \
+		+ gravity_step * (0.5 * physics_delta * physics_delta)
+	flying_cat_companion_velocity += gravity_step * physics_delta
+	flying_cat_companion_drop_elapsed += physics_delta
+
+	var progress := clampf(
+		flying_cat_companion_drop_elapsed / flying_cat_companion_drop_duration,
+		0.0,
+		1.0
+	)
+	var visual_progress := smoothstep(0.0, 1.0, progress)
+	flying_cat_companion_drop_carrier.scale = flying_cat_companion_drop_start_scale.lerp(
+		flying_cat_companion_drop_final_scale,
+		visual_progress
+	)
+	flying_cat_companion_drop_carrier.rotation = lerp_angle(
+		flying_cat_companion_drop_start_rotation,
+		deg_to_rad(flying_cat_companion_landing_rotation_degrees),
+		visual_progress
+	)
+	flying_cat_companion_drop_carrier.global_position = \
+		flying_cat_companion_drop_pivot_global_position
+
+	if progress >= 1.0:
+		flying_cat_companion_landed = true
+		flying_cat_companion_velocity = Vector2.ZERO
+		flying_cat_companion_drop_pivot_global_position = \
+			flying_cat_companion_landing_marker.global_position
+		flying_cat_companion_drop_carrier.global_position = \
+			flying_cat_companion_drop_pivot_global_position
+
+
+func _reset_flying_cat_companion() -> void:
+	if is_instance_valid(flying_cat_companion_swing_tween):
+		flying_cat_companion_swing_tween.kill()
+	if flying_cat_companion.get_parent() != flying_cat:
+		flying_cat_companion.reparent(flying_cat, false)
+	if is_instance_valid(flying_cat_companion_drop_carrier):
+		flying_cat_companion_drop_carrier.queue_free()
+	flying_cat_companion_drop_carrier = null
+	flying_cat_companion.position = flying_cat_companion_start_position
+	flying_cat_companion.scale = flying_cat_companion_start_scale
+	flying_cat_companion.visible = true
+	flying_cat_companion_dropped = false
+	flying_cat_companion_landed = false
+	flying_cat_companion_velocity = Vector2.ZERO
+	_start_flying_cat_companion_swing()
+
+
+func _process(delta:float) -> void:
+	if Engine.is_editor_hint() or not flight_formation_motion_started:
+		return
+	_update_soft_flight_damage_boost_effect()
+	flight_formation.position.x -= flight_formation_speed * delta
+	if not flying_cat_companion_dropped \
+	and flight_formation.position.x <= flying_cat_companion_drop_trigger_x:
+		_drop_flying_cat_companion()
+	_update_flying_cat_companion_free_fall(delta)
+	var right_edge := flight_formation.position.x + flight_formation_horizontal_bounds.y
+	if right_edge <= _flight_layer_x(-80.0):
+		## 整支编队离开左侧后，直接回到编辑器保存的起点继续下一轮。
+		flight_formation.position = flight_formation_start_position
+		_reset_flying_cat_companion()
+
+
+func _get_flight_group_horizontal_bounds(group:Control) -> Vector2:
+	var left := INF
+	var right := -INF
+	var members := group.find_children("*", "Control", true, false)
+	for member_node:Node in members:
+		var member := member_node as Control
+		for corner:Vector2 in [
+			Vector2.ZERO,
+			Vector2(member.size.x, 0.0),
+			member.size,
+			Vector2(0.0, member.size.y),
+		]:
+			var corner_global:Vector2 = member.get_global_transform() * corner
+			var corner_in_group:Vector2 = group.get_global_transform().affine_inverse() * corner_global
+			left = minf(left, corner_in_group.x)
+			right = maxf(right, corner_in_group.x)
+	if is_inf(left) or is_inf(right):
+		return Vector2.ZERO
+	return Vector2(left, right)
+
+
+func _flight_layer_x(root_x: float) -> float:
+	var global_point := get_global_transform() * Vector2(root_x, 0.0)
+	return (flight_layer.get_global_transform().affine_inverse() * global_point).x
+
 
 func _apply_level_workshop_button_transform() -> void:
 	level_workshop_button.position = level_workshop_button_position
