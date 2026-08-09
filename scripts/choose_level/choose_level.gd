@@ -30,6 +30,9 @@ var cover_texture_used_rect_cache: Dictionary[int, Rect2i] = {}
 
 ## 游戏模式,用于管理关卡存档
 @export var game_mode:MainSceneRegistry.MainScenes = MainSceneRegistry.MainScenes.Null
+## 选关场景允许显示的页面数量；-1 表示显示全部页面。
+## 用于临时隐藏尚未开放的整类关卡，同时避免玩家通过翻页进入空页面。
+@export var visible_page_limit := -1
 ## 开放关卡数量，冒险默认为1，其余模式为3，若打开控制台开放所有关卡为-1
 var open_level_num:int = -1
 var all_pages_array : Array[GridContainer]
@@ -54,7 +57,10 @@ func _ready() -> void:
 	else:
 		open_level_num = -1
 
-	for page_i in all_page.get_child_count():
+	var visible_page_count := all_page.get_child_count()
+	if visible_page_limit >= 0:
+		visible_page_count = mini(visible_page_count, visible_page_limit)
+	for page_i in visible_page_count:
 		var page = all_page.get_child(page_i)
 		all_pages_array.append(page)
 		page.visible = false

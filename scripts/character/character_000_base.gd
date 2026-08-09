@@ -2,6 +2,7 @@ extends Node2D
 class_name Character000Base
 
 const NumericalStore := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const PuzzleZombieValues := preload("res://scripts/resources/puzzle_original_zombie_values.gd")
 
 #region 子节点
 @onready var body: BodyCharacter = %Body
@@ -134,6 +135,8 @@ enum E_CharacterInitType{
 func _enter_tree() -> void:
 	## 数值工坊保存的是全局调整；在任何组件 _ready() 前应用，保证所有后续对局一致生效。
 	NumericalStore.apply_to_character(self, true)
+	## 解谜模式中的改版僵尸需要保持原版关卡强度；此覆盖必须晚于全局数值调整。
+	PuzzleZombieValues.apply_to_character(self)
 
 
 func _ready() -> void:

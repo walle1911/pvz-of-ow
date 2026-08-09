@@ -14,12 +14,40 @@ is_lawn_mover = false
 look_show_zombie = false
 can_choosed_card = false
 monster_mode = 0
-zombie_refresh_types = Array[int]([500, 502, 503, 504, 505, 506, 507, 508])
+zombie_refresh_types = Array[int]([100, 102, 503, 104, 505, 506, 507, 9])
 start_sun = 1000
 pre_choosed_card_list_plant = Array[int]([527])
 is_pot_mode = true
 pot_mode = 2
-is_can_look_random_res_pot = true
 is_save_plant_on_pot_mode = true
-random_pot_num_on_fixed_mode = Vector3i(15, 5, 5)
+random_pot_plant = Dictionary[int, int]({
+1: 2,
+4: 2,
+6: 1,
+19: 1,
+21: 1,
+24: 1,
+40: 1
+})
+random_pot_zombie = Dictionary[int, int]({
+16: 1,
+24: 1,
+100: 2,
+102: 1,
+104: 1
+})
+plant_pot = Dictionary[int, int]({
+1: 1,
+4: 1,
+6: 1,
+18: 1,
+21: 1,
+527: 1
+})
+zombie_pot = Dictionary[int, int]({
+24: 1,
+100: 1,
+102: 1,
+104: 1
+})
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

@@ -13,27 +13,27 @@ is_lawn_mover = false
 look_show_zombie = false
 can_choosed_card = false
 monster_mode = 0
-zombie_refresh_types = Array[int]([500, 502, 503, 504, 505, 506, 507, 508])
+zombie_refresh_types = Array[int]([100, 102, 503, 104, 505, 506, 507, 9])
 card_mode = 0
 is_pot_mode = true
 pot_mode = 2
 random_pot_plant = Dictionary[int, int]({
 532: 5,
 534: 2,
-539: 2,
-547: 1
+40: 2,
+48: 1
 })
 random_pot_zombie = Dictionary[int, int]({
-500: 6,
-502: 2,
-504: 1,
-523: 1
+24: 1,
+100: 6,
+102: 2,
+104: 1
 })
 plant_pot = Dictionary[int, int]({
 525: 1,
 534: 2
 })
 zombie_pot = Dictionary[int, int]({
-502: 2
+102: 2
 })
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

@@ -61,6 +61,7 @@ grow_vertical = 2
 theme = ExtResource("1_exhd4")
 script = ExtResource("2_6fnvv")
 game_mode = 103
+visible_page_limit = 1
 metadata/_edit_vertical_guides_ = [-68.0]
 
 [node name="BG" type="TextureRect" parent="."]
@@ -1632,6 +1633,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Last" type="TextureButton" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -1664,6 +1666,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Next" type="TextureButton" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -1696,6 +1699,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="LabelPage" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
