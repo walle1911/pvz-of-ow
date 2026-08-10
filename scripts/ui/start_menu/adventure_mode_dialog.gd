@@ -5,6 +5,13 @@ signal normal_mode_selected
 signal chessboard_mode_selected
 
 
+func _ready() -> void:
+	## 棋盘格主线暂时隐藏；普通模式与取消按钮保留固定可见。
+	$Panel/ChessboardMode.hide()
+	$Panel/ChessboardMode.process_mode = Node.PROCESS_MODE_DISABLED
+	$Panel/NormalMode.position.y = 157.0
+
+
 func configure(title: String, normal_text: String, chessboard_text: String) -> void:
 	$Panel/Title.text = title
 	$Panel/NormalMode/Label.text = normal_text

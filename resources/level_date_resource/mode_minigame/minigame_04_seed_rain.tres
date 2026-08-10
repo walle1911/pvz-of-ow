@@ -14,26 +14,26 @@ is_day = false
 is_day_sun = false
 can_choosed_card = false
 zombie_multy = 4
-zombie_refresh_types = Array[int]([509, 501, 503, 504, 505, 507, 508, 516, 515, 504])
+zombie_refresh_types = Array[int]([9, 1, 3, 504, 5, 507, 508, 16, 515, 504])
 card_mode = 0
 is_seed_rain = true
 all_card_plant_type_probability_seed_rain = Dictionary[int, int]({
-501: 2,
-503: 1,
-504: 2,
-506: 2,
+1: 2,
+3: 1,
+4: 2,
+6: 2,
 508: 2,
 517: 8,
-518: 1,
-519: 2,
-521: 1,
-523: 2,
+18: 1,
+19: 2,
+21: 1,
+23: 2,
 526: 1,
 528: 2,
-544: 1
+44: 1
 })
 card_order_plant_seed_rain = Dictionary[int, int]({
-0: 516,
-5: 543
+0: 16,
+5: 43
 })
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

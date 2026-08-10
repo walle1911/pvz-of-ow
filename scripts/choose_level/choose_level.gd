@@ -13,13 +13,6 @@ const WORLD_COVER_TEXTURES: Array[Texture2D] = [
 ]
 ## 第三世界只有这些关卡的封面角色站在水面，其余关卡发生在泳池旁草地。
 const POOL_SURFACE_COVER_LEVELS := [&"adventure_3_1", &"adventure_3_2", &"adventure_3_4"]
-const MOVED_CHESSBOARD_LEVELS: Array[ResourceLevelData] = [
-	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_01_ten_flags.tres"),
-	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_02_ten_rounds.tres"),
-	preload("res://resources/level_date_resource/mode_survival/survival_chessboard_03_endless.tres"),
-]
-const MOVED_CHESSBOARD_NAMES := ["棋盘格·十旗", "棋盘格·十轮", "排位模式"]
-
 ## 用于生成关卡 ID 的计数
 var next_level_number: int = 1
 var configured_level_count := 0
@@ -44,7 +37,7 @@ var bgm_choose_card: AudioStream = preload("res://assets/audio/BGM/choose_card.m
 func _ready() -> void:
 	if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
 		_build_adventure_preset_buttons()
-	_configure_moved_chessboard_levels()
+	_hide_unavailable_level_buttons()
 	## 如果没有开放所有关卡
 	if not Global.config_service.open_all_level:
 		if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure:
@@ -86,65 +79,19 @@ func _ready() -> void:
 	_ready_update_page()
 
 
-func _configure_moved_chessboard_levels() -> void:
-	if game_mode == MainSceneRegistry.MainScenes.ChooseLevelSurvival:
-		for page in all_page.get_children():
-			for child in page.get_children():
-				if child is ChooseLevelButton and child.curr_level_data_game_para != null \
-						and child.curr_level_data_game_para.is_chessboard_mode:
-					child.visible = false
-		return
-	if game_mode != MainSceneRegistry.MainScenes.ChooseLevelMiniGame or all_page.get_child_count() == 0:
-		return
-	var empty_buttons: Array[ChooseLevelButton] = []
+func _hide_unavailable_level_buttons() -> void:
+	## 棋盘格主线、十旗/十轮与排位模式暂时只隐藏入口，底层资源和存档仍保留。
+	## 空占位按钮也一并隐藏，避免小游戏页留下可点击的空白入口。
 	for page in all_page.get_children():
 		for child in page.get_children():
-			if child is ChooseLevelButton and child.curr_level_data_game_para == null:
-				empty_buttons.append(child)
-	for index in mini(MOVED_CHESSBOARD_LEVELS.size(), empty_buttons.size()):
-		var button := empty_buttons[index]
-		button.activate_runtime_level(MOVED_CHESSBOARD_LEVELS[index])
-		button.get_node("TextureButton/Label").text = MOVED_CHESSBOARD_NAMES[index]
-		_configure_chessboard_cover(button, index)
-	for index in range(MOVED_CHESSBOARD_LEVELS.size(), empty_buttons.size()):
-		empty_buttons[index].visible = false
-
-
-func _configure_chessboard_cover(button: ChooseLevelButton, variant: int) -> void:
-	var panel := button.get_node_or_null("Panel") as Panel
-	if panel == null:
-		panel = Panel.new()
-		panel.name = "Panel"
-		button.add_child(panel)
-	panel.position = Vector2(11, 4)
-	panel.size = Vector2(96, 70)
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.clip_children = CanvasItem.CLIP_CHILDREN_ONLY
-	for child in panel.get_children():
-		child.queue_free()
-	var background := TextureRect.new()
-	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.texture = WORLD_COVER_TEXTURES[0]
-	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(background)
-	var tint := ColorRect.new()
-	tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	tint.color = [Color(0.15, 0.45, 0.12, 0.28), Color(0.48, 0.26, 0.08, 0.28), Color(0.32, 0.12, 0.48, 0.3)][variant]
-	tint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(tint)
-	var label := Label.new()
-	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	label.text = "▦"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", 43)
-	label.add_theme_color_override("font_color", Color(0.9, 0.84, 0.48, 0.95))
-	label.add_theme_color_override("font_outline_color", Color(0.08, 0.05, 0.02, 0.9))
-	label.add_theme_constant_override("outline_size", 4)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(label)
+			var button := child as ChooseLevelButton
+			if button == null:
+				continue
+			if button.curr_level_data_game_para == null \
+					or button.curr_level_data_game_para.is_chessboard_mode \
+					or button.curr_level_data_game_para.is_ranked_mode:
+				button.hide()
+				button.process_mode = Node.PROCESS_MODE_DISABLED
 
 ## 更新关卡是否锁住 无尽模式默认开放，不占用开放名额
 func update_lock_level(choose_level_button:ChooseLevelButton, curr_level_state_data:Dictionary):

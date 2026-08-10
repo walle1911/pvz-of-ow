@@ -605,6 +605,8 @@ func _simple_intro_wave(zombie_type: CharacterRegistry.ZombieType) -> int:
 func _plain_zombie_type() -> CharacterRegistry.ZombieType:
 	if zombie_manager.game_para.custom_simple_original_mode:
 		return zombie_manager.game_para.simple_base_zombie_type
+	if CharacterRegistry.ZombieType.Z001NormTalon in zombie_manager.zombie_refresh_types:
+		return CharacterRegistry.ZombieType.Z001NormTalon
 	return CharacterRegistry.ZombieType.Z501Norm
 
 
@@ -643,7 +645,11 @@ func spawn_sea_weed_zombies():
 		print("无水路,无法生成珊瑚僵尸")
 		return
 
-	var zombie_type_sea_weed_list :Array= [CharacterRegistry.ZombieType.Z501Norm, CharacterRegistry.ZombieType.Z503Cone, CharacterRegistry.ZombieType.Z505Bucket]
+	var zombie_type_sea_weed_list:Array[CharacterRegistry.ZombieType] = [
+		_preferred_pool_variant(CharacterRegistry.ZombieType.Z001NormTalon, CharacterRegistry.ZombieType.Z501Norm),
+		_preferred_pool_variant(CharacterRegistry.ZombieType.Z003ConeTalon, CharacterRegistry.ZombieType.Z503Cone),
+		_preferred_pool_variant(CharacterRegistry.ZombieType.Z005BucketTalon, CharacterRegistry.ZombieType.Z505Bucket),
+	]
 
 	for i in range(3):
 		var zombie_type:CharacterRegistry.ZombieType = zombie_type_sea_weed_list.pick_random()
@@ -651,6 +657,12 @@ func spawn_sea_weed_zombies():
 		var zombie_sea_weed:Zombie000Base = wave_create_zombie(zombie_type, lane, -1, _zombie_seaweed)
 
 		zombie_sea_weed.global_position.x = randf_range(500, 750)
+
+
+func _preferred_pool_variant(
+		ow_type:CharacterRegistry.ZombieType,
+		original_type:CharacterRegistry.ZombieType) -> CharacterRegistry.ZombieType:
+	return ow_type if ow_type in zombie_manager.zombie_refresh_types else original_type
 
 ## 珊瑚僵尸
 func _zombie_seaweed(z:Zombie001Norm):

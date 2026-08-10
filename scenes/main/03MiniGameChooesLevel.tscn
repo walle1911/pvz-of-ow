@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bwevuvs5nnwfx" path="res://assets/image/ui/ui_challenge/Challenge_Background.jpg" id="2_xopa1"]
 [ext_resource type="Texture2D" uid="uid://hb4b6ujaahoc" path="res://assets/image/Almanac/Almanac_GroundDay.jpg" id="4_e2jkj"]
 [ext_resource type="Resource" uid="uid://c8yt6n65ponc6" path="res://resources/level_date_resource/mode_minigame/minigame_01_bowling.tres" id="5_mrsyh"]
-[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_520_yeti.tscn" id="7_my4l7"]
+[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_020_zombie_yeti_winston.tscn" id="7_my4l7"]
 [ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="7_pw6t1"]
 [ext_resource type="Texture2D" path="res://assets/reanim/WreckingBall_body.png" id="8_bkyeq"]
 [ext_resource type="Resource" uid="uid://3mvuumsl5v6c" path="res://resources/level_date_resource/mode_minigame/minigame_02_hammer_zombie.tres" id="8_fgi2n"]
@@ -16,9 +16,9 @@
 [ext_resource type="PackedScene" uid="uid://bhjnqm3kqr2fq" path="res://scenes/choose_level/choose_level_button.tscn" id="9_xsph7"]
 [ext_resource type="Texture2D" uid="uid://qtifu6lsmq6x" path="res://assets/reanim/hammer_1.png" id="10_sb4cu"]
 [ext_resource type="Texture2D" uid="uid://dweon5ml8otw5" path="res://assets/reanim/Hammer_2.png" id="11_mrsyh"]
-[ext_resource type="PackedScene" path="res://scenes/character/plant/plant_501_pea_shooter_single.tscn" id="12_fgi2n"]
+[ext_resource type="PackedScene" path="res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn" id="12_fgi2n"]
 [ext_resource type="Resource" uid="uid://cxdnr4j80e85h" path="res://resources/level_date_resource/mode_minigame/minigame_03_mini_zombie.tres" id="13_bkyeq"]
-[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_501_norm.tscn" id="13_pw6t1"]
+[ext_resource type="PackedScene" path="res://scenes/character/zombie/zombie_001_norm_talon.tscn" id="13_pw6t1"]
 [ext_resource type="Texture2D" uid="uid://om7aubyyu3le" path="res://assets/image/ui/ui_level/SeedChooser_Button2.png" id="13_v8ms4"]
 [ext_resource type="Resource" uid="uid://byaabbkntnwec" path="res://resources/level_date_resource/mode_minigame/minigame_101_small_gambling.tres" id="14_5d8uv"]
 [ext_resource type="Texture2D" uid="uid://dwva3w3r5kjvb" path="res://assets/image/Almanac/Almanac_GroundNightPool.jpg" id="14_bkyeq"]
@@ -362,12 +362,12 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("4_e2jkj")
 
-[node name="Plant501PeaShooterSingle" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("12_fgi2n")]
+[node name="Plant001PeaShooterSoldier76" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" node_paths=PackedStringArray("node_no_change_direction") instance=ExtResource("12_fgi2n")]
 position = Vector2(85.8333, 88.115)
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 character_init_type = 1
 
-[node name="Zombie501Norm" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("13_pw6t1")]
+[node name="Zombie001NormTalon" parent="AllPage/GridContainer/ChooseLevelButton3/Panel/TextureRect" instance=ExtResource("13_pw6t1")]
 position = Vector2(151.66666, 93.33333)
 scale = Vector2(0.5, 0.5)
 character_init_type = 1
@@ -630,7 +630,7 @@ grow_vertical = 2
 scale = Vector2(0.6, 0.6)
 texture = ExtResource("4_e2jkj")
 
-[node name="Zombie520Yeti" parent="AllPage/GridContainer2/ChooseLevelButton/Panel/TextureRect" instance=ExtResource("7_my4l7")]
+[node name="Zombie020YetiWinston" parent="AllPage/GridContainer2/ChooseLevelButton/Panel/TextureRect" instance=ExtResource("7_my4l7")]
 position = Vector2(92.5, 94.7817)
 scale = Vector2(0.5, 0.5)
 character_init_type = 1

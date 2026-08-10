@@ -48,9 +48,6 @@ var curr_all_preplant_purple:Array[Plant000Base]
 ## 上一次选中的非模仿者植物类型，模仿者种植时自动复制它
 var last_non_imitater_plant_type: CharacterRegistry.PlantType = CharacterRegistry.PlantType.Null
 
-## 缓存：游戏场景中的 BodyCorrect 位置，按植物类型索引
-var _game_body_correct_cache: Dictionary = {}
-
 ## 斩仇火爆辣椒空中技能状态
 var _vendetta_charge_player:AnimationPlayer
 var _vendetta_animation_tree:AnimationTree
@@ -112,6 +109,8 @@ func click_card(card:Card) -> bool:
 	if character_type == CharacterRegistry.CharacterType.Plant\
 		and card.card_plant_type == VENDETTA_PLANT_TYPE:
 		return _click_vendetta_card(card)
+	if character_type == CharacterRegistry.CharacterType.Plant and _is_original_plant(card.card_plant_type):
+		return _click_original_plant_card(card)
 
 	var character_static_copy := card.character_static.duplicate() as Node2D
 	if not is_instance_valid(character_static_copy) or character_static_copy.get_child_count() == 0:
@@ -148,7 +147,6 @@ func click_card(card:Card) -> bool:
 		## 静态植物以及植物虚影
 		character_child.scale = Vector2.ONE
 		character_child.position = Vector2.ZERO
-		_fix_body_correct_from_game_scene(character_child, curr_card.card_plant_type)
 		characte_static_shadow = character_child.duplicate()
 		characte_static_shadow.modulate.a = 0
 		characte_static.z_index = 1
@@ -184,6 +182,77 @@ func click_card(card:Card) -> bool:
 			click_card_column()
 
 	return true
+
+
+func _is_original_plant(plant_type:CharacterRegistry.PlantType) -> bool:
+	return (int(plant_type) >= 501 and int(plant_type) <= 549) \
+		or plant_type == CharacterRegistry.PlantType.P1499Imitater
+
+
+func _click_original_plant_card(card:Card) -> bool:
+	var preview_plant := _create_original_plant_preview(card)
+	var preview_shadow := _create_original_plant_preview(card)
+	if not is_instance_valid(preview_plant) or not is_instance_valid(preview_shadow):
+		if is_instance_valid(preview_plant):
+			preview_plant.queue_free()
+		if is_instance_valid(preview_shadow):
+			preview_shadow.queue_free()
+		push_warning("手持原版植物失败，无法创建展示实例: %s" % card.card_plant_type)
+		return false
+
+	if curr_card != null:
+		_clear_curr_data()
+	curr_card = card
+	EventBus.push_event("hm_character_hand_card", [curr_card])
+	if not card.is_imitater and card.card_plant_type != CharacterRegistry.PlantType.P1499Imitater:
+		last_non_imitater_plant_type = card.card_plant_type
+	plant_condition = Global.character_registry.get_plant_info(
+		card.card_plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	if plant_condition == null and last_non_imitater_plant_type != CharacterRegistry.PlantType.Null:
+		plant_condition = Global.character_registry.get_plant_info(
+			last_non_imitater_plant_type,
+			CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+		)
+
+	characte_static = preview_plant
+	characte_static_shadow = preview_shadow
+	characte_static.z_index = 1
+	characte_static_shadow.modulate.a = 0.0
+	temporary_character.add_child(characte_static)
+	temporary_character.add_child(characte_static_shadow)
+
+	if click_card_column:
+		click_card_column()
+	if plant_condition != null and plant_condition.is_purple_card:
+		start_preplant_purple_light(plant_condition, card.card_plant_type)
+	return true
+
+
+func _create_original_plant_preview(card:Card) -> Plant000Base:
+	var plant_scene := Global.character_registry.get_plant_info(
+		card.card_plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantScenes
+	) as PackedScene
+	if not is_instance_valid(plant_scene):
+		return null
+	var preview := plant_scene.instantiate() as Plant000Base
+	if not is_instance_valid(preview):
+		return null
+	preview.init_plant({
+		Plant000Base.E_PInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsShow,
+		Plant000Base.E_PInitAttr.IsImitaterMaterial: card.is_imitater,
+	})
+	preview.position = Vector2.ZERO
+	preview.scale = Vector2.ONE
+	var plant_shadow := preview.get_node_or_null(^"Shadow") as CanvasItem
+	if is_instance_valid(plant_shadow):
+		plant_shadow.visible = false
+	var preview_hp := preview.get_node_or_null(^"HpComponent/HpControl") as CanvasItem
+	if is_instance_valid(preview_hp):
+		preview_hp.visible = false
+	return preview
 
 
 func _wrap_cone_talon_card_sprite(character_static_copy:Node2D, card_sprite:Node2D) -> Node2D:
@@ -726,76 +795,6 @@ func click_cell(plant_cell:PlantCell):
 func exit_status():
 	_clear_curr_data()
 
-
-## 从游戏场景获取正确的 BodyCorrect 及其子节点结构，应用到卡片预览节点上
-func _fix_body_correct_from_game_scene(plant_child: Node2D, plant_type: CharacterRegistry.PlantType) -> void:
-	## 土豆雷卡牌预览已经烘焙为出土完成帧；真实场景的默认坐标是出土动画
-	## 起始帧，不能覆盖卡图中的最终碎石布局。
-	if plant_type == CharacterRegistry.PlantType.P505PotatoMine:
-		return
-	## Echo 的实战 Anim_idle 初始缩放由 AnimationTree 从近零值驱动；把该初始值
-	## 覆盖到卡牌静态图后，会让鼠标手持贴图看起来完全消失。
-	if plant_type == CharacterRegistry.PlantType.P999ImitaterEcho:
-		return
-	if not _game_body_correct_cache.has(plant_type):
-		_game_body_correct_cache[plant_type] = _make_game_body_correct_snapshot(plant_type)
-
-	var snapshot: Dictionary = _game_body_correct_cache.get(plant_type, {})
-	if snapshot.is_empty():
-		return
-
-	var card_body_correct = plant_child.get_node_or_null("Body/BodyCorrect") as Node2D
-	if not card_body_correct:
-		return
-
-	_apply_node_snapshot(card_body_correct, snapshot)
-
-
-func _make_game_body_correct_snapshot(plant_type: CharacterRegistry.PlantType) -> Dictionary:
-	var snapshot: Dictionary = {}
-	var plant_scene = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantScenes)
-	if not plant_scene:
-		return snapshot
-
-	var instance = plant_scene.instantiate()
-	var body_correct = instance.get_node_or_null("Body/BodyCorrect") as Node2D
-	if body_correct:
-		_collect_node_snapshot(body_correct, snapshot)
-	instance.queue_free()
-	return snapshot
-
-
-func _collect_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
-	snapshot[&"pos"] = node.position
-	snapshot[&"scale"] = node.scale
-	var children_snapshot: Dictionary = {}
-	for child in node.get_children():
-		## 卡牌静态图可能会复用出战场景中默认隐藏的动画占位节点。
-		## 这些节点在卡图里被重新摆放并主动显示（例如土豆雷的碎石、脸和眼睛），
-		## 不应被出战场景的隐藏状态坐标覆盖，否则手持预览会出现碎片堆叠。
-		if child is CanvasItem and not (child as CanvasItem).visible:
-			continue
-		var child_node2d := child as Node2D
-		if child_node2d:
-			var child_snap: Dictionary = {}
-			_collect_node_snapshot(child_node2d, child_snap)
-			children_snapshot[child.name] = child_snap
-	if not children_snapshot.is_empty():
-		snapshot[&"children"] = children_snapshot
-
-
-func _apply_node_snapshot(node: Node2D, snapshot: Dictionary) -> void:
-	if snapshot.has("pos"):
-		node.position = snapshot["pos"]
-	if snapshot.has("scale"):
-		node.scale = snapshot["scale"]
-	var children_snapshot: Dictionary = snapshot.get("children", {})
-	for child in node.get_children():
-		var child_name: String = child.name
-		if children_snapshot.has(child_name):
-			var child_node2d := child as Node2D
-			if child_node2d:
-				_apply_node_snapshot(child_node2d, children_snapshot[child_name])
 
 func _is_valid_hand_card(card: Card) -> bool:
 	return is_instance_valid(card) \
