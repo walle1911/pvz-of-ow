@@ -4,7 +4,10 @@ class_name Plant017LilyPad
 
 func _ready() -> void:
 	super._ready()
-	tween_up_and_down()
+	## 手持/图鉴展示会持续更新根节点位置，不能再用 Tween 抢写 position。
+	## 只有正式种下的睡莲需要水面漂浮效果。
+	if character_init_type == E_CharacterInitType.IsNorm:
+		tween_up_and_down()
 
 func tween_up_and_down():
 	await get_tree().physics_frame

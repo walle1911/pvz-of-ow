@@ -6,8 +6,9 @@
 [resource]
 script = ExtResource("2_3aqa3")
 game_sences = 1
-game_BG = 2
+game_BG = 3
 game_BGM = 5
+is_day = false
 is_day_sun = false
 can_choosed_card = false
 is_mini_zombie = true

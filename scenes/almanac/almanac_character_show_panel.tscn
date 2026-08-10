@@ -87,6 +87,15 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 9
 
+[node name="SkillTitle" type="Label" parent="AllBg/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.772549, 0.54902, 0.152941, 1)
+theme_override_colors/font_outline_color = Color(0.560784, 0.262745, 0.105882, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("4_wmr3e")
+theme_override_font_sizes/font_size = 14
+text = "技能介绍"
+
 [node name="CharacterText1" type="Label" parent="AllBg/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(255, 0)
 layout_mode = 2
@@ -281,6 +290,15 @@ theme_override_constants/shadow_outline_size = 0
 theme_override_fonts/font = ExtResource("4_wmr3e")
 theme_override_font_sizes/font_size = 13
 autowrap_mode = 2
+
+[node name="IntroductionTitle" type="Label" parent="AllBg/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.772549, 0.54902, 0.152941, 1)
+theme_override_colors/font_outline_color = Color(0.560784, 0.262745, 0.105882, 1)
+theme_override_constants/outline_size = 1
+theme_override_fonts/font = ExtResource("4_wmr3e")
+theme_override_font_sizes/font_size = 14
+text = "角色简介"
 
 [node name="CharacterText4Introduction" type="Label" parent="AllBg/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(255, 0)

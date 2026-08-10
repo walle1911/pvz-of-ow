@@ -71,13 +71,13 @@ const ZOMBIE_NAME_TEXTURE_MAP = {
 ## 角色名字
 @onready var character_name: TextureRect = $AllBg/CharacterName
 @onready var character_name_text: Label = $AllBg/CharacterNameText
-## 描述
+## 技能介绍
 @onready var character_text_1: Label = $AllBg/ScrollContainer/VBoxContainer/CharacterText1
 ## 参数列表容器
 @onready var character_text_2_para: VBoxContainer = $AllBg/ScrollContainer/VBoxContainer/CharacterText2Para
 ## 提示
 @onready var character_text_3_hint: Label = $AllBg/ScrollContainer/VBoxContainer/CharacterText3Hint
-## 介绍
+## 角色简介
 @onready var character_text_4_introduction: Label = $AllBg/ScrollContainer/VBoxContainer/CharacterText4Introduction
 ##　花费
 @onready var cost: HBoxContainer = $AllBg/PlantEndPara/Cost
@@ -170,7 +170,7 @@ func get_almanac_character_data(group_name: String, character_registry_name: Str
 	return {
 		"背景": "Day",
 		"名字": character_registry_name,
-		"描述": "该角色暂无完整图鉴描述。",
+		"描述": "该角色的技能介绍尚未补充。",
 		"参数": {},
 		"简介": "该角色的图鉴文案尚未补充。",
 	}
@@ -224,7 +224,7 @@ func play_almanac_dance(show_zombie: Zombie000Base) -> void:
 ## 更新通用数据
 func almanac_update_character_panel_common(data_almanac_character:Dictionary):
 	character_bg.texture = CharacterBgMap[data_almanac_character["背景"]]
-	## 描述
+	## 技能介绍
 	character_text_1.text = data_almanac_character["描述"]
 	var num_para = data_almanac_character["参数"].size()
 	## 参数
@@ -242,7 +242,7 @@ func almanac_update_character_panel_common(data_almanac_character:Dictionary):
 		character_text_3_hint.visible = true
 	else:
 		character_text_3_hint.visible = false
-	## 简介
+	## 角色简介
 	character_text_4_introduction.text = data_almanac_character["简介"]
 
 
