@@ -55,6 +55,8 @@ var return_to_developer_mode := false
 var developer_level_adjustments_active := false
 ## 从开发者选关进入实战时保留关卡源数据，供右上角“编辑”直接交给关卡工坊。
 var developer_workshop_level_source: Dictionary = {}
+## 开发者模式礼盒入口正在浏览四个内置测试关卡。
+var developer_gift_test_levels_active := false
 ## 关卡工坊从卡片右键进入数值编辑器时，保存目标角色和返回后的选卡界面状态。
 var numerical_editor_context: Dictionary = {}
 var level_workshop_return_state: Dictionary = {}

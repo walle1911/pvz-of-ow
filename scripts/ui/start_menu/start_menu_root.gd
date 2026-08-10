@@ -149,6 +149,7 @@ func _hide_unavailable_start_menu_items() -> void:
 	## 由运行时代码统一隐藏，避免场景在编辑器中重新保存后恢复显示和点击区域。
 	garden_button.hide()
 	garden_button.process_mode = Node.PROCESS_MODE_DISABLED
+	## 礼盒稍后由开发者模式状态统一控制；普通模式始终不可见、不可点击。
 	gift_button.hide()
 	gift_button.process_mode = Node.PROCESS_MODE_DISABLED
 
@@ -501,6 +502,8 @@ func _apply_editor_menu_preview() -> void:
 
 func _apply_developer_mode(enabled: bool) -> void:
 	developer_mode = enabled
+	if not enabled and not Engine.is_editor_hint():
+		Global.developer_gift_test_levels_active = false
 	## 开发者菜单本身不是关卡；只有从对应入口真正进关时才开启数值覆盖。
 	## @tool 的 Inspector 预览也会调用本方法；编辑器预览不能修改运行时 Global 状态。
 	if not Engine.is_editor_hint():
@@ -510,6 +513,8 @@ func _apply_developer_mode(enabled: bool) -> void:
 	for button in [menu_button_1, menu_button_2, menu_button_3, menu_button_4]:
 		button.visible = not developer_mode
 	developer_menu.visible = developer_mode
+	gift_button.visible = developer_mode
+	gift_button.process_mode = Node.PROCESS_MODE_INHERIT if developer_mode else Node.PROCESS_MODE_DISABLED
 	_apply_normal_option_buttons()
 	_apply_developer_store_button(developer_mode)
 	if developer_mode:
@@ -557,6 +562,7 @@ func _unrealized():
 ## 开始游戏
 func _on_button_1_pressed() -> void:
 	Global.game_para = null
+	Global.developer_gift_test_levels_active = false
 	Global.developer_level_adjustments_active = developer_mode
 	if developer_mode:
 		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
@@ -605,7 +611,8 @@ func _on_button_4_pressed() -> void:
 ## 自定义关卡
 func _on_custom_button_pressed() -> void:
 	Global.game_para = null
-	Global.developer_level_adjustments_active = false
+	Global.developer_gift_test_levels_active = true
+	Global.developer_level_adjustments_active = true
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelCustom])
 
 ## 切换开发者模式/正常模式

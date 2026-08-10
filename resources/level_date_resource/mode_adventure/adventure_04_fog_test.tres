@@ -33,4 +33,6 @@ card_order_plant_seed_rain = Dictionary[int, int]({
 0: 516,
 5: 543
 })
+start_sun = 5757
+is_sun_value_locked = true
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

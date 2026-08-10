@@ -4,6 +4,28 @@ class_name CustomChooseLevel
 const CHOOSE_LEVEL_BUTTON_CUSTOMIZE = preload("res://scenes/choose_level/choose_level_button_customize.tscn")
 const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd")
 const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
+const DEVELOPER_GIFT_TEST_LEVELS: Array[Dictionary] = [
+	{
+		"id": "developer_test_day",
+		"name": "白天测试",
+		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_01_day_test.tres"),
+	},
+	{
+		"id": "developer_test_pool",
+		"name": "泳池测试",
+		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_03_pool_test.tres"),
+	},
+	{
+		"id": "developer_test_fog",
+		"name": "雾夜测试",
+		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_04_fog_test.tres"),
+	},
+	{
+		"id": "developer_test_roof",
+		"name": "屋顶测试",
+		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_05_Roof_test.tres"),
+	},
+]
 
 @onready var panel_help: Panel = $PanelHelp
 @onready var grid_container: GridContainer = $AllPage/GridContainer
@@ -20,6 +42,11 @@ func _ready() -> void:
 	all_page.remove_child(detached_grid_template)
 	detached_grid_template.name = "GridTemplate"
 	add_child(detached_grid_template)
+	if Global.developer_gift_test_levels_active:
+		$ClassicLevels.hide()
+		$CustomLevels.hide()
+		_build_developer_gift_test_levels()
+		return
 	$ClassicLevels.visible = Global.developer_level_adjustments_active
 	$CustomLevels.visible = Global.developer_level_adjustments_active
 	_build_level_entries()
@@ -27,6 +54,22 @@ func _ready() -> void:
 		_show_developer_list("classic")
 	else:
 		_rebuild_pages(custom_entries)
+
+
+func _build_developer_gift_test_levels() -> void:
+	var title := get_node_or_null("Label") as Label
+	if title != null:
+		title.text = "训练靶场"
+	var entries: Array[Dictionary] = []
+	for definition in DEVELOPER_GIFT_TEST_LEVELS:
+		var source := definition["resource"] as ResourceLevelData
+		entries.append({
+			"game_para": source.duplicate_runtime(),
+			"id": definition["id"],
+			"name": definition["name"],
+			"editor_source": {},
+		})
+	_rebuild_pages(entries)
 
 
 func _build_level_entries() -> void:
@@ -185,8 +228,9 @@ func _on_button_ok_pressed() -> void:
 
 
 func back_start_menu() -> void:
-	if Global.developer_level_adjustments_active:
+	if Global.developer_level_adjustments_active or Global.developer_gift_test_levels_active:
 		Global.return_to_developer_mode = true
+	Global.developer_gift_test_levels_active = false
 	Global.developer_level_adjustments_active = false
 	Global.developer_workshop_level_source = {}
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu])

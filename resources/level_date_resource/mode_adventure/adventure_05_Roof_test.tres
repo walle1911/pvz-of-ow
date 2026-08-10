@@ -24,7 +24,8 @@ game_BGM = 4
 all_pre_plant_data = Array[ExtResource("1_hl02h")]([SubResource("Resource_hl02h"), SubResource("Resource_i5mhj")])
 zombie_refresh_types = Array[int]([507, 501, 503, 505, 506, 508, 524, 522, 509, 515])
 is_bungi = true
-start_sun = 50000
+start_sun = 5757
+is_sun_value_locked = true
 all_card_plant_type_probability = Dictionary[int, int]({
 503: 1,
 507: 1,

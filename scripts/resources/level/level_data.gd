@@ -71,6 +71,8 @@ func duplicate_runtime() -> ResourceLevelData:
 @export var look_show_zombie: bool = true
 ## 是否可以选择卡片,传送带不可选择
 @export var can_choosed_card: bool = true
+## 测试关卡可把阳光永久锁定为 start_sun；种植、收集和事件修改都不会改变显示值。
+@export var is_sun_value_locked := false
 ## 戴夫对话资源
 @export var crazy_dave_dialog: CrazyDaveDialogResource
 #endregion

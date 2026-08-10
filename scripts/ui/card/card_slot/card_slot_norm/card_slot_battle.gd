@@ -23,6 +23,8 @@ var _squash_doomfist_card_attack_check_timer := 0.0
 ## 阳光值
 var sun_value:
 	set(value):
+		if is_instance_valid(Global.game_para) and Global.game_para.is_sun_value_locked:
+			value = Global.game_para.start_sun
 		sun_value = value
 		_remove_invalid_curr_cards()
 		curr_sun_value.text = str(value)
