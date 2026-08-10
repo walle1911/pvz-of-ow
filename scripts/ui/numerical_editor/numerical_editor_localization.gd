@@ -4,7 +4,7 @@ class_name NumericalEditorLocalization
 const CHARACTER_NAMES := {
 	"PeaShooterSingle": "豌豆射手", "SunFlower": "向日葵", "CherryBomb": "樱桃炸弹",
 	"WallNut": "坚果墙", "PotatoMine": "土豆雷", "SnowPea": "寒冰射手", "Chomper": "大嘴花",
-	"PeaShooterDouble": "双发射手", "PuffShroom": "小喷菇", "SunShroom": "阳光菇",
+	"PeaShooterDouble": "双发射手", "PeaShooterDoubleRework": "双发射手（改版）", "PuffShroom": "小喷菇", "SunShroom": "阳光菇",
 	"FumeShroom": "大喷菇", "GraveBuster": "墓碑吞噬者", "HypnoShroom": "魅惑菇",
 	"ScaredyShroom": "胆小菇", "IceShroom": "寒冰菇", "DoomShroom": "毁灭菇", "LilyPad": "睡莲",
 	"Squash": "倭瓜", "ThreePeater": "三线射手", "TangleKelp": "缠绕水草", "Jalapeno": "火爆辣椒",

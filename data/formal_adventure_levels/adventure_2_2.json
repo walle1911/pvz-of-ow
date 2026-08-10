@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0
+		0,
+		1,
+		2,
+		3,
+		4
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -19,8 +19,13 @@
 		23,
 		505,
 		14,
-		11
+		43
 	],
+	"bossConfig": {
+		"enabled": false,
+		"rewardPlant": -1,
+		"zombieType": 524
+	},
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
 		"mineCount": 0.0,
@@ -44,7 +49,7 @@
 	"coverCharacters": [
 		{
 			"kind": "plant",
-			"type": 11
+			"type": 43
 		}
 	],
 	"earlyRefreshDelay": 1.5,
@@ -75,7 +80,7 @@
 		"type": "night_lawn"
 	},
 	"minimumWaveTime": 5.58,
-	"name": "2-2 我真没胖",
+	"name": "2-2 莫伊拉黄球bug之谜",
 	"openingFirstZombieAdvanceCells": 0.0,
 	"plantSelectionEnabled": true,
 	"playerConfig": {
@@ -84,9 +89,9 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071512.0,
-	"rewardPlant": 43,
+	"rewardPlant": 11,
 	"rewardPlants": [
-		43
+		11
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,
@@ -94,9 +99,6 @@
 	"simpleFlagZombieType": 2,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
-	"simpleZombieIntroWaves": {
-
-	},
 	"simpleZombiePool": [
 		1,
 		5,
@@ -105,6 +107,9 @@
 	],
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
+	"specialRewardCardLevels": {
+
+	},
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		27.32,

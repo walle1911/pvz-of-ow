@@ -32,8 +32,6 @@
 [ext_resource type="BitMap" uid="uid://w2jtfego7tpg" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Flower3_Mask.png" id="21_we678"]
 [ext_resource type="Texture2D" uid="uid://c507rl01uyqmg" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Options1.png" id="22_fkqsy"]
 [ext_resource type="Texture2D" uid="uid://bm2w5mn3oskys" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png" id="23_c836s"]
-[ext_resource type="Texture2D" uid="uid://bcbh8nxk0eyxb" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png" id="24_2ir4x"]
-[ext_resource type="Texture2D" uid="uid://8rgyovu881ui" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png" id="25_0it6s"]
 [ext_resource type="Texture2D" uid="uid://bn2nx3r7lb3qn" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Quit1.png" id="26_0sp34"]
 [ext_resource type="Texture2D" uid="uid://dgtn0ijtgsxu" path="res://assets/image/ui/ui_start_menu/SelectorScreen_Quit2.png" id="27_jjhxv"]
 [ext_resource type="Texture2D" uid="uid://ccx3fdicdur3a" path="res://assets/image/ui/ui_start_menu/SelectorScreen_ZenGarden.png" id="28_0sp34"]
@@ -97,6 +95,7 @@
 [ext_resource type="Texture2D" uid="uid://7k4xdatvaer7" path="res://assets/image/ui/ui_start_menu/flying_cat_companion.png" id="94_flying_cat_companion"]
 [ext_resource type="Texture2D" uid="uid://cilsmgsdoj02r" path="res://assets/image/ui/ui_start_menu/soft_flight_leader.png" id="95_soft_flight_leader"]
 [ext_resource type="Texture2D" uid="uid://dej857xkxrh51" path="res://assets/image/ui/ui_start_menu/soft_flight_partner.png" id="96_soft_flight_partner"]
+[ext_resource type="Texture2D" uid="uid://nt7ccodnuwcy" path="res://assets/image/ui/ui_start_menu/SelectorScreen_CreditSign.png" id="97_credit_sign"]
 
 [sub_resource type="Animation" id="Animation_xll4c"]
 resource_name = "Idle"
@@ -545,31 +544,36 @@ _data = {
 &"RESET": SubResource("Animation_i4128")
 }
 
-[sub_resource type="BitMap" id="BitMap_bwc1h"]
+[sub_resource type="BitMap" id="BitMap_ulmbv"]
 data = {
 "data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAgP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj//38AAACA/+8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P///w8AAAD///+/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8A/4/////wMAgP////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw/////////wDA//////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD/////////P8D///////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP//////////z////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA/////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7/////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////////////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////////////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////////////////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP///////////////////////38AAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////////////////////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAPD/////////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAgP//////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////////////////////////8PAAAAAAAAAAAAAAAAAAAAAAAAAADg//////////////////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAID//////////////////////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAP7//////////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAADA////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////////8PAAAAAAAAAAAAAAAAAAcAAAAAAPz///////////////////////////8AAAAAAAAAAAAAAAAA/v//HwD//////////////////////////////w8AAAAAAAAAAAAAAAD4////////////////////////////////////fwAAAAAAAAAAAAAAAPD/////////////////////////////////////BwAAAAAAAAAAAAAAwP////////////////////////////////////8/AAAAAAAAAAAAAACA//////////////////////////////////////8BAAAAAAAAAAAAAAD8/////////////////////////////////////x8AAAAAAAAAAAAAAPD//////////////////////////////////////wAAAAAAAAAAAAAAwP//////////////////////////////////////DwAAAAAAAAAAAAAA//////////////////////////////////////9/AAAAAAAAAAAAAAD8//////////////////////////////////////8DAAAAAAAAAAAAAPD//////////////////////////////////////z8AAAAAAAAAAAAAwP///////////////////////////////////////wEAAAAAAAAAAAAA////////////////////////////////////////DwAAAAAAAAAAAAD4////////////////////////////////////////AQAAAAAAAAAAAMD/////////////////////////////////////////AQAAAAAAAAAAAP7/////////////////////////////////////////AAAAAAAAAAAA8P///////////////////////////////////////////wUAAAAAAACA//////////////////////////////////////////////8HAAAAAAD8//////////////////////////////////////////////8BAAAAAOD//////////////////////////////////////////////z8AAAAAAP///////////////////////////////////////////////wcAAAAA+P//////////////////////////////////////////////////AADA//////////////////////////////////////////////////8/AAD+//////////////////////////////////////////////////8HAPD///////////////////////////////////////////////////8BgP////////////////////////////////////////////////////8B/P///////////////////////////////////////////////////z/g/////////////////////////////////////////////////////wP/////////////////////////////////////////////////////P/j/////////////////////////////////////////////////////wf////////////////////////////////////////////////////8f/v/////////////////////////////////////////////////////w/////////////////////////////////////////////////////wf/////////////////////////////////////////////////////P/j/////////////////////////////////////////////////////wf////////////////////////////////////////////////////8P/P///////////////////////////////////////////////////3/g/////////////////////////////////////////////////////4P/////////////////////////////////////////////////////H/7/////////////////////////////////////////////////////8P////////////////////////////////////////////////////+H/////////////////////////////////////////////////////x/8/////////////////////////////////////////////////////+D/////////////////////////////////////////////////////B/////////////////////////////////////////////////////8/+P/////////////////////////////////////////////////////B/////////////////////////////////////////////////////w//////////////////////////////////////////////////////f/j/////////////////////////////////////////////////////w/////////////////////////////////////////////////////8P/v///////////////////////////////////////////////////3/w/////////////////////////////////////////////////////4P/////////////////////////////////////////////////////H/z/////////////////////////////////////////////////////4P////////////////////////////////////////////////////8H/////////////////////////////////////////////////////z/4/////////////////////////////////////////////////////+D/////////////////////////////////////////////////////B/////////////////////////////////////////////////////8/+P/////////////////////////////////////////////////////B/////////////////////////////////////////////////////w/+////////////////////////////////////////////////////f/D/////////////////////////////////////////////////////g/////////////////////////////////////////////////////8f/P///////////////////////////////////////////////////3/g/////////////////////////////////////////////////////wP/////////////////////////////////////////////////////H/D/////////////////////////////////////////////////////AP////////////////////////////////////////////////////8H8P///////////////////////////////////////////////////z8A/////////////////////////////////////////////////////wDw////////////////////////////////////////////////////BwD+//////////////////////////////////////////////////8/AMD///////////////////////////////////////////////////8BAID/5////////////////////////////////////////////////wcAAAAA/v//////////////////////////////////////////////PwAAAADg////////////////////////////////////////////////AwAAAAD8//////////////////////////////////////////////8fAAAAAAD///////////////////////////////////////////////8AAAAAAMD//////////////////////////////////////////////wcAAAAAAAD/////////////////////////////////////////////PwAAAAAAAACA////////////////////////////////////////////AAAAAAAAAAAA4P////////////////////////////////////////8HAAAAAAAAAAAAAAD4/////////////////////////////////////z8AAAAAAAAAAAAAAAD8/////////////////////////////////////wEAAAAAAAAAAAAAAADw////////////////////////////////////DwAAAAAAAAAAAAAAAAD4//////////////////////////////////9/AAAAAAAAAAAAAAAAAAAG+PD3//////////////////////////////8DAAAAAAAAAAAAAAAAAAAAAAD8/////////////////////////////x8AAAAAAAAAAAAAAAAAAAAAAAD+/////////////////////////////wAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////////////////AwAAAAAAAAAAAAAAAAAAAAAAAAD+//////////////////////////8PAAAAAAAAAAAAAAAAAAAAAAAAAADA/////////////////////////38AAAAAAAAAAAAAAAAAAAAAAAAAAAD4/////////////////////////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAD+////////////////////////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///3/////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/w/////////////////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P///////////////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA/////////////////////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID///////////////////9/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD///////////////////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID//////////////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////////////////fwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////////////////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8//////////////8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/////////////38AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+/////////////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8//////////8fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////38AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/wf///////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgM///z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="),
 "size": Vector2i(331, 146)
 }
 
-[sub_resource type="BitMap" id="BitMap_waalj"]
+[sub_resource type="BitMap" id="BitMap_bwc1h"]
 data = {
 "data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg/x8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD/fwD4/wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//Af///wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPj//////////wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz//////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P//////////f///AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////////////////AQAAAAAAAAAAAAAAAAAAAAAAAAAAAPz///////////////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAD4//////////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAPj///////////////////8BAAAAAAAAAAAAAAAAAAAAAAAA+P////////////////////8PAAAAAAAAAAAAAAAAAAAAAADw//////////////////////8AAAAAAAAAAAAAAAAAAAAAAPD//////////////////////w8AAAAAAAAAAAAAAAAAAAAA8P///////////////////////wAAAAAAAAAAAAAAAAAAAADw////////////////////////DwAAAAAAAAAAAAAAAAAAAPD/////////////////////////7w8AAAAAAAAAAAAAAAAA4P//////////////////////////PwAAAAAAAAAAAAAAAADg////////////////////////////AAAAAAAAAAAAAAAAAOD///////////////////////////8DAAAAAAAAAAAAAAAA8P///////////////////////////x8AAAAAAAAAAAAAAADw////////////////////////////f8AAAAAAAAAAAAAAAPD//////////////////////////////fkHAAAAAAAAAAAA8P///////////////////////////////R8AAAAAAAAAAADw////////////////////////////////PwAAAAAAAAAAAPD//////////////////////////////////AAAAAAAAAAA8P//////////////////////////////////HwAAAAAAAADw////////////////////////////////////BwAAAAAAAPD/////////////////////////////////////AQAAAAAA8P////////////////////////////////////9/AAAAAADw////////////////////////////////////////fwAAAPD/////////////////////////////////////////DwAA4P////////////////////////////////////////8fAADg/////////////////////////////////////////38AAOD//////////////////////////////////////////w8AwP///////////////////////////////////////////wDA////////////////////////////////////////////B8D///////////////////////////////////////////8PwP///////////////////////////////////////////w/A////////////////////////////////////////////D8D///////////////////////////////////////////8fwP///////////////////////////////////////////x/A////////////////////////////////////////////D8D///////////////////////////////////////////8PwP///////////////////////////////////////////w/A////////////////////////////////////////////D8D///////////////////////////////////////////8PwP///////////////////////////////////////////wfA////////////////////////////////////////////B8D///////////////////////////////////////////8HwP///////////////////////////////////////////weA////////////////////////////////////////////B4D///////////////////////////////////////////8HgP///////////////////////////////////////////weA////////////////////////////////////////////B4D///////////////////////////////////////////8HgP///////////////////////////////////////////weA////////////////////////////////////////////B4D///////////////////////////////////////////8DgP///////////////////////////////////////////wEA/v//////////////////////////////////////////AQD4//////////////////////////////////////////8BAADA/////////////////////////////////////////wEAAAD+////////////////////////////////////////AQAAAADg//////////////////////////////////////8BAAAAAAD//////////////////////////////////////wEAAAAAAL7/////////////////////////////////////AQAAAAAAAAD///////////////////////////////////8BAAAAAAAAAID//////////////////////////////////wEAAAAAAAAAAP//////////////////////////////////AAAAAAAAAAAAAAD///////////////////////////////8AAAAAAAAAAAAAAPD/////////////////////////////fwAAAAAAAAAAAAAAAOD///////////////////////////9/AAAAAAAAAAAAAAAAAP7//////////////////////////z8AAAAAAAAAAAAAAAAAwP//////////////////////////PwAAAAAAAAAAAAAAAAAA/v////////////////////////8fAAAAAAAAAAAAAAAAAACA/////////////////////////x8AAAAAAAAAAAAAAAAAAAD4////////////////////////HwAAAAAAAAAAAAAAAAAAAID///////////////////////8fAAAAAAAAAAAAAAAAAAAAAPr//////////////////////x8AAAAAAAAAAAAAAAAAAAAAwP//////////////////////HwAAAAAAAAAAAAAAAAAAAAAAAPz///////////////////8fAAAAAAAAAAAAAAAAAAAAAAAA+P///////////////////x8AAAAAAAAAAAAAAAAAAAAAAADw////////////////////HwAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////////////8fAAAAAAAAAAAAAAAAAAAAAAAAAADw/////////////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAID/////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAANz///////////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPD//////////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8M////////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP///////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID/////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD///////8DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P//////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD//////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP//7///AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPjD//8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP9/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/D8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgDwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="),
 "size": Vector2i(280, 130)
 }
 
-[sub_resource type="BitMap" id="BitMap_kdsvj"]
+[sub_resource type="BitMap" id="BitMap_waalj"]
 data = {
 "data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P9/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA/////z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8//////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD///////8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz///////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP////////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P////////8PAwAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////////////BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/////////////fwAAAAAAAAAAAAAAAAAAAAAAAAAAAPz//////////////wcAAAAAAAAAAAAAAAAAAAAAAAAAwP///////////////wMAAAAAAAAAAAAAAAAAAAAAAAAA/P//////////////fwAAAAAAAAAAAAAAAAAAAAAAAADA////////////////DwAAAAAAAAAAAAAAAAAAAAAAAAD8////////////////AQAAAAAAAAAAAAAAAAAAAAAAAMD///////////////8//gAAAAAAAAAAAAAAAAAAAAAAAPz/////////////////fwAAAAAAAAAAAAAAAAAAAAAAwP//////////////////fwAAAAAAAAAAAAAAAAAAAAAA/P///////////////////wEAAAAAAAAAAAAAAAAAAADA/////////////////////w8AAAAAAAAAAAAAAAAAAAD8/////////////////////38AAAAAAAAAAAAAAAAAAMD/////////////////////////BwAAAAAAAAAAAAAAAPz/////////////////////////AQAAAAAAAAAAAAAAgP////////////////////////8/AAAAAAAAAAAAAAAA8P////////////////////////8PAAAAAAAAAAAAAACA//////////////////////////8DAAAAAAAAAAAAAAD8//////////////////////////8PAAAAAAAAAAAAAMD///////////////////////////8DAAAAAAAAAAAAAPz////////////////////////////4BwAAAAAAAAAAwP//////////////////////////////HwAAAAAAAAAA+P//////////////////////////////fwAAAAAAAACA/////////////////////////////////wEAAAAAAAD4/////////////////////////////////z8AAAAAAID//////////////////////////////////z8AAAAAAPj//////////////////////////////////x8AAAAAgP///////////////////////////////////w8AAAAA+P///////////////////////////////////wMAAACA/////////////////////////////////////wEAAAD4////////////////////////////////////PwAAAYD/////////////////////////////////////H/z/Afj///////////////////////////////////////9/AP////////////////////////////////////////8P8P////////////////////////////////////////+A/////////////////////////////////////////w/8/////////////////////////////////////////8D/////////////////////////////////////////D/j/////////////////////////////////////////gP////////////////////////////////////////8P+P////////////////////////////////////////+B/////////////////////////////////////////z/4/////////////////////////////////////////wP/////////////////////////////////////////P+D/////////////////////////////////////////A/z///////////////////////////////////////8/gP////////////////////////////////////////8DAPj//////////////////////////////////////z8AgP///////////////////////////////////////wMA8P//////////////////////////////////////PwAA+P//////////////////////////////////////AwAAgP////////////////////////////////////8/AAAAAPj///////////////////////////////////8BAAAAAP7//////////////////////////////////x8AAAAAAPj//////////////////////////////////wEAAAAAAHz+////////////////////////////////HwAAAAAAAAD+/P//////////////////////////////AAAAAAAAAACA//////////////////////////////8PAAAAAAAAAADw//////////////////////////////8AAAAAAAAAAAD8/////////////////////////////w8AAAAAAAAAAAD4/////////////////////////////wAAAAAAAAAAAADg////////////////////////////BwAAAAAAAAAAAAD4//////////////////////////9/AAAAAAAAAAAAAAD+//////////////////////////8DAAAAAAAAAAAAAAD//////////////////////////z8AAAAAAAAAAAAAAMD//////////////////////////wEAAAAAAAAAAAAAAOD/////////////////////////HwAAAAAAAAAAAAAAAPD/////////////////////////AQAAAAAAAAAAAAAAAPD///////////////////////8/AAAAAAAAAAAAAAAAAAD///////////////////////8DAAAAAAAAAAAAAAAAAOD//////////////////////z8AAAAAAAAAAAAAAAAAAPz//////////////////////wEAAAAAAAAAAAAAAAAAAP//////////////////////DwAAAAAAAAAAAAAAAAAAAPz///////////////////9/AAAAAAAAAAAAAAAAAAAAAPj///////////////////8PAAAAAAAAAAAAAAAAAAAAAPD///////////////////8AAAAAAAAAAAAAAAAAAAAAAAAA/P///////////////w8AAAAAAAAAAAAAAAAAAAAAAAAA/P///////////////wAAAAAAAAAAAAAAAAAAAAAAAADA////////////////DwAAAAAAAAAAAAAAAAAAAAAAAADg//////////////9/AAAAAAAAAAAAAAAAAAAAAAAAAADw//////////////8HAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////////38AAAAAAAAAAAAAAAAAAAAAAAAAAACA/////////////wMAAAAAAAAAAAAAAAAAAAAAAAAAAADA////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////////////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4/////////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg/////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P//////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP///wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP7/fwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP//AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4P8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+AcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="),
 "size": Vector2i(260, 119)
 }
 
-[sub_resource type="BitMap" id="BitMap_68q5j"]
+[sub_resource type="BitMap" id="BitMap_kdsvj"]
 data = {
 "data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOD/AwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP//BwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz//////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP///////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/P///////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA/////////wMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/////////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD//////////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPz///////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P///////////x8AAAAAAAAAAAAAAAAAAAAAAAAAAACA/////////////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAD8////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAOD///////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAP7//////////////z8AAAAAAAAAAAAAAAAAAAAAAAAA4P///////////////z8AAAAAAAAAAAAAAAAAAAAAAAAA/v///////////////w8AAAAAAAAAAAAAAAAAAAAAAADg/////////////////wcAAAAAAAAAAAAAAAAAAAAAAAD+//////////////////8DAAAAAAAAAAAAAAAAAAAAAOD/////////////////////AwAAAAAAAAAAAAAAAAAAAP7/////////////////////AAAAAAAAAAAAAAAAAAAA4P////////////////////8fAAAAAAAAAAAAAAAAAAAA/v////////////////////8DAAAAAAAAAAAAAAAAAADg/////////////////////384AAAAAAAAAAAAAAAAAAD+//////////////////////9/AAAAAAAAAAAAAAAAAOD/////////////////////////AwAAAAAAAAAAAAAAAPz/////////////////////////AQAAAAAAAAAAAAAAgP////////////////////////8/AAAAAAAAAAAAAAAA8P//////////////////////////BwAAAAAAAAAAAAAA/v//////////////////////////AQAAAAAAAAAAAAD8////////////////////////////AAAAAAAAAAAAAMD///////////////////////////9/AAAAAAAAAAAAAPz///////////////////////////8fAAAAAAAAAAAAwP////////////////////////////8HAAAAAAAAAAAA/P////////////////////////////8DAAAAAAAAAADA//////////////////////////////8DAAAAAAAAAAD8//////////////////////////////8BAAAAAAAAAMD///////////////////////////////8BAAAAAAAAAPz///////////////////////////////8/AAAAAAAAgP////////////////////////////////8/AAAAAAAA+P////////////////////////////////8fAAAAAAAA////////////////////////////////////HwAAAADw////////////////////////////////////BwAAAAD/////////////////////////////////////AwAAAPD/////////////////////////////////////AQAAAP7/////////////////////////////////////AAAA4P////////////////////////////////////9/AAAA/v////////////////////////////////////8fAADg//////////////////////////////////////8PAAD8//////////////////////////////////////85AID///////////////////////////////////////8/APj///////////////////////////////////////8PAP7///////////////////////////////////////8AgP///////////////////////////////////////w8A4P///////////////////////////////////////wAA/P//////////////////////////////////////DwAA////////////////////////////////////////AADA//3///////////////////////////////////8PAACAj/////////////////////////////////////8BAAAA4P///////////////////////////////////x8AAAAA+P///////////////////////////////////wAAAAAA/v//////////////////////////////////DwAAAAAA+P////////////////////////////////9/AAAAAAAA4P////////////////////////////////8HAAAAAAAAgP////////////////////////////////8AAAAAAAAAAPz//////////////////////////////x8AAAAAAAAAAP7//////////////////////////////wEAAAAAAAAAAP7/////////////////////////////DwAAAAAAAAAAAP//////////////////////////////AAAAAAAAAAAAAP////////////////////////////8PAAAAAAAAAAAAAPz//////////////////////////38AAAAAAAAAAAAAAPz//////////////////////////wcAAAAAAAAAAAAAAPz/////////////////////////fwAAAAAAAAAAAAAAAPz/////////////////////////BwAAAAAAAAAAAAAAAPz///////////////////////8/AAAAAAAAAAAAAAAAAPz///////////////////////8DAAAAAAAAAAAAAAAAAP///////////////////////z8AAAAAAAAAAAAAAAAAAP///////////////////////wEAAAAAAAAAAAAAAAAAAP//////////////////////HwAAAAAAAAAAAAAAAAAAgP//////////////////////AQAAAAAAAAAAAAAAAAAAgP////////////////////8fAAAAAAAAAAAAAAAAAAAAwP////////////////////8BAAAAAAAAAAAAAAAAAAAA4P///////////////////x8AAAAAAAAAAAAAAAAAAAAA8P///////////////////wEAAAAAAAAAAAAAAAAAAAAA+P//////////////////HwAAAAAAAAAAAAAAAAAAAAAAwP//////////////////AQAAAAAAAAAAAAAAAAAAAAAAwP////////////////8fAAAAAAAAAAAAAAAAAAAAAAAA8P////////////////8AAAAAAAAAAAAAAAAAAAAAAAAA+P///////////////w8AAAAAAAAAAAAAAAAAAAAAAAAA/P///////////////wAAAAAAAAAAAAAAAAAAAAAAAAAA/v3/////////////DwAAAAAAAAAAAAAAAAAAAAAAAAAAjv////////////9/AAAAAAAAAAAAAAAAAAAAAAAAAAAA+P////////////8HAAAAAAAAAAAAAAAAAAAAAAAAAACA/////////////z8AAAAAAAAAAAAAAAAAAAAAAAAAAADg/////////////wMAAAAAAAAAAAAAAAAAAAAAAAAAAADA////////////PwAAAAAAAAAAAAAAAAAAAAAAAAAAAADA////////////AwAAAAAAAAAAAAAAAAAAAAAAAAAAAADw//////////8/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA/+////////8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//7//////x8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwP///////wEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+P//////HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA//////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADA//////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg/////w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADw/////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4////DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADg////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD4//8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//38AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAID//wcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/HwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="),
 "size": Vector2i(260, 124)
 }
 
-[sub_resource type="BitMap" id="BitMap_v82p4"]
+[sub_resource type="LabelSettings" id="LabelSettings_acknowledgements"]
+font = ExtResource("54_343qg")
+font_size = 18
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BitMap" id="BitMap_68q5j"]
 data = {
 "data": PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgP9/AAAAAAAAAAAAAAAA4P///wMAAAAAAAAAAAAA8P////8PAAAAAAAAAAAAgP//////PwAAAAAAAAAAAAD///////8BAAAAAAAAAAAA/v//////BwAAAAAAAAAAAPz//////x8AAAAAAAAAAAD4//////9/AAAAAAAAAAAA8P///////wEAAAAAAAAAAOD///////8HAAAAAAAAAADA////////HwAAAAAAAAAAgP///////38AAAAAAAAAAAD/////////AQAAAAAAAAAA/v///////wcAAAAAAAAAAPz///////8fAAAAAAAAAAD4////////fwAAAAAAAAAA8P////////8DAAAAAAAAAOD/////////DwAAAAAAAADA/////////z8AAAAAAAAAAP//////////AAAAAAAAAAD+/////////wMAAAAAAAAA/P////////8PAAAAAAAAAPj/////////PwAAAAAAAADw//////////8AAAAAAAAA4P//////////AwAAAAAAAID//////////w8AAAAAAAAA//////////8/AAAAAAAAAPzH/////////wAAAAAAAADwP/7///////8DAAAAAAAA4P/5////////DwAAAAAfAOD/5////////38AAAAA/w/A/5//////////AQAAAP7/wf8//////////wcAAAD8/5+f//////////8fAAAA+P//P/z/////////fwAAAOD//3/g//////////8BAADA////Af//////////BwAAAP///x/+/////////x8AAAD+/////f////////9/AAAA+P/////8/////////wEAAOD/////4f////////8HAADA/////wf/////////HwAAAP////8/+P///////38AAAD8/////4H/////////AQAA+P////8H/P///////wcAAOD/////H+D///////8PAACA/////38A/v//////HwAAAP//////APD/////fwAAAAD8/////wMA/////wAAAAAA8P////8HAPj//wEAAAAAAID/////DwCA/wEAAAAAAAAA/v///x8AAAAAAAAAAAAAAPD///8/AAAAAAAAAAAAAACA////fwAAAAAAAAAAAAAAAP////8AAAAAAAAAAAAAAAD+////AQAAAAAAAAAAAAAA/P///wMAAAAAAAAAAAAAAPj///8HAAAAAAAAAAAAAADw////BwAAAAAAAAAAAAAA4P///w8AAAAAAAAAAAAAAMD///8fAAAAAAAAAAAAAAAA//+PDwAAAAAAAAAAAAAAAPz/HwAAAAAAAAAAAAAAAADw/z8AAAAAAAAAAAAAAAAAwP8/AAAAAAAAAAAAAAAAAID/DwAAAAAAAAAAAAAAAAAA/x8AAAAAAAAAAAAAAAAAAP9/AAAAAAAAAAAAAAAAAAD+/wAAAAAAAAAAAAAAAAAA+P8DAAAAAAAAAAAAAAAAAPj/BwAAAAAAAAAAAAAAAADw/x8AAAAAAAAAAAAAAAAAwP8PAAAAAAAAAAAAAAAAAID/PwAAAAAAAAAAAAAAAAAA/38AAAAAAAAAAAAAAAAAAP5/AAAAAAAAAAAAAAAAAAD8/wAAAAAAAAAAAAAAAAAA8P8BAAAAAAAAAAAAAAAAAMD/AwAAAAAAAAAAAAAAAACA/w8AAAAAAAAAAAAAAAAAAP4/AAAAAAAAAAAAAAAAAAD8fwAAAAAAAAAAAAAAAAAA+P8AAAAAAAAAAAAAAAAAAOD/AAAAAAAAAAAAAAAAAAAAwQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="),
 "size": Vector2i(130, 89)
@@ -1340,6 +1344,23 @@ font_color = Color(0, 0, 0, 1)
 font = ExtResource("54_343qg")
 font_color = Color(1, 1, 0.62352943, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_credit_role"]
+font = ExtResource("54_343qg")
+font_size = 18
+shadow_color = Color(0.12, 0.1, 0.07, 0.55)
+
+[sub_resource type="LabelSettings" id="LabelSettings_v82p4"]
+font = ExtResource("54_343qg")
+font_size = 18
+font_color = Color(1, 1, 0.62352943, 1)
+shadow_color = Color(0.12, 0.1, 0.07, 0.55)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w42h5"]
+font = ExtResource("54_343qg")
+font_size = 18
+font_color = Color(1, 1, 0.62352943, 1)
+shadow_color = Color(0.12, 0.1, 0.07, 0.55)
+
 [sub_resource type="Animation" id="Animation_63h8x"]
 resource_name = "Idle"
 length = 2.0
@@ -1510,7 +1531,6 @@ bgm = ExtResource("2_yl4bl")
 level_workshop_button_position = Vector2(595, 248.89)
 level_workshop_button_rotation_degrees = -1.5
 flying_cat_companion_landing_scale = 1.15
-flying_cat_companion_landing_width_scale = null
 metadata/_edit_horizontal_guides_ = [573.0, -184.0]
 metadata/_edit_vertical_guides_ = [160.0]
 
@@ -1862,7 +1882,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("3_jrmm2")
 texture_pressed = ExtResource("4_qq5l0")
 texture_hover = ExtResource("4_qq5l0")
-texture_click_mask = SubResource("BitMap_bwc1h")
+texture_click_mask = SubResource("BitMap_ulmbv")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("5_j2mjb")
@@ -1878,7 +1898,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("86_developer_level")
 texture_pressed = ExtResource("86_developer_level")
 texture_hover = ExtResource("86_developer_level")
-texture_click_mask = SubResource("BitMap_waalj")
+texture_click_mask = SubResource("BitMap_bwc1h")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("5_j2mjb")
@@ -1894,7 +1914,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("87_developer_numerical")
 texture_pressed = ExtResource("87_developer_numerical")
 texture_hover = ExtResource("87_developer_numerical")
-texture_click_mask = SubResource("BitMap_kdsvj")
+texture_click_mask = SubResource("BitMap_waalj")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("5_j2mjb")
@@ -1910,7 +1930,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("88_developer_save")
 texture_pressed = ExtResource("88_developer_save")
 texture_hover = ExtResource("88_developer_save")
-texture_click_mask = SubResource("BitMap_68q5j")
+texture_click_mask = SubResource("BitMap_kdsvj")
 ignore_texture_size = true
 stretch_mode = 0
 script = ExtResource("5_j2mjb")
@@ -2042,16 +2062,28 @@ script = ExtResource("5_j2mjb")
 
 [node name="TextureButton2" type="TextureButton" parent="BG_Right/Option" unique_id=1448240739]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 98.0
-offset_right = 149.0
-offset_bottom = 124.0
-tooltip_text = "帮助"
+offset_left = 92.74
+offset_top = 92.32
+offset_right = 141.73996
+offset_bottom = 118.32
+scale = Vector2(1.26, 1.26)
+tooltip_text = "鸣谢"
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("24_2ir4x")
-texture_pressed = ExtResource("25_0it6s")
-texture_hover = ExtResource("25_0it6s")
 script = ExtResource("5_j2mjb")
+
+[node name="Label" type="Label" parent="BG_Right/Option/TextureButton2" unique_id=363288586]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_right = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "鸣谢"
+label_settings = SubResource("LabelSettings_acknowledgements")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TextureButton3" type="TextureButton" parent="BG_Right/Option" unique_id=601669848]
 layout_mode = 0
@@ -2222,7 +2254,7 @@ mouse_default_cursor_shape = 2
 texture_normal = ExtResource("90_developer_import")
 texture_pressed = ExtResource("91_developer_import_hover")
 texture_hover = ExtResource("91_developer_import_hover")
-texture_click_mask = SubResource("BitMap_v82p4")
+texture_click_mask = SubResource("BitMap_68q5j")
 ignore_texture_size = true
 script = ExtResource("5_j2mjb")
 
@@ -2418,7 +2450,7 @@ position = Vector2(103, 155)
 anchors_preset = 0
 offset_left = 47.0
 offset_right = 351.0
-offset_bottom = 249.0
+offset_bottom = 360.0
 script = ExtResource("63_gis02")
 
 [node name="TextureRect" type="TextureRect" parent="WoodSign" unique_id=266057545]
@@ -2470,6 +2502,7 @@ texture_click_mask = ExtResource("55_31n4o")
 script = ExtResource("5_j2mjb")
 
 [node name="TextureRect3" type="TextureRect" parent="WoodSign" unique_id=1690003935]
+visible = false
 layout_mode = 0
 offset_left = 6.0
 offset_top = 200.0
@@ -2486,6 +2519,247 @@ offset_bottom = 176.0
 texture = ExtResource("80_h0dsg")
 expand_mode = 1
 flip_h = true
+
+[node name="CreditSign" type="Control" parent="WoodSign" unique_id=1289524958]
+anchors_preset = 0
+offset_left = -14.0
+offset_top = 217.0
+offset_right = 290.0
+offset_bottom = 337.0
+pivot_offset = Vector2(152, 60)
+mouse_filter = 2
+
+[node name="CreditSignTexture" type="TextureRect" parent="WoodSign/CreditSign" unique_id=695972283]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -46.0
+offset_top = -41.000008
+offset_right = 43.0
+offset_bottom = -56.000008
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("97_credit_sign")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextLine1" type="Control" parent="WoodSign/CreditSign" unique_id=998876102]
+anchors_preset = 0
+offset_left = -2.0
+offset_top = -12.000008
+offset_right = 302.0
+offset_bottom = 19.741856
+rotation = -0.05235988
+pivot_offset = Vector2(152, 15.870932)
+mouse_filter = 2
+
+[node name="RoleLabel" type="Label" parent="WoodSign/CreditSign/TextLine1" unique_id=1963238132]
+layout_mode = 0
+offset_left = 53.704624
+offset_top = -0.16635889
+offset_right = 149.70462
+offset_bottom = 28.833641
+text = "制作人："
+label_settings = SubResource("LabelSettings_credit_role")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProducerNameLabel1" type="Label" parent="WoodSign/CreditSign/TextLine1" unique_id=266306952]
+layout_mode = 0
+offset_left = 116.87997
+offset_top = -1.8623407
+offset_right = 225.06317
+offset_bottom = 29.879524
+text = "瓦尔泽亚"
+label_settings = SubResource("LabelSettings_v82p4")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProducerNameButton1" type="BaseButton" parent="WoodSign/CreditSign/TextLine1" unique_id=1609477313]
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 2
+auto_translate_mode = 0
+editor_description = ""
+visible = true
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+show_behind_parent = false
+top_level = false
+clip_children = 0
+light_mask = 1
+visibility_layer = 1
+z_index = 0
+z_as_relative = true
+y_sort_enabled = false
+texture_filter = 0
+texture_repeat = 0
+material = null
+use_parent_material = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 0)
+layout_direction = 0
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 116.87997
+offset_top = -1.8623407
+offset_right = 225.06317
+offset_bottom = 29.879524
+grow_horizontal = 1
+grow_vertical = 1
+rotation = 0.0
+scale = Vector2(1, 1)
+pivot_offset = Vector2(0, 0)
+pivot_offset_ratio = Vector2(0, 0)
+size_flags_horizontal = 1
+size_flags_vertical = 1
+size_flags_stretch_ratio = 1.0
+localize_numeral_system = true
+tooltip_text = "查看瓦尔泽亚的信息"
+tooltip_auto_translate_mode = 0
+focus_neighbor_left = NodePath("")
+focus_neighbor_top = NodePath("")
+focus_neighbor_right = NodePath("")
+focus_neighbor_bottom = NodePath("")
+focus_next = NodePath("")
+focus_previous = NodePath("")
+focus_mode = 2
+focus_behavior_recursive = 0
+mouse_filter = 0
+mouse_behavior_recursive = 0
+mouse_force_pass_scroll_events = true
+mouse_default_cursor_shape = 2
+accessibility_name = ""
+accessibility_description = ""
+accessibility_live = 0
+accessibility_controls_nodes = Array[NodePath]([])
+accessibility_described_by_nodes = Array[NodePath]([])
+accessibility_labeled_by_nodes = Array[NodePath]([])
+accessibility_flow_to_nodes = Array[NodePath]([])
+theme = null
+theme_type_variation = &""
+disabled = false
+toggle_mode = false
+button_pressed = false
+action_mode = 1
+button_mask = 1
+keep_pressed_outside = false
+button_group = null
+shortcut = null
+shortcut_feedback = true
+shortcut_in_tooltip = true
+script = null
+
+[node name="TextLine2" type="Control" parent="WoodSign/CreditSign" unique_id=1345189160]
+anchors_preset = 0
+offset_top = 11.058117
+offset_right = 304.0
+offset_bottom = 41.05812
+rotation = -0.06981317
+pivot_offset = Vector2(152, 15)
+mouse_filter = 2
+
+[node name="ProducerNameLabel2" type="Label" parent="WoodSign/CreditSign/TextLine2" unique_id=879271914]
+layout_mode = 0
+offset_left = 88.138985
+offset_top = -3.5580378
+offset_right = 288.13895
+offset_bottom = 26.441963
+text = "无敌霹雳大战锤"
+label_settings = SubResource("LabelSettings_w42h5")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProducerNameButton2" type="BaseButton" parent="WoodSign/CreditSign/TextLine2" unique_id=281957672]
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 2
+auto_translate_mode = 0
+editor_description = ""
+visible = true
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+show_behind_parent = false
+top_level = false
+clip_children = 0
+light_mask = 1
+visibility_layer = 1
+z_index = 0
+z_as_relative = true
+y_sort_enabled = false
+texture_filter = 0
+texture_repeat = 0
+material = null
+use_parent_material = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 0)
+layout_direction = 0
+layout_mode = 0
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 88.138985
+offset_top = -3.5580378
+offset_right = 288.13895
+offset_bottom = 26.441963
+grow_horizontal = 1
+grow_vertical = 1
+rotation = 0.0
+scale = Vector2(1, 1)
+pivot_offset = Vector2(0, 0)
+pivot_offset_ratio = Vector2(0, 0)
+size_flags_horizontal = 1
+size_flags_vertical = 1
+size_flags_stretch_ratio = 1.0
+localize_numeral_system = true
+tooltip_text = "查看无敌霹雳大战锤的信息"
+tooltip_auto_translate_mode = 0
+focus_neighbor_left = NodePath("")
+focus_neighbor_top = NodePath("")
+focus_neighbor_right = NodePath("")
+focus_neighbor_bottom = NodePath("")
+focus_next = NodePath("")
+focus_previous = NodePath("")
+focus_mode = 2
+focus_behavior_recursive = 0
+mouse_filter = 0
+mouse_behavior_recursive = 0
+mouse_force_pass_scroll_events = true
+mouse_default_cursor_shape = 2
+accessibility_name = ""
+accessibility_description = ""
+accessibility_live = 0
+accessibility_controls_nodes = Array[NodePath]([])
+accessibility_described_by_nodes = Array[NodePath]([])
+accessibility_labeled_by_nodes = Array[NodePath]([])
+accessibility_flow_to_nodes = Array[NodePath]([])
+theme = null
+theme_type_variation = &""
+disabled = false
+toggle_mode = false
+button_pressed = false
+action_mode = 1
+button_mask = 1
+keep_pressed_outside = false
+button_group = null
+shortcut = null
+shortcut_feedback = true
+shortcut_in_tooltip = true
+script = null
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1486086871]
 libraries/ = SubResource("AnimationLibrary_b7wor")
@@ -2738,20 +3012,79 @@ visible = false
 
 [node name="Dialog_Help" parent="." unique_id=1135247515 instance=ExtResource("57_ry5e1")]
 visible = false
-layout_mode = 0
-offset_left = 225.0
-offset_top = 124.0
-offset_right = 225.0
-offset_bottom = 124.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = -156.5
+offset_right = 195.0
+offset_bottom = 156.5
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Label" type="Label" parent="Dialog_Help" unique_id=90303607]
+[node name="Panel" parent="Dialog_Help" index="0"]
+offset_right = 390.0
+
+[node name="PVZButton" parent="Dialog_Help" index="1"]
+offset_left = 115.0
+offset_right = 275.0
+
+[node name="Label" type="RichTextLabel" parent="Dialog_Help" unique_id=90303607]
 layout_mode = 0
-offset_left = 81.0
-offset_top = 123.0
-offset_right = 241.0
-offset_bottom = 172.0
-text = "僵尸打开了你的天灵盖
-摇了摇头就走了"
+offset_left = 30.0
+offset_top = 87.0
+offset_right = 360.0
+offset_bottom = 218.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 8
+theme_override_fonts/normal_font = ExtResource("54_343qg")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center][color=#ffffff]部分创意来源[/color]
+[color=#ffff9f]Hokiiiii[/color][color=#ffffff]；[/color][color=#ffff9f]我69岁激素砍人[/color][color=#ffffff]；
+[/color][color=#ffff9f]海绵宝宝蟹黄大豆[/color][color=#ffffff]。
+以及评论区的各位。[/color][/center]"
+scroll_active = false
+
+[node name="ProducerInfoDialog" parent="." unique_id=634571610 instance=ExtResource("57_ry5e1")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_top = -156.5
+offset_right = 195.0
+offset_bottom = 156.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" parent="ProducerInfoDialog" index="0"]
+offset_right = 390.0
+
+[node name="PVZButton" parent="ProducerInfoDialog" index="1"]
+offset_left = 115.0
+offset_right = 275.0
+
+[node name="InfoText" type="RichTextLabel" parent="ProducerInfoDialog" unique_id=1790705094]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 88.0
+offset_right = 360.0
+offset_bottom = 218.0
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("54_343qg")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center][color=#ffffff]制作人信息[/color][/center]"
+scroll_active = false
 
 [node name="Dialog" parent="." unique_id=537695847 instance=ExtResource("57_ry5e1")]
 visible = false
@@ -3340,6 +3673,8 @@ offset_bottom = -178.0
 [connection signal="pressed" from="BG_Right/Menu/DeveloperMenu/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="BG_Right/Menu/LevelWorkshopButton" to="." method="_on_level_workshop_button_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton" to="." method="_on_option_button_1_pressed"]
+[connection signal="mouse_entered" from="BG_Right/Option/TextureButton2" to="." method="_on_acknowledgements_button_mouse_entered"]
+[connection signal="mouse_exited" from="BG_Right/Option/TextureButton2" to="." method="_on_acknowledgements_button_mouse_exited"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton2" to="." method="_on_option_button_2_pressed"]
 [connection signal="pressed" from="BG_Right/Option/TextureButton3" to="." method="_on_option_button_3_pressed"]
 [connection signal="pressed" from="BG_Right/Item/TextureButton" to="." method="_on_item_button_1_pressed"]
@@ -3349,6 +3684,12 @@ offset_bottom = -178.0
 [connection signal="mouse_exited" from="BG_Right/CustomButton" to="BG_Right/CustomButton" method="_on_mouse_exited"]
 [connection signal="pressed" from="BG_Right/CustomButton" to="." method="_on_custom_button_pressed"]
 [connection signal="pressed" from="WoodSign/ButtonUserUpdate" to="." method="_on_button_update_user_pressed"]
+[connection signal="mouse_entered" from="WoodSign/CreditSign/TextLine1/ProducerNameButton1" to="." method="_on_producer_name_button_1_mouse_entered"]
+[connection signal="mouse_exited" from="WoodSign/CreditSign/TextLine1/ProducerNameButton1" to="." method="_on_producer_name_button_1_mouse_exited"]
+[connection signal="pressed" from="WoodSign/CreditSign/TextLine1/ProducerNameButton1" to="." method="_on_producer_name_label_1_pressed"]
+[connection signal="mouse_entered" from="WoodSign/CreditSign/TextLine2/ProducerNameButton2" to="." method="_on_producer_name_button_2_mouse_entered"]
+[connection signal="mouse_exited" from="WoodSign/CreditSign/TextLine2/ProducerNameButton2" to="." method="_on_producer_name_button_2_mouse_exited"]
+[connection signal="pressed" from="WoodSign/CreditSign/TextLine2/ProducerNameButton2" to="." method="_on_producer_name_label_2_pressed"]
 [connection signal="toggled" from="StartMenuOptionDialog/Option/FullScreen/CheckButton" to="." method="_on_full_screen_button_toggled"]
 [connection signal="pressed" from="StartMenuOptionDialog/Return" to="StartMenuOptionDialog" method="return_button_pressed"]
 [connection signal="pressed" from="StartMenuOptionDialog/Button4" to="StartMenuOptionDialog/Button4/CanvasLayer" method="appear_canvas_layer_control"]

@@ -35,6 +35,7 @@ var selected_cards: Array = []
 	CharacterRegistry.PlantType.P003CherryBombJunkrat,
 	CharacterRegistry.PlantType.P004WallNutBrigitte,
 	CharacterRegistry.PlantType.P006SnowPeaMei,
+	CharacterRegistry.PlantType.P008PeaShooterDoubleRework,
 	CharacterRegistry.PlantType.P011FumeShroomRoadhog,
 	CharacterRegistry.PlantType.P013HypnoShroomJuno,
 	CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,

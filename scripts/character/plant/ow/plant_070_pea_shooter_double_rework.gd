@@ -1,0 +1,3 @@
+extends Plant008PeaShooterDouble
+class_name Plant070PeaShooterDoubleRework
+

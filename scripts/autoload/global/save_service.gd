@@ -196,6 +196,7 @@ func _migrate_selected_cards(cards: Array, save_version: String = "") -> Array:
 		71: CharacterRegistry.PlantType.P037GarlicMauga,
 		72: CharacterRegistry.PlantType.P022CaltropHazard,
 		73: CharacterRegistry.PlantType.P020TangleKelpMizuki,
+		74: CharacterRegistry.PlantType.P008PeaShooterDoubleRework,
 		999: CharacterRegistry.PlantType.P1499Imitater,
 	}
 	var legacy_zombie_type_map := {

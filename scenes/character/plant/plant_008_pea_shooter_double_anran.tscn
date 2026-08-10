@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/character/plant/plant_508_pea_shooter_double.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/character/plant/ow/plant_070_pea_shooter_double_rework.gd" id="2_rework"]
+
+[node name="Plant008PeaShooterDoubleRework" instance=ExtResource("1_base")]
+script = ExtResource("2_rework")
+plant_type = 8
+

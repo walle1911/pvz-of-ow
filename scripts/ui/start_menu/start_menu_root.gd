@@ -6,14 +6,18 @@ const RETURN_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/butt
 const LEVEL_WORKSHOP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/button_developer.png")
 const OPTION_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options1.png")
 const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png")
-const HELP_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help1.png")
-const HELP_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Help2.png")
 const DEVELOPER_IMPORT_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImport.png")
 const DEVELOPER_IMPORT_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImportHighlight.png")
 const BUFF_BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.gdshader")
+const PRODUCER_NAME_COLOR := Color(1.0, 1.0, 0.62352943, 1.0)
+const PRODUCER_INFO_TEXT_Y := 88.0
 
 @onready var dialog: Dialog = $Dialog
+@onready var producer_info_dialog: Dialog = $ProducerInfoDialog
+@onready var producer_info_text: RichTextLabel = $ProducerInfoDialog/InfoText
+@onready var producer_name_label_1: Label = $WoodSign/CreditSign/TextLine1/ProducerNameLabel1
+@onready var producer_name_label_2: Label = $WoodSign/CreditSign/TextLine2/ProducerNameLabel2
 @export var bgm:AudioStream
 @onready var user: User = $User
 @onready var menu_button_1: TextureButton = $BG_Right/Menu/Button1
@@ -30,6 +34,7 @@ const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.
 @onready var adventure_mode_dialog = $AdventureModeDialog
 @onready var option_button: TextureButton = $BG_Right/Option/TextureButton
 @onready var help_button: TextureButton = $BG_Right/Option/TextureButton2
+@onready var acknowledgements_label: Label = $BG_Right/Option/TextureButton2/Label
 @onready var store_button: TextureButton = $BG_Right/Item/TextureButton3
 @onready var garden_button: TextureButton = $BG_Right/Item/TextureButton
 @onready var gift_button: TextureButton = $BG_Right/CustomButton
@@ -117,6 +122,9 @@ var flying_cat_companion_drop_duration := 1.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	## 两个姓名原本共用 LabelSettings；复制后悬停时可以只改变当前姓名。
+	producer_name_label_1.label_settings = producer_name_label_1.label_settings.duplicate()
+	producer_name_label_2.label_settings = producer_name_label_2.label_settings.duplicate()
 	_apply_level_workshop_button_transform()
 	_setup_developer_buttons()
 	_hide_unavailable_start_menu_items()
@@ -545,12 +553,11 @@ func _apply_normal_option_buttons() -> void:
 	option_button.texture_pressed = OPTION_HOVER_TEXTURE
 	option_button.texture_hover = OPTION_HOVER_TEXTURE
 	option_button.tooltip_text = "选项"
-	help_button.position = Vector2(100, 98)
-	help_button.size = Vector2(49, 26)
-	help_button.texture_normal = HELP_NORMAL_TEXTURE
-	help_button.texture_pressed = HELP_HOVER_TEXTURE
-	help_button.texture_hover = HELP_HOVER_TEXTURE
-	help_button.tooltip_text = "帮助"
+	help_button.texture_normal = null
+	help_button.texture_pressed = null
+	help_button.texture_hover = null
+	help_button.tooltip_text = "鸣谢"
+	acknowledgements_label.label_settings.font_color = Color.BLACK
 
 ## 花园需要浇水
 var garden_need_water:=true
@@ -626,6 +633,62 @@ func _on_option_button_1_pressed() -> void:
 
 func _on_option_button_2_pressed() -> void:
 	$Dialog_Help.appear_dialog()
+
+
+func _on_acknowledgements_button_mouse_entered() -> void:
+	acknowledgements_label.label_settings.font_color = Color(0, 1, 0, 1)
+
+
+func _on_acknowledgements_button_mouse_exited() -> void:
+	acknowledgements_label.label_settings.font_color = Color.BLACK
+
+
+func _on_producer_name_label_1_pressed() -> void:
+	_show_producer_info(
+		"[center][color=#ffffff]bilibili：[/color][color=#ffff9f]瓦尔泽亚1582[/color]"
+		+ "\n\n[color=#ffffff]后续我将在该频道开源所有代码"
+		+ "\n并发布快速制作pvz改版游戏的教程。[/color][/center]"
+	)
+
+
+func _on_producer_name_label_2_pressed() -> void:
+	_show_producer_info(
+		"[center][color=#ffffff]抖音：[/color][color=#ffff9f]无敌霹雳大战锤[/color]"
+		+ "\n[color=#ffffff]小红书：[/color][color=#ffff9f]阿伍不爱喝咖啡[/color]"
+		+ "\n[color=#ffffff]小黑盒：[/color][color=#ffff9f]爱玩游戏的男孩57[/color][/center]",
+		8,
+		15.0
+	)
+
+
+func _show_producer_info(info: String, line_separation: int = 0, vertical_offset: float = 0.0) -> void:
+	producer_info_text.text = info
+	producer_info_text.position.y = PRODUCER_INFO_TEXT_Y + vertical_offset
+	if line_separation > 0:
+		producer_info_text.add_theme_constant_override("line_separation", line_separation)
+	else:
+		producer_info_text.remove_theme_constant_override("line_separation")
+	producer_info_dialog.appear_dialog()
+
+
+func _on_producer_name_button_1_mouse_entered() -> void:
+	_set_producer_name_hovered(producer_name_label_1, true)
+
+
+func _on_producer_name_button_1_mouse_exited() -> void:
+	_set_producer_name_hovered(producer_name_label_1, false)
+
+
+func _on_producer_name_button_2_mouse_entered() -> void:
+	_set_producer_name_hovered(producer_name_label_2, true)
+
+
+func _on_producer_name_button_2_mouse_exited() -> void:
+	_set_producer_name_hovered(producer_name_label_2, false)
+
+
+func _set_producer_name_hovered(label: Label, hovered: bool) -> void:
+	label.label_settings.font_color = Color.WHITE if hovered else PRODUCER_NAME_COLOR
 
 
 func _save_and_export_developer_package() -> void:

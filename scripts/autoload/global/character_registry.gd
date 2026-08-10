@@ -40,6 +40,7 @@ enum PlantType {
 	P003CherryBombJunkrat = 3,
 	P004WallNutBrigitte = 4,
 	P006SnowPeaMei = 6,
+	P008PeaShooterDoubleRework = 8,
 	P011FumeShroomRoadhog = 11,
 	P013HypnoShroomJuno = 13,
 	P014ScaredyShroomWidowmaker = 14,
@@ -213,7 +214,7 @@ enum ZombieInfoAttribute{
 
 ## 紫卡植物种植前置植物（一个紫卡可对应多个可叠加的前置植物）
 @export var AllPrePlantPurple:Dictionary[PlantType, Array]= {
-	PlantType.P541GatlingPea:[PlantType.P508PeaShooterDouble],
+	PlantType.P541GatlingPea:[PlantType.P008PeaShooterDoubleRework, PlantType.P508PeaShooterDouble],
 	PlantType.P542TwinSunFlower:[PlantType.P002SunflowerMercy, PlantType.P502SunFlower],
 	PlantType.P543GloomShroom:[PlantType.P011FumeShroomRoadhog, PlantType.P511FumeShroom],
 	PlantType.P544Cattail:[PlantType.P517LilyPad],
@@ -578,6 +579,13 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_549_pea_shooter_double_reverse.tscn"
+		},
+	PlantType.P008PeaShooterDoubleRework: {
+		PlantInfoAttribute.PlantName: "PeaShooterDoubleRework",
+		PlantInfoAttribute.CoolTime: 7.5,
+		PlantInfoAttribute.SunCost: 200,
+		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_008_pea_shooter_double_rework.tscn"
 		},
 	PlantType.P001PeaShooterSoldier76: {
 		PlantInfoAttribute.PlantName: "PeaShooterSoldier76",

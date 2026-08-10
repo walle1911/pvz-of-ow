@@ -221,6 +221,7 @@ script_list_meta = {
 "res://scripts/character/plant/ow/plant_067_coffee_bean_ana.gd": [-1, -1],
 "res://scripts/character/plant/ow/plant_068_scaredy_shroom_widowmaker.gd": [-1, -1],
 "res://scripts/character/plant/ow/plant_069_hypno_shroom_juno.gd": [-1, -1],
+"res://scripts/character/plant/ow/plant_070_pea_shooter_double_rework.gd": [-1, -1],
 "res://scripts/character/zombie/common/zombie_000_base.gd": [-1, -1],
 "res://scripts/character/zombie/original/zombie_001_norm.gd": [-1, -1],
 "res://scripts/character/zombie/original/zombie_004_pole_vaulter.gd": [-1, -1],
