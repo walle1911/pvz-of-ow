@@ -1,0 +1,108 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/fx/bullet_effect/fire_helix_2d.gd" id="1_fire"]
+[ext_resource type="Script" path="res://scripts/fx/bullet_effect/procedural_ribbon_2d.gd" id="2_ribbon"]
+
+[sub_resource type="Curve" id="Curve_particle_scale"]
+_data = [Vector2(0, 0.35), 0.0, 1.6, 0, 0, Vector2(0.28, 1), 1.5, 0.0, 0, 0, Vector2(1, 0), -1.2, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_particle_scale"]
+curve = SubResource("Curve_particle_scale")
+
+[sub_resource type="Gradient" id="Gradient_wisps"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(1, 0.14, 0.01, 0, 1, 0.31, 0.025, 0.24, 0.8, 0.03, 0.002, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture_wisps"]
+gradient = SubResource("Gradient_wisps")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wisps"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(130, 26, 1)
+direction = Vector3(1, 0, 0)
+spread = 24.0
+initial_velocity_min = 36.0
+initial_velocity_max = 105.0
+gravity = Vector3(0, -7, 0)
+scale_min = 0.35
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_particle_scale")
+color_ramp = SubResource("GradientTexture_wisps")
+
+[sub_resource type="Gradient" id="Gradient_embers"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(1, 0.92, 0.42, 1, 1, 0.28, 0.01, 0.8, 0.8, 0.02, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture_embers"]
+gradient = SubResource("Gradient_embers")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_embers"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 20.0
+direction = Vector3(1, 0, 0)
+spread = 38.0
+initial_velocity_min = 85.0
+initial_velocity_max = 190.0
+gravity = Vector3(0, 28, 0)
+scale_min = 0.12
+scale_max = 0.36
+scale_curve = SubResource("CurveTexture_particle_scale")
+color_ramp = SubResource("GradientTexture_embers")
+
+[node name="FireHelix2D" type="Node2D"]
+script = ExtResource("1_fire")
+
+[node name="Nozzle" type="Node2D" parent="."]
+
+[node name="Glow" type="Node2D" parent="Nozzle"]
+z_index = -2
+
+[node name="Body" type="Node2D" parent="Nozzle"]
+z_index = 1
+
+[node name="Core" type="Node2D" parent="Nozzle"]
+z_index = 2
+
+[node name="Helix" type="Node2D" parent="."]
+
+[node name="OuterGlow" type="MeshInstance2D" parent="Helix"]
+z_index = -2
+script = ExtResource("2_ribbon")
+
+[node name="Body" type="MeshInstance2D" parent="Helix"]
+z_index = 1
+script = ExtResource("2_ribbon")
+
+[node name="Core" type="MeshInstance2D" parent="Helix"]
+z_index = 2
+script = ExtResource("2_ribbon")
+
+[node name="FireHead" type="Node2D" parent="."]
+
+[node name="RibbonsBack" type="Node2D" parent="FireHead"]
+z_index = -1
+
+[node name="RibbonsFront" type="Node2D" parent="FireHead"]
+z_index = 3
+
+[node name="CoreRibbons" type="Node2D" parent="FireHead"]
+z_index = 4
+
+[node name="FlameWisps" type="GPUParticles2D" parent="."]
+z_index = -1
+emitting = false
+amount = 40
+lifetime = 0.65
+randomness = 0.7
+process_material = SubResource("ParticleProcessMaterial_wisps")
+
+[node name="Embers" type="GPUParticles2D" parent="."]
+z_index = 5
+emitting = false
+amount = 30
+lifetime = 0.52
+randomness = 0.8
+process_material = SubResource("ParticleProcessMaterial_embers")

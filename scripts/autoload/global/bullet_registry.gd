@@ -30,6 +30,7 @@ enum BulletType{
 	Bullet019WidowmakerTracer,	## 黑百合胆小菇即时命中弹道
 	Bullet020SojournTracer,	## 索杰恩豌豆射手僵尸蓝色穿透弹道
 	Bullet021SeaShroomWuyang,	## 海蘑菇无恙鼠标制导孢子
+	Bullet022AnranFireWave,	## 安燃近距离穿透火焰环流
 
 
 	Bullet1001Bowling = 1001,		## 保龄球
@@ -77,6 +78,7 @@ enum AttackMode {
 	BulletType.Bullet019WidowmakerTracer :preload("res://scenes/bullet/bullet_019_widowmaker_tracer.tscn"),
 	BulletType.Bullet020SojournTracer :preload("res://scenes/bullet/bullet_020_sojourn_tracer.tscn"),
 	BulletType.Bullet021SeaShroomWuyang :preload("res://scenes/bullet/bullet_021_sea_shroom_wuyang.tscn"),
+	BulletType.Bullet022AnranFireWave :preload("res://scenes/bullet/bullet_022_anran_fire_wave.tscn"),
 }
 
 ## 获取子弹场景方法

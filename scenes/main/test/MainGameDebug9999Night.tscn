@@ -5,6 +5,8 @@
 
 [node name="MainGameDebug9999Night" unique_id=1562171854 instance=ExtResource("1_front")]
 game_para = ExtResource("2_level")
+metadata/_edit_vertical_guides_ = [285.0]
+metadata/_edit_horizontal_guides_ = [53.0]
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
 plant_in_cell = {

@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" uid="uid://cit8bsc5op7f0" path="res://scenes/bullet/bullet_000_linear_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_022_anran_fire_wave.gd" id="2_script"]
+[ext_resource type="PackedScene" path="res://scenes/fx/fire_helix_2d.tscn" id="3_fire"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fire_wave"]
+radius = 12.0
+
+[node name="Bullet022AnranFireWave" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+bullet_type = 22
+max_attack_num = -1
+attack_value = 40
+speed = 620.0
+bullet_mode = 1
+max_distance = 210.0
+trigger_be_attack_sfx = false
+type_bullet_SFX = 2
+
+[node name="BulletBody" parent="Body" index="0"]
+visible = false
+
+[node name="BulletEffect" parent="." index="2"]
+is_bullet_effect = false
+
+[node name="CollisionShape2D" parent="Area2DAttack" index="0"]
+shape = SubResource("CircleShape2D_fire_wave")
+
+[node name="FireHelix2D" parent="." index="5" instance=ExtResource("3_fire")]
+length = 210.0
+turns = 4.85
+amplitude_start = 5.0
+amplitude_end = 13.0
+spin_speed = 8.0
+turbulence = 3.2
+direction = Vector2(1, 0)
+body_width = 11.0
+glow_width = 22.0
+core_width = 3.5
+head_radius = 24.0
+head_ribbon_count = 6
+nozzle_length = 44.8

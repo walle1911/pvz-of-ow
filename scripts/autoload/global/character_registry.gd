@@ -585,7 +585,7 @@ const PlantInfo = {
 		PlantInfoAttribute.CoolTime: 7.5,
 		PlantInfoAttribute.SunCost: 200,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_008_pea_shooter_double_rework.tscn"
+		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_008_pea_shooter_double_anran.tscn"
 		},
 	PlantType.P001PeaShooterSoldier76: {
 		PlantInfoAttribute.PlantName: "PeaShooterSoldier76",

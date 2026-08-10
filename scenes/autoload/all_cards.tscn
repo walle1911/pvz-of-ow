@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://f43xv0aun5yb" path="res://assets/reanim/SunFlower_leftpetal6.png" id="17_h2xlp"]
 [ext_resource type="Texture2D" uid="uid://df06anw7nt00g" path="res://assets/reanim/SunFlower_leftpetal5.png" id="18_a41kf"]
 [ext_resource type="Texture2D" uid="uid://csycwxx4kl7gc" path="res://assets/reanim/SunFlower_leftpetal4.png" id="19_5n58f"]
+[ext_resource type="Texture2D" uid="uid://rip1limlsaa1" path="res://assets/image/ui/Character_Card/anran_card.png" id="20_a818n"]
 [ext_resource type="Texture2D" uid="uid://coqi3vpwq3dft" path="res://assets/reanim/SunFlower_leftpetal3.png" id="20_qgv2v"]
 [ext_resource type="Texture2D" uid="uid://dj5sy8aolaots" path="res://assets/reanim/SunFlower_leftpetal2.png" id="21_857ao"]
 [ext_resource type="Texture2D" uid="uid://c88ujwcx255a7" path="res://assets/reanim/SunFlower_leftpetal1.png" id="22_8nu58"]
@@ -1091,84 +1092,84 @@ plant_card_ids = Dictionary[int, int]({
 3: 2,
 4: 3,
 6: 4,
-8: 5,
-11: 6,
-13: 7,
-14: 8,
-16: 9,
-18: 10,
-19: 11,
-20: 12,
-21: 13,
-22: 14,
-23: 15,
-24: 16,
-25: 17,
-27: 18,
-31: 19,
-32: 20,
-36: 21,
-37: 22,
-38: 23,
-40: 24,
-41: 25,
-43: 26,
-44: 27,
-48: 28,
-52: 29,
-501: 31,
-502: 32,
-503: 33,
-504: 34,
-505: 35,
-506: 36,
-507: 37,
-508: 38,
-509: 39,
-510: 40,
-511: 41,
-512: 42,
-513: 43,
-514: 44,
-515: 45,
-516: 46,
-517: 47,
-518: 48,
-519: 49,
-520: 50,
-521: 51,
-522: 52,
-523: 53,
-524: 54,
-525: 55,
-526: 56,
-527: 57,
-528: 58,
-529: 59,
-530: 60,
-531: 61,
-532: 62,
-533: 63,
-534: 64,
-535: 65,
-536: 66,
-537: 67,
-538: 68,
-539: 69,
-540: 70,
-541: 71,
-542: 72,
-543: 73,
-544: 74,
-545: 75,
-546: 76,
-547: 77,
-548: 78,
-549: 79,
-999: 30,
-1001: 80,
-1002: 81,
-1003: 82
+8: 82,
+11: 5,
+13: 6,
+14: 7,
+16: 8,
+18: 9,
+19: 10,
+20: 11,
+21: 12,
+22: 13,
+23: 14,
+24: 15,
+25: 16,
+27: 17,
+31: 18,
+32: 19,
+36: 20,
+37: 21,
+38: 22,
+40: 23,
+41: 24,
+43: 25,
+44: 26,
+48: 27,
+52: 28,
+501: 30,
+502: 31,
+503: 32,
+504: 33,
+505: 34,
+506: 35,
+507: 36,
+508: 37,
+509: 38,
+510: 39,
+511: 40,
+512: 41,
+513: 42,
+514: 43,
+515: 44,
+516: 45,
+517: 46,
+518: 47,
+519: 48,
+520: 49,
+521: 50,
+522: 51,
+523: 52,
+524: 53,
+525: 54,
+526: 55,
+527: 56,
+528: 57,
+529: 58,
+530: 59,
+531: 60,
+532: 61,
+533: 62,
+534: 63,
+535: 64,
+536: 65,
+537: 66,
+538: 67,
+539: 68,
+540: 69,
+541: 70,
+542: 71,
+543: 72,
+544: 73,
+545: 74,
+546: 75,
+547: 76,
+548: 77,
+549: 78,
+999: 29,
+1001: 79,
+1002: 80,
+1003: 81
 })
 zombie_card_ids = Dictionary[int, int]({
 1: 9,
@@ -1468,9 +1469,8 @@ layout_mode = 2
 imitater_tint_color = Color(0.427, 0.757, 0.992, 1)
 imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
-card_id = 5
+card_id = 82
 card_plant_type = 8
-cool_time = 7.5
 sun_cost = 200
 
 [node name="CardBg" parent="PlantCards/Card31" index="0"]
@@ -1480,142 +1480,10 @@ texture = ExtResource("3_m4n4y")
 position = Vector2(1, 14)
 scale = Vector2(0.5, 0.5)
 
-[node name="Body" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework" unique_id=-800000003]
-
-[node name="BodyCorrect" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body" unique_id=-800000004]
-position = Vector2(-43, -70)
-
-[node name="Backleaf" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000005]
-position = Vector2(27.6, 54.764)
-scale = Vector2(0.5874, 0.48144)
-texture = ExtResource("3_xm6ba")
-centered = false
-
-[node name="Backleaf_left_tip" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000006]
-position = Vector2(24.736, 55.228)
-rotation = 0.0102626
-scale = Vector2(0.61456, 0.515)
-texture = ExtResource("4_2m5n3")
-centered = false
-
-[node name="Backleaf_right_tip" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000007]
-position = Vector2(47.876, 54.364)
-rotation = 0.0461463
-scale = Vector2(0.66084, 0.50884)
-texture = ExtResource("5_utnli")
-centered = false
-
-[node name="Stalk_bottom" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000008]
-position = Vector2(38.252, 49.072)
-rotation = 0.217049
-scale = Vector2(0.55988, 0.75092)
-skew = -0.0753286
-texture = ExtResource("6_1j6ba")
-centered = false
-
-[node name="Stalk_top" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000009]
-position = Vector2(34.216, 36.696)
-rotation = 0.188007
-scale = Vector2(0.56564, 0.85512)
-skew = -0.0766547
-texture = ExtResource("7_1qg83")
-centered = false
-
-[node name="Frontleaf" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000010]
-position = Vector2(22.212, 55.388)
-scale = Vector2(0.57664, 0.52172)
-texture = ExtResource("8_jrvjq")
-centered = false
-
-[node name="Frontleaf_right_tip" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000011]
-position = Vector2(55.536, 56.488)
-rotation = -0.15701
-scale = Vector2(0.72552, 0.54524)
-texture = ExtResource("9_lppa3")
-centered = false
-
-[node name="Frontleaf_tip_left" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000012]
-position = Vector2(19.612, 60.448)
-rotation = 0.14172
-scale = Vector2(0.62656, 0.54512)
-texture = ExtResource("10_xa6hp")
-centered = false
-
-[node name="Anim_stem" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect" unique_id=-800000013]
-position = Vector2(39.952, 42.836)
-centered = false
-
-[node name="stem_correct" type="Node2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem" unique_id=-800000014]
-position = Vector2(-36.5861, -47.9858)
-
-[node name="Idle_headleaf_farthest" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000015]
-position = Vector2(12.9, 38.1)
-rotation = -0.338594
-scale = Vector2(0.547, 0.501)
-skew = -0.0837757
-texture = ExtResource("91_orgcc")
-centered = false
-
-[node name="Idle_headleaf_3rdfarthest" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000016]
-position = Vector2(22.6, 17.7)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("92_1exfc")
-centered = false
-
-[node name="Idle_headleaf_2ndfarthest" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000017]
-position = Vector2(11.1, 29.1)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("93_a1y4x")
-centered = false
-
-[node name="Idle_headleaf_tip_bottom" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000018]
-position = Vector2(6.2, 33.1)
-scale = Vector2(0.555, 0.493)
-texture = ExtResource("94_bywlf")
-centered = false
-
-[node name="Idle_headleaf_nearest" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000019]
-position = Vector2(17, 18.4)
-scale = Vector2(0.527, 0.513)
-texture = ExtResource("95_biftl")
-centered = false
-
-[node name="Idle_headleaf_tip_top" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000020]
-position = Vector2(13, 18.4)
-scale = Vector2(0.527, 0.513)
-texture = ExtResource("96_5jdnp")
-centered = false
-
-[node name="Anim_face" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000021]
-position = Vector2(19.2, 17.8)
-scale = Vector2(0.555, 0.5)
-texture = ExtResource("12_cgaa5")
-centered = false
-
-[node name="Idle_mouth" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000022]
-position = Vector2(52.4, 17.8)
-scale = Vector2(0.555, 0.5)
-texture = ExtResource("13_rata2")
-centered = false
-
-[node name="Idle_shoot_blink" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000023]
-centered = false
-
-[node name="Anim_blink" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000024]
-visible = false
-position = Vector2(37.5, 23.5)
-scale = Vector2(0.555, 0.555)
-texture = ExtResource("14_kp5c5")
-centered = false
-
-[node name="PeaShooter_eyebrow" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000025]
-position = Vector2(34.8, 19.7)
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("97_rcuue")
-centered = false
-
-[node name="Marker2DBullet" type="Marker2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework/Body/BodyCorrect/Anim_stem/stem_correct" unique_id=-800000026]
-position = Vector2(60.9452, 30.6411)
+[node name="Sprite2D" type="Sprite2D" parent="PlantCards/Card31/CardBg/CharacterStatic/Plant008PeaShooterDoubleRework" unique_id=1852354980]
+position = Vector2(-4.22, -28.01)
+scale = Vector2(0.49, 0.49)
+texture = ExtResource("20_a818n")
 
 [node name="Card16" parent="PlantCards" unique_id=1875858146 instance=ExtResource("2_5pqky")]
 layout_mode = 2
@@ -13650,32 +13518,33 @@ centered = false
 [editable path="PlantCards/Card2"]
 [editable path="PlantCards/Card3"]
 [editable path="PlantCards/Card4"]
-[editable path="PlantCards/Card5"]
 [editable path="PlantCards/Card6"]
-[editable path="PlantCards/Card7"]
-[editable path="PlantCards/Card8"]
-[editable path="PlantCards/Card9"]
-[editable path="PlantCards/Card10"]
-[editable path="PlantCards/Card11"]
-[editable path="PlantCards/Card12"]
-[editable path="PlantCards/Card13"]
-[editable path="PlantCards/Card14"]
-[editable path="PlantCards/Card15"]
+[editable path="PlantCards/Card31"]
 [editable path="PlantCards/Card16"]
-[editable path="PlantCards/Card17"]
-[editable path="PlantCards/Card18"]
-[editable path="PlantCards/Card19"]
 [editable path="PlantCards/Card20"]
-[editable path="PlantCards/Card22"]
-[editable path="PlantCards/Card21"]
-[editable path="PlantCards/Card23"]
-[editable path="PlantCards/Card24"]
+[editable path="PlantCards/Card19"]
+[editable path="PlantCards/Card13"]
+[editable path="PlantCards/Card5"]
 [editable path="PlantCards/Card25"]
+[editable path="PlantCards/Card21"]
+[editable path="PlantCards/Card10"]
+[editable path="PlantCards/Card23"]
 [editable path="PlantCards/Card26"]
+[editable path="PlantCards/Card8"]
+[editable path="PlantCards/Card15"]
 [editable path="PlantCards/Card27"]
 [editable path="PlantCards/Card28"]
+[editable path="PlantCards/Card17"]
+[editable path="PlantCards/Card18"]
+[editable path="PlantCards/Card24"]
 [editable path="PlantCards/Card29"]
+[editable path="PlantCards/Card11"]
+[editable path="PlantCards/Card7"]
+[editable path="PlantCards/Card14"]
+[editable path="PlantCards/Card9"]
 [editable path="PlantCards/Card30"]
+[editable path="PlantCards/Card22"]
+[editable path="PlantCards/Card12"]
 [editable path="PlantCards2/Card1"]
 [editable path="PlantCards2/Card2"]
 [editable path="PlantCards2/Card3"]
@@ -13710,7 +13579,6 @@ centered = false
 [editable path="PlantCards2/Card31"]
 [editable path="PlantCards2/Card32"]
 [editable path="PlantCards2/Card33"]
-[editable path="PlantCards2/Card34"]
 [editable path="PlantCards2/Card35"]
 [editable path="PlantCards2/Card36"]
 [editable path="PlantCards2/Card37"]
@@ -13725,22 +13593,23 @@ centered = false
 [editable path="PlantCards2/Card46"]
 [editable path="PlantCards2/Card47"]
 [editable path="PlantCards2/Card48"]
+[editable path="PlantCards2/Card34"]
 [editable path="PlantCards3/Card"]
 [editable path="PlantCards3/Card2"]
 [editable path="PlantCards3/Card3"]
-[editable path="ZombieCards/Card1"]
-[editable path="ZombieCards/Card2"]
-[editable path="ZombieCards/Card3"]
-[editable path="ZombieCards/Card4"]
-[editable path="ZombieCards/Card5"]
-[editable path="ZombieCards/Card6"]
-[editable path="ZombieCards/Card7"]
-[editable path="ZombieCards/Card8"]
-[editable path="ZombieCards/Card10"]
 [editable path="ZombieCards/Card11"]
 [editable path="ZombieCards/Card12"]
 [editable path="ZombieCards/Card13"]
 [editable path="ZombieCards/Card14"]
+[editable path="ZombieCards/Card5"]
+[editable path="ZombieCards/Card6"]
+[editable path="ZombieCards/Card7"]
+[editable path="ZombieCards/Card4"]
+[editable path="ZombieCards/Card3"]
+[editable path="ZombieCards/Card2"]
+[editable path="ZombieCards/Card1"]
+[editable path="ZombieCards/Card8"]
+[editable path="ZombieCards/Card10"]
 [editable path="ZombieCards2/Card1"]
 [editable path="ZombieCards2/Card2"]
 [editable path="ZombieCards2/Card3"]
