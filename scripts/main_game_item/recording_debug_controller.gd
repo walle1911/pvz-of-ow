@@ -10,7 +10,8 @@ extends Node
 const EVENT_TRIGGER_DELAY := 1.5
 const DIRECTOR_SUN_VALUE := 5757
 const DIRECTOR_PANEL_FONT_SIZE := 18
-const SNAPSHOT_LIBRARY_PATH := "user://recording_5757_layout_snapshots.json"
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+static var SNAPSHOT_LIBRARY_PATH := UserPaths.path("recording_5757_layout_snapshots.json")
 const FORCED_PULT_VIRTUAL_TARGET_DISTANCE := 650.0
 const MAX_FREEZE_GROUPS := 5
 const ZOMBIE_ONLY_GROUP_INDEX := 5
@@ -202,9 +203,10 @@ void fragment() {
 
 func _load_layout_snapshot_library() -> void:
 	layout_snapshots.clear()
-	if not FileAccess.file_exists(SNAPSHOT_LIBRARY_PATH):
+	var read_path := UserPaths.read_path("recording_5757_layout_snapshots.json")
+	if not FileAccess.file_exists(read_path):
 		return
-	var file := FileAccess.open(SNAPSHOT_LIBRARY_PATH, FileAccess.READ)
+	var file := FileAccess.open(read_path, FileAccess.READ)
 	if file == null:
 		push_warning("无法读取 5757 布景快照库: %s" % FileAccess.get_open_error())
 		return

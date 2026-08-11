@@ -5,6 +5,7 @@ const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd"
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
 const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
 
 
 func _ready() -> void:
@@ -14,9 +15,9 @@ func _ready() -> void:
 func _run() -> void:
 	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
 	var source_dir := "res://data/adventure_levels"
-	if not AdventureStore.developer_level_path("adventure_1_1").begins_with("user://") \
-	or not AdventureStore.formal_level_path("adventure_1_1").begins_with("user://"):
-		_fail("玩家关卡覆盖和正式同步必须写入 user://")
+	if AdventureStore.developer_level_path("adventure_1_1") != UserPaths.path("adventure_levels/adventure_1_1.json") \
+	or AdventureStore.formal_level_path("adventure_1_1") != UserPaths.path("formal_adventure_levels/adventure_1_1.json"):
+		_fail("玩家关卡覆盖和正式同步必须写入统一玩家数据目录")
 		return
 	## 回归直接进入 2-1 的路径：限定卡不依赖奖励存档，只由目标关卡主动投放。
 	var direct_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))

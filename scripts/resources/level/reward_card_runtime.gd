@@ -1,10 +1,12 @@
 extends RefCounted
 class_name RewardCardRuntime
 
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+
 const BUNDLED_FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
 const BUNDLED_DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
-const FORMAL_LEVEL_DIR := "user://formal_adventure_levels"
-const DEVELOPER_LEVEL_DIR := "user://adventure_levels"
+static var FORMAL_LEVEL_DIR := UserPaths.path("formal_adventure_levels")
+static var DEVELOPER_LEVEL_DIR := UserPaths.path("adventure_levels")
 static var _special_reward_catalog_cache: Dictionary = {}
 
 ## 工坊保存或同步关卡后调用，保证新“限”规则即时生效。
@@ -119,7 +121,13 @@ static func _effective_level_path(source_dir: String, world: int, level_number: 
 	if FileAccess.file_exists(path):
 		return path
 	if source_dir == FORMAL_LEVEL_DIR:
+		var legacy_formal := UserPaths.read_path("formal_adventure_levels/%s" % file_name)
+		if legacy_formal != path and FileAccess.file_exists(legacy_formal):
+			return legacy_formal
 		return "%s/%s" % [BUNDLED_FORMAL_LEVEL_DIR, file_name]
 	if source_dir == DEVELOPER_LEVEL_DIR:
+		var legacy_developer := UserPaths.read_path("adventure_levels/%s" % file_name)
+		if legacy_developer != path and FileAccess.file_exists(legacy_developer):
+			return legacy_developer
 		return "%s/%s" % [BUNDLED_DEVELOPER_LEVEL_DIR, file_name]
 	return path

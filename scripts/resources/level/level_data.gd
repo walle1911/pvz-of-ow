@@ -1,6 +1,8 @@
 extends Resource
 class_name ResourceLevelData
 
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+
 #region 选关数据,管理关卡存档
 ## 游戏模式(冒险，迷你游戏，解密，生存)，游戏选关场景
 var game_mode: MainSceneRegistry.MainScenes = MainSceneRegistry.MainScenes.Null
@@ -474,7 +476,7 @@ func get_pot_zombie_with_row_type_pot_on_fiexd_mode(pot_zombie_dic: Dictionary) 
 
 ## 更新数据 (存档相关)
 func update_data_with_save_game_data() -> void:
-	var path = get_save_game_path()
+	var path = get_read_save_game_path()
 	if ResourceLoader.exists(path):
 		var res = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		if res is ResourceSaveGameMainGame:
@@ -491,7 +493,7 @@ func update_data_with_save_game_data() -> void:
 ## 删除存档
 func delete_game_data():
 	save_game_data_main_game = null
-	var path = get_save_game_path()
+	var path = get_read_save_game_path()
 
 	if ResourceLoader.exists(path):
 		var err = DirAccess.remove_absolute(path)
@@ -541,10 +543,13 @@ func filter_invalid_zombie_refresh_types(
 ## 读档系统只能从空白场景读档
 ## 获取存档路径
 func get_save_game_path() -> String:
-	var dir = DirAccess.open("user://")
-	if not dir.dir_exists(Global.user_manager.curr_user_name + "/" + Global.save_service.MAIN_GAME_SAVE_DIR_NAME):
-		dir.make_dir(Global.user_manager.curr_user_name + "/" + Global.save_service.MAIN_GAME_SAVE_DIR_NAME)
+	var relative_path: String = str(Global.user_manager.curr_user_name) + "/" + str(Global.save_service.MAIN_GAME_SAVE_DIR_NAME)
+	DirAccess.make_dir_recursive_absolute(UserPaths.path(relative_path))
+	return UserPaths.path(relative_path + "/" + save_game_name + ".tres")
 
-	return "user://" + Global.user_manager.curr_user_name + "/" + Global.save_service.MAIN_GAME_SAVE_DIR_NAME + "/" + save_game_name + ".tres"
+
+func get_read_save_game_path() -> String:
+	var relative_path: String = str(Global.user_manager.curr_user_name) + "/" + str(Global.save_service.MAIN_GAME_SAVE_DIR_NAME) + "/" + save_game_name + ".tres"
+	return UserPaths.read_path(relative_path)
 
 #endregion

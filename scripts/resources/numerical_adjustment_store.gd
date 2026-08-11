@@ -2,8 +2,9 @@ extends RefCounted
 class_name NumericalAdjustmentStore
 
 const Policy := preload("res://scripts/resources/numerical_adjustment_policy.gd")
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
 
-const SAVE_PATH := "user://numerical_adjustments.json"
+static var SAVE_PATH := UserPaths.path("numerical_adjustments.json")
 const DATA_VERSION := 5
 const REGISTRY_NODE_PATH := "@registry"
 const ZOMBIE_SPAWN_WEIGHT_BY_GRADE := {
@@ -29,9 +30,10 @@ static func load_data(force_reload := false) -> Dictionary:
 		return _cache
 	_is_loaded = true
 	_cache = {"version": DATA_VERSION, "characters": {}}
-	if not FileAccess.file_exists(SAVE_PATH):
+	var read_path := UserPaths.read_path("numerical_adjustments.json")
+	if not FileAccess.file_exists(read_path):
 		return _cache
-	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var file := FileAccess.open(read_path, FileAccess.READ)
 	if file == null:
 		return _cache
 	var parsed = JSON.parse_string(file.get_as_text())

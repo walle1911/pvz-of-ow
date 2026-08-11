@@ -4,6 +4,7 @@ class_name LevelCustomRuntime
 const LevelJsonRuntimeScript := preload("res://scripts/resources/level/level_json_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
 
 const ZOMBIE_TYPE_IDS := {
 	"normal": 501,
@@ -157,9 +158,9 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	var special_reward_source_dir := ""
 	match str(level.get("_adventureLevelSource", "")):
 		"formal":
-			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", "user://formal_adventure_levels"))
+			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", UserPaths.path("formal_adventure_levels")))
 		"developer":
-			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", "user://adventure_levels"))
+			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", UserPaths.path("adventure_levels")))
 	game_para.special_reward_card_source_dir = special_reward_source_dir
 	var boss_config: Dictionary = level.get("bossConfig", {})
 	game_para.boss_enabled = bool(boss_config.get("enabled", false))

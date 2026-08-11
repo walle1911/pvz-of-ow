@@ -1,6 +1,8 @@
 extends Node
 class_name UserManager
 
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+
 signal signal_users_update
 
 ## 当前用户名
@@ -9,15 +11,19 @@ var curr_user_name: String = ""
 var all_user_name: Array[String] = []
 
 ## 当前用户配置文件路径（单独存储用户名）
-const CURRENT_USER_CONFIG_PATH := "user://current_user.ini"
+static var CURRENT_USER_CONFIG_PATH := UserPaths.path("current_user.ini")
 
 ## 从单独文件加载当前用户名和用户列表
 func load_current_user() -> bool:
 	var config := ConfigFile.new()
-	var err := config.load(CURRENT_USER_CONFIG_PATH)
+	var read_path := UserPaths.read_path("current_user.ini")
+	var err := config.load(read_path)
 	if err == OK:
 		curr_user_name = config.get_value("user", "current_user", "")
 		all_user_name = config.get_value("user", "all_user", [])
+		UserPaths.migrate_legacy_player_data(all_user_name)
+		if read_path != CURRENT_USER_CONFIG_PATH:
+			save_user_names()
 		print("✅ 成功加载当前用户: ", curr_user_name)
 		print("✅ 已加载用户列表: ", all_user_name)
 		return true
@@ -25,10 +31,12 @@ func load_current_user() -> bool:
 	print("⚠️ 用户配置文件不存在")
 	curr_user_name = ""
 	all_user_name.clear()
+	UserPaths.migrate_legacy_player_data([])
 	return false
 
 ## 保存当前用户名到单独文件
 func save_user_names() -> void:
+	UserPaths.ensure_directory()
 	var config := ConfigFile.new()
 	config.set_value("user", "current_user", curr_user_name)
 	config.set_value("user", "all_user", all_user_name)
@@ -46,7 +54,7 @@ func set_current_user(user_name: String) -> void:
 
 ## 验证并创建存档文件夹，创建用户名时调用
 func ensure_save_directory_exists(user_name: String) -> void:
-	var save_dir_path := "user://%s/%s" % [user_name, SaveService.MAIN_GAME_SAVE_DIR_NAME]
+	var save_dir_path := UserPaths.path("%s/%s" % [user_name, SaveService.MAIN_GAME_SAVE_DIR_NAME])
 	if not DirAccess.dir_exists_absolute(save_dir_path):
 		var err := DirAccess.make_dir_recursive_absolute(save_dir_path)
 		if err == OK:
@@ -84,7 +92,7 @@ func delete_user(user_name: String) -> String:
 		return "不能删除当前登录用户"
 
 	# 删除用户存档目录
-	var user_dir_path := "user://%s" % user_name
+	var user_dir_path := UserPaths.path(user_name)
 	if DirAccess.dir_exists_absolute(user_dir_path):
 		delete_folder(user_dir_path)
 		print("✅ 已删除用户存档目录: ", user_dir_path)
@@ -114,8 +122,8 @@ func rename_user(old_name: String, new_name: String) -> String:
 		return "新用户名已存在"
 
 	# 迁移存档目录
-	var old_dir_path := "user://%s" % old_name
-	var new_dir_path := "user://%s" % new_name
+	var old_dir_path := UserPaths.read_directory_path(old_name)
+	var new_dir_path := UserPaths.path(new_name)
 
 	if DirAccess.dir_exists_absolute(old_dir_path):
 		var err := DirAccess.rename_absolute(old_dir_path, new_dir_path)

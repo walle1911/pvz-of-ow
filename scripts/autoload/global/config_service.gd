@@ -1,6 +1,8 @@
 extends Node
 class_name ConfigService
 
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+
 ## 配置服务：只负责 config.ini 的读写、保存当前设置、并对外提供配置值
 ## 运行态逻辑请直接通过 Global.config_service/<var> 与 <signal> 获取
 
@@ -90,7 +92,13 @@ var track_bullet_mouse := false:
 func _get_config_path() -> String:
 	if user_manager == null or user_manager.curr_user_name.is_empty():
 		return ""
-	return "user://" + user_manager.curr_user_name + "/" + CURRENT_CONFIG_FILE
+	return UserPaths.path(user_manager.curr_user_name + "/" + CURRENT_CONFIG_FILE)
+
+
+func _get_read_config_path() -> String:
+	if user_manager == null or user_manager.curr_user_name.is_empty():
+		return ""
+	return UserPaths.read_path(user_manager.curr_user_name + "/" + CURRENT_CONFIG_FILE)
 
 func get_difficulty_refresh_speed() -> float:
 	return float(DIFFICULTY_REFRESH_SPEED.get(game_difficulty, 1.0))
@@ -100,7 +108,7 @@ func get_combined_refresh_speed(level_refresh_speed: float) -> float:
 
 func load_and_apply_config() -> void:
 
-	var path := _get_config_path()
+	var path := _get_read_config_path()
 	if path.is_empty():
 		return
 
@@ -133,6 +141,7 @@ func save_config() -> void:
 	if path.is_empty():
 		return
 
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	var config := ConfigFile.new()
 
 	# 音乐相关

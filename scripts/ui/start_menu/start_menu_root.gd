@@ -699,6 +699,7 @@ func _save_and_export_developer_package() -> void:
 	var file_dialog := FileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.current_dir = ProjectSettings.globalize_path(DeveloperPackageStore.package_directory())
 	file_dialog.current_file = "pvz_of_ow_developer_package.json"
 	file_dialog.filters = ["*.json ; PVZ-of-OW 开发者包"]
 	file_dialog.file_selected.connect(func(path: String):
@@ -714,6 +715,7 @@ func _open_developer_package_import() -> void:
 	var file_dialog := FileDialog.new()
 	file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	file_dialog.current_dir = ProjectSettings.globalize_path(DeveloperPackageStore.package_directory())
 	file_dialog.filters = ["*.json ; PVZ-of-OW 开发者包"]
 	file_dialog.file_selected.connect(func(path: String):
 		var result := DeveloperPackageStore.import_package(path)

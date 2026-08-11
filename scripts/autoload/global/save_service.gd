@@ -1,6 +1,8 @@
 extends Node
 class_name SaveService
 
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+
 ## 全局游戏存档服务：只负责持久化金币/花园/关卡进度
 ## 文件 IO 与自动保存逻辑放在这里，Global 只负责业务/运行态状态
 
@@ -19,7 +21,13 @@ var _auto_save_timer: Timer
 func _get_save_game_path() -> String:
 	if user_manager == null or user_manager.curr_user_name.is_empty():
 		return ""
-	return "user://" + user_manager.curr_user_name + "/" + SaveGameFileName
+	return UserPaths.path(user_manager.curr_user_name + "/" + SaveGameFileName)
+
+
+func _get_read_save_game_path() -> String:
+	if user_manager == null or user_manager.curr_user_name.is_empty():
+		return ""
+	return UserPaths.read_path(user_manager.curr_user_name + "/" + SaveGameFileName)
 
 ## 启用自动保存存档
 func start_autosave(interval_sec: float = 60.0) -> void:
@@ -72,7 +80,7 @@ func save_now() -> void:
 	print(GlobalUtils.get_curr_time(), " 存档全局数据成功, 存档路径:", path)
 
 func load_global_game_data() -> void:
-	var path := _get_save_game_path()
+	var path := _get_read_save_game_path()
 	if path.is_empty():
 		return
 
@@ -110,14 +118,14 @@ func save_selected_cards() -> void:
 	if global_game_state == null:
 		push_error("❌ 选卡存档失败：GlobalGameState 未就绪")
 		return
-	var data := _load_json(path)
+	var data := _load_json(_get_read_save_game_path())
 	data["version"] = SaveGameVersion
 	data["selected_cards"] = global_game_state.selected_cards
 	if not _save_json(data, path):
 		return
 
 func load_selected_cards() -> void:
-	var path := _get_save_game_path()
+	var path := _get_read_save_game_path()
 	if path.is_empty():
 		return
 	if global_game_state == null:
@@ -318,6 +326,10 @@ func _migrate_displaced_zombie_type(zombie_type: int) -> int:
 	return zombie_type
 
 func _save_json(data: Dictionary, path: String) -> bool:
+	var make_error := DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	if make_error != OK:
+		push_error("❌ 存档写入失败：无法创建目录 %s（错误码 %d）" % [path.get_base_dir(), make_error])
+		return false
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		var err := FileAccess.get_open_error()

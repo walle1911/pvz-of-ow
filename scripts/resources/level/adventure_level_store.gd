@@ -4,18 +4,23 @@ class_name AdventureLevelStore
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const JsonRuntime := preload("res://scripts/resources/level/level_json_runtime.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
 ## res:// 中的数据只作为随安装包发布的默认模板；导出后该目录不可写。
 const BUNDLED_DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
 const BUNDLED_FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
-## 玩家在关卡工坊中的覆盖和同步结果必须持久化到 user://。
-const DEVELOPER_LEVEL_DIR := "user://adventure_levels"
-const FORMAL_LEVEL_DIR := "user://formal_adventure_levels"
+## 玩家在关卡工坊中的覆盖和同步结果必须持久化到统一玩家数据目录。
+static var DEVELOPER_LEVEL_DIR := UserPaths.path("adventure_levels")
+static var FORMAL_LEVEL_DIR := UserPaths.path("formal_adventure_levels")
 
 
 static func load_developer_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "成品关卡 ID 不合法：%s" % preset_id}
-	var path := _effective_level_path(developer_level_path(preset_id), bundled_developer_level_path(preset_id))
+	var path := _effective_level_path(
+		developer_level_path(preset_id),
+		bundled_developer_level_path(preset_id),
+		UserPaths.read_path("adventure_levels/%s.json" % preset_id)
+	)
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
 	var loaded := JsonRuntime.load_level(path)
@@ -51,7 +56,11 @@ static func save_developer_level(source: Dictionary, preset_id: String) -> Dicti
 static func load_formal_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "正式关卡 ID 不合法：%s" % preset_id}
-	var path := _effective_level_path(formal_level_path(preset_id), bundled_formal_level_path(preset_id))
+	var path := _effective_level_path(
+		formal_level_path(preset_id),
+		bundled_formal_level_path(preset_id),
+		UserPaths.read_path("formal_adventure_levels/%s.json" % preset_id)
+	)
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
 	var loaded := JsonRuntime.load_level(path)
@@ -126,8 +135,57 @@ static func bundled_formal_level_path(preset_id: String) -> String:
 	return "%s/%s.json" % [BUNDLED_FORMAL_LEVEL_DIR, preset_id]
 
 
-static func _effective_level_path(user_path: String, bundled_path: String) -> String:
-	return user_path if FileAccess.file_exists(user_path) else bundled_path
+static func _effective_level_path(user_path: String, bundled_path: String, legacy_path: String = "") -> String:
+	if FileAccess.file_exists(user_path):
+		return user_path
+	if not legacy_path.is_empty() and legacy_path != user_path and FileAccess.file_exists(legacy_path):
+		return legacy_path
+	return bundled_path
+
+
+static func has_developer_override(preset_id: String) -> bool:
+	var player_path := developer_level_path(preset_id)
+	var legacy_path := UserPaths.read_path("adventure_levels/%s.json" % preset_id)
+	if not FileAccess.file_exists(player_path) and legacy_path != player_path and FileAccess.file_exists(legacy_path):
+		player_path = legacy_path
+	if not FileAccess.file_exists(player_path):
+		return false
+	return not _files_equal(player_path, bundled_developer_level_path(preset_id))
+
+
+static func reset_developer_level(preset_id: String) -> Dictionary:
+	if not is_formal_preset_id(preset_id):
+		return {"ok": false, "error": "正式关卡 ID 不合法：%s" % preset_id}
+	var bundled_developer_path := bundled_developer_level_path(preset_id)
+	if not FileAccess.file_exists(bundled_developer_path):
+		return {"ok": false, "changed": false, "path": "", "error": "安装包中缺少该关卡的初始模板"}
+	var developer_result := _copy_level_file(bundled_developer_path, developer_level_path(preset_id))
+	if not developer_result["ok"]:
+		return developer_result
+	var bundled_formal_path := bundled_formal_level_path(preset_id)
+	if FileAccess.file_exists(bundled_formal_path):
+		var formal_result := _copy_level_file(bundled_formal_path, formal_level_path(preset_id))
+		if not formal_result["ok"]:
+			return formal_result
+	RewardCardRuntime.invalidate_special_reward_catalog()
+	return {"ok": true, "changed": true, "path": developer_level_path(preset_id), "error": ""}
+
+
+static func _files_equal(left_path: String, right_path: String) -> bool:
+	if not FileAccess.file_exists(left_path) or not FileAccess.file_exists(right_path):
+		return false
+	var left_file := FileAccess.open(left_path, FileAccess.READ)
+	var right_file := FileAccess.open(right_path, FileAccess.READ)
+	if left_file == null or right_file == null:
+		return false
+	if left_file.get_length() != right_file.get_length():
+		left_file.close()
+		right_file.close()
+		return false
+	var is_equal := left_file.get_buffer(left_file.get_length()) == right_file.get_buffer(right_file.get_length())
+	left_file.close()
+	right_file.close()
+	return is_equal
 
 
 static func _write_level(path: String, level: Dictionary) -> Dictionary:

@@ -732,9 +732,26 @@ func _open_template_picker() -> void:
 	sync_button.custom_minimum_size = Vector2(420, 44)
 	sync_button.tooltip_text = "勾选并发布已保存的开发者关卡"
 	box.add_child(sync_button)
+	var reset_button := Button.new()
+	reset_button.text = "恢复所选关卡初始设置"
+	reset_button.custom_minimum_size = Vector2(420, 44)
+	reset_button.tooltip_text = "移除所选关卡的玩家覆盖，恢复安装包内置模板"
+	box.add_child(reset_button)
+	var refresh_reset_button := func(_index: int = -1):
+		if picker.selected < 0 or picker.selected >= presets.size():
+			reset_button.disabled = true
+			return
+		reset_button.disabled = not FormalLevelStore.has_developer_override(str(presets[picker.selected]["id"]))
+	picker.item_selected.connect(refresh_reset_button)
+	refresh_reset_button.call()
 	sync_button.pressed.connect(func():
 		dialog.queue_free()
 		_request_leave_with_unsaved_check(_open_formal_sync_dialog)
+	)
+	reset_button.pressed.connect(func():
+		if picker.selected < 0 or picker.selected >= presets.size():
+			return
+		_open_reset_formal_level_dialog(str(presets[picker.selected]["id"]), dialog)
 	)
 	dialog.confirmed.connect(func():
 		if picker.selected < 0 or picker.selected >= presets.size():
@@ -746,6 +763,50 @@ func _open_template_picker() -> void:
 	add_child(dialog)
 	_force_font_recursive(dialog)
 	dialog.popup_centered()
+
+
+func _open_reset_formal_level_dialog(preset_id: String, source_dialog: Window) -> void:
+	var reset_dialog := Window.new()
+	reset_dialog.title = "恢复关卡初始设置"
+	reset_dialog.size = Vector2i(560, 250)
+	reset_dialog.min_size = Vector2i(560, 250)
+	reset_dialog.max_size = Vector2i(560, 250)
+	reset_dialog.unresizable = true
+	reset_dialog.exclusive = true
+	var message := Label.new()
+	message.position = Vector2(40, 34)
+	message.size = Vector2(480, 112)
+	message.text = "确定恢复 %s 的初始设置吗？\n该关卡已保存的玩家修改会被移除，安装包内置模板不会改变。" % preset_id
+	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	reset_dialog.add_child(message)
+	var cancel_button := Button.new()
+	cancel_button.text = "取消"
+	cancel_button.position = Vector2(105, 174)
+	cancel_button.size = Vector2(150, 44)
+	reset_dialog.add_child(cancel_button)
+	var confirm_button := Button.new()
+	confirm_button.text = "确认恢复"
+	confirm_button.position = Vector2(305, 174)
+	confirm_button.size = Vector2(150, 44)
+	reset_dialog.add_child(confirm_button)
+	cancel_button.pressed.connect(func(): reset_dialog.queue_free())
+	reset_dialog.close_requested.connect(func(): reset_dialog.queue_free())
+	confirm_button.pressed.connect(func():
+		var result := FormalLevelStore.reset_developer_level(preset_id)
+		if not result["ok"]:
+			message.text = "恢复失败：%s" % str(result["error"])
+			return
+		reset_dialog.queue_free()
+		if is_instance_valid(source_dialog):
+			source_dialog.queue_free()
+		_load_preset_for_edit(preset_id)
+		status_label.text = "已恢复 %s 的安装包初始设置。" % preset_id
+	)
+	add_child(reset_dialog)
+	_force_font_recursive(reset_dialog)
+	reset_dialog.popup_centered()
 
 
 func _open_formal_sync_dialog() -> void:

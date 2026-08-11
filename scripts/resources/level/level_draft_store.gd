@@ -2,8 +2,9 @@ extends RefCounted
 class_name LevelDraftStore
 
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
-const DRAFT_DIR := "user://level_drafts"
-const AUTOSAVE_PATH := "user://level_drafts/_autosave.json"
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+static var DRAFT_DIR := UserPaths.path("level_drafts")
+static var AUTOSAVE_PATH := UserPaths.path("level_drafts/_autosave.json")
 
 
 static func save_draft(level: Dictionary) -> Dictionary:
@@ -34,7 +35,7 @@ static func save_autosave(level: Dictionary) -> bool:
 
 
 static func load_autosave() -> Dictionary:
-	return load_draft(AUTOSAVE_PATH)
+	return load_draft(UserPaths.read_path("level_drafts/_autosave.json"))
 
 
 static func load_draft(path: String) -> Dictionary:
@@ -52,24 +53,33 @@ static func load_draft(path: String) -> Dictionary:
 
 
 static func list_drafts() -> Array[Dictionary]:
-	_ensure_directory()
 	var result: Array[Dictionary] = []
-	var directory := DirAccess.open(DRAFT_DIR)
-	if directory == null:
-		return result
-	for file_name in directory.get_files():
-		if file_name == "_autosave.json" or file_name.get_extension().to_lower() != "json":
+	var seen_ids: Dictionary = {}
+	var directories: Array[String] = [DRAFT_DIR]
+	var legacy_dir := UserPaths.legacy_path("level_drafts")
+	if legacy_dir != DRAFT_DIR:
+		directories.append(legacy_dir)
+	for directory_path in directories:
+		var directory := DirAccess.open(directory_path)
+		if directory == null:
 			continue
-		var path := "%s/%s" % [DRAFT_DIR, file_name]
-		var loaded := load_draft(path)
-		if loaded["ok"]:
-			var level: Dictionary = loaded["level"]
-			result.append({
-				"id": str(level.get("id", file_name.get_basename())),
-				"name": str(level.get("name", "未命名关卡")),
-				"path": path,
-				"waves": (level.get("waves", []) as Array).size(),
-			})
+		for file_name in directory.get_files():
+			if file_name == "_autosave.json" or file_name.get_extension().to_lower() != "json":
+				continue
+			var path := "%s/%s" % [directory_path, file_name]
+			var loaded := load_draft(path)
+			if loaded["ok"]:
+				var level: Dictionary = loaded["level"]
+				var level_id := str(level.get("id", file_name.get_basename()))
+				if seen_ids.has(level_id):
+					continue
+				seen_ids[level_id] = true
+				result.append({
+					"id": level_id,
+					"name": str(level.get("name", "未命名关卡")),
+					"path": path,
+					"waves": (level.get("waves", []) as Array).size(),
+				})
 	result.sort_custom(func(left, right): return str(left["name"]) < str(right["name"]))
 	return result
 

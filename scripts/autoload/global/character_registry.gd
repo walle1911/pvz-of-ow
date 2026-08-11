@@ -1,7 +1,8 @@
 extends Node
 class_name CharacterRegistry
 
-const NUMERICAL_ADJUSTMENTS_PATH := "user://numerical_adjustments.json"
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+static var NUMERICAL_ADJUSTMENTS_PATH := UserPaths.path("numerical_adjustments.json")
 
 var _character_scene_cache: Dictionary[String, PackedScene] = {}
 var _plant_condition_cache: Dictionary[String, Resource] = {}
@@ -899,13 +900,14 @@ func _get_baked_plant_scene_value(scene_path:String, property_name:String, fallb
 ## Godot 编辑器热重载时可能用旧 class_name 方法表解析这里。这里只读取相同存档中的
 ## 两个注册字段；角色节点字段仍由 NumericalAdjustmentStore 统一应用。
 func _get_developer_plant_registry_value(scene_path:String, property_name:String, fallback):
-	if not FileAccess.file_exists(NUMERICAL_ADJUSTMENTS_PATH):
+	var adjustments_path := UserPaths.read_path("numerical_adjustments.json")
+	if not FileAccess.file_exists(adjustments_path):
 		return fallback
-	var modified_time := int(FileAccess.get_modified_time(NUMERICAL_ADJUSTMENTS_PATH))
+	var modified_time := int(FileAccess.get_modified_time(adjustments_path))
 	if modified_time != _numerical_adjustments_modified_time:
 		_numerical_adjustments_modified_time = modified_time
 		_numerical_adjustments_cache.clear()
-		var file := FileAccess.open(NUMERICAL_ADJUSTMENTS_PATH, FileAccess.READ)
+		var file := FileAccess.open(adjustments_path, FileAccess.READ)
 		if file != null:
 			var loaded_adjustments = JSON.parse_string(file.get_as_text())
 			if loaded_adjustments is Dictionary:

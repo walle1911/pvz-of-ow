@@ -5,10 +5,10 @@ const DraftStore := preload("res://scripts/resources/level/level_draft_store.gd"
 const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const NumericalStore := preload("res://scripts/resources/numerical_adjustment_store.gd")
+const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
 
 const PACKAGE_FORMAT := "pvz-of-ow-developer-package"
 const PACKAGE_VERSION := 1
-const BACKUP_PATH := "user://developer_package_backup.json"
 
 
 static func build_package() -> Dictionary:
@@ -35,10 +35,31 @@ static func build_package() -> Dictionary:
 
 
 static func save_backup() -> Dictionary:
-	return write_package(BACKUP_PATH, build_package())
+	var directory := package_directory()
+	var ensure_error := DirAccess.make_dir_recursive_absolute(directory)
+	if ensure_error != OK:
+		return {"ok": false, "error": "无法创建开发者包目录，错误码 %s" % str(ensure_error)}
+	var stamp := Time.get_datetime_string_from_system(false, true).replace("-", "").replace(":", "").replace(" ", "_")
+	var path := directory.path_join("自动备份_%s.json" % stamp)
+	var suffix := 2
+	while FileAccess.file_exists(path):
+		path = directory.path_join("自动备份_%s_%d.json" % [stamp, suffix])
+		suffix += 1
+	return write_package(path, build_package())
+
+
+static func package_directory() -> String:
+	var directory := UserPaths.developer_package_root_path()
+	var ensure_error := DirAccess.make_dir_recursive_absolute(directory)
+	if ensure_error != OK:
+		push_warning("无法创建开发者包目录，错误码 %s" % str(ensure_error))
+	return directory
 
 
 static func write_package(path: String, package: Dictionary) -> Dictionary:
+	var ensure_error := DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	if ensure_error != OK:
+		return {"ok": false, "error": "无法创建开发者包目录，错误码 %s" % str(ensure_error)}
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	if file == null:
 		return {"ok": false, "error": "无法写入开发者包，错误码 %s" % str(FileAccess.get_open_error())}
