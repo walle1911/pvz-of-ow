@@ -1,8 +1,10 @@
 extends RefCounted
 class_name RewardCardRuntime
 
-const FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
-const DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
+const BUNDLED_FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
+const BUNDLED_DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
+const FORMAL_LEVEL_DIR := "user://formal_adventure_levels"
+const DEVELOPER_LEVEL_DIR := "user://adventure_levels"
 static var _special_reward_catalog_cache: Dictionary = {}
 
 ## 工坊保存或同步关卡后调用，保证新“限”规则即时生效。
@@ -92,7 +94,7 @@ static func _build_special_reward_catalog(source_dir: String) -> Dictionary:
 	for directory in directories:
 		for world in range(1, 6):
 			for level_number in range(1, 11):
-				var path := "%s/adventure_%d_%d.json" % [directory, world, level_number]
+				var path := _effective_level_path(directory, world, level_number)
 				if not FileAccess.file_exists(path):
 					continue
 				var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -109,3 +111,15 @@ static func _build_special_reward_catalog(source_dir: String) -> Dictionary:
 						continue
 					rules[key] = merge_allowed_level_ids(rules.get(key, []), allowed_level_ids)
 	return {"rules": rules}
+
+
+static func _effective_level_path(source_dir: String, world: int, level_number: int) -> String:
+	var file_name := "adventure_%d_%d.json" % [world, level_number]
+	var path := "%s/%s" % [source_dir, file_name]
+	if FileAccess.file_exists(path):
+		return path
+	if source_dir == FORMAL_LEVEL_DIR:
+		return "%s/%s" % [BUNDLED_FORMAL_LEVEL_DIR, file_name]
+	if source_dir == DEVELOPER_LEVEL_DIR:
+		return "%s/%s" % [BUNDLED_DEVELOPER_LEVEL_DIR, file_name]
+	return path

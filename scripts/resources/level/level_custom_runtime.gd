@@ -157,9 +157,9 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	var special_reward_source_dir := ""
 	match str(level.get("_adventureLevelSource", "")):
 		"formal":
-			special_reward_source_dir = "res://data/formal_adventure_levels"
+			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", "user://formal_adventure_levels"))
 		"developer":
-			special_reward_source_dir = "res://data/adventure_levels"
+			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", "user://adventure_levels"))
 	game_para.special_reward_card_source_dir = special_reward_source_dir
 	var boss_config: Dictionary = level.get("bossConfig", {})
 	game_para.boss_enabled = bool(boss_config.get("enabled", false))

@@ -2079,7 +2079,7 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 
 func _limited_card_source_dir() -> String:
 	## 工坊编辑成品关时读取开发者关卡配置；正式游玩会在运行参数中改用正式目录。
-	return "res://data/adventure_levels"
+	return FormalLevelStore.DEVELOPER_LEVEL_DIR
 
 
 func _is_limited_card_unavailable_here(type_id: int) -> bool:

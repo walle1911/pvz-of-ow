@@ -4,6 +4,7 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const RewardCardRuntime := preload("res://scripts/resources/level/reward_card_runtime.gd")
+const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
 
 
 func _ready() -> void:
@@ -13,6 +14,10 @@ func _ready() -> void:
 func _run() -> void:
 	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
 	var source_dir := "res://data/adventure_levels"
+	if not AdventureStore.developer_level_path("adventure_1_1").begins_with("user://") \
+	or not AdventureStore.formal_level_path("adventure_1_1").begins_with("user://"):
+		_fail("玩家关卡覆盖和正式同步必须写入 user://")
+		return
 	## 回归直接进入 2-1 的路径：限定卡不依赖奖励存档，只由目标关卡主动投放。
 	var direct_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
 	if not direct_level_result["ok"]:
@@ -25,6 +30,9 @@ func _run() -> void:
 		_fail("工坊卡片状态也应读到土豆地雷的限定目标关卡")
 		return
 	var direct_level_para := direct_level_result["game_para"] as ResourceLevelData
+	if direct_level_para.special_reward_card_source_dir != AdventureStore.DEVELOPER_LEVEL_DIR:
+		_fail("开发者关卡的限定卡规则应使用玩家覆盖目录并回退到内置模板")
+		return
 	if direct_level_para.available_plant_types.has(plant_type as CharacterRegistry.PlantType):
 		_fail("2-1 不应把限定土豆地雷混入普通可选卡池")
 		return

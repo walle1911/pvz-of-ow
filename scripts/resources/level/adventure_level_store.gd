@@ -4,15 +4,18 @@ class_name AdventureLevelStore
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const JsonRuntime := preload("res://scripts/resources/level/level_json_runtime.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
-const DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
-## 正式模式读取独立快照；只有在工坊中主动同步时才会更新。
-const FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
+## res:// 中的数据只作为随安装包发布的默认模板；导出后该目录不可写。
+const BUNDLED_DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
+const BUNDLED_FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
+## 玩家在关卡工坊中的覆盖和同步结果必须持久化到 user://。
+const DEVELOPER_LEVEL_DIR := "user://adventure_levels"
+const FORMAL_LEVEL_DIR := "user://formal_adventure_levels"
 
 
 static func load_developer_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "成品关卡 ID 不合法：%s" % preset_id}
-	var path := developer_level_path(preset_id)
+	var path := _effective_level_path(developer_level_path(preset_id), bundled_developer_level_path(preset_id))
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
 	var loaded := JsonRuntime.load_level(path)
@@ -22,6 +25,7 @@ static func load_developer_level(preset_id: String) -> Dictionary:
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
 	level["_adventureLevelSource"] = "developer"
+	level["_adventureLevelSourceDir"] = DEVELOPER_LEVEL_DIR
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
@@ -32,28 +36,22 @@ static func save_developer_level(source: Dictionary, preset_id: String) -> Dicti
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
 	level.erase("_adventureLevelSource")
+	level.erase("_adventureLevelSourceDir")
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
 		return {"ok": false, "path": developer_level_path(preset_id), "error": str(built["error"])}
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(DEVELOPER_LEVEL_DIR))
 	var path := developer_level_path(preset_id)
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	if file == null:
-		return {
-			"ok": false,
-			"path": path,
-			"error": "无法写入项目内正式关卡；请确认当前是从 Godot 编辑器运行项目，错误码 %s" % str(FileAccess.get_open_error()),
-		}
-	file.store_string(JSON.stringify(level, "\t"))
-	file.close()
-	RewardCardRuntime.invalidate_special_reward_catalog(DEVELOPER_LEVEL_DIR)
+	var write_result := _write_level(path, level)
+	if not write_result["ok"]:
+		return write_result
+	RewardCardRuntime.invalidate_special_reward_catalog()
 	return {"ok": true, "path": path, "error": ""}
 
 
 static func load_formal_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "正式关卡 ID 不合法：%s" % preset_id}
-	var path := formal_level_path(preset_id)
+	var path := _effective_level_path(formal_level_path(preset_id), bundled_formal_level_path(preset_id))
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
 	var loaded := JsonRuntime.load_level(path)
@@ -63,23 +61,29 @@ static func load_formal_level(preset_id: String) -> Dictionary:
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
 	level["_adventureLevelSource"] = "formal"
+	level["_adventureLevelSourceDir"] = FORMAL_LEVEL_DIR
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
 static func is_developer_level_synced(preset_id: String) -> bool:
 	if not is_formal_preset_id(preset_id):
 		return false
-	var developer_path := developer_level_path(preset_id)
-	var formal_path := formal_level_path(preset_id)
-	if not FileAccess.file_exists(developer_path) or not FileAccess.file_exists(formal_path):
+	var developer := load_developer_level(preset_id)
+	var formal := load_formal_level(preset_id)
+	if not developer["ok"] or not formal["ok"]:
 		return false
-	var developer_file := FileAccess.open(developer_path, FileAccess.READ)
-	var formal_file := FileAccess.open(formal_path, FileAccess.READ)
+	var developer_file := FileAccess.open(str(developer["path"]), FileAccess.READ)
+	var formal_file := FileAccess.open(str(formal["path"]), FileAccess.READ)
 	if developer_file == null or formal_file == null:
 		return false
 	if developer_file.get_length() != formal_file.get_length():
+		developer_file.close()
+		formal_file.close()
 		return false
-	return developer_file.get_buffer(developer_file.get_length()) == formal_file.get_buffer(formal_file.get_length())
+	var is_equal := developer_file.get_buffer(developer_file.get_length()) == formal_file.get_buffer(formal_file.get_length())
+	developer_file.close()
+	formal_file.close()
+	return is_equal
 
 
 static func sync_developer_levels_to_formal(preset_ids: Array[String]) -> Dictionary:
@@ -94,21 +98,15 @@ static func sync_developer_levels_to_formal(preset_ids: Array[String]) -> Dictio
 				"synced": [],
 				"error": "%s 尚未保存为开发者正式关卡" % preset_id if not loaded["exists"] else "%s 无法读取：%s" % [preset_id, str(loaded["error"])],
 			}
-		sources.append({"id": preset_id, "path": str(loaded["path"])})
-	var make_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(FORMAL_LEVEL_DIR))
-	if make_error != OK:
-		return {"ok": false, "synced": [], "error": "无法创建正式关卡目录，错误码 %s" % str(make_error)}
+		sources.append({"id": preset_id, "path": loaded["path"]})
 	var synced: Array[String] = []
 	for source in sources:
 		var preset_id := str(source["id"])
-		var copy_error := DirAccess.copy_absolute(
-			ProjectSettings.globalize_path(str(source["path"])),
-			ProjectSettings.globalize_path(formal_level_path(preset_id))
-		)
-		if copy_error != OK:
-			return {"ok": false, "synced": synced, "error": "同步 %s 失败，错误码 %s" % [preset_id, str(copy_error)]}
+		var write_result := _copy_level_file(str(source["path"]), formal_level_path(preset_id))
+		if not write_result["ok"]:
+			return {"ok": false, "synced": synced, "error": "同步 %s 失败：%s" % [preset_id, str(write_result["error"])]}
 		synced.append(preset_id)
-	RewardCardRuntime.invalidate_special_reward_catalog(FORMAL_LEVEL_DIR)
+	RewardCardRuntime.invalidate_special_reward_catalog()
 	return {"ok": true, "synced": synced, "error": ""}
 
 
@@ -118,6 +116,47 @@ static func developer_level_path(preset_id: String) -> String:
 
 static func formal_level_path(preset_id: String) -> String:
 	return "%s/%s.json" % [FORMAL_LEVEL_DIR, preset_id]
+
+
+static func bundled_developer_level_path(preset_id: String) -> String:
+	return "%s/%s.json" % [BUNDLED_DEVELOPER_LEVEL_DIR, preset_id]
+
+
+static func bundled_formal_level_path(preset_id: String) -> String:
+	return "%s/%s.json" % [BUNDLED_FORMAL_LEVEL_DIR, preset_id]
+
+
+static func _effective_level_path(user_path: String, bundled_path: String) -> String:
+	return user_path if FileAccess.file_exists(user_path) else bundled_path
+
+
+static func _write_level(path: String, level: Dictionary) -> Dictionary:
+	var make_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(path.get_base_dir()))
+	if make_error != OK:
+		return {"ok": false, "path": path, "error": "无法创建关卡存档目录，错误码 %s" % str(make_error)}
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return {"ok": false, "path": path, "error": "无法写入关卡存档，错误码 %s" % str(FileAccess.get_open_error())}
+	file.store_string(JSON.stringify(level, "\t"))
+	file.close()
+	return {"ok": true, "path": path, "error": ""}
+
+
+static func _copy_level_file(source_path: String, target_path: String) -> Dictionary:
+	var source_file := FileAccess.open(source_path, FileAccess.READ)
+	if source_file == null:
+		return {"ok": false, "path": target_path, "error": "无法读取待同步关卡，错误码 %s" % str(FileAccess.get_open_error())}
+	var content := source_file.get_buffer(source_file.get_length())
+	source_file.close()
+	var make_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(target_path.get_base_dir()))
+	if make_error != OK:
+		return {"ok": false, "path": target_path, "error": "无法创建正式关卡存档目录，错误码 %s" % str(make_error)}
+	var target_file := FileAccess.open(target_path, FileAccess.WRITE)
+	if target_file == null:
+		return {"ok": false, "path": target_path, "error": "无法写入正式关卡存档，错误码 %s" % str(FileAccess.get_open_error())}
+	target_file.store_buffer(content)
+	target_file.close()
+	return {"ok": true, "path": target_path, "error": ""}
 
 
 static func is_formal_preset_id(preset_id: String) -> bool:
