@@ -16,6 +16,8 @@ class_name Zombie026PeashooterZombie
 var _is_peashooter_head_dropped := false
 var _is_raw_potato_poisoned := false
 
+const DAMAGE_MULTIPLIER := 0.5
+
 @export_group("索杰恩远程攻击")
 @export_range(0.1, 30.0, 0.05, "or_greater") var pea_shot_interval := 0.45
 @export_range(1, 10000, 1, "or_greater") var pea_attack_damage := 10
@@ -34,11 +36,19 @@ var _is_raw_potato_poisoned := false
 
 func _ready() -> void:
 	super()
+	## 索杰恩的近战啮食、普通豌豆和穿透激光统一按原始数值的 50% 结算。
+	var melee_attack := attack_component as AttackComponentZombieNorm
+	if is_instance_valid(melee_attack):
+		melee_attack.init_attack_value_per_min = maxi(
+			roundi(float(melee_attack.init_attack_value_per_min) * DAMAGE_MULTIPLIER),
+			1
+		)
+		melee_attack.curr_attack_value_per_min = melee_attack.init_attack_value_per_min
 	attack_bullet.configure_sojourn_attack(
 		pea_shot_interval,
-		pea_attack_damage,
+		maxi(roundi(float(pea_attack_damage) * DAMAGE_MULTIPLIER), 1),
 		pea_projectile_scale,
-		laser_penetration_damage
+		maxi(roundi(float(laser_penetration_damage) * DAMAGE_MULTIPLIER), 1)
 	)
 	_setup_markers_2d_bullet()
 	_random_anim_status()

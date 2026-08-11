@@ -10,6 +10,7 @@ const DEVELOPER_PATH_PREFIXES := [
 	"adventure_levels",
 	"formal_adventure_levels",
 	"level_drafts",
+	"recording_5757_snapshots",
 ]
 const DEVELOPER_FILES := [
 	"developer_package_backup.json",

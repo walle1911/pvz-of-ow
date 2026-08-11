@@ -2,11 +2,13 @@ extends Node
 
 ## 高级录制导演：A 为群像幕，Q/W/E/R/T/Y/U/I 为八个分幕。
 ## A/Q～I 切幕永不保存运行现场；群像幕按 O 冻结整体母版并正式运行。
-## Z/X/C 分别在射手后方、前方、前方第二格补种天使、火炬和拉玛刹菜问。
+## Z/X 分别在射手后方、前方补种天使与火炬；C 在右数第三列整列补种拉玛刹菜问。
 ## Shift 仅在录制导演场景切换顶部植物/僵尸预选框，普通关卡不启用。
 
 const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
+const AdventureLevelPresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 static var LAYOUT_PATH := UserPaths.path("recording_5757_director_layout.json")
+const SNAPSHOT_DIRECTORY := "recording_5757_snapshots"
 
 const STAGE_COUNT := 8
 const STAGE_KEYS: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I"]
@@ -14,12 +16,13 @@ const OVERVIEW_STAGE := -1
 const BACKGROUND_OPACITY := 0.32
 const DIRECTOR_SUN_VALUE := 5757
 const DIRECTOR_ZOMBIE_SCALE := 0.8
-const OVERVIEW_HORDE_PER_LANE := 12
-const OVERVIEW_HORDE_SPACING := 42.0
+const OVERVIEW_HORDE_INITIAL_PER_LANE := 1
+const OVERVIEW_HORDE_SPAWN_INTERVAL := 0.4
 const OVERVIEW_HORDE_BOSS_TYPES: Array[int] = [25]
 const RECORDING_STAGE_META := &"recording_freeze_group"
 const RECORDING_FROZEN_META := &"recording_is_frozen"
 const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"
+const RECORDING_OVERVIEW_HORDE_META := &"recording_overview_horde"
 const RESTART_CLEAR_META := &"recording_director_clear_on_restart"
 
 var main_game: MainGameManager
@@ -31,7 +34,10 @@ var transition_running := false
 var is_manual_pause_active := false
 var formal_running := false
 var runtime_master_layout: Dictionary = {}
-var sync_elapsed := 0.0
+var overview_horde_spawn_elapsed := 0.0
+var overview_horde_spawn_serial := 0
+var overview_horde_refresh_types: Array[int] = []
+var overview_sojourn_spawned := false
 var gray_material: ShaderMaterial
 
 var director_window: Window
@@ -41,6 +47,7 @@ var clear_stage_zombies_button: Button
 var mode_label: Label
 var status_label: Label
 var feedback_label: Label
+var snapshot_option: OptionButton
 var zombie_option: OptionButton
 var zombie_lane_spin: SpinBox
 var zombie_col_spin: SpinBox
@@ -78,17 +85,16 @@ func _ready() -> void:
 	_connect_zombie_scaling()
 	_enable_director_card_pages()
 	_connect_manual_placement()
+	_connect_runtime_creation_signals()
 	_update_lane_range()
-	var clear_for_restart := bool(get_tree().get_meta(RESTART_CLEAR_META, false))
-	if clear_for_restart:
+	if bool(get_tree().get_meta(RESTART_CLEAR_META, false)):
 		get_tree().remove_meta(RESTART_CLEAR_META)
-	elif FileAccess.file_exists(UserPaths.read_path("recording_5757_director_layout.json")):
-		var saved_layout := _read_layout()
-		if not saved_layout.is_empty():
-			await _restore_layout(saved_layout)
-			runtime_master_layout = saved_layout.duplicate(true)
+	# 每次进入录制场景都从空白现场开始。历史快照只列出供用户主动选择，绝不自动恢复。
+	await _restore_layout({"version": 3, "plants": [], "zombies": []})
+	runtime_master_layout.clear()
 	_activate_stage(0, false)
 	_refresh_targets()
+	_refresh_snapshot_options()
 	_show_window.call_deferred()
 
 
@@ -124,11 +130,7 @@ func prepare_restart_clear() -> void:
 func _process(delta: float) -> void:
 	_enforce_sun_value()
 	_process_f2()
-	sync_elapsed += delta
-	if sync_elapsed >= 0.08:
-		sync_elapsed = 0.0
-		_sync_all_characters()
-		_sync_bullets()
+	_process_overview_horde_spawning(delta)
 
 
 func _input(event: InputEvent) -> void:
@@ -167,13 +169,8 @@ func _input(event: InputEvent) -> void:
 		)
 		get_viewport().set_input_as_handled()
 		return
-	if event.keycode == KEY_C:
-		_plant_support_next_to_shooters(
-			CharacterRegistry.PlantType.P052BonkChoyRamattra,
-			2,
-			"拉玛刹菜问",
-			"前方第二格"
-		)
+	if event.keycode == KEY_C or event.physical_keycode == KEY_C:
+		_plant_column_from_right(CharacterRegistry.PlantType.P052BonkChoyRamattra, 3, "拉玛刹菜问")
 		get_viewport().set_input_as_handled()
 		return
 	var stage := _stage_from_key(event.keycode)
@@ -254,9 +251,7 @@ func _save_and_switch_stage(stage: int) -> void:
 	if stage == selected_stage:
 		return
 	if runtime_master_layout.is_empty():
-		runtime_master_layout = _read_layout().duplicate(true)
-	if runtime_master_layout.is_empty():
-		_feedback("还没有整体快照。请先点击“保存整体快照”，再切幕。")
+		_feedback("本次启动还没有载入母版。请先保存新快照，或从历史快照中选择并恢复。")
 		return
 	await _rebuild_formal_stage(stage)
 	_feedback("已从最后一次保存的整体快照重建 %s；上一幕发生的一切均未保存。" % _stage_name(stage))
@@ -274,14 +269,17 @@ func _start_formal_overview() -> void:
 		return
 	if not _write_layout(false):
 		return
-	runtime_master_layout = _read_layout().duplicate(true)
 	if runtime_master_layout.is_empty():
 		_feedback("整体快照为空，无法正式开始。")
 		return
 	formal_running = true
 	is_manual_pause_active = false
+	overview_horde_spawn_elapsed = 0.0
+	overview_horde_spawn_serial = 0
+	overview_horde_refresh_types.clear()
+	overview_sojourn_spawned = _has_overview_sojourn()
 	await _rebuild_formal_stage(OVERVIEW_STAGE)
-	_feedback("O：正式开始。整体母版已持久化；右侧每行已生成 %d 只僵尸。" % OVERVIEW_HORDE_PER_LANE)
+	_feedback("O：正式开始。右侧每行先生成 %d 只先锋，之后在 A 幕按行轮换持续输送；P 暂停或 Q～I 分镜会停止刷新。" % OVERVIEW_HORDE_INITIAL_PER_LANE)
 
 
 func _rebuild_formal_stage(stage: int) -> void:
@@ -290,9 +288,9 @@ func _rebuild_formal_stage(stage: int) -> void:
 	transition_running = true
 	_hold_current_frame(true)
 	_clear_transient_nodes()
-	await _restore_layout(runtime_master_layout)
+	await _restore_layout(runtime_master_layout, formal_running)
 	_activate_stage(stage, false)
-	if formal_running and stage == OVERVIEW_STAGE:
+	if formal_running and stage == OVERVIEW_STAGE and not _has_overview_horde():
 		_spawn_overview_horde()
 	_hold_current_frame(false)
 	transition_running = false
@@ -319,6 +317,7 @@ func _toggle_all_characters_paused() -> void:
 func _assign_character(character: Character000Base, stage: int) -> void:
 	if not is_instance_valid(character) or stage < OVERVIEW_STAGE or stage >= STAGE_COUNT:
 		return
+	_track_character(character)
 	var instance_id := character.get_instance_id()
 	membership_by_id[instance_id] = {"ref": weakref(character), "stage": stage}
 	character.set_meta(RECORDING_STAGE_META, stage)
@@ -349,8 +348,33 @@ func _connect_zombie_scaling() -> void:
 		main_game.zombie_manager.signal_zombie_created.connect(callback)
 
 
+func _connect_runtime_creation_signals() -> void:
+	if not is_instance_valid(main_game):
+		return
+	if is_instance_valid(main_game.plant_cell_manager):
+		for row_cells: Array in main_game.plant_cell_manager.all_plant_cells:
+			for plant_cell: PlantCell in row_cells:
+				var plant_callback := Callable(self, &"_on_plant_created")
+				if not plant_cell.signal_plant_created_instance.is_connected(plant_callback):
+					plant_cell.signal_plant_created_instance.connect(plant_callback)
+	if is_instance_valid(main_game.bullets):
+		var bullet_entered_callback := Callable(self, &"_on_bullet_entered_tree")
+		if not main_game.bullets.child_entered_tree.is_connected(bullet_entered_callback):
+			main_game.bullets.child_entered_tree.connect(bullet_entered_callback)
+		var bullet_exiting_callback := Callable(self, &"_on_bullet_exiting_tree")
+		if not main_game.bullets.child_exiting_tree.is_connected(bullet_exiting_callback):
+			main_game.bullets.child_exiting_tree.connect(bullet_exiting_callback)
+
+
+func _on_plant_created(_plant_cell: PlantCell, plant: Plant000Base) -> void:
+	if is_instance_valid(plant):
+		_apply_character_state(plant)
+
+
 func _on_zombie_created(zombie: Zombie000Base) -> void:
 	_ensure_director_zombie_scale(zombie)
+	if is_instance_valid(zombie):
+		_apply_character_state(zombie)
 
 
 func _ensure_director_zombie_scale(zombie: Zombie000Base) -> void:
@@ -379,6 +403,7 @@ func _apply_director_state() -> void:
 
 
 func _apply_character_state(character: Character000Base) -> void:
+	_track_character(character)
 	var stage := _character_stage(character)
 	var should_run := false
 	var should_show := true
@@ -392,7 +417,9 @@ func _apply_character_state(character: Character000Base) -> void:
 	else:
 		should_run = stage == selected_stage
 		if character is Zombie000Base:
-			should_show = stage == selected_stage
+			var is_overview_horde := bool(character.get_meta(RECORDING_OVERVIEW_HORDE_META, false))
+			should_show = stage == selected_stage or is_overview_horde
+			is_background = is_overview_horde
 		else:
 			is_background = stage != selected_stage
 	if is_manual_pause_active:
@@ -403,6 +430,19 @@ func _apply_character_state(character: Character000Base) -> void:
 		_restore_character(character)
 	else:
 		_freeze_character(character, is_background)
+
+
+func _track_character(character: Character000Base) -> void:
+	if not is_instance_valid(character):
+		return
+	var callback := Callable(self, &"_on_character_exiting_tree").bind(character.get_instance_id())
+	if not character.tree_exiting.is_connected(callback):
+		character.tree_exiting.connect(callback)
+
+
+func _on_character_exiting_tree(instance_id: int) -> void:
+	membership_by_id.erase(instance_id)
+	frozen_character_states.erase(instance_id)
 
 
 func _freeze_character(character: Character000Base, is_background: bool) -> void:
@@ -422,7 +462,7 @@ func _freeze_character(character: Character000Base, is_background: bool) -> void
 	character.process_mode = Node.PROCESS_MODE_DISABLED
 	var saved_state: Dictionary = frozen_character_states[instance_id]
 	_set_collisions_enabled(saved_state, false)
-	if is_background and character is Plant000Base:
+	if is_background:
 		character.use_parent_material = false
 		character.material = gray_material
 		for item_state in saved_state.get("canvas_items", []):
@@ -514,24 +554,41 @@ func _sync_bullets() -> void:
 		var bullet := bullet_value as Bullet000Base
 		var instance_id := bullet.get_instance_id()
 		current_ids[instance_id] = true
-		var source_stage := int(bullet.get_meta(RECORDING_STAGE_META, OVERVIEW_STAGE))
-		var source_ref := bullet.get_meta(&"recording_source_character_ref", null) as WeakRef
-		var source_value: Variant = source_ref.get_ref() if is_instance_valid(source_ref) else null
-		if is_instance_valid(source_value) and source_value is Character000Base:
-			source_stage = _character_stage(source_value)
-			bullet.set_meta(RECORDING_STAGE_META, source_stage)
-		var should_run := not is_manual_pause_active and (
-			selected_stage == OVERVIEW_STAGE or source_stage == selected_stage
-		)
-		if should_run:
-			_restore_bullet(instance_id)
-		else:
-			if not frozen_bullet_states.has(instance_id):
-				frozen_bullet_states[instance_id] = {"ref": weakref(bullet), "process_mode": bullet.process_mode}
-			bullet.process_mode = Node.PROCESS_MODE_DISABLED
+		_apply_bullet_state(bullet)
 	for instance_id in frozen_bullet_states.keys():
 		if not current_ids.has(instance_id):
 			frozen_bullet_states.erase(instance_id)
+
+
+func _on_bullet_entered_tree(node: Node) -> void:
+	if node is Bullet000Base:
+		_apply_bullet_state(node as Bullet000Base)
+
+
+func _on_bullet_exiting_tree(node: Node) -> void:
+	if node is Bullet000Base:
+		frozen_bullet_states.erase(node.get_instance_id())
+
+
+func _apply_bullet_state(bullet: Bullet000Base) -> void:
+	if not is_instance_valid(bullet):
+		return
+	var instance_id := bullet.get_instance_id()
+	var source_stage := int(bullet.get_meta(RECORDING_STAGE_META, OVERVIEW_STAGE))
+	var source_ref := bullet.get_meta(&"recording_source_character_ref", null) as WeakRef
+	var source_value: Variant = source_ref.get_ref() if is_instance_valid(source_ref) else null
+	if is_instance_valid(source_value) and source_value is Character000Base:
+		source_stage = _character_stage(source_value)
+		bullet.set_meta(RECORDING_STAGE_META, source_stage)
+	var should_run := not is_manual_pause_active and (
+		selected_stage == OVERVIEW_STAGE or source_stage == selected_stage
+	)
+	if should_run:
+		_restore_bullet(instance_id)
+	else:
+		if not frozen_bullet_states.has(instance_id):
+			frozen_bullet_states[instance_id] = {"ref": weakref(bullet), "process_mode": bullet.process_mode}
+		bullet.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 func _restore_bullet(instance_id: int) -> void:
@@ -604,6 +661,8 @@ func _capture_layout() -> Dictionary:
 		if not is_instance_valid(zombie_value):
 			continue
 		var zombie := zombie_value as Zombie000Base
+		if bool(zombie.get_meta(RECORDING_OVERVIEW_HORDE_META, false)):
+			continue
 		var stage := _character_stage(zombie)
 		zombies.append({
 			"zombie_type": int(zombie.zombie_type), "lane": int(zombie.lane),
@@ -611,15 +670,22 @@ func _capture_layout() -> Dictionary:
 			"hp": int(zombie.hp_component.curr_hp), "scale_x": zombie.scale.x, "scale_y": zombie.scale.y, "stage": stage,
 		})
 	return {
-		"version": 3,
+		"version": 4,
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
+		"saved_at_unix_ms": int(Time.get_unix_time_from_system() * 1000.0),
 		"plants": plants,
 		"zombies": zombies,
 	}
 
 
-func _restore_layout(layout: Dictionary) -> void:
+func _restore_layout(layout: Dictionary, preserve_overview_horde := false) -> void:
 	var layout_version := int(layout.get("version", 1))
+	var preserved_horde: Array[Zombie000Base] = []
+	if preserve_overview_horde:
+		for zombie_value in main_game.zombie_manager.all_zombies_1d:
+			if is_instance_valid(zombie_value) \
+			and bool(zombie_value.get_meta(RECORDING_OVERVIEW_HORDE_META, false)):
+				preserved_horde.append(zombie_value)
 	_restore_all_frozen_state_before_rebuild()
 	membership_by_id.clear()
 	for row_cells: Array in main_game.plant_cell_manager.all_plant_cells:
@@ -629,7 +695,7 @@ func _restore_layout(layout: Dictionary) -> void:
 					plant_value.is_can_death_language = false
 					plant_value.character_death_disappear()
 	for zombie_value in main_game.zombie_manager.all_zombies_1d.duplicate():
-		if is_instance_valid(zombie_value):
+		if is_instance_valid(zombie_value) and not preserved_horde.has(zombie_value):
 			zombie_value.character_death_disappear()
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -670,6 +736,9 @@ func _restore_layout(layout: Dictionary) -> void:
 				_ensure_director_zombie_scale(zombie)
 			_apply_hp(zombie, int(data.get("hp", 0)))
 			_assign_character(zombie, int(data.get("stage", 0)))
+	for zombie in preserved_horde:
+		if is_instance_valid(zombie):
+			_assign_character(zombie, OVERVIEW_STAGE)
 	_apply_director_state()
 
 
@@ -679,6 +748,10 @@ func _restore_all_frozen_state_before_rebuild() -> void:
 		var character_value: Variant = character_ref.get_ref() if is_instance_valid(character_ref) else null
 		if is_instance_valid(character_value):
 			_restore_character_visual(character_value, state)
+			_set_collisions_enabled(state, true)
+			(character_value as Character000Base).process_mode = int(
+				state.get("process_mode", Node.PROCESS_MODE_INHERIT)
+			) as Node.ProcessMode
 	frozen_character_states.clear()
 	frozen_bullet_states.clear()
 
@@ -688,15 +761,31 @@ func _write_layout(show_feedback := true) -> bool:
 	if layout.is_empty():
 		_feedback("保存整体快照失败：当前没有可保存的编排。")
 		return false
-	var file := FileAccess.open(LAYOUT_PATH, FileAccess.WRITE)
-	if file == null:
-		_feedback("保存编排失败：%s" % FileAccess.get_open_error())
+	var timestamp_ms := int(Time.get_unix_time_from_system() * 1000.0)
+	layout["version"] = maxi(4, int(layout.get("version", 1)))
+	layout["saved_at_unix"] = timestamp_ms / 1000
+	layout["saved_at_unix_ms"] = timestamp_ms
+	var ensure_error := UserPaths.ensure_directory(SNAPSHOT_DIRECTORY)
+	if ensure_error != OK:
+		_feedback("创建快照历史目录失败：%s" % error_string(ensure_error))
 		return false
-	file.store_string(JSON.stringify(layout, "\t"))
+	var history_path := UserPaths.path(SNAPSHOT_DIRECTORY).path_join("snapshot_%d.json" % timestamp_ms)
+	if not _write_layout_file(history_path, layout) or not _write_layout_file(LAYOUT_PATH, layout):
+		_feedback("保存整体快照失败：%s" % error_string(FileAccess.get_open_error()))
+		return false
 	if not formal_running:
 		runtime_master_layout = layout.duplicate(true)
+	_refresh_snapshot_options(history_path)
 	if show_feedback:
-		_feedback("已持久化保存整体快照（八幕植物、僵尸、位置、血量和幕归属）。")
+		_feedback("已新增历史快照：%s。可在下拉列表中按时间选择恢复。" % _snapshot_time_label(layout))
+	return true
+
+
+func _write_layout_file(path: String, layout: Dictionary) -> bool:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(layout, "\t"))
 	return true
 
 
@@ -709,10 +798,74 @@ func _read_layout() -> Dictionary:
 	return parsed as Dictionary if parsed is Dictionary else {}
 
 
+func _read_layout_path(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+func _selected_snapshot_layout() -> Dictionary:
+	if not is_instance_valid(snapshot_option) or snapshot_option.selected < 0:
+		return {}
+	var path := str(snapshot_option.get_item_metadata(snapshot_option.selected))
+	return _read_layout_path(path)
+
+
+func _refresh_snapshot_options(preferred_path := "") -> void:
+	if not is_instance_valid(snapshot_option):
+		return
+	snapshot_option.clear()
+	var paths: Array[String] = []
+	var directory_path := UserPaths.path(SNAPSHOT_DIRECTORY)
+	var directory := DirAccess.open(directory_path)
+	if directory != null:
+		directory.list_dir_begin()
+		var file_name := directory.get_next()
+		while not file_name.is_empty():
+			if not directory.current_is_dir() and file_name.ends_with(".json"):
+				paths.append(directory_path.path_join(file_name))
+			file_name = directory.get_next()
+		directory.list_dir_end()
+	paths.sort()
+	paths.reverse()
+	if paths.is_empty():
+		var legacy_path := UserPaths.read_path("recording_5757_director_layout.json")
+		if FileAccess.file_exists(legacy_path):
+			paths.append(legacy_path)
+	for path in paths:
+		var layout := _read_layout_path(path)
+		if layout.is_empty():
+			continue
+		snapshot_option.add_item(_snapshot_time_label(layout))
+		snapshot_option.set_item_metadata(snapshot_option.item_count - 1, path)
+		if path == preferred_path:
+			snapshot_option.select(snapshot_option.item_count - 1)
+	if snapshot_option.item_count == 0:
+		snapshot_option.add_item("（暂无历史快照）")
+		snapshot_option.disabled = true
+	else:
+		snapshot_option.disabled = false
+
+
+func _snapshot_time_label(layout: Dictionary) -> String:
+	var unix_time := int(layout.get("saved_at_unix", 0))
+	if unix_time <= 0:
+		return "旧版快照（无时间）"
+	var timezone := Time.get_time_zone_from_system()
+	var local_unix_time := unix_time + int(timezone.get("bias", 0)) * 60
+	var datetime := Time.get_datetime_dict_from_unix_time(local_unix_time)
+	return "%04d-%02d-%02d  %02d:%02d:%02d" % [
+		int(datetime.get("year", 0)), int(datetime.get("month", 0)), int(datetime.get("day", 0)),
+		int(datetime.get("hour", 0)), int(datetime.get("minute", 0)), int(datetime.get("second", 0)),
+	]
+
+
 func _reload_saved_stage_for_edit() -> void:
-	var layout := _read_layout()
+	var layout := _selected_snapshot_layout()
 	if layout.is_empty():
-		_feedback("还没有保存过编排。")
+		_feedback("请先在历史快照列表中选择一个可用快照。")
 		return
 	if transition_running:
 		return
@@ -733,9 +886,9 @@ func _reload_saved_stage_for_edit() -> void:
 
 
 func _reload_entire_layout_for_edit() -> void:
-	var layout := _read_layout()
+	var layout := _selected_snapshot_layout()
 	if layout.is_empty():
-		_feedback("还没有保存过整体快照。")
+		_feedback("请先在历史快照列表中选择一个可用快照。")
 		return
 	if transition_running:
 		return
@@ -832,32 +985,131 @@ func _spawn_zombie(zombie_type: CharacterRegistry.ZombieType, lane: int, global_
 func _spawn_overview_horde() -> void:
 	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
 		return
-	var refresh_types: Array[int] = []
-	for zombie_type_value in main_game.zombie_manager.zombie_refresh_types:
-		var zombie_type := int(zombie_type_value)
-		if zombie_type == int(CharacterRegistry.ZombieType.Null) \
-		or zombie_type in OVERVIEW_HORDE_BOSS_TYPES \
-		or not Global.character_registry.ZombieInfo.has(zombie_type):
-			continue
-		refresh_types.append(zombie_type)
-	if refresh_types.is_empty():
-		refresh_types = [
-			int(CharacterRegistry.ZombieType.Z501Norm),
-			int(CharacterRegistry.ZombieType.Z503Cone),
-			int(CharacterRegistry.ZombieType.Z505Bucket),
-		]
+	var refresh_types := _overview_horde_types()
 	for lane in main_game.zombie_manager.all_zombie_rows.size():
 		var row: ZombieRow = main_game.zombie_manager.all_zombie_rows[lane]
 		var lane_types := _zombie_types_for_row(refresh_types, row.zombie_row_type)
 		if lane_types.is_empty():
 			continue
-		for index in OVERVIEW_HORDE_PER_LANE:
+		for index in OVERVIEW_HORDE_INITIAL_PER_LANE:
 			var zombie_type := lane_types[(lane + index) % lane_types.size()] as CharacterRegistry.ZombieType
 			var position := row.zombie_create_position.global_position
-			position.x += float(index) * OVERVIEW_HORDE_SPACING
-			var zombie := _spawn_zombie(zombie_type, lane, position)
-			if is_instance_valid(zombie):
-				_assign_character(zombie, OVERVIEW_STAGE)
+			_spawn_overview_horde_zombie(zombie_type, lane, position)
+
+
+func _process_overview_horde_spawning(delta: float) -> void:
+	if not formal_running \
+	or selected_stage != OVERVIEW_STAGE \
+	or is_manual_pause_active \
+	or transition_running:
+		overview_horde_spawn_elapsed = 0.0
+		return
+	overview_horde_spawn_elapsed += delta
+	while overview_horde_spawn_elapsed >= OVERVIEW_HORDE_SPAWN_INTERVAL:
+		overview_horde_spawn_elapsed -= OVERVIEW_HORDE_SPAWN_INTERVAL
+		_spawn_overview_horde_batch()
+
+
+func _spawn_overview_horde_batch() -> void:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return
+	if main_game.zombie_manager.all_zombie_rows.is_empty():
+		return
+	var refresh_types := _overview_horde_types()
+	var lane := overview_horde_spawn_serial % main_game.zombie_manager.all_zombie_rows.size()
+	var row: ZombieRow = main_game.zombie_manager.all_zombie_rows[lane]
+	var lane_types := _zombie_types_for_row(refresh_types, row.zombie_row_type)
+	if overview_sojourn_spawned:
+		lane_types.erase(int(CharacterRegistry.ZombieType.Z026PeashooterZombie))
+	if not lane_types.is_empty():
+		var zombie_type := lane_types[overview_horde_spawn_serial % lane_types.size()] \
+			as CharacterRegistry.ZombieType
+		_spawn_overview_horde_zombie(zombie_type, lane, row.zombie_create_position.global_position)
+	overview_horde_spawn_serial += 1
+
+
+func _spawn_overview_horde_zombie(
+	zombie_type: CharacterRegistry.ZombieType,
+	lane: int,
+	position: Vector2
+) -> void:
+	var is_sojourn := zombie_type == CharacterRegistry.ZombieType.Z026PeashooterZombie
+	if is_sojourn and overview_sojourn_spawned:
+		return
+	var zombie := _spawn_zombie(zombie_type, lane, position)
+	if is_instance_valid(zombie):
+		if is_sojourn:
+			overview_sojourn_spawned = true
+		zombie.set_meta(RECORDING_OVERVIEW_HORDE_META, true)
+		_assign_character(zombie, OVERVIEW_STAGE)
+
+
+func _overview_horde_types() -> Array[int]:
+	if not overview_horde_refresh_types.is_empty():
+		return overview_horde_refresh_types
+	for zombie_type_value in _formal_adventure_world_zombie_pool():
+		var zombie_type := int(zombie_type_value)
+		if zombie_type == int(CharacterRegistry.ZombieType.Null) \
+		or zombie_type in OVERVIEW_HORDE_BOSS_TYPES \
+		or not Global.character_registry.ZombieInfo.has(zombie_type):
+			continue
+		overview_horde_refresh_types.append(zombie_type)
+	if overview_horde_refresh_types.is_empty():
+		overview_horde_refresh_types.assign([
+			int(CharacterRegistry.ZombieType.Z501Norm),
+			int(CharacterRegistry.ZombieType.Z503Cone),
+			int(CharacterRegistry.ZombieType.Z505Bucket),
+		])
+	## 白天导演尸群首批就展示第一世界的索杰恩，避免她排在长轮询末尾看起来像没有进池。
+	if main_game.game_para.game_BG == ConstLevelData.GameBg.FrontDay:
+		var sojourn_type := int(CharacterRegistry.ZombieType.Z026PeashooterZombie)
+		if overview_horde_refresh_types.has(sojourn_type):
+			overview_horde_refresh_types.erase(sojourn_type)
+			overview_horde_refresh_types.push_front(sojourn_type)
+	return overview_horde_refresh_types
+
+
+## 直接汇总对应世界十关正式冒险配置，避免导演模式的副本卡池与关卡工坊脱节。
+func _formal_adventure_world_zombie_pool() -> Array[int]:
+	var world := int(main_game.game_para.game_BG) + 1
+	var result: Array[int] = []
+	for level_number in range(1, AdventureLevelPresets.LEVELS_PER_WORLD + 1):
+		var preset_id := "adventure_%d_%d" % [world, level_number]
+		var level := AdventureLevelPresets.build_formal_level(preset_id) \
+			if world <= AdventureLevelPresets.FORMAL_WORLD_COUNT \
+			else AdventureLevelPresets.build_level(preset_id)
+		for key in ["simpleZombiePool", "simpleOnceFinalZombies"]:
+			for zombie_type_value in level.get(key, []):
+				var zombie_type := int(zombie_type_value)
+				if zombie_type > 0 and not result.has(zombie_type):
+					result.append(zombie_type)
+	## 合并世界级 OW 追加角色，不让用户目录中的旧正式快照把索杰恩等角色漏掉。
+	if world >= 1 and world <= AdventureLevelPresets.WORLD_BONUS_ZOMBIES.size():
+		for zombie_type_value in AdventureLevelPresets.WORLD_BONUS_ZOMBIES[world - 1]:
+			var zombie_type := int(zombie_type_value)
+			if zombie_type > 0 and not result.has(zombie_type):
+				result.append(zombie_type)
+	return result
+
+
+func _has_overview_horde() -> bool:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return false
+	for zombie in main_game.zombie_manager.all_zombies_1d:
+		if is_instance_valid(zombie) and bool(zombie.get_meta(RECORDING_OVERVIEW_HORDE_META, false)):
+			return true
+	return false
+
+
+func _has_overview_sojourn() -> bool:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return false
+	for zombie in main_game.zombie_manager.all_zombies_1d:
+		if is_instance_valid(zombie) \
+		and zombie.zombie_type == CharacterRegistry.ZombieType.Z026PeashooterZombie \
+		and bool(zombie.get_meta(RECORDING_OVERVIEW_HORDE_META, false)):
+			return true
+	return false
 
 
 func _zombie_types_for_row(
@@ -982,6 +1234,47 @@ func _plant_support_next_to_shooters(
 	_refresh_targets()
 	_feedback("%s补种完成：已在射手%s种下 %d 株，跳过 %d 处无效位置。" % [
 		support_name, direction_name, planted_count, skipped_count
+	])
+
+
+func _plant_column_from_right(
+	plant_type: CharacterRegistry.PlantType,
+	column_from_right: int,
+	plant_name: String
+) -> void:
+	if not is_instance_valid(main_game) \
+	or main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME \
+	or not is_instance_valid(main_game.plant_cell_manager):
+		_feedback("进入草坪并开始游戏后才能使用 %s 快捷种植。" % plant_name)
+		return
+	var plant_condition := Global.character_registry.get_plant_info(
+		plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	) as ResourcePlantCondition
+	if not is_instance_valid(plant_condition):
+		_feedback("%s 缺少种植条件资源。" % plant_name)
+		return
+
+	var planted_count := 0
+	var skipped_count := 0
+	for row_cells: Array in main_game.plant_cell_manager.all_plant_cells:
+		var target_col := row_cells.size() - column_from_right
+		if target_col < 0 or target_col >= row_cells.size():
+			skipped_count += 1
+			continue
+		var target_cell: PlantCell = row_cells[target_col]
+		if not plant_condition.judge_is_can_plant(target_cell, plant_type):
+			skipped_count += 1
+			continue
+		var plant := target_cell.create_plant(plant_type, false, true) as Plant000Base
+		if not is_instance_valid(plant):
+			skipped_count += 1
+			continue
+		planted_count += 1
+		_assign_character(plant, selected_stage)
+	_refresh_targets()
+	_feedback("%s批量种植完成：已在右数第 %d 列种下 %d 株，跳过 %d 个无效格。" % [
+		plant_name, column_from_right, planted_count, skipped_count
 	])
 
 
@@ -1210,6 +1503,11 @@ func _build_director_window() -> void:
 	delete_button.pressed.connect(_delete_target)
 	box.add_child(delete_button)
 	_add_separator(box)
+	_add_section(box, "整体快照历史（按保存时间）")
+	snapshot_option = OptionButton.new()
+	snapshot_option.fit_to_longest_item = false
+	snapshot_option.tooltip_text = "选择一个历史时间点，再点击恢复整体快照或恢复当前幕。"
+	box.add_child(snapshot_option)
 	var save_row := HBoxContainer.new()
 	box.add_child(save_row)
 	var save_button := Button.new()
@@ -1229,6 +1527,7 @@ func _build_director_window() -> void:
 	feedback_label = Label.new()
 	feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(feedback_label)
+	_refresh_snapshot_options()
 	_update_panel()
 
 
@@ -1329,7 +1628,7 @@ func _update_panel() -> void:
 		else "◇ 编排预览 · ▶ 当前幕运行中"
 	)
 	status_label.text = (
-		"当前：%s。正式运行切幕会丢弃现场并从持久化整体母版重建；A 群像幕会重新生成逐行尸群。"
+		"当前：%s。A 群像幕持续从右侧刷新尸群；P 暂停或 Q～I 分镜中不生成新僵尸。"
 		if formal_running
 		else "当前：%s。A/Q～I 切幕不会保存，始终从最后一次整体快照重建；A 幕按 O 正式开始。"
 	) % _stage_name(selected_stage)
