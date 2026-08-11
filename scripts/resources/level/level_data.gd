@@ -75,6 +75,8 @@ func duplicate_runtime() -> ResourceLevelData:
 @export var can_choosed_card: bool = true
 ## 测试关卡可把阳光永久锁定为 start_sun；种植、收集和事件修改都不会改变显示值。
 @export var is_sun_value_locked := false
+## 训练靶场的运行时标记；由靶场选关入口写入副本，不持久化到普通关卡。
+var is_target_range := false
 ## 戴夫对话资源
 @export var crazy_dave_dialog: CrazyDaveDialogResource
 #endregion

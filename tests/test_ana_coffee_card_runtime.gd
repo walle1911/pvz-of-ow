@@ -7,6 +7,18 @@ func _ready() -> void:
 
 
 func _run() -> void:
+	assert(Plant052SunflowerMercy.is_blue_line_damage_boost_target_type(
+		CharacterRegistry.PlantType.P008PeaShooterDoubleRework
+	))
+	var mercy := load("res://scenes/character/plant/plant_002_sunflower_mercy.tscn").instantiate() \
+		as Plant052SunflowerMercy
+	assert(mercy.damage_boost_target_plant_types.has(
+		CharacterRegistry.PlantType.P008PeaShooterDoubleRework
+	))
+	mercy.free()
+	assert(Plant067CoffeeBeanAna.is_nano_boost_target_type(
+		CharacterRegistry.PlantType.P008PeaShooterDoubleRework
+	))
 	for _frame in range(120):
 		await get_tree().process_frame
 		if is_instance_valid(Global.main_game) \

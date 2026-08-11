@@ -91,7 +91,16 @@ func _init_card_slot_candidate_pages():
 
 	var ordered_plant_cards := _collect_plant_cards()
 	ordered_plant_cards.sort_custom(_sort_card_by_id)
-	_add_card_pages(grid_container_plant, ordered_plant_cards, all_card_candidate_containers_plant)
+	var ow_plant_cards:Array[Card] = []
+	var original_plant_cards:Array[Card] = []
+	for card in ordered_plant_cards:
+		if _is_pvz_original_plant_type(card.card_plant_type):
+			original_plant_cards.append(card)
+		else:
+			ow_plant_cards.append(card)
+	## 两类植物从新页面开始，避免按容量切页时把 OW 改版卡和原版卡混在同一页。
+	_add_card_pages(grid_container_plant, ow_plant_cards, all_card_candidate_containers_plant)
+	_add_card_pages(grid_container_plant, original_plant_cards, all_card_candidate_containers_plant)
 
 	var ordered_zombie_cards := _collect_zombie_cards()
 	ordered_zombie_cards.sort_custom(_sort_card_by_id)
@@ -215,6 +224,12 @@ func _is_original_plant_type(plant_type: CharacterRegistry.PlantType) -> bool:
 		or plant_type == CharacterRegistry.PlantType.P1499Imitater
 
 
+func _is_pvz_original_plant_type(plant_type: CharacterRegistry.PlantType) -> bool:
+	## 原版 PVZ 的 48 种植物恰好占满一页；P549 反向双发和其他特殊植物归入 OW 改版页。
+	return int(plant_type) >= int(CharacterRegistry.PlantType.P501PeaShooterSingle) \
+		and int(plant_type) <= int(CharacterRegistry.PlantType.P548CobCannon)
+
+
 func _adventure_card_lock_active() -> bool:
 	return is_instance_valid(Global.main_game) and Global.main_game.game_para.adventure_card_lock_active
 
@@ -238,14 +253,14 @@ func _on_next_page_button_pressed() -> void:
 
 
 func change_page(change_num:int= 1):
+	if all_show_page.is_empty():
+		return
 	all_show_page[curr_page].visible = false
 	curr_page += change_num + all_show_page.size()
 	curr_page %= all_show_page.size()
 	all_show_page[curr_page].visible = true
 
 	label_page.text = str(curr_page + 1) + "/" + str(all_show_page.size())
-
-
 ## 模仿者卡槽出现
 func imitater_card_slot_appear():
 	all_imitater_card.visible = true

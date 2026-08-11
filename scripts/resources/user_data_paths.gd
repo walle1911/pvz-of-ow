@@ -14,7 +14,7 @@ const DEVELOPER_PATH_PREFIXES := [
 const DEVELOPER_FILES := [
 	"developer_package_backup.json",
 	"numerical_adjustments.json",
-	"recording_5757_layout_snapshots.json",
+	"recording_5757_director_layout.json",
 ]
 
 
@@ -105,7 +105,7 @@ static func migrate_legacy_player_data(user_names: Array[String]) -> void:
 		"current_user.ini",
 		"numerical_adjustments.json",
 		"developer_package_backup.json",
-		"recording_5757_layout_snapshots.json",
+		"recording_5757_director_layout.json",
 	]:
 		_copy_legacy_file(relative_file)
 	for relative_directory in [

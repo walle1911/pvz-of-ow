@@ -6,8 +6,7 @@ class_name SombraEmpConfusion
 
 const HYPNO_DETECTION_LAYER := 32
 const HYPNO_REAL_LAYER := 1024
-const EMP_MARK_TEXTURE := preload("res://assets/reanim/Sombra.png")
-const EMP_MARK_SHADER := preload("res://shaders/sombra_emp_mark.gdshader")
+const EMP_MARK_TEXTURE := preload("res://resources/character_resource/sombra_emp_skull.png")
 const EMP_MARK_POSITION := Vector2(0.0, -66.0)
 const EMP_MARK_SCALE := Vector2.ONE * 0.92
 const EMP_MARK_GROW_DURATION := 0.25
@@ -71,9 +70,6 @@ func _show_emp_mark_once() -> void:
 	sprite.texture = EMP_MARK_TEXTURE
 	sprite.scale = Vector2.ZERO
 	sprite.modulate.a = 0.0
-	var material := ShaderMaterial.new()
-	material.shader = EMP_MARK_SHADER
-	sprite.material = material
 	_emp_mark_root.add_child(sprite)
 
 	var tween := sprite.create_tween()

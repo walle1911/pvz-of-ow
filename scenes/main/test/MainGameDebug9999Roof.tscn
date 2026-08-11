@@ -7,3 +7,4 @@
 game_para = ExtResource("2_level")
 test_change_sun_value = 9999
 test_time_scale = 1
+test_dynamic_card_slot_expansion = true

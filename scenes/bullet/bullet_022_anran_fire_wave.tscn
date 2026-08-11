@@ -14,7 +14,7 @@ max_attack_num = -1
 attack_value = 40
 speed = 620.0
 bullet_mode = 1
-max_distance = 210.0
+max_distance = 200.0
 trigger_be_attack_sfx = false
 type_bullet_SFX = 2
 
@@ -28,7 +28,7 @@ is_bullet_effect = false
 shape = SubResource("CircleShape2D_fire_wave")
 
 [node name="FireHelix2D" parent="." index="5" instance=ExtResource("3_fire")]
-length = 210.0
+length = 200.0
 turns = 4.85
 amplitude_start = 5.0
 amplitude_end = 13.0

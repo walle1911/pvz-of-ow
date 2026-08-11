@@ -5,9 +5,9 @@ class_name AttackComponentBulletDoublePeaAnran
 
 @export_group("近距离火焰环流")
 ## 任意可攻击敌人进入该距离后，本轮两发子弹都会切换为火焰环流。
-@export_range(0.0, 2000.0, 1.0, "suffix:px") var close_wave_distance := 210.0
+@export_range(0.0, 2000.0, 1.0, "suffix:px") var close_wave_distance := 200.0
 ## 火焰环流飞出该距离后消散。
-@export_range(0.0, 2000.0, 1.0, "suffix:px") var close_wave_max_distance := 210.0
+@export_range(0.0, 2000.0, 1.0, "suffix:px") var close_wave_max_distance := 200.0
 @export var close_wave_bullet_type:BulletRegistry.BulletType = BulletRegistry.BulletType.Bullet022AnranFireWave
 
 

@@ -19,6 +19,9 @@ var cards_placeholder:Array = []
 var curr_cards : Array[Card]
 ## 当前关卡允许选择的卡片数量；不得用界面可见上限替代。
 var card_selection_limit := 0
+## 仅录制导演启用：顶部卡槽分成植物页与僵尸页，Shift 切换。
+var director_pages_enabled := false
+var director_current_page := 0
 var _squash_doomfist_card_attack_check_timer := 0.0
 ## 阳光值
 var sun_value:
@@ -37,6 +40,29 @@ func _ready() -> void:
 	EventBus.subscribe("test_change_sun_value", func(value): sun_value = value)
 	EventBus.subscribe("add_sun_value", func(value): sun_value+=value)
 	EventBus.subscribe("update_card_purple_sun_cost", update_card_purple_sun_cost)
+	_setup_target_range_sun_button()
+
+
+func _setup_target_range_sun_button() -> void:
+	if not is_instance_valid(Global.game_para) or not Global.game_para.is_target_range:
+		return
+	var refresh_button := Button.new()
+	refresh_button.name = "TargetRangeCooldownRefreshButton"
+	refresh_button.position = Vector2(-78, 0)
+	refresh_button.size = Vector2(78, 70)
+	refresh_button.flat = true
+	refresh_button.focus_mode = Control.FOCUS_NONE
+	refresh_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	refresh_button.tooltip_text = "刷新全部卡片冷却"
+	refresh_button.pressed.connect(_refresh_target_range_card_cooldowns)
+	$SunLabelControl.add_child(refresh_button)
+
+
+func _refresh_target_range_card_cooldowns() -> void:
+	_remove_invalid_curr_cards()
+	for card: Card in curr_cards:
+		card.set_card_cool_end()
+		card.judge_card_ready()
 
 func _process(delta: float) -> void:
 	if not is_instance_valid(Global.main_game) or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
@@ -50,11 +76,14 @@ func _process(delta: float) -> void:
 	_try_squash_doomfist_attack_coffee_bean_ana()
 
 ## 初始化出战卡槽，管理器调用
-func init_card_slot_battle(max_choosed_card_num:int, sun:int):
+func init_card_slot_battle(max_choosed_card_num:int, sun:int, initial_card_slot_num := -1):
 	self.sun_value = sun
 	card_selection_limit = mini(maxi(0, max_choosed_card_num), max_visible_card_num)
+	if initial_card_slot_num < 0:
+		initial_card_slot_num = card_selection_limit
+	initial_card_slot_num = mini(maxi(0, initial_card_slot_num), card_selection_limit)
 	card_placeholder_template = card_placeholder_ori.duplicate()
-	for i in range(card_selection_limit):
+	for i in range(initial_card_slot_num):
 		var cloned_card_placeholder = card_placeholder_template.duplicate()
 		card_ui_list.add_child(cloned_card_placeholder)
 
@@ -77,6 +106,81 @@ func add_card_placeholder() -> Control:
 	cards_placeholder.append(cloned_card_placeholder)
 	return cloned_card_placeholder
 
+
+func enable_director_card_pages() -> void:
+	if director_pages_enabled:
+		return
+	director_pages_enabled = true
+	director_current_page = 0
+	refresh_director_card_page()
+
+
+func toggle_director_card_page() -> bool:
+	if not director_pages_enabled:
+		return false
+	director_current_page = 1 - director_current_page
+	refresh_director_card_page()
+	return true
+
+
+func show_director_card_page(page: int) -> void:
+	if not director_pages_enabled:
+		return
+	director_current_page = clampi(page, 0, 1)
+	refresh_director_card_page()
+
+
+func director_page_for_card(card: Card) -> int:
+	return 1 if is_instance_valid(card) \
+		and card.card_zombie_type != CharacterRegistry.ZombieType.Null else 0
+
+
+func director_cards_on_page(page: int) -> Array[Card]:
+	var result: Array[Card] = []
+	for card in curr_cards:
+		if _is_valid_card(card) and director_page_for_card(card) == page:
+			result.append(card)
+	return result
+
+
+func director_page_is_full(card: Card) -> bool:
+	return director_pages_enabled \
+		and director_cards_on_page(director_page_for_card(card)).size() >= card_selection_limit
+
+
+func director_placeholder_index_for_new_card(card: Card) -> int:
+	return director_cards_on_page(director_page_for_card(card)).size()
+
+
+func refresh_director_card_page() -> void:
+	if not director_pages_enabled:
+		return
+	_remove_invalid_curr_cards()
+	var visible_cards := director_cards_on_page(director_current_page)
+	# 两个逻辑页复用同一排占位节点。卡片最初可能按 curr_cards 的全局顺序
+	# 挂在后面的占位节点上，因此切页时必须按“当前页内序号”重新排到首格。
+	for i in range(mini(visible_cards.size(), cards_placeholder.size())):
+		var visible_card := visible_cards[i]
+		var target_placeholder: Control = cards_placeholder[i]
+		if visible_card.get_parent() != target_placeholder:
+			visible_card.reparent(target_placeholder, false)
+		visible_card.position = Vector2.ZERO
+	for card in curr_cards:
+		if not _is_valid_card(card):
+			continue
+		var is_on_current_page := director_page_for_card(card) == director_current_page
+		card.visible = is_on_current_page
+		if Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME:
+			if is_on_current_page:
+				card.set_shortcut((visible_cards.find(card) + 1) % 10)
+			else:
+				card.set_shortcut_disappear()
+	if is_instance_valid(Global.main_game) \
+	and is_instance_valid(Global.main_game.card_manager) \
+	and is_instance_valid(Global.main_game.card_manager.card_slot_root):
+		Global.main_game.card_manager.card_slot_root.curr_cards = visible_cards
+	judge_disappear_add_card_bar()
+
 func _exit_tree() -> void:
 	if is_instance_valid(card_placeholder_template):
 		card_placeholder_template.free()
@@ -92,7 +196,10 @@ func main_game_refresh_card():
 		if not card.signal_card_ready.is_connected(_on_card_ready):
 			card.signal_card_ready.connect(_on_card_ready)
 		card.judge_sun_enough(sun_value)
-		card.set_shortcut((i+1)%10)
+		if not director_pages_enabled:
+			card.set_shortcut((i+1)%10)
+	if director_pages_enabled:
+		refresh_director_card_page()
 	judge_disappear_add_card_bar()
 
 ## 开始下一轮出战卡槽更新数据
@@ -163,11 +270,18 @@ func _get_available_squash_doomfist() -> Plant054SquashDoomfist:
 #region 控制台相关
 ## 是否显示多余卡槽
 func judge_disappear_add_card_bar():
+	var visible_card_count := curr_cards.size()
+	if director_pages_enabled:
+		visible_card_count = director_cards_on_page(director_current_page).size()
 	## 在游戏进行阶段
 	if Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME:
 		if Global.config_service.disappear_spare_card_Placeholder:
-			if curr_cards.size() < cards_placeholder.size():
-				for i in range(curr_cards.size(), cards_placeholder.size()):
+			if director_pages_enabled:
+				for i in range(cards_placeholder.size()):
+					cards_placeholder[i].visible = i < visible_card_count
+				return
+			if visible_card_count < cards_placeholder.size():
+				for i in range(visible_card_count, cards_placeholder.size()):
 					cards_placeholder[i].visible = false
 		else:
 			for i in range(cards_placeholder.size()):

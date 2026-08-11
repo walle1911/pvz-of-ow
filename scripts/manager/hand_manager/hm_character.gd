@@ -17,9 +17,8 @@ const OW_ZOMBIE_PREVIEW_GROUND_Y := 12.0
 
 @onready var hand_manager: HandManager = %HandManager
 
-## 卡牌手动放置的角色已经完成创建。导演场景用它做缩放、入组和冻结同步；
-## 必须在实例创建完成后发出，不能使用 ZombieManager 的提前创建信号代替。
-signal signal_manual_character_placed(character: Character000Base, is_director_zombie: bool)
+## 卡牌手动放置的角色已经完成创建。导演编辑模式用它自动归入当前幕。
+signal signal_manual_character_placed(character: Character000Base)
 
 ## 角色临时挂载节点
 @onready var temporary_character: Node2D = %TemporaryCharacter
@@ -761,7 +760,7 @@ func click_cell(plant_cell:PlantCell):
 				is_imitater = true
 			var created_plant := plant_cell.create_plant(plant_type, is_imitater, true, false, false, imitater_variant)
 			if is_instance_valid(created_plant):
-				signal_manual_character_placed.emit(created_plant, false)
+				signal_manual_character_placed.emit(created_plant)
 		else:
 			var zombie_init_para:Dictionary = {
 				Zombie000Base.E_ZInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsNorm,
@@ -779,10 +778,7 @@ func click_cell(plant_cell:PlantCell):
 				GlobalUtils.get_special_zombie_callable(curr_card.card_zombie_type, plant_cell)
 			)
 			if is_instance_valid(created_zombie):
-				signal_manual_character_placed.emit(
-					created_zombie,
-					bool(curr_card.get_meta(&"recording_director_zombie_card", false))
-				)
+				signal_manual_character_placed.emit(created_zombie)
 			if curr_card.is_chessboard_hypno_reward and is_instance_valid(created_zombie):
 				created_zombie.be_hypno()
 
@@ -857,7 +853,7 @@ func _click_cell_column(plant_cell:PlantCell):
 					_is_imitater = true
 				var created_plant := _plant_cell.create_plant(_plant_type, _is_imitater, true, false, false, _imitater_variant)
 				if is_instance_valid(created_plant):
-					signal_manual_character_placed.emit(created_plant, false)
+					signal_manual_character_placed.emit(created_plant)
 	else:
 		for i in range(characte_static_shadow_colum.size()):
 			## 当前格子的图像透明
@@ -881,10 +877,7 @@ func _click_cell_column(plant_cell:PlantCell):
 					GlobalUtils.get_special_zombie_callable(curr_card.card_zombie_type, _plant_cell)
 				)
 				if is_instance_valid(created_zombie):
-					signal_manual_character_placed.emit(
-						created_zombie,
-						bool(curr_card.get_meta(&"recording_director_zombie_card", false))
-					)
+					signal_manual_character_placed.emit(created_zombie)
 
 ## 柱子模式 清除数据
 func _clear_curr_data_column():

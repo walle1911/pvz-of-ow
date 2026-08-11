@@ -196,6 +196,8 @@ func call_dancer_init(z:Zombie010Dancer, dancer_i:int):
 	if is_instance_valid(dancing_zombie) \
 	and dancing_zombie.zombie_type == CharacterRegistry.ZombieType.Z009DancingZombieLucio:
 		z.scale = Vector2(absf(dancing_zombie.scale.x), absf(dancing_zombie.scale.y))
+		if bool(dancing_zombie.get_meta(&"recording_director_scale_applied", false)):
+			z.set_meta(&"recording_director_scale_applied", true)
 	z.init_dancer_be_call(
 		dancer_i, animation_origin_speed, animation_curr_speed,
 		init_random_speed, self, is_hypnotized

@@ -6,7 +6,7 @@
 
 [node name="MainGameDebugRecording5757" unique_id=1121518709 instance=ExtResource("1_front")]
 game_para = ExtResource("2_level")
-director_placed_zombie_scale = 0.8
+test_dynamic_card_slot_expansion = true
 
 [node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
 plant_in_cell = {
@@ -416,4 +416,3 @@ plant_in_cell = {
 [node name="RecordingDebugController" type="Node" parent="." index="18" unique_id=1462498711]
 process_mode = 3
 script = ExtResource("3_controller")
-spawn_gargantuar_pair_on_o = true

@@ -31,14 +31,14 @@ const BOSS_DIALOG_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 @export var test_pre_choosed_card_list_plant: Array[CharacterRegistry.PlantType] = []
 ## 直接运行测试场景时覆盖关卡资源中的预选僵尸卡，留空则使用关卡资源原配置
 @export var test_pre_choosed_card_list_zombie: Array[CharacterRegistry.ZombieType] = []
-## 直接运行测试场景时覆盖最大卡槽数量，固定8个，超过上限自动增加
+## 直接运行测试场景时覆盖最大卡槽数量；启用动态扩展时则表示初始卡槽数。
 @export_range(1, 15) var test_max_choosed_card_num: int = 8
+## 9999/导演测试场景可从上述初始格数开始，随选卡动态扩展到关卡上限。
+@export var test_dynamic_card_slot_expansion := false
 ## 直接运行测试场景时显示植物和僵尸血量，便于观察调参结果
 @export var test_show_hp_label := true
 
-@export_group("5757导演设置")
-## F4 导演卡和导演台按钮放置的僵尸等比缩放比例；1.0 为原尺寸。
-@export_range(0.1, 2.0, 0.05) var director_placed_zombie_scale := 0.8
+@export_group("调试场景设置")
 ## 启用后，D.Va 毁灭菇的幼体不再随机弹射，只尝试落在指定的斜前方格。
 @export var dva_baby_use_fixed_diagonal_cell := false
 ## x 为行偏移，y 为列偏移；(-1, 1) 表示行 -1、列 +1 的斜前一格。
@@ -161,6 +161,8 @@ var boss_battle_started := false
 var boss_battle_finished := false
 var boss_choice_layer: Control
 var active_boss: Zombie000Base
+var target_range_hint_layer: Control
+signal target_range_hint_dismissed
 
 #endregion
 
@@ -196,7 +198,7 @@ func apply_test_card_overrides() -> void:
 		game_para.pre_choosed_card_list_plant = test_pre_choosed_card_list_plant.duplicate()
 	if not test_pre_choosed_card_list_zombie.is_empty():
 		game_para.pre_choosed_card_list_zombie = test_pre_choosed_card_list_zombie.duplicate()
-	if test_max_choosed_card_num > 0:
+	if test_max_choosed_card_num > 0 and not test_dynamic_card_slot_expansion:
 		game_para.max_choosed_card_num = test_max_choosed_card_num
 
 func apply_test_display_overrides() -> void:
@@ -233,6 +235,9 @@ func _ready() -> void:
 	init_manager()
 	## 初始化游戏背景音乐
 	_init_game_BGM()
+	if game_para.is_target_range:
+		_show_target_range_hint()
+		await target_range_hint_dismissed
 
 	## 若有存档
 	if is_save_game_data_on_init:
@@ -262,6 +267,68 @@ func _ready() -> void:
 				no_choosed_card_start_game()
 		else:
 			main_game_start()
+
+
+func _show_target_range_hint() -> void:
+	target_range_hint_layer = Control.new()
+	target_range_hint_layer.name = "TargetRangeHintLayer"
+	target_range_hint_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	target_range_hint_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	target_range_hint_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	canvas_layer_ui.add_child(target_range_hint_layer)
+
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.0, 0.0, 0.0, 0.55)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	target_range_hint_layer.add_child(shade)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-260, -125)
+	panel.size = Vector2(520, 250)
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color("302819")
+	panel_style.border_color = Color("b79b5b")
+	panel_style.set_border_width_all(5)
+	panel_style.set_corner_radius_all(14)
+	panel.add_theme_stylebox_override("panel", panel_style)
+	target_range_hint_layer.add_child(panel)
+
+	var title := Label.new()
+	title.position = Vector2(30, 28)
+	title.size = Vector2(460, 40)
+	title.text = "靶 场 提 示"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", Color("f3e7ba"))
+	panel.add_child(title)
+
+	var message := Label.new()
+	message.position = Vector2(30, 78)
+	message.size = Vector2(460, 52)
+	message.text = "点击左上角的阳光图标能刷新冷却值"
+	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	message.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	message.add_theme_font_size_override("font_size", 20)
+	message.add_theme_color_override("font_color", Color("fff1c4"))
+	panel.add_child(message)
+
+	## 操作区固定在弹窗底部，不受正文长度和窗口缩放影响。
+	panel.add_child(_boss_dialog_button("确认", Vector2(73, 168), _dismiss_target_range_hint))
+	panel.add_child(_boss_dialog_button("关闭", Vector2(277, 168), _dismiss_target_range_hint))
+
+
+func _dismiss_target_range_hint() -> void:
+	if not is_instance_valid(target_range_hint_layer):
+		return
+	target_range_hint_layer.queue_free()
+	target_range_hint_layer = null
+	target_range_hint_dismissed.emit()
 
 ## 主游戏管理器事件总线订阅
 func event_bus_subscribe():

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ResourceLevelData" format=3]
+
+[ext_resource type="Script" uid="uid://bjt3l56exxmdw" path="res://scripts/resources/level/level_data.gd" id="1_level"]
+
+[resource]
+script = ExtResource("1_level")
+game_BG = 1
+game_BGM = 1
+is_day = false
+is_day_sun = false
+monster_mode = 0
+max_choosed_card_num = 15
+start_sun = 5757
+is_sun_value_locked = true
+metadata/_custom_type_script = "uid://bjt3l56exxmdw"

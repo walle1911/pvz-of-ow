@@ -5,6 +5,7 @@
 
 [node name="MainGameDebug9999Night" unique_id=1562171854 instance=ExtResource("1_front")]
 game_para = ExtResource("2_level")
+test_dynamic_card_slot_expansion = true
 metadata/_edit_vertical_guides_ = [285.0]
 metadata/_edit_horizontal_guides_ = [53.0]
 

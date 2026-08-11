@@ -606,8 +606,8 @@ static func lane_distribution(group: Dictionary, rows: int) -> Array[float]:
 	return result
 
 
-static func simulate_group(group: Dictionary, wave_start: float, seed: int, rows: int, wave_id := "", group_id := "") -> Array[Dictionary]:
-	var state := _seed_state(seed)
+static func simulate_group(group: Dictionary, wave_start: float, seed_value: int, rows: int, wave_id := "", group_id := "") -> Array[Dictionary]:
+	var state := _seed_state(seed_value)
 	var spawn_time := wave_start + float(group.get("startDelay", 0.0))
 	var result: Array[Dictionary] = []
 	var count := maxi(0, int(group.get("count", 0)))
@@ -723,8 +723,8 @@ static func _latest_spawn_time(group: Dictionary) -> float:
 	return float(group.get("startDelay", 0.0)) + float(count - 1) * interval
 
 
-static func _seed_state(seed: int) -> int:
-	var state := seed & 0x7fffffff
+static func _seed_state(seed_value: int) -> int:
+	var state := seed_value & 0x7fffffff
 	return state if state != 0 else 1
 
 

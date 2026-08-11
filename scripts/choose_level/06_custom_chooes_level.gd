@@ -11,6 +11,11 @@ const DEVELOPER_GIFT_TEST_LEVELS: Array[Dictionary] = [
 		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_01_day_test.tres"),
 	},
 	{
+		"id": "developer_test_night",
+		"name": "黑夜测试",
+		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_02_night_test.tres"),
+	},
+	{
 		"id": "developer_test_pool",
 		"name": "泳池测试",
 		"resource": preload("res://resources/level_date_resource/mode_adventure/adventure_03_pool_test.tres"),
@@ -63,8 +68,12 @@ func _build_developer_gift_test_levels() -> void:
 	var entries: Array[Dictionary] = []
 	for definition in DEVELOPER_GIFT_TEST_LEVELS:
 		var source := definition["resource"] as ResourceLevelData
+		var target_range_para := source.duplicate_runtime()
+		## 靶场只允许玩家主动放置测试僵尸，绝不启动右侧自然波次。
+		target_range_para.is_target_range = true
+		target_range_para.monster_mode = ConstLevelData.E_MonsterMode.Null
 		entries.append({
-			"game_para": source.duplicate_runtime(),
+			"game_para": target_range_para,
 			"id": definition["id"],
 			"name": definition["name"],
 			"editor_source": {},

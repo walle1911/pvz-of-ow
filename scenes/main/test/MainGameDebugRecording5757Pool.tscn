@@ -6,9 +6,8 @@
 
 [node name="MainGameDebugRecording5757Pool" instance=ExtResource("1_pool")]
 game_para = ExtResource("2_level")
-director_placed_zombie_scale = 0.8
+test_dynamic_card_slot_expansion = true
 
 [node name="RecordingDebugController" type="Node" parent="." index="18"]
 process_mode = 3
 script = ExtResource("3_controller")
-talon_wave_lane_count = 2

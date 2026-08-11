@@ -8,31 +8,13 @@ script = ExtResource("2_gwdva")
 game_sences = 1
 game_BG = 3
 game_BGM = 3
+is_fog = true
 is_rain = true
 is_day = false
 is_day_sun = false
 zombie_multy = 4
 zombie_refresh_types = Array[int]([515])
-is_seed_rain = true
-all_card_plant_type_probability_seed_rain = Dictionary[int, int]({
-501: 2,
-503: 1,
-504: 2,
-506: 2,
-508: 2,
-517: 8,
-518: 1,
-519: 2,
-521: 1,
-523: 2,
-526: 1,
-528: 2,
-544: 1
-})
-card_order_plant_seed_rain = Dictionary[int, int]({
-0: 516,
-5: 543
-})
+max_choosed_card_num = 15
 start_sun = 5757
 is_sun_value_locked = true
 metadata/_custom_type_script = "uid://bjt3l56exxmdw"

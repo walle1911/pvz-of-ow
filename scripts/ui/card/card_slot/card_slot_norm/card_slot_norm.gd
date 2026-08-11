@@ -9,11 +9,21 @@ class_name CardSlotNorm
 @onready var card_slot_candidate: CardSlotCandidate = $CardSlotCandidate
 ## 出战卡槽节点
 @onready var card_slot_battle: CardSlotBattle = $CardSlotBattle
+var director_pages_enabled := false
 
 
 ## 初始化出战卡槽，管理器调用
 func init_card_slot_norm(game_para:ResourceLevelData):
-	card_slot_battle.init_card_slot_battle(game_para.max_choosed_card_num, game_para.start_sun)
+	var initial_card_slot_num := game_para.max_choosed_card_num
+	if is_instance_valid(Global.main_game) \
+	and Global.main_game.is_test \
+	and Global.main_game.test_dynamic_card_slot_expansion:
+		initial_card_slot_num = Global.main_game.test_max_choosed_card_num
+	card_slot_battle.init_card_slot_battle(
+		game_para.max_choosed_card_num,
+		game_para.start_sun,
+		initial_card_slot_num
+	)
 
 	for i in card_slot_candidate.all_card_candidate_containers_plant:
 		var card:Card = card_slot_candidate.all_card_candidate_containers_plant[i].card
@@ -28,6 +38,17 @@ func init_card_slot_norm(game_para:ResourceLevelData):
 	## 初始化预选卡
 	if game_para.pre_choosed_card_list_plant or game_para.pre_choosed_card_list_zombie:
 		init_pre_choosed_card(game_para.pre_choosed_card_list_plant, game_para.pre_choosed_card_list_zombie)
+
+
+func enable_director_card_pages() -> void:
+	director_pages_enabled = true
+	card_slot_battle.enable_director_card_pages()
+
+
+func toggle_director_card_page() -> bool:
+	if not director_pages_enabled:
+		return false
+	return card_slot_battle.toggle_director_card_page()
 
 # 重选上次卡片
 func _on_re_card_button_pressed() -> void:
@@ -176,6 +197,9 @@ func _on_card_click(card:Card):
 	if Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.CHOOSE_CARD\
 		and Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.RE_CHOOSE_CARD:
 		return
+	if director_pages_enabled:
+		_on_director_card_click(card)
+		return
 	## 达到当前关卡上限后，未选卡片不再响应点击；已选卡片仍可取消。
 	if not card.is_choosed_pre_card \
 	and card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit:
@@ -184,6 +208,7 @@ func _on_card_click(card:Card):
 	# 如果card被选择，取消选取，后面的card向前移动
 	if card.is_choosed_pre_card:
 		card.is_choosed_pre_card = false
+		card.visible = true
 		var card_idx = card_slot_battle.curr_cards.find(card)
 		card_slot_battle.curr_cards.erase(card)
 		for i in range(card_idx, card_slot_battle.curr_cards.size()):
@@ -199,6 +224,37 @@ func _on_card_click(card:Card):
 		card.is_choosed_pre_card = true
 		card_slot_battle.curr_cards.append(card)
 		move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
+
+
+func _on_director_card_click(card: Card) -> void:
+	var card_page := card_slot_battle.director_page_for_card(card)
+	if not card.is_choosed_pre_card and card_page != card_slot_battle.director_current_page:
+		SoundManager.play_other_SFX("buzzer")
+		return
+	SoundManager.play_other_SFX("tap")
+	if card.is_choosed_pre_card:
+		card.is_choosed_pre_card = false
+		card.visible = true
+		var page_cards := card_slot_battle.director_cards_on_page(card_page)
+		var page_index := page_cards.find(card)
+		card_slot_battle.curr_cards.erase(card)
+		page_cards.erase(card)
+		for i in range(maxi(page_index, 0), page_cards.size()):
+			move_card_to(page_cards[i], card_slot_battle.cards_placeholder[i])
+		await move_card_to(card, card.card_candidate_container)
+	else:
+		if card_slot_battle.director_page_is_full(card):
+			SoundManager.play_other_SFX("buzzer")
+			return
+		var placeholder_index := card_slot_battle.director_placeholder_index_for_new_card(card)
+		if placeholder_index >= card_slot_battle.cards_placeholder.size():
+			var new_placeholder := card_slot_battle.add_card_placeholder()
+			if not is_instance_valid(new_placeholder):
+				return
+		card.is_choosed_pre_card = true
+		card_slot_battle.curr_cards.append(card)
+		await move_card_to(card, card_slot_battle.cards_placeholder[placeholder_index])
+	card_slot_battle.refresh_director_card_page()
 
 ## 游戏选卡阶段时，模仿者卡片被点击
 func _on_imitater_card_click(card:Card):
@@ -219,31 +275,53 @@ func _on_imitater_card_click(card:Card):
 		return
 	## 达到当前关卡上限后，未选模仿者卡片不再响应点击。
 	if not card.is_choosed_pre_card \
-	and card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit:
+	and (
+		card_slot_battle.director_page_is_full(card)
+		if director_pages_enabled
+		else card_slot_battle.curr_cards.size() >= card_slot_battle.card_selection_limit
+	):
+		return
+	if director_pages_enabled \
+	and not card.is_choosed_pre_card \
+	and card_slot_battle.director_current_page != 0:
+		SoundManager.play_other_SFX("buzzer")
 		return
 	SoundManager.play_other_SFX("tap")
 	# 如果card被选择，取消选取，后面的card向前移动
 	if card.is_choosed_pre_card:
 		card.is_choosed_pre_card = false
-		var card_idx = card_slot_battle.curr_cards.find(card)
+		card.visible = true
+		var card_idx = (
+			card_slot_battle.director_cards_on_page(0).find(card)
+			if director_pages_enabled
+			else card_slot_battle.curr_cards.find(card)
+		)
 		card_slot_battle.curr_cards.erase(card)
-		for i in range(card_idx, card_slot_battle.curr_cards.size()):
-			move_card_to(card_slot_battle.curr_cards[i], card_slot_battle.cards_placeholder[i])
+		var remaining_cards := card_slot_battle.director_cards_on_page(0) if director_pages_enabled else card_slot_battle.curr_cards
+		for i in range(card_idx, remaining_cards.size()):
+			move_card_to(remaining_cards[i], card_slot_battle.cards_placeholder[i])
 		await move_card_to(card, card_slot_candidate.card_imitater)
 		card.reparent(card.card_candidate_container, false)
 		card_slot_candidate.imitater_be_choosed_cancel()
 
 	## 如果没被选取，放在最后一位；达到当前关卡上限则拒绝选择。
 	else:
-		if card_slot_battle.curr_cards.size() >= card_slot_battle.cards_placeholder.size():
+		var placeholder_index := (
+			card_slot_battle.director_placeholder_index_for_new_card(card)
+			if director_pages_enabled
+			else card_slot_battle.curr_cards.size()
+		)
+		if placeholder_index >= card_slot_battle.cards_placeholder.size():
 			var new_placeholder = card_slot_battle.add_card_placeholder()
 			if not is_instance_valid(new_placeholder):
 				return
 		card.is_choosed_pre_card = true
 		card_slot_battle.curr_cards.append(card)
 		card.reparent(card_slot_candidate.card_imitater, false)
-		move_card_to(card, card_slot_battle.cards_placeholder[card_slot_battle.curr_cards.size()-1])
+		move_card_to(card, card_slot_battle.cards_placeholder[placeholder_index])
 		card_slot_candidate.imitater_be_choosed()
+	if director_pages_enabled:
+		card_slot_battle.refresh_director_card_page.call_deferred()
 
 
 ## 移动card到目标点位置
@@ -269,6 +347,7 @@ func move_card_to(card:Card, target_parent):
 	card.position = Vector2.ZERO
 
 	card.button.mouse_filter = Control.MOUSE_FILTER_PASS
+	card_slot_battle.refresh_director_card_page()
 
 ## 选卡结束后，卡片断开连接，游戏开始后修改点击信号连接
 func card_disconnect_click_in_choose():

@@ -395,6 +395,7 @@ script_list_meta = {
 "res://scripts/resources/save_game/save_game_main_game.gd": [-1, -1],
 "res://scripts/resources/save_game/save_game_plant_cell.gd": [-1, -1],
 "res://scripts/resources/save_game/save_game_plant_cell_manager.gd": [-1, -1],
+"res://scripts/resources/user_data_paths.gd": [-1, -1],
 "res://scripts/start_menu/garden_water_flag.gd": [-1, -1],
 "res://scripts/start_menu/one_user_button.gd": [-1, -1],
 "res://scripts/start_menu/overwatch_streamer_id_library.gd": [-1, -1],
@@ -465,6 +466,7 @@ script_list_meta = {
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
 "res://tests/test_plant_balance_smoke.gd": [-1, -1],
 "res://tests/test_sigma_gravity_field_runtime.gd": [-1, -1],
+"res://tests/test_user_data_paths.gd": [-1, -1],
 "res://tests/test_wuyang_guided_bullet_runtime.gd": [-1, -1]
 }
 line_number_show = true

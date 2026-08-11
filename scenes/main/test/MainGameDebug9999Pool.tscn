@@ -5,6 +5,7 @@
 
 [node name="MainGameDebug9999Pool" unique_id=943140564 instance=ExtResource("1_back")]
 game_para = ExtResource("2_level")
+test_dynamic_card_slot_expansion = true
 
 [node name="PlantCell" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
 plant_in_cell = {
