@@ -81,6 +81,10 @@ func encyclopedia():
 func resume_game():
 	EventBus.push_event("change_is_mouse_visibel_on_hammer", true)
 
+	var recording_director := Global.main_game.get_node_or_null(^"RecordingDebugController")
+	if is_instance_valid(recording_director) and recording_director.has_method("prepare_restart_clear"):
+		recording_director.call("prepare_restart_clear")
+
 	Global.main_game.re_main_game()
 
 	TreePauseManager.end_tree_pause_clear_all_pause_factors()

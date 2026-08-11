@@ -1,7 +1,7 @@
 extends Node
 
 ## 高级录制导演：A 为群像幕，Q/W/E/R/T/Y/U/I 为八个分幕。
-## A/Q～I 会先保存当前编排再切幕；P 独立切换全体角色暂停。
+## A/Q～I 切幕永不保存运行现场；群像幕按 O 冻结整体母版并正式运行。
 ## Z/X/C 分别在射手后方、前方、前方第二格补种天使、火炬和拉玛刹菜问。
 ## Shift 仅在录制导演场景切换顶部植物/僵尸预选框，普通关卡不启用。
 
@@ -14,9 +14,13 @@ const OVERVIEW_STAGE := -1
 const BACKGROUND_OPACITY := 0.32
 const DIRECTOR_SUN_VALUE := 5757
 const DIRECTOR_ZOMBIE_SCALE := 0.8
+const OVERVIEW_HORDE_PER_LANE := 12
+const OVERVIEW_HORDE_SPACING := 42.0
+const OVERVIEW_HORDE_BOSS_TYPES: Array[int] = [25]
 const RECORDING_STAGE_META := &"recording_freeze_group"
 const RECORDING_FROZEN_META := &"recording_is_frozen"
 const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"
+const RESTART_CLEAR_META := &"recording_director_clear_on_restart"
 
 var main_game: MainGameManager
 var selected_stage := 0
@@ -25,6 +29,8 @@ var frozen_character_states: Dictionary[int, Dictionary] = {}
 var frozen_bullet_states: Dictionary[int, Dictionary] = {}
 var transition_running := false
 var is_manual_pause_active := false
+var formal_running := false
+var runtime_master_layout: Dictionary = {}
 var sync_elapsed := 0.0
 var gray_material: ShaderMaterial
 
@@ -73,10 +79,14 @@ func _ready() -> void:
 	_enable_director_card_pages()
 	_connect_manual_placement()
 	_update_lane_range()
-	if FileAccess.file_exists(UserPaths.read_path("recording_5757_director_layout.json")):
+	var clear_for_restart := bool(get_tree().get_meta(RESTART_CLEAR_META, false))
+	if clear_for_restart:
+		get_tree().remove_meta(RESTART_CLEAR_META)
+	elif FileAccess.file_exists(UserPaths.read_path("recording_5757_director_layout.json")):
 		var saved_layout := _read_layout()
 		if not saved_layout.is_empty():
 			await _restore_layout(saved_layout)
+			runtime_master_layout = saved_layout.duplicate(true)
 	_activate_stage(0, false)
 	_refresh_targets()
 	_show_window.call_deferred()
@@ -107,6 +117,10 @@ func _relaunch_standalone_if_embedded_in_editor() -> bool:
 	return true
 
 
+func prepare_restart_clear() -> void:
+	get_tree().set_meta(RESTART_CLEAR_META, true)
+
+
 func _process(delta: float) -> void:
 	_enforce_sun_value()
 	_process_f2()
@@ -129,6 +143,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.keycode == KEY_P or event.physical_keycode == KEY_P:
 		_toggle_all_characters_paused()
+		get_viewport().set_input_as_handled()
+		return
+	if event.keycode == KEY_O or event.physical_keycode == KEY_O:
+		_start_formal_overview()
 		get_viewport().set_input_as_handled()
 		return
 	if event.keycode == KEY_Z:
@@ -233,11 +251,53 @@ func _activate_stage(stage: int, show_feedback := true) -> void:
 func _save_and_switch_stage(stage: int) -> void:
 	if stage < OVERVIEW_STAGE or stage >= STAGE_COUNT or transition_running:
 		return
-	var previous_stage := selected_stage
+	if stage == selected_stage:
+		return
+	if runtime_master_layout.is_empty():
+		runtime_master_layout = _read_layout().duplicate(true)
+	if runtime_master_layout.is_empty():
+		_feedback("还没有整体快照。请先点击“保存整体快照”，再切幕。")
+		return
+	await _rebuild_formal_stage(stage)
+	_feedback("已从最后一次保存的整体快照重建 %s；上一幕发生的一切均未保存。" % _stage_name(stage))
+
+
+func _start_formal_overview() -> void:
+	if transition_running:
+		return
+	if selected_stage != OVERVIEW_STAGE:
+		_feedback("O 只能在 A 群像幕下正式开始。请先按 A。")
+		return
+	if not is_instance_valid(main_game) \
+	or main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
+		_feedback("进入草坪并开始游戏后，才能在 A 群像幕按 O 正式开始。")
+		return
 	if not _write_layout(false):
 		return
+	runtime_master_layout = _read_layout().duplicate(true)
+	if runtime_master_layout.is_empty():
+		_feedback("整体快照为空，无法正式开始。")
+		return
+	formal_running = true
+	is_manual_pause_active = false
+	await _rebuild_formal_stage(OVERVIEW_STAGE)
+	_feedback("O：正式开始。整体母版已持久化；右侧每行已生成 %d 只僵尸。" % OVERVIEW_HORDE_PER_LANE)
+
+
+func _rebuild_formal_stage(stage: int) -> void:
+	if transition_running or runtime_master_layout.is_empty():
+		return
+	transition_running = true
+	_hold_current_frame(true)
+	_clear_transient_nodes()
+	await _restore_layout(runtime_master_layout)
 	_activate_stage(stage, false)
-	_feedback("已保存 %s，并切换到 %s。" % [_stage_name(previous_stage), _stage_name(stage)])
+	if formal_running and stage == OVERVIEW_STAGE:
+		_spawn_overview_horde()
+	_hold_current_frame(false)
+	transition_running = false
+	_refresh_targets()
+	_update_panel()
 
 
 func _stage_name(stage: int) -> String:
@@ -485,6 +545,14 @@ func _restore_bullet(instance_id: int) -> void:
 	frozen_bullet_states.erase(instance_id)
 
 
+func _clear_flying_bullets() -> void:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.bullets):
+		return
+	for bullet in main_game.bullets.get_children():
+		bullet.queue_free()
+	frozen_bullet_states.clear()
+
+
 func _current_characters() -> Array[Character000Base]:
 	var result: Array[Character000Base] = []
 	if not is_instance_valid(main_game):
@@ -542,7 +610,12 @@ func _capture_layout() -> Dictionary:
 			"x": zombie.global_position.x, "y": zombie.global_position.y,
 			"hp": int(zombie.hp_component.curr_hp), "scale_x": zombie.scale.x, "scale_y": zombie.scale.y, "stage": stage,
 		})
-	return {"version": 2, "plants": plants, "zombies": zombies}
+	return {
+		"version": 3,
+		"saved_at_unix": int(Time.get_unix_time_from_system()),
+		"plants": plants,
+		"zombies": zombies,
+	}
 
 
 func _restore_layout(layout: Dictionary) -> void:
@@ -611,14 +684,19 @@ func _restore_all_frozen_state_before_rebuild() -> void:
 
 
 func _write_layout(show_feedback := true) -> bool:
-	var layout := _capture_layout()
+	var layout := runtime_master_layout.duplicate(true) if formal_running else _capture_layout()
+	if layout.is_empty():
+		_feedback("保存整体快照失败：当前没有可保存的编排。")
+		return false
 	var file := FileAccess.open(LAYOUT_PATH, FileAccess.WRITE)
 	if file == null:
 		_feedback("保存编排失败：%s" % FileAccess.get_open_error())
 		return false
 	file.store_string(JSON.stringify(layout, "\t"))
+	if not formal_running:
+		runtime_master_layout = layout.duplicate(true)
 	if show_feedback:
-		_feedback("已保存 %s 当前编排。" % _stage_name(selected_stage))
+		_feedback("已持久化保存整体快照（八幕植物、僵尸、位置、血量和幕归属）。")
 	return true
 
 
@@ -631,7 +709,7 @@ func _read_layout() -> Dictionary:
 	return parsed as Dictionary if parsed is Dictionary else {}
 
 
-func _reload_layout_for_edit() -> void:
+func _reload_saved_stage_for_edit() -> void:
 	var layout := _read_layout()
 	if layout.is_empty():
 		_feedback("还没有保存过编排。")
@@ -639,14 +717,101 @@ func _reload_layout_for_edit() -> void:
 	if transition_running:
 		return
 	transition_running = true
+	formal_running = false
+	runtime_master_layout = layout.duplicate(true)
 	_hold_current_frame(true)
 	_clear_transient_nodes()
-	await _restore_layout(layout)
+	await _restore_stage_from_layout(layout, selected_stage)
+	is_manual_pause_active = true
+	_apply_director_state()
+	_sync_bullets()
 	_hold_current_frame(false)
 	transition_running = false
 	_refresh_targets()
+	_update_panel()
+	_feedback("已将 %s 恢复到上次保存的样子，并进入暂停状态。" % _stage_name(selected_stage))
+
+
+func _reload_entire_layout_for_edit() -> void:
+	var layout := _read_layout()
+	if layout.is_empty():
+		_feedback("还没有保存过整体快照。")
+		return
+	if transition_running:
+		return
+	transition_running = true
+	formal_running = false
+	runtime_master_layout = layout.duplicate(true)
+	_hold_current_frame(true)
+	_clear_transient_nodes()
+	await _restore_layout(layout)
+	is_manual_pause_active = true
 	_activate_stage(selected_stage, false)
-	_feedback("已恢复保存的全部幕编排。")
+	_sync_bullets()
+	_hold_current_frame(false)
+	transition_running = false
+	_refresh_targets()
+	_update_panel()
+	_feedback("已恢复持久化整体快照，并进入暂停编辑状态。")
+
+
+func _restore_stage_from_layout(layout: Dictionary, stage: int) -> void:
+	var layout_version := int(layout.get("version", 1))
+	for character in _current_characters():
+		if _character_stage(character) != stage:
+			continue
+		var instance_id := character.get_instance_id()
+		membership_by_id.erase(instance_id)
+		frozen_character_states.erase(instance_id)
+		character.is_can_death_language = false
+		character.character_death_disappear()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	for plant_data_value in layout.get("plants", []):
+		if not plant_data_value is Dictionary:
+			continue
+		var data: Dictionary = plant_data_value
+		if int(data.get("stage", 0)) != stage:
+			continue
+		var row := int(data.get("row", -1))
+		var col := int(data.get("col", -1))
+		if row < 0 or row >= main_game.plant_cell_manager.all_plant_cells.size():
+			continue
+		if col < 0 or col >= main_game.plant_cell_manager.all_plant_cells[row].size():
+			continue
+		var plant_type := int(data.get("plant_type", 0)) as CharacterRegistry.PlantType
+		if not Global.character_registry.PlantInfo.has(plant_type):
+			continue
+		var plant := main_game.plant_cell_manager.all_plant_cells[row][col].create_plant(
+			plant_type, false, false, bool(data.get("imitater", false))
+		) as Plant000Base
+		if is_instance_valid(plant):
+			_apply_hp(plant, int(data.get("hp", 0)))
+			_assign_character(plant, stage)
+	for zombie_data_value in layout.get("zombies", []):
+		if not zombie_data_value is Dictionary:
+			continue
+		var data: Dictionary = zombie_data_value
+		if int(data.get("stage", 0)) != stage:
+			continue
+		var lane := int(data.get("lane", -1))
+		if lane < 0 or lane >= main_game.zombie_manager.all_zombie_rows.size():
+			continue
+		var zombie_type := int(data.get("zombie_type", 0)) as CharacterRegistry.ZombieType
+		var zombie := _spawn_zombie(
+			zombie_type,
+			lane,
+			Vector2(float(data.get("x", 0.0)), float(data.get("y", 0.0)))
+		)
+		if is_instance_valid(zombie):
+			zombie.scale = Vector2(float(data.get("scale_x", 1.0)), float(data.get("scale_y", 1.0)))
+			if layout_version >= 2:
+				zombie.set_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META, true)
+			else:
+				zombie.remove_meta(RECORDING_DIRECTOR_SCALE_APPLIED_META)
+				_ensure_director_zombie_scale(zombie)
+			_apply_hp(zombie, int(data.get("hp", 0)))
+			_assign_character(zombie, stage)
 
 
 func _spawn_zombie(zombie_type: CharacterRegistry.ZombieType, lane: int, global_position: Vector2) -> Zombie000Base:
@@ -662,6 +827,54 @@ func _spawn_zombie(zombie_type: CharacterRegistry.ZombieType, lane: int, global_
 	var zombie := main_game.zombie_manager.create_norm_zombie(zombie_type, row, init_para, global_position)
 	_ensure_director_zombie_scale(zombie)
 	return zombie
+
+
+func _spawn_overview_horde() -> void:
+	if not is_instance_valid(main_game) or not is_instance_valid(main_game.zombie_manager):
+		return
+	var refresh_types: Array[int] = []
+	for zombie_type_value in main_game.zombie_manager.zombie_refresh_types:
+		var zombie_type := int(zombie_type_value)
+		if zombie_type == int(CharacterRegistry.ZombieType.Null) \
+		or zombie_type in OVERVIEW_HORDE_BOSS_TYPES \
+		or not Global.character_registry.ZombieInfo.has(zombie_type):
+			continue
+		refresh_types.append(zombie_type)
+	if refresh_types.is_empty():
+		refresh_types = [
+			int(CharacterRegistry.ZombieType.Z501Norm),
+			int(CharacterRegistry.ZombieType.Z503Cone),
+			int(CharacterRegistry.ZombieType.Z505Bucket),
+		]
+	for lane in main_game.zombie_manager.all_zombie_rows.size():
+		var row: ZombieRow = main_game.zombie_manager.all_zombie_rows[lane]
+		var lane_types := _zombie_types_for_row(refresh_types, row.zombie_row_type)
+		if lane_types.is_empty():
+			continue
+		for index in OVERVIEW_HORDE_PER_LANE:
+			var zombie_type := lane_types[(lane + index) % lane_types.size()] as CharacterRegistry.ZombieType
+			var position := row.zombie_create_position.global_position
+			position.x += float(index) * OVERVIEW_HORDE_SPACING
+			var zombie := _spawn_zombie(zombie_type, lane, position)
+			if is_instance_valid(zombie):
+				_assign_character(zombie, OVERVIEW_STAGE)
+
+
+func _zombie_types_for_row(
+	zombie_types: Array[int],
+	row_type: CharacterRegistry.ZombieRowType
+) -> Array[int]:
+	var result: Array[int] = []
+	for zombie_type in zombie_types:
+		var allowed_row_type := Global.character_registry.get_zombie_info(
+			zombie_type as CharacterRegistry.ZombieType,
+			CharacterRegistry.ZombieInfoAttribute.ZombieRowType
+		) as CharacterRegistry.ZombieRowType
+		if allowed_row_type == CharacterRegistry.ZombieRowType.Both \
+		or row_type == CharacterRegistry.ZombieRowType.Both \
+		or allowed_row_type == row_type:
+			result.append(zombie_type)
+	return result
 
 
 func _clear_transient_nodes() -> void:
@@ -938,7 +1151,7 @@ func _build_director_window() -> void:
 	box.add_theme_constant_override("separation", 8)
 	scroll.add_child(box)
 	var title := Label.new()
-	title.text = "统一导演：A/Q～I 切幕，P 暂停/恢复"
+	title.text = "统一导演：A/Q～I 切幕，A 幕按 O 正式开始"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(title)
 	mode_label = Label.new()
@@ -1000,15 +1213,19 @@ func _build_director_window() -> void:
 	var save_row := HBoxContainer.new()
 	box.add_child(save_row)
 	var save_button := Button.new()
-	save_button.text = "保存当前幕"
+	save_button.text = "保存整体快照"
 	save_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	save_button.pressed.connect(_write_layout)
 	save_row.add_child(save_button)
+	var load_all_button := Button.new()
+	load_all_button.text = "恢复整体快照"
+	load_all_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	load_all_button.pressed.connect(_reload_entire_layout_for_edit)
+	save_row.add_child(load_all_button)
 	var load_button := Button.new()
-	load_button.text = "恢复已保存编排"
-	load_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	load_button.pressed.connect(_reload_layout_for_edit)
-	save_row.add_child(load_button)
+	load_button.text = "恢复当前幕"
+	load_button.pressed.connect(_reload_saved_stage_for_edit)
+	box.add_child(load_button)
 	feedback_label = Label.new()
 	feedback_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(feedback_label)
@@ -1103,11 +1320,19 @@ func _update_panel() -> void:
 	if not is_instance_valid(mode_label):
 		return
 	mode_label.text = (
-		"⏸ P 全体暂停"
+		"● 正式运行 · ⏸ P 全体暂停"
+		if formal_running and is_manual_pause_active
+		else "● 正式运行 · ▶ 当前幕运行中"
+		if formal_running
+		else "⏸ P 全体暂停"
 		if is_manual_pause_active
-		else "▶ 当前幕运行中"
+		else "◇ 编排预览 · ▶ 当前幕运行中"
 	)
-	status_label.text = "当前：%s。新放置角色自动归入本幕；A/Q～I 保存并切幕，P 暂停或恢复全体。" % _stage_name(selected_stage)
+	status_label.text = (
+		"当前：%s。正式运行切幕会丢弃现场并从持久化整体母版重建；A 群像幕会重新生成逐行尸群。"
+		if formal_running
+		else "当前：%s。A/Q～I 切幕不会保存，始终从最后一次整体快照重建；A 幕按 O 正式开始。"
+	) % _stage_name(selected_stage)
 	stage_option.disabled = false
 	clear_stage_button.disabled = false
 	clear_stage_zombies_button.disabled = false

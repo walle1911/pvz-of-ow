@@ -53,8 +53,11 @@ func toggle_director_card_page() -> bool:
 # 重选上次卡片
 func _on_re_card_button_pressed() -> void:
 	Global.save_service.load_selected_cards()
+	var previous_director_page := card_slot_battle.director_current_page
 	for card_type_data:Dictionary in Global.global_game_state.selected_cards:
 		if card_type_data.has("plant_type"):
+			if director_pages_enabled:
+				card_slot_battle.show_director_card_page(0)
 			var plant_type:CharacterRegistry.PlantType = card_type_data["plant_type"]
 			## 如果是模仿者
 			if card_type_data.get("is_imitater", false):
@@ -69,10 +72,14 @@ func _on_re_card_button_pressed() -> void:
 					plant_container.card._on_button_pressed()
 
 		elif card_type_data.has("zombie_type"):
+			if director_pages_enabled:
+				card_slot_battle.show_director_card_page(1)
 			var zombie_type:CharacterRegistry.ZombieType = card_type_data["zombie_type"]
 			var zombie_container := _get_candidate_zombie_container(zombie_type)
 			if zombie_container != null and not zombie_container.card.is_choosed_pre_card:
 				zombie_container.card._on_button_pressed()
+	if director_pages_enabled:
+		card_slot_battle.show_director_card_page(previous_director_page)
 
 
 
@@ -102,6 +109,7 @@ func _on_texture_button_pressed() -> void:
 			card_type_data["zombie_type"] = card.card_zombie_type
 		else:
 			print("error:当前卡牌类型不为植物也不为僵尸")
+			continue
 		Global.global_game_state.selected_cards.append(card_type_data)
 
 	Global.save_service.save_selected_cards()
