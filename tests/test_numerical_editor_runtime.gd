@@ -67,7 +67,7 @@ func _run() -> void:
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_031_pumpkin_zarya.tscn", ".", "gravity_hold_duration")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_032_magnet_shroom_sombra.tscn", ".", "emp_duration")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_036_coffee_bean_ana.tscn", ".", "boost_duration")
-	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_037_garlic_mauga.tscn", ".", "chain_last_stand_duration")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_037_garlic_mauga.tscn", ".", "chain_skill_duration")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn", ".", "yellow_fume_chance")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_044_cattail_jetpack_cat.tscn", ".", "critical_knockback_distance")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "HpComponent", "max_hp")

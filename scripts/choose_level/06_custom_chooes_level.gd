@@ -72,6 +72,8 @@ func _build_developer_gift_test_levels() -> void:
 		## 靶场只允许玩家主动放置测试僵尸，绝不启动右侧自然波次。
 		target_range_para.is_target_range = true
 		target_range_para.monster_mode = ConstLevelData.E_MonsterMode.Null
+		## 靶场没有右侧自然僵尸，因此跳过马路僵尸预览和向右查看镜头。
+		target_range_para.look_show_zombie = false
 		entries.append({
 			"game_para": target_range_para,
 			"id": definition["id"],

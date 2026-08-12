@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://b0v7x61hxedb7"]
+
+[ext_resource type="Shader" uid="uid://cvvrnge3jt4gu" path="res://shaders/fx/force_field_wall.gdshader" id="1_shader"]
+
+[resource]
+shader = ExtResource("1_shader")
+shader_parameter/wall_color = Color(0.22, 0.58, 1, 1)
+shader_parameter/base_alpha = 0.42
+shader_parameter/pulse_speed = 0.7
+shader_parameter/pulse_amount = 0.035
+shader_parameter/scan_speed = 0.06
+shader_parameter/scan_strength = 0.018
+shader_parameter/scan_density = 3.0
+shader_parameter/edge_strength = 0.1

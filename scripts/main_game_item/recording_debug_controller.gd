@@ -1,7 +1,7 @@
 extends Node
 
-## 高级录制导演：A 为群像幕，Q/W/E/R/T/Y/U/I 为八个分幕。
-## A/Q～I 切幕永不保存运行现场；群像幕按 O 冻结整体母版并正式运行。
+## 高级录制导演：A 为群像幕，Q/W/E/R/T/Y/U/I 为八个分幕，B 为独立背景幕。
+## A/B/Q～I 切幕永不保存运行现场；群像幕按 O 冻结整体母版并正式运行。
 ## Z/X 分别在射手后方、前方补种天使与火炬；C 在右数第三列整列补种拉玛刹菜问。
 ## Shift 仅在录制导演场景切换顶部植物/僵尸预选框，普通关卡不启用。
 
@@ -10,8 +10,9 @@ const AdventureLevelPresets := preload("res://scripts/resources/level/adventure_
 static var LAYOUT_PATH := UserPaths.path("recording_5757_director_layout.json")
 const SNAPSHOT_DIRECTORY := "recording_5757_snapshots"
 
-const STAGE_COUNT := 8
-const STAGE_KEYS: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I"]
+const STAGE_COUNT := 9
+const BACKGROUND_STAGE := 8
+const STAGE_KEYS: Array[String] = ["Q", "W", "E", "R", "T", "Y", "U", "I", "B"]
 const OVERVIEW_STAGE := -1
 const BACKGROUND_OPACITY := 0.32
 const DIRECTOR_SUN_VALUE := 5757
@@ -34,6 +35,7 @@ var transition_running := false
 var is_manual_pause_active := false
 var formal_running := false
 var runtime_master_layout: Dictionary = {}
+var hide_background_stage_after_return := false
 var overview_horde_spawn_elapsed := 0.0
 var overview_horde_spawn_serial := 0
 var overview_horde_refresh_types: Array[int] = []
@@ -92,6 +94,8 @@ func _ready() -> void:
 	# 每次进入录制场景都从空白现场开始。历史快照只列出供用户主动选择，绝不自动恢复。
 	await _restore_layout({"version": 3, "plants": [], "zombies": []})
 	runtime_master_layout.clear()
+	# 首次保存母版前允许在各编辑幕之间直接编排；保持全体暂停，避免切幕时把运行状态误当成布景。
+	is_manual_pause_active = true
 	_activate_stage(0, false)
 	_refresh_targets()
 	_refresh_snapshot_options()
@@ -173,6 +177,10 @@ func _input(event: InputEvent) -> void:
 		_plant_column_from_right(CharacterRegistry.PlantType.P052BonkChoyRamattra, 3, "拉玛刹菜问")
 		get_viewport().set_input_as_handled()
 		return
+	if event.keycode == KEY_B or event.physical_keycode == KEY_B:
+		_save_and_switch_stage(BACKGROUND_STAGE)
+		get_viewport().set_input_as_handled()
+		return
 	var stage := _stage_from_key(event.keycode)
 	if stage >= 0:
 		_save_and_switch_stage(stage)
@@ -250,8 +258,13 @@ func _save_and_switch_stage(stage: int) -> void:
 		return
 	if stage == selected_stage:
 		return
+	if stage == OVERVIEW_STAGE:
+		# B 是一次性特写分镜：直接从 B 返回 A 时，B 组整体退出画面。
+		# 从其他分镜进入 A 时，恢复默认的“B 植物半透明”全景布景。
+		hide_background_stage_after_return = selected_stage == BACKGROUND_STAGE
 	if runtime_master_layout.is_empty():
-		_feedback("本次启动还没有载入母版。请先保存新快照，或从历史快照中选择并恢复。")
+		_activate_stage(stage, false)
+		_feedback("已切换到 %s；首次保存整体快照前，静止编排会原样保留。" % _stage_name(stage))
 		return
 	await _rebuild_formal_stage(stage)
 	_feedback("已从最后一次保存的整体快照重建 %s；上一幕发生的一切均未保存。" % _stage_name(stage))
@@ -299,7 +312,11 @@ func _rebuild_formal_stage(stage: int) -> void:
 
 
 func _stage_name(stage: int) -> String:
-	return "A 群像幕" if stage == OVERVIEW_STAGE else "%s 幕" % STAGE_KEYS[stage]
+	if stage == OVERVIEW_STAGE:
+		return "A 群像幕"
+	if stage == BACKGROUND_STAGE:
+		return "B 独立背景幕"
+	return "%s 幕" % STAGE_KEYS[stage]
 
 
 func _toggle_all_characters_paused() -> void:
@@ -367,14 +384,30 @@ func _connect_runtime_creation_signals() -> void:
 
 
 func _on_plant_created(_plant_cell: PlantCell, plant: Plant000Base) -> void:
-	if is_instance_valid(plant):
-		_apply_character_state(plant)
+	if not is_instance_valid(plant):
+		return
+	## 玩法生成的角色可在进入树前携带母体分幕；先登记归属再应用冻结状态，
+	## 否则 D.Va 幼体会在 start_baby_launch() 创建 Tween 前被当作群像角色冻结。
+	if plant.has_meta(RECORDING_STAGE_META):
+		var inherited_stage := int(plant.get_meta(RECORDING_STAGE_META, OVERVIEW_STAGE))
+		if inherited_stage >= OVERVIEW_STAGE and inherited_stage < STAGE_COUNT:
+			_assign_character(plant, inherited_stage)
+			return
+	_apply_character_state(plant)
 
 
 func _on_zombie_created(zombie: Zombie000Base) -> void:
 	_ensure_director_zombie_scale(zombie)
-	if is_instance_valid(zombie):
-		_apply_character_state(zombie)
+	if not is_instance_valid(zombie):
+		return
+	## Echo 等玩法生成的僵尸会在入树前携带母体分幕；将元数据同步进成员表，
+	## 避免它被默认当作 A 群像幕僵尸并在当前分幕隐藏。
+	if zombie.has_meta(RECORDING_STAGE_META):
+		var inherited_stage := int(zombie.get_meta(RECORDING_STAGE_META, OVERVIEW_STAGE))
+		if inherited_stage >= OVERVIEW_STAGE and inherited_stage < STAGE_COUNT:
+			_assign_character(zombie, inherited_stage)
+			return
+	_apply_character_state(zombie)
 
 
 func _ensure_director_zombie_scale(zombie: Zombie000Base) -> void:
@@ -409,7 +442,13 @@ func _apply_character_state(character: Character000Base) -> void:
 	var should_show := true
 	var is_background := false
 	if selected_stage == OVERVIEW_STAGE:
-		if character is Zombie000Base:
+		if stage == BACKGROUND_STAGE:
+			# A 的默认布景只保留半透明 B 植物；B 僵尸一律隐藏。
+			# 如果是直接从 B 返回 A，则 B 组整体隐藏。
+			should_run = false
+			should_show = not hide_background_stage_after_return and character is Plant000Base
+			is_background = should_show
+		elif character is Zombie000Base:
 			should_run = stage == OVERVIEW_STAGE
 			should_show = stage == OVERVIEW_STAGE
 		else:
@@ -581,7 +620,8 @@ func _apply_bullet_state(bullet: Bullet000Base) -> void:
 		source_stage = _character_stage(source_value)
 		bullet.set_meta(RECORDING_STAGE_META, source_stage)
 	var should_run := not is_manual_pause_active and (
-		selected_stage == OVERVIEW_STAGE or source_stage == selected_stage
+		(selected_stage == OVERVIEW_STAGE and source_stage != BACKGROUND_STAGE) \
+		or source_stage == selected_stage
 	)
 	if should_run:
 		_restore_bullet(instance_id)
@@ -1444,7 +1484,7 @@ func _build_director_window() -> void:
 	box.add_theme_constant_override("separation", 8)
 	scroll.add_child(box)
 	var title := Label.new()
-	title.text = "统一导演：A/Q～I 切幕，A 幕按 O 正式开始"
+	title.text = "统一导演：A/B/Q～I 切幕，A 幕按 O 正式开始"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(title)
 	mode_label = Label.new()
@@ -1454,7 +1494,11 @@ func _build_director_window() -> void:
 	stage_option.add_item("A：群像幕")
 	stage_option.set_item_metadata(0, OVERVIEW_STAGE)
 	for stage in STAGE_COUNT:
-		stage_option.add_item("%s：第 %d 幕" % [STAGE_KEYS[stage], stage + 1])
+		stage_option.add_item(
+			"B：独立背景幕"
+			if stage == BACKGROUND_STAGE
+			else "%s：第 %d 幕" % [STAGE_KEYS[stage], stage + 1]
+		)
 		stage_option.set_item_metadata(stage + 1, stage)
 	stage_option.item_selected.connect(func(index: int):
 		_save_and_switch_stage(int(stage_option.get_item_metadata(index)))
@@ -1628,9 +1672,9 @@ func _update_panel() -> void:
 		else "◇ 编排预览 · ▶ 当前幕运行中"
 	)
 	status_label.text = (
-		"当前：%s。A 群像幕持续从右侧刷新尸群；P 暂停或 Q～I 分镜中不生成新僵尸。"
+		"当前：%s。A 群像幕持续从右侧刷新尸群；P 暂停或 B/Q～I 分镜中不生成新僵尸。"
 		if formal_running
-		else "当前：%s。A/Q～I 切幕不会保存，始终从最后一次整体快照重建；A 幕按 O 正式开始。"
+		else "当前：%s。A/B/Q～I 切幕不会保存，始终从最后一次整体快照重建；A 幕按 O 正式开始。"
 	) % _stage_name(selected_stage)
 	stage_option.disabled = false
 	clear_stage_button.disabled = false

@@ -33,6 +33,11 @@ func apply_pre_ready_data(data:Dictionary):
 	_wait_for_launch = data.get("wait_for_launch", false)
 	_baby_grow_time_left = data.get("baby_grow_time_left", baby_grow_time)
 	baby_scale = data.get("baby_scale", baby_scale)
+	## 导演关卡会在植物创建信号发出时立即冻结未归组角色。
+	## 幼体必须在进入场景树前继承母体分幕，才能正常完成弹射 Tween。
+	var recording_stage:Variant = data.get("recording_stage", null)
+	if recording_stage != null:
+		set_meta(&"recording_freeze_group", int(recording_stage))
 
 
 func ready_norm():
@@ -70,7 +75,8 @@ func _on_bomb_once():
 		baby_grow_time,
 		baby_scale,
 		baby_launch_duration,
-		baby_launch_height
+		baby_launch_height,
+		get_meta(&"recording_freeze_group", null)
 	)
 
 

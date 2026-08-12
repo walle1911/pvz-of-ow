@@ -121,14 +121,33 @@ func _create_imitater_zombie():
 		Zombie000Base.E_ZInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsNorm,
 		Zombie000Base.E_ZInitAttr.Lane:lane_index,
 	}
+	var init_zombie_special := GlobalUtils.get_special_zombie_callable(imitater_zombie_type, plant_cell)
+	var recording_stage:Variant = get_meta(&"recording_freeze_group", null)
+	## 导演模式会在僵尸创建信号发出时立即按分幕决定显隐。
+	## 因此复制体必须在 add_child() 和创建信号之前继承 Echo 本体的分幕。
+	var prepare_zombie := Callable(self, &"_prepare_imitater_zombie").bind(
+		init_zombie_special,
+		recording_stage
+	)
 	var zombie:Zombie000Base = Global.main_game.zombie_manager.create_norm_zombie(
 		imitater_zombie_type,
 		zombie_parent,
 		zombie_init_para,
 		Vector2(global_position.x, zombie_parent.zombie_create_position.global_position.y),
-		GlobalUtils.get_special_zombie_callable(imitater_zombie_type, plant_cell)
+		prepare_zombie
 	)
 	_apply_imitater_zombie_effects(zombie)
+
+
+func _prepare_imitater_zombie(
+	zombie:Zombie000Base,
+	init_zombie_special:Callable,
+	recording_stage:Variant
+):
+	if not init_zombie_special.is_null():
+		init_zombie_special.call(zombie)
+	if recording_stage != null:
+		zombie.set_meta(&"recording_freeze_group", int(recording_stage))
 
 
 func _apply_imitater_zombie_effects(zombie:Zombie000Base):

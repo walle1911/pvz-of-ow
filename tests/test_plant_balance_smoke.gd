@@ -28,7 +28,7 @@ const REQUIRED_PANEL_FIELDS := {
 	31: {".": ["gravity_trigger_hp_threshold", "gravity_hold_duration"]},
 	32: {".": ["emp_radius", "emp_duration", "emp_switch_interval", "emp_zombie_fight_radius"]},
 	36: {".": ["attack_speed_multiplier", "damage_multiplier", "damage_reduction", "instant_heal", "boost_duration"]},
-	37: {".": ["chain_lane_shift_time", "chain_lane_hold_time", "chain_pull_time", "chain_stink_pause", "chain_last_stand_duration"]},
+	37: {".": ["chain_skill_duration"]},
 	41: {"AttackComponent": ["giant_pea_attack_value", "giant_pea_knockback_distance"]},
 	43: {".": ["yellow_fume_chance", "yellow_fume_heal_value"]},
 	44: {".": ["critical_self_heal_amount", "critical_ally_heal_amount", "critical_knockback_distance"]},

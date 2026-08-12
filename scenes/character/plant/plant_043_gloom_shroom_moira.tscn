@@ -828,6 +828,8 @@ process_material = SubResource("ParticleProcessMaterial_52sk1")
 [node name="CreateSunComponent" type="Node2D" parent="." index="12" unique_id=397054629 node_paths=PackedStringArray("marker_2d_create_sun")]
 script = ExtResource("20_moira_sun")
 marker_2d_create_sun = NodePath("../Body/BodyCorrect/Marker2DCreateSun")
+create_time_range_first = Vector2(6, 25)
+create_time_range_other = Vector2(47, 50)
 
 [node name="CreateSunTimer" type="Timer" parent="CreateSunComponent" index="0" unique_id=1312435805]
 one_shot = true

@@ -1,10 +1,414 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dtpppl0won8v4"]
 
-[ext_resource type="PackedScene" path="res://scenes/main/test/MainGameDebugRecording5757.tscn" id="1_recording"]
+[ext_resource type="PackedScene" uid="uid://cb2h3unhc5d14" path="res://scenes/main/test/MainGameDebugRecording5757.tscn" id="1_recording"]
 [ext_resource type="Resource" path="res://resources/level_date_resource/mode_adventure/adventure_debug_recording_5757_night.tres" id="2_level"]
 
-[node name="MainGameDebugRecording5757Night" instance=ExtResource("1_recording")]
+[node name="MainGameDebugRecording5757Night" unique_id=2065746383 instance=ExtResource("1_recording")]
 game_para = ExtResource("2_level")
-test_dynamic_card_slot_expansion = true
+metadata/_edit_vertical_guides_ = [305.0, 163.0]
+metadata/_edit_horizontal_guides_ = [418.0, 82.0]
 
-[node name="RecordingDebugController" parent="." index="18"]
+[node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow1" index="0" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell2" parent="PlantCellsRoot/PlantCellsRow1" index="1" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell3" parent="PlantCellsRoot/PlantCellsRow1" index="2" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell4" parent="PlantCellsRoot/PlantCellsRow1" index="3" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell5" parent="PlantCellsRoot/PlantCellsRow1" index="4" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell6" parent="PlantCellsRoot/PlantCellsRow1" index="5" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell7" parent="PlantCellsRoot/PlantCellsRow1" index="6" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell8" parent="PlantCellsRoot/PlantCellsRow1" index="7" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell9" parent="PlantCellsRoot/PlantCellsRow1" index="8" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow2" index="0" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell2" parent="PlantCellsRoot/PlantCellsRow2" index="1" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell3" parent="PlantCellsRoot/PlantCellsRow2" index="2" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell4" parent="PlantCellsRoot/PlantCellsRow2" index="3" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell5" parent="PlantCellsRoot/PlantCellsRow2" index="4" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell6" parent="PlantCellsRoot/PlantCellsRow2" index="5" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell7" parent="PlantCellsRoot/PlantCellsRow2" index="6" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell8" parent="PlantCellsRoot/PlantCellsRow2" index="7" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell9" parent="PlantCellsRoot/PlantCellsRow2" index="8" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow3" index="0" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell2" parent="PlantCellsRoot/PlantCellsRow3" index="1" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell3" parent="PlantCellsRoot/PlantCellsRow3" index="2" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell4" parent="PlantCellsRoot/PlantCellsRow3" index="3" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell5" parent="PlantCellsRoot/PlantCellsRow3" index="4" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell6" parent="PlantCellsRoot/PlantCellsRow3" index="5" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell7" parent="PlantCellsRoot/PlantCellsRow3" index="6" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell8" parent="PlantCellsRoot/PlantCellsRow3" index="7" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell9" parent="PlantCellsRoot/PlantCellsRow3" index="8" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow4" index="0" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell2" parent="PlantCellsRoot/PlantCellsRow4" index="1" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell3" parent="PlantCellsRoot/PlantCellsRow4" index="2" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell4" parent="PlantCellsRoot/PlantCellsRow4" index="3" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell5" parent="PlantCellsRoot/PlantCellsRow4" index="4" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell6" parent="PlantCellsRoot/PlantCellsRow4" index="5" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell7" parent="PlantCellsRoot/PlantCellsRow4" index="6" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell8" parent="PlantCellsRoot/PlantCellsRow4" index="7" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell9" parent="PlantCellsRoot/PlantCellsRow4" index="8" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell1" parent="PlantCellsRoot/PlantCellsRow5" index="0" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell2" parent="PlantCellsRoot/PlantCellsRow5" index="1" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell3" parent="PlantCellsRoot/PlantCellsRow5" index="2" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell4" parent="PlantCellsRoot/PlantCellsRow5" index="3" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell5" parent="PlantCellsRoot/PlantCellsRow5" index="4" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell6" parent="PlantCellsRoot/PlantCellsRow5" index="5" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell7" parent="PlantCellsRoot/PlantCellsRow5" index="6" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell8" parent="PlantCellsRoot/PlantCellsRow5" index="7" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}
+
+[node name="PlantCell9" parent="PlantCellsRoot/PlantCellsRow5" index="8" node_paths=PackedStringArray("plant_in_cell")]
+plant_in_cell = {
+0: null,
+1: null,
+2: null,
+3: null,
+4: null
+}

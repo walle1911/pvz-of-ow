@@ -266,7 +266,11 @@ func _ready() -> void:
 				await get_tree().create_timer(1.0).timeout
 				no_choosed_card_start_game()
 		else:
-			main_game_start()
+			## 靶场跳过马路预览，但仍需保留正常选卡阶段。
+			if game_para.is_target_range and game_para.can_choosed_card:
+				card_manager.card_slot_appear_choose()
+			else:
+				main_game_start()
 
 
 func _show_target_range_hint() -> void:
@@ -464,7 +468,11 @@ func start_next_round_game():
 			await get_tree().create_timer(1.0).timeout
 			no_choosed_card_start_game()
 	else:
-		main_game_start()
+		## 多轮靶场同样跳过马路预览后直接进入重新选卡。
+		if game_para.is_target_range and game_para.can_choosed_card:
+			card_manager.card_slot_appear_choose()
+		else:
+			main_game_start()
 
 
 ## 下轮选卡时暂停游戏
@@ -492,8 +500,9 @@ func choosed_card_start_game():
 	main_game_progress = E_MainGameProgress.PREPARE
 	## 隐藏待选卡槽
 	await card_manager.card_slot_disappear_choose()
-	## 相机移动回游戏场景
-	await camera_2d.move_back_ori()
+	## 靶场镜头始终停在草坪，不需要空等返回镜头动画。
+	if not game_para.is_target_range:
+		await camera_2d.move_back_ori()
 	main_game_start()
 
 ## 选卡结束，开始游戏
@@ -510,8 +519,9 @@ func main_game_start():
 	if game_para.look_show_zombie:
 		zombie_manager.delete_prepare_show_zombies()
 
-	## 首次白天教学关先播放原版滚动铺草皮，再进入 Ready/Set/Plant。
-	await background_manager.play_sod_rollout_if_needed()
+	## 首次白天教学关先播放原版滚动铺草皮；靶场直接进入可操作状态。
+	if not game_para.is_target_range:
+		await background_manager.play_sod_rollout_if_needed()
 
 	## 开始天降阳光
 	if game_para.is_day_sun:
@@ -520,6 +530,13 @@ func main_game_start():
 	## 生成墓碑
 	if game_para.init_tombstone_num > 0:
 		plant_cell_manager.create_tombstone(game_para.init_tombstone_num)
+
+	if game_para.is_target_range:
+		main_game_progress = E_MainGameProgress.MAIN_GAME
+		card_manager.card_slot_update_main_game()
+		SoundManager.play_bgm(bgm_main_game)
+		zombie_manager.start_game()
+		return
 
 	## 等待1秒红字出现
 	await get_tree().create_timer(1.0).timeout

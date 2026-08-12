@@ -181,9 +181,7 @@ const SCRIPT_RULES := {
 		"gravity_hold_duration": "non_negative_seconds",
 	},
 	"res://scripts/character/plant/ow/plant_037_garlic_mauga.gd": {
-		"chain_lane_shift_time": "seconds", "chain_lane_hold_time": "seconds",
-		"chain_pull_time": "seconds", "chain_stink_pause": "seconds",
-		"chain_last_stand_duration": "seconds",
+		"chain_skill_duration": "seconds",
 	},
 	"res://scripts/character/zombie/original/zombie_009_jackson.gd": {"num_moon_walk": "non_negative_int"},
 	"res://scripts/character/zombie/ow/zombie_025_gargantuar_bob.gd": {"boss_throw_thresholds": "threshold_array"},

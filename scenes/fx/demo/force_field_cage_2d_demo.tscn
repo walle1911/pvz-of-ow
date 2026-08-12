@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/fx/force_field_cage_2d.tscn" id="1_cage"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ground"]
+bg_color = Color(0.08, 0.42, 0.18, 1)
+
+[node name="ForceFieldCage2DDemo" type="Node2D"]
+
+[node name="Ground" type="Panel" parent="."]
+z_index = -10
+offset_right = 1066.0
+offset_bottom = 600.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ground")
+
+[node name="BackCharacter" type="Polygon2D" parent="."]
+position = Vector2(500, 282)
+polygon = PackedVector2Array(-25, 35, -30, -35, -12, -82, 0, -98, 17, -80, 31, -30, 24, 35)
+color = Color(0.22, 0.26, 0.25, 1)
+
+[node name="FrontCharacter" type="Polygon2D" parent="."]
+position = Vector2(558, 360)
+polygon = PackedVector2Array(-25, 35, -30, -35, -12, -82, 0, -98, 17, -80, 31, -30, 24, 35)
+color = Color(0.32, 0.37, 0.34, 1)
+
+[node name="ForceFieldCage2D" parent="." instance=ExtResource("1_cage")]
+position = Vector2(533, 350)
+cage_size = Vector2(330, 330)
+shield_height = 165.0
+opening_side = 2
+opening_width = 0.0

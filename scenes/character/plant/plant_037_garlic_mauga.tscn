@@ -48,14 +48,12 @@ sprite_change = Array[NodePath]([NodePath("../Body/BodyCorrect/Anim_face")])
 sprite_change_texture = Array[Texture2D]([ExtResource("13_vggsd")])
 metadata/_custom_type_script = "uid://jl0nl4a234bc"
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mauga_mouse"]
+size = Vector2(80, 100)
+
 [node name="Plant037GarlicMauga" unique_id=1402278193 instance=ExtResource("1_34mm5")]
 script = ExtResource("2_5vkpm")
-chain_last_stand_duration = 4.0
-chain_lane_shift_time = 0.55
-chain_lane_hold_time = 1.0
-chain_pull_time = 0.75
-chain_stink_pause = 0.35
-chain_max_length = 70.0
+chain_skill_duration = 4.0
 plant_type = 37
 
 [node name="BodyCorrect" parent="Body" index="0"]
@@ -122,6 +120,13 @@ scale = Vector2(0.9, 0.9)
 texture = ExtResource("6_oxluj")
 centered = false
 
+[node name="Area2DMouse" type="Area2D" parent="Body" index="1"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2DMouse" index="0"]
+position = Vector2(0, -35)
+shape = SubResource("RectangleShape2D_mauga_mouse")
+
 [node name="HpComponent" parent="." index="3"]
 max_hp = 400
 
@@ -147,3 +152,4 @@ body_change = Array[ExtResource("11_eruay")]([SubResource("Resource_fgxvd"), Sub
 
 [connection signal="timeout" from="IceDecelerateTimer" to="." method="_on_ice_decelerate_timer_timeout"]
 [connection signal="timeout" from="IceFreezeTimer" to="." method="_on_ice_freeze_timer_timeout"]
+[connection signal="input_event" from="Body/Area2DMouse" to="." method="_on_area_2d_input_event"]
