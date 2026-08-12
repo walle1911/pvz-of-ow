@@ -45,8 +45,13 @@ var _is_ana_coffee_dual_card := false
 var _is_ana_coffee_mode := false
 var _ana_coffee_mode_toggle:TextureButton
 var _ana_coffee_mode_toggle_icon:TextureRect
+var _ana_coffee_mode_toggle_cool_mask:ProgressBar
 var _ana_coffee_preview_root:Node2D
 var _normal_coffee_preview_root:Node2D
+## 双卡当前这一轮共享冷却的总时长。切换形态只改变下一次使用的配置，不改变本轮冷却池。
+var _ana_coffee_shared_cool_duration := 0.0
+var _ana_coffee_cool_time := 0.0
+var _normal_coffee_cool_time := 0.0
 const ANA_COFFEE_CARD_TEXTURE := preload("res://assets/image/ui/Character_Card/CoffeeBean_Ana_Card.png")
 const NORMAL_COFFEE_CARD_TEXTURE := preload("res://assets/reanim/Coffeebean_head1.png")
 const MINI_SEED_PACKET_TEXTURE := preload("res://assets/image/ui/ui_card/SeedPacket_Larger.png")
@@ -68,6 +73,12 @@ func _ready() -> void:
 	if _is_ana_coffee_dual_card and is_instance_valid(character_static) and character_static.get_child_count() > 0:
 		_ana_coffee_preview_root = character_static.get_child(0) as Node2D
 	_apply_developer_plant_card_values()
+	if _is_ana_coffee_dual_card:
+		_ana_coffee_cool_time = cool_time
+		_normal_coffee_cool_time = Global.character_registry.get_plant_info(
+			CharacterRegistry.PlantType.P536CoffeeBean,
+			CharacterRegistry.PlantInfoAttribute.CoolTime
+		)
 	_original_cool_time = cool_time
 	_cool_mask.value = 0
 	if is_imitater:
@@ -91,6 +102,11 @@ func set_almanac_card():
 
 ## 改变卡片的冷却时间（测试时使用）
 func card_change_cool_time(new_cool_time:float):
+	if _is_ana_coffee_dual_card:
+		var active_base_cool_time := _ana_coffee_cool_time if _is_ana_coffee_mode else _normal_coffee_cool_time
+		var cooldown_scale := new_cool_time / active_base_cool_time if active_base_cool_time > 0.0 else 0.0
+		_ana_coffee_cool_time *= cooldown_scale
+		_normal_coffee_cool_time *= cooldown_scale
 	self.cool_time = new_cool_time
 	_cool_mask.value = 0
 
@@ -130,9 +146,12 @@ func _process(delta: float) -> void:
 	if _is_cooling:
 		_cool_timer -= delta
 		_cool_mask.value = _cool_timer
+		_sync_ana_coffee_toggle_cool_mask()
 		# 卡片冷却完成
 		if _cool_timer <= 0:
 			_is_cooling = false
+			_sync_ana_coffee_toggle_cool_mask()
+			_ana_coffee_shared_cool_duration = 0.0
 			_restore_squash_doomfist_card_visual()
 			judge_card_ready()
 
@@ -173,7 +192,14 @@ func _ensure_ana_coffee_toggle_in_battle() -> void:
 	_ana_coffee_mode_toggle_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_ana_coffee_mode_toggle_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_icon)
+
+	_ana_coffee_mode_toggle_cool_mask = _cool_mask.duplicate() as ProgressBar
+	_ana_coffee_mode_toggle_cool_mask.name = "SharedCooldownMask"
+	_ana_coffee_mode_toggle_cool_mask.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_ana_coffee_mode_toggle_cool_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_cool_mask)
 	_update_ana_coffee_toggle_visual()
+	_sync_ana_coffee_toggle_cool_mask()
 
 
 func _toggle_ana_coffee_mode() -> void:
@@ -190,11 +216,6 @@ func _set_ana_coffee_mode(use_ana:bool) -> void:
 	if not use_ana and not _ensure_normal_coffee_preview():
 		return
 
-	var old_cool_time := cool_time
-	var elapsed_cool_time := 0.0
-	if _is_cooling:
-		elapsed_cool_time = maxf(old_cool_time - _cool_timer, 0.0)
-
 	_is_ana_coffee_mode = use_ana
 	var next_plant_type := CharacterRegistry.PlantType.P036CoffeeBeanAna \
 		if use_ana else CharacterRegistry.PlantType.P536CoffeeBean
@@ -207,19 +228,15 @@ func _set_ana_coffee_mode(use_ana:bool) -> void:
 		next_plant_type,
 		CharacterRegistry.PlantInfoAttribute.SunCost
 	)
-	cool_time = Global.character_registry.get_plant_info(
-		next_plant_type,
-		CharacterRegistry.PlantInfoAttribute.CoolTime
-	)
+	cool_time = _ana_coffee_cool_time if use_ana else _normal_coffee_cool_time
 	_sync_ana_coffee_preview()
 	_update_ana_coffee_toggle_visual()
 
 	if _is_cooling:
-		_cool_timer = maxf(cool_time - elapsed_cool_time, 0.0)
+		# 正在进行的冷却属于双卡共享池，切换形态不得改变剩余时间或总时长。
+		_cool_mask.max_value = _ana_coffee_shared_cool_duration
 		_cool_mask.value = _cool_timer
-		if _cool_timer <= 0.0:
-			_is_cooling = false
-			_restore_squash_doomfist_card_visual()
+	_sync_ana_coffee_toggle_cool_mask()
 	_refresh_sun_and_ready_state_after_mode_switch()
 
 
@@ -258,6 +275,17 @@ func _update_ana_coffee_toggle_visual() -> void:
 	if is_instance_valid(_ana_coffee_mode_toggle_icon):
 		_ana_coffee_mode_toggle_icon.texture = NORMAL_COFFEE_CARD_TEXTURE if _is_ana_coffee_mode else ANA_COFFEE_CARD_TEXTURE
 	_ana_coffee_mode_toggle.tooltip_text = "切换为普通咖啡豆" if _is_ana_coffee_mode else "切换为安娜咖啡豆"
+
+
+func _sync_ana_coffee_toggle_cool_mask() -> void:
+	if not is_instance_valid(_ana_coffee_mode_toggle_cool_mask):
+		return
+	_ana_coffee_mode_toggle_cool_mask.visible = _is_cooling
+	if not _is_cooling:
+		_ana_coffee_mode_toggle_cool_mask.value = 0.0
+		return
+	_ana_coffee_mode_toggle_cool_mask.max_value = maxf(_ana_coffee_shared_cool_duration, 0.001)
+	_ana_coffee_mode_toggle_cool_mask.value = maxf(_cool_timer, 0.0)
 
 
 func _cancel_hand_if_this_card_is_selected() -> void:
@@ -305,6 +333,8 @@ func set_card_cool_end():
 	_cool_timer = 0
 	_cool_mask.value = _cool_timer
 	_is_cooling = false
+	_ana_coffee_shared_cool_duration = 0.0
+	_sync_ana_coffee_toggle_cool_mask()
 	_restore_squash_doomfist_card_visual()
 
 ## 卡片可以点击
@@ -337,9 +367,13 @@ func card_cool():
 	_is_cooling = true
 	_cool_mask.visible = true
 	_cool_timer = cool_time
+	if _is_ana_coffee_dual_card:
+		_ana_coffee_shared_cool_duration = cool_time
+		_cool_mask.max_value = _ana_coffee_shared_cool_duration
 	_cool_mask.value = cool_time
 	is_can_click = false
 	_is_ready_state = false
+	_sync_ana_coffee_toggle_cool_mask()
 
 func start_squash_doomfist_card_attack():
 	is_being_attacked_by_squash_doomfist = true
@@ -360,6 +394,9 @@ func hide_by_squash_doomfist():
 	_cool_mask.visible = true
 	_cool_timer = _original_cool_time
 	_cool_mask.value = _original_cool_time
+	if _is_ana_coffee_dual_card:
+		_ana_coffee_shared_cool_duration = _original_cool_time
+		_sync_ana_coffee_toggle_cool_mask()
 	is_can_click = false
 	_is_ready_state = false
 
