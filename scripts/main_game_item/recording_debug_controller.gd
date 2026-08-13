@@ -19,7 +19,8 @@ const DIRECTOR_SUN_VALUE := 5757
 const DIRECTOR_ZOMBIE_SCALE := 0.8
 const OVERVIEW_HORDE_INITIAL_PER_LANE := 1
 const OVERVIEW_HORDE_SPAWN_INTERVAL := 0.4
-const OVERVIEW_HORDE_BOSS_TYPES: Array[int] = [25]
+## Bob 与第三世界终局温斯顿只在正式冒险终局登场，不进入导演模式的循环尸群。
+const OVERVIEW_HORDE_BOSS_TYPES: Array[int] = [20, 25]
 const RECORDING_STAGE_META := &"recording_freeze_group"
 const RECORDING_FROZEN_META := &"recording_is_frozen"
 const RECORDING_DIRECTOR_SCALE_APPLIED_META := &"recording_director_scale_applied"

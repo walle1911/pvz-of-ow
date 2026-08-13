@@ -487,11 +487,15 @@ func be_chomper_eat(attack_value:int):
 	#await get_tree().process_frame
 	set_deferred("is_can_death_language", true)
 
-## 被倭瓜压
-func be_squash(attack_value:int=1800):
+## 被倭瓜压。force_death 用于毛加落地踩踏这类无视血量的处决。
+func be_squash(attack_value:int=1800, force_death:=false):
 	is_can_death_language = false
-	hp_component.Hp_loss(attack_value,BulletRegistry.AttackMode.Penetration, false, false)
+	if force_death:
+		hp_component.Hp_loss_death(false)
+	else:
+		hp_component.Hp_loss(attack_value,BulletRegistry.AttackMode.Penetration, false, false)
 	if is_death:
+		body.be_flattened_body()
 		queue_free()
 	#await get_tree().process_frame
 	set_deferred("is_can_death_language", true)

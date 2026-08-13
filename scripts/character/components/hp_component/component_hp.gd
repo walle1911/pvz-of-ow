@@ -21,7 +21,10 @@ var is_death := false
 var death_hp:int = 0
 ## 受到伤害倍率来源。安娜纳米强化使用 0.7 表示减伤 30%。
 var damage_taken_multiplier_sources:Dictionary[int, float] = {}
+## 伤害免疫来源。用于技能期间屏蔽普通伤害；强制死亡仍会绕过该表。
+var damage_immunity_sources:Dictionary[int, bool] = {}
 var _ignore_damage_reduction_once := false
+var _ignore_damage_immunity_once := false
 var curr_hp:int:
 	set(value):
 		value = max(value, 0)
@@ -89,6 +92,9 @@ func get_all_hp():
 ## [is_drop_2:bool] 是否有掉落额外条件
 ## return bool: 返回是否死亡
 func Hp_loss(attack_value:int, _bullet_mode:BulletRegistry.AttackMode =BulletRegistry.AttackMode.Norm, is_drop_on_death=true, trigger_be_attack_SFX:=true, is_drop_2:=true):
+	if not _ignore_damage_immunity_once and attack_value > 0 and not damage_immunity_sources.is_empty():
+		_ignore_damage_reduction_once = false
+		return false
 	var final_attack_value := attack_value
 	if not _ignore_damage_reduction_once and attack_value > 0:
 		final_attack_value = maxi(1, int(round(float(attack_value) * get_damage_taken_multiplier())))
@@ -107,8 +113,10 @@ func Hp_loss(attack_value:int, _bullet_mode:BulletRegistry.AttackMode =BulletReg
 ##[is_drop:bool]是否有掉落body
 func Hp_loss_death(is_drop:=true):
 	_ignore_damage_reduction_once = true
+	_ignore_damage_immunity_once = true
 	Hp_loss(get_all_hp(),BulletRegistry.AttackMode.Norm, is_drop, false)
 	_ignore_damage_reduction_once = false
+	_ignore_damage_immunity_once = false
 
 ## 增加一个受到伤害倍率来源。
 func add_damage_taken_multiplier(source:Object, multiplier:float):
@@ -121,6 +129,18 @@ func remove_damage_taken_multiplier(source:Object):
 	if not is_instance_valid(source):
 		return
 	damage_taken_multiplier_sources.erase(source.get_instance_id())
+
+## 增加一个普通伤害免疫来源。
+func add_damage_immunity(source:Object) -> void:
+	if not is_instance_valid(source):
+		return
+	damage_immunity_sources[source.get_instance_id()] = true
+
+## 移除一个普通伤害免疫来源。
+func remove_damage_immunity(source:Object) -> void:
+	if not is_instance_valid(source):
+		return
+	damage_immunity_sources.erase(source.get_instance_id())
 
 ## 不同减伤来源乘算；当前安娜强化只会存在一个实例。
 func get_damage_taken_multiplier() -> float:

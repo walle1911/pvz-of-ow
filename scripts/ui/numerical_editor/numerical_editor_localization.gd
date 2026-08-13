@@ -130,6 +130,7 @@ const PROPERTY_LABELS := {
 	"emp_zombie_fight_radius": "EMP僵尸互殴半径",
 	"attack_speed_multiplier": "攻击速度倍率", "boost_duration": "强化持续时间",
 	"chain_skill_duration": "锁链技能持续时间",
+	"chain_health_cost": "锁链生命消耗",
 	"critical_self_heal_amount": "濒死自我治疗量", "critical_ally_heal_amount": "濒死队友治疗量",
 	"critical_knockback_distance": "危急治疗击退距离",
 	"hp_threshold": "近距离爆发血量阈值", "close_burst_distance": "近距离爆发范围",

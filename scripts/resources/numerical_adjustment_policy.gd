@@ -182,6 +182,7 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/plant/ow/plant_037_garlic_mauga.gd": {
 		"chain_skill_duration": "seconds",
+		"chain_health_cost": "non_negative_int",
 	},
 	"res://scripts/character/zombie/original/zombie_009_jackson.gd": {"num_moon_walk": "non_negative_int"},
 	"res://scripts/character/zombie/ow/zombie_025_gargantuar_bob.gd": {"boss_throw_thresholds": "threshold_array"},

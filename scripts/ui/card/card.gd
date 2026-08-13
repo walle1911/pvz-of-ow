@@ -308,6 +308,13 @@ func _refresh_sun_and_ready_state_after_mode_switch() -> void:
 func is_ana_coffee_mode_active() -> bool:
 	return _is_ana_coffee_dual_card and _is_ana_coffee_mode
 
+
+## 双形态切换只改变本次种植内容；关卡解锁检查仍按玩家实际选入卡槽的安娜卡判断。
+func get_availability_plant_type() -> CharacterRegistry.PlantType:
+	if _is_ana_coffee_dual_card:
+		return CharacterRegistry.PlantType.P036CoffeeBeanAna
+	return card_plant_type
+
 ## 修改阳光时会调用
 func judge_sun_enough(curr_sun_value):
 	# 判断阳光是否足够
@@ -470,16 +477,17 @@ func _on_button_pressed() -> void:
 
 
 func _is_reward_card_allowed_in_current_level() -> bool:
-	if card_plant_type == CharacterRegistry.PlantType.Null:
+	var availability_plant_type := get_availability_plant_type()
+	if availability_plant_type == CharacterRegistry.PlantType.Null:
 		return true
 	if not is_instance_valid(Global.main_game) or not is_instance_valid(Global.main_game.game_para):
 		return true
 	if not Global.main_game.game_para.adventure_card_lock_active:
 		return true
 	return RewardCardRuntime.is_plant_available_in_level(
-		int(card_plant_type),
+		int(availability_plant_type),
 		Global.main_game.game_para.level_id,
-		Global.main_game.game_para.available_plant_types.has(card_plant_type),
+		Global.main_game.game_para.available_plant_types.has(availability_plant_type),
 		Global.main_game.game_para.special_reward_card_source_dir
 	)
 

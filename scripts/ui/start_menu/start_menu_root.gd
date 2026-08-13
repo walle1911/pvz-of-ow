@@ -285,14 +285,18 @@ func _start_flight_formation_motion() -> void:
 
 
 func _update_flying_cat_companion_drop_trigger() -> void:
-	var first_group_bounds := _get_flight_group_horizontal_bounds(flying_cat_group)
-	first_group_bounds += Vector2(flying_cat_group.position.x, flying_cat_group.position.x)
-	var first_group_exit_x := _flight_layer_x(-80.0) - first_group_bounds.y
-	flying_cat_companion_drop_trigger_x = lerpf(
+	## 小猫现在位于第二个出场槽位，但安娜仍需在交换前第一组经过的位置脱落。
+	## 先按小猫原本位于 x=0 的第一组槽位求出旧触发点，再抵消小猫组交换后的横移量。
+	var original_first_group_bounds := _get_flight_group_horizontal_bounds(flying_cat_group)
+	var original_first_group_exit_x := \
+		_flight_layer_x(-80.0) - original_first_group_bounds.y
+	var original_drop_trigger_x := lerpf(
 		flight_formation_start_position.x,
-		first_group_exit_x,
+		original_first_group_exit_x,
 		0.5
 	)
+	flying_cat_companion_drop_trigger_x = \
+		original_drop_trigger_x - flying_cat_group.position.x
 
 
 func _drop_flying_cat_companion() -> void:
@@ -309,6 +313,8 @@ func _drop_flying_cat_companion() -> void:
 	flying_cat_companion_drop_carrier = Node2D.new()
 	flying_cat_companion_drop_carrier.name = "FlyingCatCompanionDropCarrier"
 	add_child(flying_cat_companion_drop_carrier)
+	## 保持安娜位于主界面前景，但将动态载体固定插在所有弹窗之前，避免覆盖弹窗内容。
+	move_child(flying_cat_companion_drop_carrier, $StartMenuOptionDialog.get_index())
 	flying_cat_companion_drop_carrier.global_position = takeoff_center_global
 	flying_cat_companion_drop_carrier.global_rotation = takeoff_transform.get_rotation()
 	flying_cat_companion_drop_carrier.global_scale = takeoff_transform.get_scale()

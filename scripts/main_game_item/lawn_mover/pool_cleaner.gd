@@ -37,7 +37,8 @@ func _on_area_entered(area: Area2D) -> void:
 
 ## 启动小推车
 func _start_mower():
-	is_moving = true
+	if not _begin_mower():
+		return
 	SoundManager.play_other_SFX("pool_cleaner")
 	animation_player.play("PoolCleaner_land")
 	_mower_run_all_zombie_on_start()

@@ -36,7 +36,8 @@ func update_move_dir_y_correct(curr_move_dir_y_correct_slope:Vector2):
 
 ## 启动小推车
 func _start_mower():
-	is_moving = true
+	if not _begin_mower():
+		return
 	animation_player.play("RoofCleaner")
 	SoundManager.play_other_SFX("lawnmower")
 	_mower_run_all_zombie_on_start()

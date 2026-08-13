@@ -310,6 +310,8 @@ func _remove_invalid_curr_cards() -> void:
 			curr_cards.remove_at(i)
 
 func _is_valid_card(card: Card) -> bool:
+	var availability_plant_type := card.get_availability_plant_type() \
+		if is_instance_valid(card) else CharacterRegistry.PlantType.Null
 	return is_instance_valid(card) \
 		and (
 			card.card_plant_type != CharacterRegistry.PlantType.Null \
@@ -317,11 +319,11 @@ func _is_valid_card(card: Card) -> bool:
 			) \
 		and (
 			not Global.main_game.game_para.adventure_card_lock_active \
-			or card.card_plant_type == CharacterRegistry.PlantType.Null \
+			or availability_plant_type == CharacterRegistry.PlantType.Null \
 			or RewardCardRuntime.is_plant_available_in_level(
-				int(card.card_plant_type),
+				int(availability_plant_type),
 				Global.main_game.game_para.level_id,
-				Global.main_game.game_para.available_plant_types.has(card.card_plant_type),
+				Global.main_game.game_para.available_plant_types.has(availability_plant_type),
 				Global.main_game.game_para.special_reward_card_source_dir
 			)
 		)

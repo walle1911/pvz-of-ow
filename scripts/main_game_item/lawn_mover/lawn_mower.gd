@@ -2,6 +2,8 @@ extends Node2D
 class_name LawnMover
 ## 小推车
 
+signal mower_started
+
 var lane: int = -1  ## 推车行，从0开始, 创建小推车的脚本赋值
 @export var move_speed: float = 300.0  ## 推车移动速度（像素/秒）
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -49,10 +51,20 @@ func start_trigger_filter(zombie :Zombie000Base):
 
 ## 启动小推车
 func _start_mower():
-	is_moving = true
+	if not _begin_mower():
+		return
 	animation_player.play("LawnMower_normal")
 	SoundManager.play_other_SFX("lawnmower")
 	_mower_run_all_zombie_on_start()
+
+
+## 标记小推车已被使用，并通知管理器补充靶场小推车。
+func _begin_mower() -> bool:
+	if is_moving:
+		return false
+	is_moving = true
+	mower_started.emit()
+	return true
 
 ## 启动时碾压当前所有的僵尸
 func _mower_run_all_zombie_on_start():

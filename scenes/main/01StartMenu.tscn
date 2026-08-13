@@ -1661,6 +1661,8 @@ mouse_filter = 2
 
 [node name="FlyingCatGroup" type="Control" parent="Cloud/FlightFormation" unique_id=1253320067]
 anchors_preset = 0
+offset_left = 757.0
+offset_right = 757.0
 mouse_filter = 2
 
 [node name="FlyingCat" type="TextureRect" parent="Cloud/FlightFormation/FlyingCatGroup" unique_id=49425997]
@@ -1688,8 +1690,8 @@ stretch_mode = 5
 
 [node name="SoftFlightGroup" type="Control" parent="Cloud/FlightFormation" unique_id=1362595119]
 anchors_preset = 0
-offset_left = 211.0
-offset_right = 211.0
+offset_left = -481.0
+offset_right = -481.0
 mouse_filter = 2
 
 [node name="SoftFlightLeader" type="TextureRect" parent="Cloud/FlightFormation/SoftFlightGroup" unique_id=172995314]

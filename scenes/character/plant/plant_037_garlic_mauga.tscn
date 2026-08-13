@@ -53,7 +53,7 @@ size = Vector2(80, 100)
 
 [node name="Plant037GarlicMauga" unique_id=1402278193 instance=ExtResource("1_34mm5")]
 script = ExtResource("2_5vkpm")
-chain_skill_duration = 4.0
+chain_skill_duration = 6.0
 plant_type = 37
 
 [node name="BodyCorrect" parent="Body" index="0"]

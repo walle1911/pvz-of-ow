@@ -89,12 +89,32 @@ func _is_active_lawn_row(row: int) -> bool:
 func create_lawn_mover(lane:int, lawn_mover_type:E_LawnMoverType, global_pos:Vector2)->LawnMover:
 	var new_lawn_mover:LawnMover = LawnMoverSecneMap[lawn_mover_type].instantiate()
 	new_lawn_mover.lane = lane
+	new_lawn_mover.mower_started.connect(_on_lawn_mover_started.bind(new_lawn_mover))
 	new_lawn_mover.z_index = lane * 50 + 40
 	## 由于在ready中会检测屋顶，使用全局位置，因此在add_child之前修改其局部位置
 	new_lawn_mover.position = global_pos - lawn_movers.global_position
 	lawn_movers.add_child(new_lawn_mover)
 	lawn_mover_appear(new_lawn_mover)
 	return new_lawn_mover
+
+
+## 靶场中小推车启动即视为用掉；下一帧在同一行补充一辆，避免重入当前碰撞回调。
+func _on_lawn_mover_started(used_lawn_mover: LawnMover) -> void:
+	if not game_item_manager.game_para.is_target_range:
+		return
+	call_deferred("_replenish_target_range_lane", used_lawn_mover.lane, used_lawn_mover)
+
+
+func _replenish_target_range_lane(lane: int, used_lawn_mover: LawnMover) -> void:
+	if lane < 0 or lane >= all_lawn_movers.size():
+		return
+	if all_lawn_movers[lane] != used_lawn_mover:
+		return
+	all_lawn_movers[lane] = create_lawn_mover(
+		lane,
+		all_lawn_movers_type[lane],
+		all_lawn_movers_global_pos[lane]
+	)
 
 ## 小推车出现动画
 func lawn_mover_appear(lawn_mover:Node2D):

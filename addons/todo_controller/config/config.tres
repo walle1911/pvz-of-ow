@@ -463,6 +463,7 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_special_reward_card_workshop.gd": [-1, -1],
 "res://tests/test_ana_coffee_card_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
+"res://tests/test_mauga_cage_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1],
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
