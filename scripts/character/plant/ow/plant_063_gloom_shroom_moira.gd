@@ -4,18 +4,22 @@ class_name Plant063GloomShroomMoira
 const MOIRA_FUME_RECOLOR_SHADER: Shader = preload("res://shaders/moira_fume_recolor.gdshader")
 
 @export_group("Moira Yellow Fume")
-@export_range(0.0, 1.0, 0.01) var yellow_fume_chance: float = 0.35
+## 形态二以伤害为主，默认 20% 的攻击改为治疗黄雾。
+@export_range(0.0, 1.0, 0.01) var yellow_fume_chance: float = 0.2
 @export var yellow_fume_color: Color = Color(1.0, 0.95, 0.0, 1.0)
 @export_range(1.0, 3.0, 0.05) var yellow_fume_alpha_scale: float = 1.45
 @export var yellow_fume_heal_value: int = 45
 @export var normal_fume_color: Color = Color.WHITE
 
-@export_group("Moira Bite Sun")
-## 每次被僵尸啃食时掉落的一颗阳光的价值；0 表示不掉落
-@export_range(0, 10000000, 1) var bite_sun_value: int = 25
+@export_group("Moira Death Sun")
+## 形态二被吃掉/死亡时一次性掉落的阳光价值；0 表示不掉落。
+@export_range(0, 10000000, 1) var death_sun_value: int = 75
+## 死亡时掉落的阳光数量。
+@export_range(0, 100, 1) var death_sun_count: int = 1
 
 @onready var create_sun_component: CreateSunComponent = $CreateSunComponent
 var yellow_fume_material: ShaderMaterial
+var _death_caused_by_zombie_bite := false
 
 func ready_norm():
 	## 改版数值调整以攻击组件的基础攻击间隔为准，避免被父类根字段覆盖。
@@ -27,6 +31,8 @@ func ready_norm():
 	super()
 	attack_component.attack_cd = configured_attack_cd
 	attack_component.bullet_attack_cd_timer.wait_time = configured_attack_cd
+	## 形态二只在死亡时掉落阳光，不再像旧机制一样定时产阳光。
+	create_sun_component.disable_component(ComponentNormBase.E_IsEnableFactor.Character)
 	if is_zombie_mode:
 		create_sun_component.disable_component(ComponentNormBase.E_IsEnableFactor.GameMode)
 
@@ -35,9 +41,17 @@ func ready_norm_signal_connect():
 	super()
 	signal_update_speed.connect(create_sun_component.owner_update_speed)
 
-## 每次被僵尸啃食时掉落一颗阳光
-func _be_zombie_eat_once_special(_attack_zombie:Zombie000Base):
-	create_sun_component.spawn_sun_with_value(bite_sun_value)
+## 形态二只在真正死亡时结算掉落，普通啃食不再反复产阳光。
+func character_death():
+	if not is_death and not is_zombie_mode and _death_caused_by_zombie_bite:
+		create_sun_component.spawn_sun_with_value(death_sun_value, death_sun_count)
+	super()
+
+
+func be_zombie_eat(attack_value: int, attack_zombie: Zombie000Base):
+	_death_caused_by_zombie_bite = true
+	super(attack_value, attack_zombie)
+	_death_caused_by_zombie_bite = false
 
 func attack_once():
 	var bullet_fx_particles: Array[GPUParticles2D] = all_bullet_fx_particles[num_attack]

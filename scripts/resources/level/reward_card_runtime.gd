@@ -64,10 +64,52 @@ static func limited_plant_types_for_level(level_id: String, source_dir: String =
 	return result
 
 
+## Boss 奖励不能按关卡进度推断。只有来源关卡的 RewardPlants 已实际写入该植物，
+## 才说明玩家击败了 Boss 并领取了额外奖励；跳过、放弃或仅普通通关都不会解锁。
+static func earned_boss_reward_plant_types(level_states: Dictionary, source_dir: String = "") -> Array[int]:
+	var catalog := _special_reward_catalog(source_dir)
+	var boss_rewards: Dictionary = catalog.get("boss_rewards", {}) as Dictionary
+	var result: Array[int] = []
+	for plant_key in boss_rewards.keys():
+		var plant_type := int(plant_key)
+		if plant_type <= 0:
+			continue
+		for level_id_value in boss_rewards[plant_key]:
+			var level_id := str(level_id_value)
+			if _level_state_has_reward(level_states, level_id, plant_type):
+				result.append(plant_type)
+				break
+	return result
+
+
 static func is_plant_available_in_level(plant_type: int, level_id: String, ordinary_available: bool, source_dir: String = "") -> bool:
 	if not is_plant_limited(plant_type, source_dir):
 		return ordinary_available
 	return is_plant_allowed_in_level(plant_type, level_id, source_dir)
+
+
+static func _special_reward_catalog(source_dir: String) -> Dictionary:
+	var catalog_key := source_dir if not source_dir.is_empty() else "all"
+	if not _special_reward_catalog_cache.has(catalog_key):
+		_special_reward_catalog_cache[catalog_key] = _build_special_reward_catalog(source_dir)
+	return _special_reward_catalog_cache[catalog_key] as Dictionary
+
+
+static func _level_state_has_reward(level_states: Dictionary, level_id: String, plant_type: int) -> bool:
+	var state_key_suffix := "_" + _normalize_level_id(level_id)
+	for raw_state_key in level_states.keys():
+		var state_key := str(raw_state_key)
+		if state_key != level_id and not state_key.ends_with(state_key_suffix):
+			continue
+		var state = level_states[raw_state_key]
+		if not (state is Dictionary):
+			continue
+		var rewards: Array = (state as Dictionary).get("RewardPlants", []) as Array
+		if rewards.any(func(value): return int(value) == plant_type):
+			return true
+		if int((state as Dictionary).get("RewardPlant", -1)) == plant_type:
+			return true
+	return false
 
 
 static func _normalize_level_id(level_id: String) -> String:
@@ -93,6 +135,7 @@ static func _build_special_reward_catalog(source_dir: String) -> Dictionary:
 	else:
 		directories = [source_dir]
 	var rules: Dictionary = {}
+	var boss_rewards: Dictionary = {}
 	for directory in directories:
 		for world in range(1, 6):
 			for level_number in range(1, 11):
@@ -112,7 +155,16 @@ static func _build_special_reward_catalog(source_dir: String) -> Dictionary:
 					if not (allowed_level_ids is Array) or allowed_level_ids.is_empty():
 						continue
 					rules[key] = merge_allowed_level_ids(rules.get(key, []), allowed_level_ids)
-	return {"rules": rules}
+				var boss_config = level.get("bossConfig", {})
+				if boss_config is Dictionary and bool((boss_config as Dictionary).get("enabled", false)):
+					var boss_reward := int((boss_config as Dictionary).get("rewardPlant", -1))
+					var level_id := str(level.get("formalPresetId", level.get("id", ""))).strip_edges()
+					if boss_reward > 0 and not level_id.is_empty():
+						boss_rewards[str(boss_reward)] = merge_allowed_level_ids(
+							boss_rewards.get(str(boss_reward), []),
+							[level_id]
+						)
+	return {"rules": rules, "boss_rewards": boss_rewards}
 
 
 static func _effective_level_path(source_dir: String, world: int, level_number: int) -> String:

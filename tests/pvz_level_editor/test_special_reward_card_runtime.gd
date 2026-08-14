@@ -15,6 +15,36 @@ func _ready() -> void:
 func _run() -> void:
 	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
 	var source_dir := "res://data/adventure_levels"
+	var echo_type := int(CharacterRegistry.PlantType.P999ImitaterEcho)
+	var no_boss_reward_states := {
+		"101_0_adventure_1_10": {
+			"IsSuccess": true,
+			"RewardPlants": [int(CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker)],
+		}
+	}
+	if RewardCardRuntime.earned_boss_reward_plant_types(no_boss_reward_states, source_dir).has(echo_type):
+		_fail("仅普通通关或跳过 Boss 不能解锁 Echo")
+		return
+	var defeated_sojourn_states := no_boss_reward_states.duplicate(true)
+	defeated_sojourn_states["101_0_adventure_1_10"]["RewardPlants"].append(echo_type)
+	if not RewardCardRuntime.earned_boss_reward_plant_types(defeated_sojourn_states, source_dir).has(echo_type):
+		_fail("击败索杰恩并领取 Boss 奖励后应识别 Echo 解锁")
+		return
+	var original_level_states := Global.global_game_state.curr_all_level_state_data.duplicate(true)
+	Global.global_game_state.curr_all_level_state_data = no_boss_reward_states
+	var echo_locked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	if not echo_locked_result["ok"] \
+	or (echo_locked_result["game_para"] as ResourceLevelData).available_plant_types.has(echo_type as CharacterRegistry.PlantType):
+		Global.global_game_state.curr_all_level_state_data = original_level_states
+		_fail("进入后续关卡不能自动解锁 Echo")
+		return
+	Global.global_game_state.curr_all_level_state_data = defeated_sojourn_states
+	var echo_unlocked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	Global.global_game_state.curr_all_level_state_data = original_level_states
+	if not echo_unlocked_result["ok"] \
+	or not (echo_unlocked_result["game_para"] as ResourceLevelData).available_plant_types.has(echo_type as CharacterRegistry.PlantType):
+		_fail("击败索杰恩并领取奖励后，后续关卡应显示 Echo")
+		return
 	if AdventureStore.developer_level_path("adventure_1_1") != UserPaths.path("adventure_levels/adventure_1_1.json") \
 	or AdventureStore.formal_level_path("adventure_1_1") != UserPaths.path("formal_adventure_levels/adventure_1_1.json"):
 		_fail("玩家关卡覆盖和正式同步必须写入统一玩家数据目录")

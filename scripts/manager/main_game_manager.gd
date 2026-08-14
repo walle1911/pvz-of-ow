@@ -779,7 +779,8 @@ func _add_boss_choice_card(parent: Control, is_plant: bool, type_id: int, pos: V
 	parent.add_child(card)
 	var cost := card.get_node_or_null("CardBg/Cost") as Label
 	if cost != null:
-		cost.visible = false
+		## Boss 卡片也展示真实费用；索杰恩应显示角色注册表中的 307 阳光。
+		cost.visible = true
 	var progress := card.get_node_or_null("ProgressBar") as ProgressBar
 	if progress != null:
 		progress.visible = false
@@ -1124,6 +1125,7 @@ func update_level_state_data_success():
 	var reward_plants: Array[CharacterRegistry.PlantType] = game_para.reward_plant_types.duplicate()
 	if reward_plants.is_empty() and int(game_para.reward_plant_type) >= 0:
 		reward_plants.append(int(game_para.reward_plant_type) as CharacterRegistry.PlantType)
+	var reward_state_changed := false
 	if not reward_plants.is_empty():
 		var all_earned_rewards: Array[CharacterRegistry.PlantType] = []
 		for value in curr_level_state_data.get("RewardPlants", []):
@@ -1133,6 +1135,7 @@ func update_level_state_data_success():
 		for reward_plant in reward_plants:
 			if not all_earned_rewards.has(reward_plant):
 				all_earned_rewards.append(reward_plant)
+				reward_state_changed = true
 		curr_level_state_data["RewardPlants"] = all_earned_rewards
 		curr_level_state_data["RewardPlant"] = int(all_earned_rewards[0])
 	for reward_plant in reward_plants:
@@ -1140,6 +1143,9 @@ func update_level_state_data_success():
 			Global.global_game_state.curr_plant.append(reward_plant)
 	Global.global_game_state.curr_all_level_state_data[game_para.save_game_name] = curr_level_state_data
 	Global.save_service.save_now()
+	## 冒险运行参数在启动时缓存；Boss 奖励首次写入后立即重建，确保返回选关后可见。
+	if reward_state_changed:
+		Global.refresh_adventure_runtime_cache()
 
 ## 更新当前关卡数据 (多轮游戏)
 func update_level_state_data_multi_round_data(is_have_multi_round_data:=true):

@@ -36,7 +36,8 @@ func _ready() -> void:
 	var is_have_user := user_manager.load_current_user()
 	if is_have_user and not user_manager.curr_user_name.is_empty():
 		reload_session_for_current_user()
-	_warm_adventure_runtime_cache()
+	else:
+		_warm_adventure_runtime_cache()
 	_warm_adventure_scene_cache()
 	## 创建全局数据自动存档计时器（由 SaveService 负责）
 	save_service.start_autosave(60.0)
@@ -48,6 +49,8 @@ func reload_session_for_current_user() -> void:
 		return
 	save_service.load_global_game_data()
 	config_service.load_and_apply_config()
+	## 冒险卡池包含按用户存档解锁的 Boss 奖励，切换用户后必须同步重建。
+	refresh_adventure_runtime_cache()
 
 var main_game:MainGameManager
 var game_para:ResourceLevelData

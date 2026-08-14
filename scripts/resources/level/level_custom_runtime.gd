@@ -183,6 +183,16 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			and Global.global_game_state.curr_plant.has(plant_type) \
 			and not game_para.available_plant_types.has(plant_type):
 				game_para.available_plant_types.append(plant_type)
+		## Boss 额外奖励在击败并领取后永久进入后续冒险关卡卡池。
+		## 解锁依据是来源关卡存档里的 RewardPlants，不按“已到达 1-10/后续关卡”推断。
+		for earned_boss_reward_type in RewardCardRuntime.earned_boss_reward_plant_types(
+			Global.global_game_state.curr_all_level_state_data,
+			special_reward_source_dir
+		):
+			var plant_type := earned_boss_reward_type as CharacterRegistry.PlantType
+			if CharacterRegistry.PlantInfo.has(plant_type) \
+			and not game_para.available_plant_types.has(plant_type):
+				game_para.available_plant_types.append(plant_type)
 		var card_limit := _formal_adventure_card_limit(str(level.get("formalPresetId", "")))
 		game_para.max_choosed_card_num = maxi(1, mini(card_limit, game_para.available_plant_types.size()))
 		var forced_plants: Array[CharacterRegistry.PlantType] = []

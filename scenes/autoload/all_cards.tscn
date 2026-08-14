@@ -573,7 +573,7 @@
 [ext_resource type="Texture2D" uid="uid://lk2nlfgggplg" path="res://assets/image/ui/Character_Card/MelonPult_Ashe.png" id="390_mlr8r"]
 [ext_resource type="Texture2D" uid="uid://drj73i768ti4y" path="res://assets/reanim/Zombie_dolphinrider_outerarm_hand.png" id="391_mlr8r"]
 [ext_resource type="Texture2D" uid="uid://chk8ojme1d2nr" path="res://assets/reanim/Zombie_dolphinrider_outerarm_lower.png" id="392_10mhf"]
-[ext_resource type="Texture2D" uid="uid://vwxuhluuc7e6" path="res://assets/image/ui/Character_Card/GloomShroom_Moira.png" id="393_10mhf"]
+[ext_resource type="Texture2D" path="res://assets/image/ui/Character_Card/GloomShroom_Moira_B.png" id="393_10mhf"]
 [ext_resource type="Texture2D" uid="uid://dso348ywf210h" path="res://assets/reanim/Zombie_dolphinrider_outerarm_upper.png" id="393_bh1la"]
 [ext_resource type="Texture2D" uid="uid://1v0d7xdby02x" path="res://assets/image/ui/Character_Card/SeaShroom_Wuyang.png" id="394_bh1la"]
 [ext_resource type="Texture2D" uid="uid://3vscb61hdc13" path="res://assets/image/ui/Character_Card/MagnetShroom_Sombra.png" id="396_qpl0k"]
@@ -1980,8 +1980,8 @@ imitater_whiteness = 0.5
 imitater_gray_strength = 0.0
 card_id = 25
 card_plant_type = 43
-cool_time = 30.0
-sun_cost = 225
+cool_time = 50.0
+sun_cost = 175
 
 [node name="Plant043GloomShroomMoira" type="Node2D" parent="PlantCards/Card14/CardBg/CharacterStatic" index="0" unique_id=2057364492]
 position = Vector2(1, 14)

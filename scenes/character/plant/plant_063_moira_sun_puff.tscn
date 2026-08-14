@@ -1,0 +1,50 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn" id="1_moira"]
+[ext_resource type="Script" path="res://scripts/character/plant/ow/plant_071_moira_sun_puff.gd" id="2_script"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_short"]
+size = Vector2(249, 74)
+
+[node name="Plant063MoiraSunPuff" instance=ExtResource("1_moira")]
+script = ExtResource("2_script")
+yellow_fume_chance = 0.8
+yellow_fume_heal_value = 35
+death_sun_value = 0
+death_sun_count = 0
+attack_value = 20
+attack_cd = 1.5
+time_grow = 100.0
+mini_sun_value = 15
+norm_sun_value = 25
+small_body_scale = 0.65
+grown_body_scale = 0.85
+first_sun_time_min = 3.0
+first_sun_time_max = 12.5
+repeat_sun_time_min = 23.5
+repeat_sun_time_max = 25.0
+plant_type = 63
+plant_sun_cost = 25.0
+plant_cool_time = 7.5
+
+[node name="SleepComponent" parent="." index="4" node_paths=PackedStringArray("sleep_influence_components")]
+sleep_influence_components = [NodePath("../BlinkComponent"), NodePath("../AttackComponent"), NodePath("../CreateSunComponent")]
+
+[node name="DetectComponent" parent="AttackComponent" index="0"]
+is_lane = true
+
+[node name="AttackComponent" parent="." index="10"]
+attack_cd = 1.5
+attack_value_bullet = 20
+
+[node name="Area2D" parent="AttackComponent/DetectComponent" index="0"]
+position = Vector2(0, -25)
+
+[node name="CollisionShape2D" parent="AttackComponent/DetectComponent/Area2D" index="0"]
+position = Vector2(124.5, 0)
+shape = SubResource("RectangleShape2D_short")
+
+[node name="GrowTimer" type="Timer" parent="." index="13"]
+one_shot = true
+
+[connection signal="timeout" from="GrowTimer" to="." method="_on_grow_timer_timeout"]

@@ -69,6 +69,13 @@ custom_target_anchor_path = "Body/BodyCorrect/Anim_face/GloomShroom_Moira_Face"
 custom_glow_sprite_paths = Array[String](["Body/BodyCorrect/GloomShroom_shooter2/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter22/Sprite2D", "Body/Body/BodyCorrect/GloomShroom_stem3/GloomShroom_shooter22/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter3", "Body/BodyCorrect/GloomShroom_shooter32", "Body/BodyCorrect/GloomShroom_shooter1", "Body/BodyCorrect/GloomShroom_shooter42/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter4/Sprite2D"])
 metadata/_custom_type_script = "uid://b1htxwmggoxyl"
 
+[sub_resource type="Resource" id="Resource_moira_form1"]
+script = ExtResource("3_urcob")
+plant_type = 63
+custom_target_anchor_path = "Body/BodyCorrect/Anim_face/GloomShroom_Moira_Face"
+custom_glow_sprite_paths = Array[String](["Body/BodyCorrect/GloomShroom_shooter2/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter22/Sprite2D", "Body/Body/BodyCorrect/GloomShroom_stem3/GloomShroom_shooter22/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter3", "Body/BodyCorrect/GloomShroom_shooter32", "Body/BodyCorrect/GloomShroom_shooter1", "Body/BodyCorrect/GloomShroom_shooter42/Sprite2D", "Body/BodyCorrect/GloomShroom_shooter4/Sprite2D"])
+metadata/_custom_type_script = "uid://b1htxwmggoxyl"
+
 [sub_resource type="Resource" id="Resource_oemwk"]
 script = ExtResource("3_urcob")
 plant_type = 25
@@ -189,7 +196,7 @@ damage_boost_source_anchor_path = NodePath("Body/BodyCorrect/Stalk_bottom")
 damage_boost_source_anchor_offset = Vector2(2, 4)
 damage_boost_target_anchor_offset = Vector2(2, 4)
 damage_boost_target_plant_types = Array[int]([501, 506, 508, 519, 529, 541, 8, 49, 1, 6, 41, 27, 40, 44, 43, 25, 11, 14, 19, 42])
-damage_boost_target_configs = Array[ExtResource("3_urcob")]([SubResource("Resource_nckdh"), SubResource("Resource_lylky"), SubResource("Resource_urcob"), SubResource("Resource_s7eab"), SubResource("Resource_oemwk"), SubResource("Resource_bxfnn"), SubResource("Resource_qfbb3"), SubResource("Resource_g7p7l"), SubResource("Resource_yawjc")])
+damage_boost_target_configs = Array[ExtResource("3_urcob")]([SubResource("Resource_nckdh"), SubResource("Resource_lylky"), SubResource("Resource_urcob"), SubResource("Resource_s7eab"), SubResource("Resource_moira_form1"), SubResource("Resource_oemwk"), SubResource("Resource_bxfnn"), SubResource("Resource_qfbb3"), SubResource("Resource_g7p7l"), SubResource("Resource_yawjc")])
 beam_glow_width = 12.0
 beam_curve_height = -4.0
 beam_z_index = -1

@@ -118,18 +118,21 @@ alpha_curve = SubResource("CurveTexture_fdqap")
 
 [node name="Plant043GloomShroomMoira" unique_id=1802928863 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_185k3")]
 script = ExtResource("2_52sk1")
-yellow_fume_chance = 0.3
+yellow_fume_chance = 0.2
 yellow_fume_color = Color(1, 0.95, 0, 1)
 yellow_fume_alpha_scale = 1.45
 yellow_fume_heal_value = 35
 normal_fume_color = Color(1, 1, 1, 1)
+death_sun_value = 75
+death_sun_count = 1
 attack_value = 12
 attack_cd = 2.0
 plant_type = 43
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
-plant_sun_cost = 125.0
+plant_sun_cost = 175.0
+plant_cool_time = 50.0
 [node name="Body" parent="." index="1"]
 scale = Vector2(0.85, 0.85)
 
