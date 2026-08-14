@@ -110,6 +110,8 @@ var is_mouse_visibel_on_hammer:bool = false
 var bgm_choose_card: AudioStream = preload("res://assets/audio/BGM/choose_card.mp3")
 ## 主游戏bgm
 var bgm_main_game: AudioStream
+## Boss 追加战 bgm；普通波次结束并确认挑战后才播放。
+var bgm_boss_game: AudioStream = preload("res://assets/audio/BGM/boss.mp3")
 #endregion
 
 
@@ -835,6 +837,7 @@ func _start_boss_battle() -> void:
 		push_error("Boss 僵尸未登记：%s" % str(boss_type))
 		_skip_boss_challenge()
 		return
+	SoundManager.play_bgm(bgm_boss_game)
 	## 先用无碰撞的展示替身在右侧介绍 Boss；镜头回到左侧后再放行小推车。
 	main_game_progress = E_MainGameProgress.PREPARE
 	camera_2d.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -871,7 +874,6 @@ func _start_boss_battle() -> void:
 	active_boss = zombie_manager.create_norm_zombie(boss_type, zombie_parent, zombie_init_para, spawn_position)
 	active_boss.signal_character_death.connect(_on_boss_defeated.bind(active_boss), CONNECT_ONE_SHOT)
 	main_game_progress = E_MainGameProgress.MAIN_GAME
-	SoundManager.play_bgm(bgm_main_game)
 	print("Boss 房开始：", _boss_zombie_name(), "，第 ", lane + 1, " 行")
 
 

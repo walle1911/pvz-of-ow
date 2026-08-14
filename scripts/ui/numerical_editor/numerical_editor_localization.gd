@@ -106,7 +106,7 @@ const PROPERTY_LABELS := {
 	"time_ice": "冰冻持续时间", "time_pogo_once_default": "单次跳跃默认时间", "uppercut_attack_multiplier": "上勾拳伤害倍率",
 	"walk_status": "行走状态编号", "walk_status_max": "行走状态最大编号", "x_correct_on_attack": "攻击时横向修正",
 	"x_v": "横向速度", "yellow_fume_alpha_scale": "黄色烟雾透明度倍率", "yellow_fume_chance": "黄色烟雾出现概率",
-	"yellow_fume_heal_value": "黄色烟雾治疗量",
+	"yellow_fume_heal_value": "黄色烟雾治疗量", "bite_sun_value": "每次啃咬掉落阳光价值",
 	"close_spray_freeze_chance": "近距离喷雾冻结概率", "close_spray_freeze_time": "近距离喷雾冻结时间",
 	"close_spray_refreeze_cooldown": "近距离喷雾再次冻结冷却时间",
 	"close_spray_distance": "近距离喷雾触发距离", "close_spray_max_distance": "近距离喷雾最大射程",

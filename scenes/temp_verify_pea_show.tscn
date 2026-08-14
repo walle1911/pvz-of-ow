@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/temp_verify_pea_show.gd" id="1"]
+
+[node name="VerifyPeaShow" type="Node"]
+script = ExtResource("1")

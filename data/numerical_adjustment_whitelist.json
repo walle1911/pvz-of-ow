@@ -1,4 +1,12 @@
 {
 	"version": 1,
-	"plants": {}
+	"plants": {
+		"res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn": {
+			"CreateSunComponent": {
+				"remaining_sun_on_zombie_mode": {
+					"enabled": false
+				}
+			}
+		}
+	}
 }

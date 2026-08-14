@@ -94,11 +94,22 @@ func change_production_interval():
 
 ## 创建阳光
 func _spawn_sun():
+	_spawn_suns(sun_value, num_create_sun)
+
+
+## 创建指定价值的阳光，供角色专属事件使用，不影响定时生产参数
+func spawn_sun_with_value(custom_sun_value: int, count: int = 1):
+	if custom_sun_value <= 0 or count <= 0:
+		return
+	_spawn_suns(custom_sun_value, count)
+
+
+func _spawn_suns(spawn_sun_value: int, count: int):
 	## 播放音效
 	SoundManager.play_character_SFX(&"Throw1")
-	for i in range(num_create_sun):
+	for i in range(count):
 		var new_sun:Sun = SceneRegistry.SUN.instantiate()
-		new_sun.init_sun(sun_value, Global.main_game.suns.to_local(marker_2d_create_sun.global_position))
+		new_sun.init_sun(spawn_sun_value, Global.main_game.suns.to_local(marker_2d_create_sun.global_position))
 		Global.main_game.suns.add_child(new_sun)
 
 		# 控制阳光下落

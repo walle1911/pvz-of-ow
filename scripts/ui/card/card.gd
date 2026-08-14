@@ -49,6 +49,8 @@ var _ana_coffee_mode_toggle_sun_mask:ColorRect
 var _ana_coffee_mode_toggle_cool_mask:ProgressBar
 var _ana_coffee_preview_root:Node2D
 var _normal_coffee_preview_root:Node2D
+var _ana_coffee_toggle_phase_initialized := false
+var _ana_coffee_toggle_was_in_battle := false
 ## 双卡当前这一轮共享冷却的总时长。切换形态只改变下一次使用的配置，不改变本轮冷却池。
 var _ana_coffee_shared_cool_duration := 0.0
 var _ana_coffee_cool_time := 0.0
@@ -144,6 +146,7 @@ func card_init_ranked_reward():
 ## 卡片冷卻
 func _process(delta: float) -> void:
 	_ensure_ana_coffee_toggle_in_battle()
+	_sync_ana_coffee_toggle_battle_phase()
 	if _is_cooling:
 		_cool_timer -= delta
 		_cool_mask.value = _cool_timer
@@ -207,6 +210,29 @@ func _ensure_ana_coffee_toggle_in_battle() -> void:
 	_ana_coffee_mode_toggle_cool_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_cool_mask)
 	_update_ana_coffee_toggle_visual()
+	_sync_ana_coffee_toggle_battle_phase()
+
+
+## 小切换卡会跨轮次保留；重新选卡和准备阶段不应提前显示阳光不足或冷却状态。
+func _sync_ana_coffee_toggle_battle_phase() -> void:
+	if not is_instance_valid(_ana_coffee_mode_toggle):
+		return
+	var is_in_battle:bool = is_instance_valid(Global.main_game) \
+		and Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME
+	if _ana_coffee_toggle_phase_initialized and _ana_coffee_toggle_was_in_battle == is_in_battle:
+		return
+
+	_ana_coffee_toggle_phase_initialized = true
+	_ana_coffee_toggle_was_in_battle = is_in_battle
+	_ana_coffee_mode_toggle.mouse_filter = Control.MOUSE_FILTER_STOP \
+		if is_in_battle else Control.MOUSE_FILTER_IGNORE
+	if not is_in_battle:
+		if is_instance_valid(_ana_coffee_mode_toggle_sun_mask):
+			_ana_coffee_mode_toggle_sun_mask.visible = false
+		if is_instance_valid(_ana_coffee_mode_toggle_cool_mask):
+			_ana_coffee_mode_toggle_cool_mask.visible = false
+		return
+
 	_refresh_ana_coffee_toggle_sun_mask()
 	_sync_ana_coffee_toggle_cool_mask()
 
@@ -289,9 +315,12 @@ func _update_ana_coffee_toggle_visual() -> void:
 func _refresh_ana_coffee_toggle_sun_mask(curr_sun_value = null) -> void:
 	if not is_instance_valid(_ana_coffee_mode_toggle_sun_mask):
 		return
+	if not is_instance_valid(Global.main_game) \
+		or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
+		_ana_coffee_mode_toggle_sun_mask.visible = false
+		return
 	if curr_sun_value == null:
-		if not is_instance_valid(Global.main_game) \
-				or not is_instance_valid(Global.main_game.card_manager) \
+		if not is_instance_valid(Global.main_game.card_manager) \
 				or not is_instance_valid(Global.main_game.card_manager.card_slot_battle):
 			return
 		curr_sun_value = Global.main_game.card_manager.card_slot_battle.sun_value
@@ -307,8 +336,11 @@ func _refresh_ana_coffee_toggle_sun_mask(curr_sun_value = null) -> void:
 func _sync_ana_coffee_toggle_cool_mask() -> void:
 	if not is_instance_valid(_ana_coffee_mode_toggle_cool_mask):
 		return
-	_ana_coffee_mode_toggle_cool_mask.visible = _is_cooling
-	if not _is_cooling:
+	var should_show_cooldown:bool = _is_cooling \
+		and is_instance_valid(Global.main_game) \
+		and Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME
+	_ana_coffee_mode_toggle_cool_mask.visible = should_show_cooldown
+	if not should_show_cooldown:
 		_ana_coffee_mode_toggle_cool_mask.value = 0.0
 		return
 	_ana_coffee_mode_toggle_cool_mask.max_value = maxf(_ana_coffee_shared_cool_duration, 0.001)

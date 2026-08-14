@@ -204,8 +204,6 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		)
 	)
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
-	if game_para.boss_enabled:
-		game_para.game_BGM = ConstLevelData.GameBGM.Boss
 	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
 

@@ -411,6 +411,7 @@ script_list_meta = {
 "res://scripts/store/goods_garden_sprout.gd": [-1, -1],
 "res://scripts/store/store_confirm_goods.gd": [-1, -1],
 "res://scripts/store/store_manager.gd": [-1, -1],
+"res://scripts/temp_verify_pea_show.gd": [-1, -1],
 "res://scripts/temp_z027_check.gd": [-1, -1],
 "res://scripts/ui/PVZ_button_base.gd": [-1, -1],
 "res://scripts/ui/card/all_cards.gd": [-1, -1],

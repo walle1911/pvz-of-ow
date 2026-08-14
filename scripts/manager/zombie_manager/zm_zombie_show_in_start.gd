@@ -37,8 +37,17 @@ func create_show_zombie(zombie_type:CharacterRegistry.ZombieType, parent_node:Pa
 
 ## 生成关卡前展示僵尸
 func create_prepare_show_zombies():
-	for zombie_type in zombie_manager.zombie_refresh_types:
-		var zombie_num_range :Vector2i= special_show_zombie_num_range.get(zombie_type, default_show_zombie_num_range)
+	var show_zombie_types := resolve_prepare_show_zombie_types(
+		zombie_manager.zombie_refresh_types,
+		zombie_manager.game_para,
+	)
+	for zombie_type in show_zombie_types:
+		var zombie_num_range := resolve_prepare_show_zombie_num_range(
+			zombie_type,
+			default_show_zombie_num_range,
+			special_show_zombie_num_range,
+			zombie_manager.game_para,
+		)
 		var zombie_num = randi_range(zombie_num_range.x, zombie_num_range.y)
 		for i in range(zombie_num):
 			var z = create_show_zombie(zombie_type, show_zombie_panel)
@@ -47,6 +56,33 @@ func create_prepare_show_zombies():
 		var z = create_show_zombie(CharacterRegistry.ZombieType.Z521Bungi, show_zombie_panel_2)
 		show_zombies_array.append(z)
 	_create_opening_battlefield_zombie()
+
+
+static func resolve_prepare_show_zombie_types(
+	refresh_types: Array[CharacterRegistry.ZombieType],
+	game_para: ResourceLevelData,
+) -> Array[CharacterRegistry.ZombieType]:
+	var show_zombie_types: Array[CharacterRegistry.ZombieType] = refresh_types.duplicate()
+	## Boss 卡片可以只存在于 bossConfig，而不在普通刷怪池中。旧工坊存档尤其
+	## 容易出现这种情况；开局列阵仍应明确展示本关将出现的 Boss。
+	var boss_type := game_para.boss_zombie_type
+	if game_para.boss_enabled \
+	and CharacterRegistry.ZombieInfo.has(boss_type) \
+	and not show_zombie_types.has(boss_type):
+		show_zombie_types.append(boss_type)
+	return show_zombie_types
+
+
+static func resolve_prepare_show_zombie_num_range(
+	zombie_type: CharacterRegistry.ZombieType,
+	default_range: Vector2i,
+	special_ranges: Dictionary[CharacterRegistry.ZombieType, Vector2i],
+	game_para: ResourceLevelData,
+) -> Vector2i:
+	## Boss 在开局列阵中只展示唯一的一只，不沿用普通僵尸的 1～4 随机数量。
+	if game_para.boss_enabled and zombie_type == game_para.boss_zombie_type:
+		return Vector2i.ONE
+	return special_ranges.get(zombie_type, default_range)
 
 ## 删除关卡前展示僵尸
 func delete_prepare_show_zombies() -> void:

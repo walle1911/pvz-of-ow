@@ -8287,6 +8287,7 @@ imitater_gray_strength = 0.0
 card_id = 8
 card_zombie_type = 26
 cool_time = 0.0
+sun_cost = 307
 
 [node name="CardBg" parent="ZombieCards/Card10" index="0"]
 texture = ExtResource("3_m4n4y")

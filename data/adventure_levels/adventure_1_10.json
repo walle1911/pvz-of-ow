@@ -97,13 +97,16 @@
 	"simpleBaseZombieType": 1,
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 2,
-	"simpleOnceFinalZombies": [],
+	"simpleOnceFinalZombies": [
+		26
+	],
 	"simpleWaveCount": 20,
 	"simpleZombiePool": [
 		1,
 		504,
 		5,
-		507
+		507,
+		26
 	],
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,

@@ -1234,7 +1234,7 @@ const ZombieInfo = {
 		ZombieType.Z026PeashooterZombie:{
 			ZombieInfoAttribute.ZombieName: "PeashooterZombie",
 			ZombieInfoAttribute.CoolTime: 0.0,
-			ZombieInfoAttribute.SunCost: 100,
+			ZombieInfoAttribute.SunCost: 307,
 			ZombieInfoAttribute.ZombieScenes:"res://scenes/character/zombie/zombie_026_peashooter_soj.tscn",
 			ZombieInfoAttribute.ZombieRowType:CharacterRegistry.ZombieRowType.Land
 		},
