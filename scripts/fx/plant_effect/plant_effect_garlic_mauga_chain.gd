@@ -179,10 +179,10 @@ func _draw_target_body_cuff(finish:Vector2) -> void:
 	var attachment_scale := Vector2.ONE
 	if is_instance_valid(_target_body_anchor):
 		attachment_rotation = _target_body_anchor.global_rotation
-		var global_scale:Vector2 = _target_body_anchor.global_scale
+		var anchor_global_scale:Vector2 = _target_body_anchor.global_scale
 		attachment_scale = Vector2(
-			clampf(absf(global_scale.x), 0.4, 2.5),
-			clampf(absf(global_scale.y), 0.4, 2.5)
+			clampf(absf(anchor_global_scale.x), 0.4, 2.5),
+			clampf(absf(anchor_global_scale.y), 0.4, 2.5)
 		)
 	draw_set_transform(finish, attachment_rotation, attachment_scale)
 	draw_circle(Vector2.ZERO, BODY_CUFF_RADIUS, Color(0.08, 0.12, 0.15, 0.82))

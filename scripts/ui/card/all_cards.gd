@@ -76,19 +76,39 @@ func _register_ordered_plant_cards(
 		fallback_order: Array[CharacterRegistry.PlantType]) -> void:
 	plant_card_ids.clear()
 	var plant_i := -1
-	for plant_type in _merge_card_order(preferred_order, fallback_order):
+	var catalog_order := _merge_card_order(preferred_order, fallback_order)
+	catalog_order.sort_custom(_sort_plant_type_by_catalog_order)
+	for plant_type in catalog_order:
 		if not cards_by_type.has(plant_type):
 			continue
 		var card := cards_by_type[plant_type]
 		plant_i += 1
 		var card_para:Dictionary[Card.E_CInitAttr, Variant] = {
 			Card.E_CInitAttr.CardId:plant_i,
-			Card.E_CInitAttr.CoolTime:character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.CoolTime],
-			Card.E_CInitAttr.SunCost:character_registry.PlantInfo[card.card_plant_type][CharacterRegistry.PlantInfoAttribute.SunCost]
+			Card.E_CInitAttr.CoolTime:character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime),
+			Card.E_CInitAttr.SunCost:character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)
 		}
 		init_card(card, card_para)
 		all_plant_card_prefabs[card.card_plant_type] = card
 		plant_card_ids[card.card_plant_type] = plant_i
+
+
+func _sort_plant_type_by_catalog_order(left, right) -> bool:
+	var left_group := _plant_catalog_group(int(left))
+	var right_group := _plant_catalog_group(int(right))
+	if left_group != right_group:
+		return left_group < right_group
+	return int(left) < int(right)
+
+
+func _plant_catalog_group(plant_type: int) -> int:
+	## OW 植物（含 P549、P999）在前，原版 48 株单独成组，特殊玩法卡最后。
+	if plant_type >= int(CharacterRegistry.PlantType.P501PeaShooterSingle) \
+		and plant_type <= int(CharacterRegistry.PlantType.P548CobCannon):
+		return 1
+	if plant_type >= 1000:
+		return 2
+	return 0
 
 func _register_ordered_zombie_cards(
 		cards_by_type: Dictionary[CharacterRegistry.ZombieType, Card],

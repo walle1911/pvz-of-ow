@@ -3008,9 +3008,19 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, footer_
 	map_picker.select(maxi(0, SIMPLE_MAP_TYPES.find(current_map)))
 	var refresh_speed := _settings_spin(dialog, "僵尸刷新速度倍率", Vector2(220, 70), 0.1, 5.0, float(level.get("zombieRefreshSpeedMultiplier", 1.0)), 0.05)
 	refresh_speed.size.x = 200
-	var sun := _settings_spin(dialog, "开局阳光", Vector2(50, 140), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
+	var sun := _settings_spin(dialog, "开局阳光", Vector2(0, 140), 0, 9999, int(level["playerConfig"]["initialSun"]), 25)
 	sun.size.x = 200
-	var plant_hint := _paper_label("刷新倍率 1.0 为原速，越大换波越快。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(0, 202), Vector2(412, 34), 14, Color("d7bd80"))
+	var late_game_power := _settings_spin(
+		dialog,
+		"后半程出怪战力倍率",
+		Vector2(220, 140),
+		1.0,
+		ZombieWaveCreateManager.SIMPLE_LATE_GAME_MAX_POWER_MULTIPLIER,
+		CustomRuntime.simple_late_game_power_multiplier(level),
+		0.05
+	)
+	late_game_power.size.x = 200
+	var plant_hint := _paper_label("刷新倍率 1.0 为原速；后半程倍率 1.0 为原版点数。\n正式关卡的通关奖励请在左侧“可选卡片”中选择", Vector2(0, 202), Vector2(412, 34), 14, Color("d7bd80"))
 	plant_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dialog.add_child(plant_hint)
 	var special_title := _paper_label("地图特殊设定", Vector2(0, 238), Vector2(412, 26), 19, Color("e9d28a"))
@@ -3054,6 +3064,7 @@ func _build_simple_level_settings(dialog: Control, name_input: LineEdit, footer_
 		level["playerConfig"]["sunDropSpeed"] = 1.0
 		level["playerConfig"]["cooldownMultiplier"] = 1.0
 		level["zombieRefreshSpeedMultiplier"] = float(refresh_speed.value)
+		level["simpleLateGamePowerMultiplier"] = float(late_game_power.value)
 		level["plantSelectionEnabled"] = true
 		level["forcedPlants"] = []
 		level["freePlantSelection"] = true

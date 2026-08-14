@@ -45,6 +45,7 @@ var _is_ana_coffee_dual_card := false
 var _is_ana_coffee_mode := false
 var _ana_coffee_mode_toggle:TextureButton
 var _ana_coffee_mode_toggle_icon:TextureRect
+var _ana_coffee_mode_toggle_sun_mask:ColorRect
 var _ana_coffee_mode_toggle_cool_mask:ProgressBar
 var _ana_coffee_preview_root:Node2D
 var _normal_coffee_preview_root:Node2D
@@ -193,12 +194,20 @@ func _ensure_ana_coffee_toggle_in_battle() -> void:
 	_ana_coffee_mode_toggle_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_icon)
 
+	_ana_coffee_mode_toggle_sun_mask = ColorRect.new()
+	_ana_coffee_mode_toggle_sun_mask.name = "InsufficientSunMask"
+	_ana_coffee_mode_toggle_sun_mask.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_ana_coffee_mode_toggle_sun_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ana_coffee_mode_toggle_sun_mask.color = Color(0.0, 0.0, 0.0, 0.47)
+	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_sun_mask)
+
 	_ana_coffee_mode_toggle_cool_mask = _cool_mask.duplicate() as ProgressBar
 	_ana_coffee_mode_toggle_cool_mask.name = "SharedCooldownMask"
 	_ana_coffee_mode_toggle_cool_mask.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_ana_coffee_mode_toggle_cool_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ana_coffee_mode_toggle.add_child(_ana_coffee_mode_toggle_cool_mask)
 	_update_ana_coffee_toggle_visual()
+	_refresh_ana_coffee_toggle_sun_mask()
 	_sync_ana_coffee_toggle_cool_mask()
 
 
@@ -277,6 +286,24 @@ func _update_ana_coffee_toggle_visual() -> void:
 	_ana_coffee_mode_toggle.tooltip_text = "切换为普通咖啡豆" if _is_ana_coffee_mode else "切换为安娜咖啡豆"
 
 
+func _refresh_ana_coffee_toggle_sun_mask(curr_sun_value = null) -> void:
+	if not is_instance_valid(_ana_coffee_mode_toggle_sun_mask):
+		return
+	if curr_sun_value == null:
+		if not is_instance_valid(Global.main_game) \
+				or not is_instance_valid(Global.main_game.card_manager) \
+				or not is_instance_valid(Global.main_game.card_manager.card_slot_battle):
+			return
+		curr_sun_value = Global.main_game.card_manager.card_slot_battle.sun_value
+	var toggle_plant_type := CharacterRegistry.PlantType.P536CoffeeBean \
+		if _is_ana_coffee_mode else CharacterRegistry.PlantType.P036CoffeeBeanAna
+	var toggle_sun_cost = Global.character_registry.get_plant_info(
+		toggle_plant_type,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	)
+	_ana_coffee_mode_toggle_sun_mask.visible = curr_sun_value < toggle_sun_cost
+
+
 func _sync_ana_coffee_toggle_cool_mask() -> void:
 	if not is_instance_valid(_ana_coffee_mode_toggle_cool_mask):
 		return
@@ -319,6 +346,7 @@ func get_availability_plant_type() -> CharacterRegistry.PlantType:
 func judge_sun_enough(curr_sun_value):
 	# 判断阳光是否足够
 	is_sun_enough = curr_sun_value >= sun_cost
+	_refresh_ana_coffee_toggle_sun_mask(curr_sun_value)
 	judge_card_ready()
 
 ## 判断卡片是否可以点击

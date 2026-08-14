@@ -110,6 +110,8 @@ var custom_stage_schedule: Array[Dictionary] = []
 var custom_flag_data: Array[Dictionary] = []
 ## 简易关卡在开战前预生成自然波次，并保留权重衰减、旗帜数量和出生偏移规则。
 var custom_simple_original_mode := false
+## 工坊可调的后半程点数上限；1 表示完全使用原版曲线。
+var simple_late_game_max_power_multiplier := 1.0
 ## 简易关卡中用于补足战力的基础普通僵尸，以及每个旗帜波固定领队。
 var simple_base_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z001NormTalon
 var simple_flag_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z002FlagTalon
@@ -133,6 +135,8 @@ var special_reward_card_source_dir := ""
 var boss_enabled := false
 var boss_zombie_type: CharacterRegistry.ZombieType = CharacterRegistry.ZombieType.Z524Gargantuar
 var boss_reward_plant_type := -1
+## 选关界面确认“从存档点继续”后使用；只在本次进场期间生效。
+var resume_boss_checkpoint := false
 var active_lawn_rows: Array[int] = []
 var sod_layout_rows := 5
 var sod_rollout_rows := 0
@@ -457,7 +461,7 @@ func _apply_zombie_mode_rules() -> void:
 
 
 func _maybe_load_multi_round_save() -> void:
-	if game_round != 1:
+	if game_round != 1 or resume_boss_checkpoint:
 		print("更新多轮游戏存档数据")
 		update_data_with_save_game_data()
 

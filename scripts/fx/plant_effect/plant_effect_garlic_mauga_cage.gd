@@ -1,3 +1,4 @@
+@tool
 extends ForceFieldCage2D
 class_name PlantEffectGarlicMaugaCage
 

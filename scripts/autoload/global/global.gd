@@ -1,5 +1,8 @@
 extends Node
 
+## 返回选关场景时一次性指定要展示的世界页；读取后由选关场景重置。
+var choose_level_page_override := -1
+
 const AdventurePresetsRuntime := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const CustomLevelRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 

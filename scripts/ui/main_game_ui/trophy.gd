@@ -138,6 +138,11 @@ func _update_reward_copy(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 
 	reward_title.text = "你得到一株新植物！"
 	var plant_type := plant_types[0]
+	if main_game.game_para.level_id == "adventure_1_9" \
+	and plant_type == CharacterRegistry.PlantType.P505PotatoMine:
+		reward_description.text = "能击败恶魔的只有土豆"
+		reward_description.add_theme_font_size_override("font_size", 16)
+		return
 	var registry_name: String = Global.character_registry.get_plant_info(
 		plant_type,
 		CharacterRegistry.PlantInfoAttribute.PlantName,

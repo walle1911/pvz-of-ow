@@ -4,6 +4,9 @@ class_name ChooseLevel
 const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
+const BOSS_DIALOG_BACKGROUND := preload("res://assets/image/ui/ui_main_game_menu/UI_BG/dialog_BG.png")
+const BOSS_DIALOG_BUTTON := preload("res://assets/image/ui/ui_main_game_menu/UI_BG/button_BG.png")
+const BOSS_DIALOG_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const WORLD_COVER_TEXTURES: Array[Texture2D] = [
 	preload("res://assets/image/Almanac/Almanac_GroundDay.jpg"),
 	preload("res://assets/image/Almanac/Almanac_GroundNight.jpg"),
@@ -17,6 +20,8 @@ const POOL_SURFACE_COVER_LEVELS := [&"adventure_3_1", &"adventure_3_2", &"advent
 var next_level_number: int = 1
 var configured_level_count := 0
 var cover_texture_used_rect_cache: Dictionary[int, Rect2i] = {}
+var boss_checkpoint_dialog: Control
+var pending_boss_level_para: ResourceLevelData
 
 @onready var all_page: Control = $AllPage
 @onready var label_page: Label = get_node_or_null("LabelPage")
@@ -113,7 +118,11 @@ func update_lock_level(choose_level_button:ChooseLevelButton, curr_level_state_d
 
 func _ready_update_page():
 	## 如果从游戏中退出
-	if Global.game_para != null and Global.game_para.game_mode == game_mode:
+	if game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure \
+	and Global.choose_level_page_override >= 0:
+		curr_page = Global.choose_level_page_override
+		Global.choose_level_page_override = -1
+	elif Global.game_para != null and Global.game_para.game_mode == game_mode:
 		curr_page = Global.game_para.level_page
 
 	if curr_page >= all_pages_array.size():
@@ -145,8 +154,118 @@ func _on_choose_level_button(choose_level_button:ChooseLevelButton):
 		var preset_para: ResourceLevelData = cached["game_para"]
 		preset_para.set_choose_level(game_mode, curr_page, choose_level_button.preset_level_id)
 		choose_level_button.curr_level_data_game_para = preset_para
-	Global.game_para = choose_level_button.curr_level_data_game_para
-	choose_level_start_game(choose_level_button.curr_level_data_game_para.game_sences)
+	var level_para := choose_level_button.curr_level_data_game_para
+	level_para.resume_boss_checkpoint = false
+	var state: Dictionary = Global.global_game_state.curr_all_level_state_data.get(level_para.save_game_name, {})
+	if level_para.boss_enabled and bool(state.get("HasBossCheckpoint", false)) \
+	and ResourceLoader.exists(level_para.get_read_save_game_path()):
+		_show_boss_checkpoint_dialog(level_para)
+		return
+	_start_selected_level(level_para, false)
+
+
+func _start_selected_level(level_para: ResourceLevelData, resume_checkpoint: bool) -> void:
+	level_para.resume_boss_checkpoint = resume_checkpoint
+	Global.game_para = level_para
+	choose_level_start_game(level_para.game_sences)
+
+
+func _show_boss_checkpoint_dialog(level_para: ResourceLevelData) -> void:
+	if is_instance_valid(boss_checkpoint_dialog):
+		return
+	pending_boss_level_para = level_para
+	boss_checkpoint_dialog = Control.new()
+	boss_checkpoint_dialog.name = "BossCheckpointDialog"
+	boss_checkpoint_dialog.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	boss_checkpoint_dialog.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_checkpoint_dialog.z_index = 200
+	add_child(boss_checkpoint_dialog)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.0, 0.0, 0.0, 0.68)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_checkpoint_dialog.add_child(shade)
+	var panel := TextureRect.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-260, -150)
+	panel.size = Vector2(520, 300)
+	panel.texture = BOSS_DIALOG_BACKGROUND
+	panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	panel.stretch_mode = TextureRect.STRETCH_SCALE
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_checkpoint_dialog.add_child(panel)
+	var title := Label.new()
+	title.position = Vector2(35, 68)
+	title.size = Vector2(450, 42)
+	title.text = "发现 Boss 挑战存档"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	title.add_theme_font_size_override("font_size", 25)
+	title.add_theme_color_override("font_color", Color("f3e7ba"))
+	panel.add_child(title)
+	var description := Label.new()
+	description.position = Vector2(45, 118)
+	description.size = Vector2(430, 44)
+	description.text = "要从进入 Boss 房前的存档点继续，还是重新开始本关？"
+	description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	description.add_theme_font_size_override("font_size", 17)
+	description.add_theme_color_override("font_color", Color("e8e1cc"))
+	panel.add_child(description)
+	## 操作按钮固定在底栏，正文不会把按钮挤出目标分辨率。
+	panel.add_child(_boss_checkpoint_button("重新开始", Vector2(73, 205), _restart_boss_level))
+	panel.add_child(_boss_checkpoint_button("从存档点继续", Vector2(277, 205), _resume_boss_level))
+
+
+func _boss_checkpoint_button(text_value: String, pos: Vector2, callback: Callable) -> TextureButton:
+	var button := TextureButton.new()
+	button.position = pos
+	button.size = Vector2(170, 52)
+	button.texture_normal = BOSS_DIALOG_BUTTON
+	button.texture_hover = BOSS_DIALOG_BUTTON
+	button.texture_pressed = BOSS_DIALOG_BUTTON
+	button.ignore_texture_size = true
+	button.stretch_mode = TextureButton.STRETCH_SCALE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.text = text_value
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_color", Color("2c1c0b"))
+	button.add_child(label)
+	button.pressed.connect(callback)
+	return button
+
+
+func _resume_boss_level() -> void:
+	var level_para := pending_boss_level_para
+	_close_boss_checkpoint_dialog()
+	_start_selected_level(level_para, true)
+
+
+func _restart_boss_level() -> void:
+	var level_para := pending_boss_level_para
+	level_para.delete_game_data()
+	var state: Dictionary = Global.global_game_state.curr_all_level_state_data.get(level_para.save_game_name, {})
+	state["HasBossCheckpoint"] = false
+	Global.global_game_state.curr_all_level_state_data[level_para.save_game_name] = state
+	Global.save_service.save_now()
+	_close_boss_checkpoint_dialog()
+	_start_selected_level(level_para, false)
+
+
+func _close_boss_checkpoint_dialog() -> void:
+	if is_instance_valid(boss_checkpoint_dialog):
+		boss_checkpoint_dialog.queue_free()
+	boss_checkpoint_dialog = null
+	pending_boss_level_para = null
 
 
 func _build_adventure_preset_buttons() -> void:

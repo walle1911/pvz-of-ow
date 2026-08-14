@@ -1,20 +1,160 @@
 {
-	"version": 1,
 	"characters": {
-		"res://scenes/character/plant/plant_003_cherry_bomb_junkrat.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_sun_cost": 150}}},
-		"res://scenes/character/plant/plant_004_wall_nut_brigitte.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_sun_cost": 50}}},
-		"res://scenes/character/plant/plant_006_snow_pea_mei.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_sun_cost": 175}, "AttackComponent": {"close_spray_freeze_time": 4.0}}},
-		"res://scenes/character/plant/plant_014_scaredy_shroom_widowmaker.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_sun_cost": 50}, "AttackComponent": {"attack_value_bullet": 75}}},
-		"res://scenes/character/plant/plant_024_tall_nut_sigma.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_sun_cost": 175}}},
-		"res://scenes/character/plant/plant_032_magnet_shroom_sombra.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {".": {"emp_radius": 80.0}, "@registry": {"plant_cool_time": 25.0}}},
-		"res://scenes/character/plant/plant_036_coffee_bean_ana.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_cool_time": 25.0, "plant_sun_cost": 100}}},
-		"res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn": {"baked_at": "2026-08-10 17:14:24", "values": {"@registry": {"plant_sun_cost": 125}, "AttackComponent": {"attack_value_bullet": 12}}},
-		"res://scenes/character/plant/plant_052_bonk_choy_ramattra.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_cool_time": 30.0, "plant_sun_cost": 150}, "HpComponent": {"max_hp": 1200}}},
-		"res://scenes/character/plant/plant_505_potato_mine.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"@registry": {"plant_cool_time": 60.0, "plant_sun_cost": 500}}},
-		"res://scenes/character/zombie/zombie_001_norm_talon.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"AttackComponent": {"init_attack_value_per_min": 125}, "HpComponent": {"max_hp": 350}, "MoveComponent": {"ori_speed": 30.0}}},
-		"res://scenes/character/zombie/zombie_002_flag_talon.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"HpComponent": {"max_hp": 350}, "MoveComponent": {"ori_speed": 30.0}}},
-		"res://scenes/character/zombie/zombie_003_cone_talon.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"HpComponent": {"max_hp": 350, "max_hp_armor1": 500}, "MoveComponent": {"ori_speed": 30.0}}},
-		"res://scenes/character/zombie/zombie_005_bucket_talon.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"HpComponent": {"max_hp": 350, "max_hp_armor1": 1800}, "MoveComponent": {"ori_speed": 30.0}}},
-		"res://scenes/character/zombie/zombie_026_peashooter_soj.tscn": {"baked_at": "2026-08-01 19:00:00", "values": {"HpComponent": {"max_hp": 8000}}}
-	}
+		"res://scenes/character/plant/plant_003_cherry_bomb_junkrat.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 150.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_004_wall_nut_brigitte.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 50.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_006_snow_pea_mei.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 175.0
+				},
+				"AttackComponent": {
+					"close_spray_freeze_time": 4.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_014_scaredy_shroom_widowmaker.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 50.0
+				},
+				"AttackComponent": {
+					"attack_value_bullet": 75.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_024_tall_nut_sigma.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 175.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_032_magnet_shroom_sombra.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				".": {
+					"emp_radius": 80.0
+				},
+				"@registry": {
+					"plant_cool_time": 25.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_036_coffee_bean_ana.tscn": {
+			"baked_at": "2026-08-14 21:51:15",
+			"values": {
+				"@registry": {
+					"plant_cool_time": 25.0,
+					"plant_sun_cost": 125
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn": {
+			"baked_at": "2026-08-10 17:14:24",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 125.0
+				},
+				"AttackComponent": {
+					"attack_value_bullet": 12.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_052_bonk_choy_ramattra.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_cool_time": 30.0,
+					"plant_sun_cost": 150.0
+				},
+				"HpComponent": {
+					"max_hp": 1200.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_505_potato_mine.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"@registry": {
+					"plant_cool_time": 60.0,
+					"plant_sun_cost": 500.0
+				}
+			}
+		},
+		"res://scenes/character/zombie/zombie_001_norm_talon.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"AttackComponent": {
+					"init_attack_value_per_min": 125.0
+				},
+				"HpComponent": {
+					"max_hp": 350.0
+				},
+				"MoveComponent": {
+					"ori_speed": 30.0
+				}
+			}
+		},
+		"res://scenes/character/zombie/zombie_002_flag_talon.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"HpComponent": {
+					"max_hp": 350.0
+				},
+				"MoveComponent": {
+					"ori_speed": 30.0
+				}
+			}
+		},
+		"res://scenes/character/zombie/zombie_003_cone_talon.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"HpComponent": {
+					"max_hp": 350.0,
+					"max_hp_armor1": 500.0
+				},
+				"MoveComponent": {
+					"ori_speed": 30.0
+				}
+			}
+		},
+		"res://scenes/character/zombie/zombie_005_bucket_talon.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"HpComponent": {
+					"max_hp": 350.0,
+					"max_hp_armor1": 1800.0
+				},
+				"MoveComponent": {
+					"ori_speed": 30.0
+				}
+			}
+		},
+		"res://scenes/character/zombie/zombie_026_peashooter_soj.tscn": {
+			"baked_at": "2026-08-01 19:00:00",
+			"values": {
+				"HpComponent": {
+					"max_hp": 8000.0
+				}
+			}
+		}
+	},
+	"version": 1
 }

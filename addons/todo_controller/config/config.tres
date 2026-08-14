@@ -465,6 +465,7 @@ script_list_meta = {
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
 "res://tests/test_mauga_cage_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1],
+"res://tests/test_numerical_registry_consistency.gd": [-1, -1],
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
 "res://tests/test_plant_balance_smoke.gd": [-1, -1],

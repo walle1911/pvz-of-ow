@@ -618,8 +618,8 @@ func _add_registry_property_editor(property_name:String) -> void:
 
 
 func _plant_registry_default_value(plant_id: int, attribute: CharacterRegistry.PlantInfoAttribute):
-	var plant_info: Dictionary = CharacterRegistry.PlantInfo.get(plant_id, {})
-	return plant_info.get(attribute, 0)
+	var value = Global.character_registry.get_plant_baked_registry_value(plant_id, attribute)
+	return value if value != null else 0
 
 
 func _add_property_editor(root: Node, node: Node, property_info: Dictionary) -> void:

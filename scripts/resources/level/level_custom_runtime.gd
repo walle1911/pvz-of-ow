@@ -118,6 +118,7 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	if is_simple_mode:
 		## 简易关卡沿用自然波次管理器，并在管理器初始化时按权重预生成整关波表。
 		game_para.custom_simple_original_mode = true
+		game_para.simple_late_game_max_power_multiplier = simple_late_game_power_multiplier(level)
 		game_para.simple_base_zombie_type = int(level.get("simpleBaseZombieType", CharacterRegistry.ZombieType.Z001NormTalon)) as CharacterRegistry.ZombieType
 		game_para.simple_flag_zombie_type = int(level.get("simpleFlagZombieType", CharacterRegistry.ZombieType.Z002FlagTalon)) as CharacterRegistry.ZombieType
 		var allowed_types := _simple_allowed_zombie_types(
@@ -203,6 +204,8 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 		)
 	)
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
+	if game_para.boss_enabled:
+		game_para.game_BGM = ConstLevelData.GameBGM.Boss
 	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
 
@@ -295,6 +298,34 @@ static func _automatic_simple_intro_waves(
 			intro_wave = 7
 		result[int(zombie_type)] = clampi(intro_wave, 1, max_wave)
 	return result
+
+
+## 关卡显式保存的值始终优先，工坊设为 1.0 即可完全关闭后半程补偿。
+## 旧关卡还没有该字段时才使用保守默认值：每个新世界的前三关重置为 1.0，
+## 先让玩家适应新地图和经济节奏，之后再逐关增加。
+static func simple_late_game_power_multiplier(level: Dictionary) -> float:
+	if level.has("simpleLateGamePowerMultiplier"):
+		return clampf(
+			float(level.get("simpleLateGamePowerMultiplier", 1.0)),
+			1.0,
+			ZombieWaveCreateManager.SIMPLE_LATE_GAME_MAX_POWER_MULTIPLIER
+		)
+	var preset_id := str(level.get("formalPresetId", ""))
+	var id_parts := preset_id.split("_")
+	if id_parts.size() != 3 or id_parts[0] != "adventure" \
+	or not str(id_parts[1]).is_valid_int() or not str(id_parts[2]).is_valid_int():
+		return 1.0
+	var world := int(id_parts[1])
+	var level_number := int(id_parts[2])
+	if world == 1:
+		if level_number <= 6:
+			return 1.0
+		return minf(1.6, 1.0 + float(level_number - 6) * 0.2)
+	if world >= 2 and world <= 5:
+		if level_number <= 3:
+			return 1.0
+		return minf(1.6, 1.0 + float(level_number - 3) * 0.1)
+	return 1.0
 
 static func _original_zombie_weight(zombie_type: int) -> int:
 	return maxi(0, int(ZombieWaveCreateManager.zombie_weights_ori.get(zombie_type, AdventurePresets.ZOMBIE_WEIGHTS.get(zombie_type, 0))))

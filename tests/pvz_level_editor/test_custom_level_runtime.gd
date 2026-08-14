@@ -47,6 +47,7 @@ func _ready() -> void:
 	assert(boss_para.boss_enabled)
 	assert(boss_para.boss_zombie_type == CharacterRegistry.ZombieType.Z003ConeTalon)
 	assert(boss_para.boss_reward_plant_type == int(CharacterRegistry.PlantType.P003CherryBombJunkrat))
+	assert(boss_para.game_BGM == ConstLevelData.GameBGM.Boss)
 	assert(not boss_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z003ConeTalon))
 	assert(Logic.validate_level(boss_level).all(func(issue): return issue["severity"] != "error"))
 	var invalid_boss_level := boss_level.duplicate(true)

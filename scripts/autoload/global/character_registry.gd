@@ -857,13 +857,30 @@ func get_plant_info(plant_type:PlantType, info_attribute:PlantInfoAttribute):
 		return _cache_plant_condition(default_value)
 	if info_attribute not in [PlantInfoAttribute.CoolTime, PlantInfoAttribute.SunCost]:
 		return default_value
+	var baked_value = get_plant_baked_registry_value(plant_type, info_attribute)
 	var scene_value = curr_plant_info[PlantInfoAttribute.PlantScenes]
+	var scene_path:String = scene_value.resource_path if scene_value is PackedScene else str(scene_value)
+	if scene_path.is_empty():
+		return baked_value
+	var property_name := "plant_cool_time" if info_attribute == PlantInfoAttribute.CoolTime else "plant_sun_cost"
+	return _get_developer_plant_registry_value(scene_path, property_name, baked_value)
+
+
+## 返回未叠加玩家数值调整的运行时基准值。场景中已经烘焙的注册字段优先于
+## PlantInfo 常量；数值编辑器必须使用这里，避免显示值与卡片实际值不一致。
+func get_plant_baked_registry_value(plant_type:PlantType, info_attribute:PlantInfoAttribute):
+	if plant_type == PlantType.Null or not PlantInfo.has(plant_type):
+		return null
+	var curr_plant_info:Dictionary = PlantInfo[plant_type]
+	var default_value = curr_plant_info.get(info_attribute)
+	if info_attribute not in [PlantInfoAttribute.CoolTime, PlantInfoAttribute.SunCost]:
+		return default_value
+	var scene_value = curr_plant_info.get(PlantInfoAttribute.PlantScenes, "")
 	var scene_path:String = scene_value.resource_path if scene_value is PackedScene else str(scene_value)
 	if scene_path.is_empty():
 		return default_value
 	var property_name := "plant_cool_time" if info_attribute == PlantInfoAttribute.CoolTime else "plant_sun_cost"
-	var baked_value = _get_baked_plant_scene_value(scene_path, property_name, default_value)
-	return _get_developer_plant_registry_value(scene_path, property_name, baked_value)
+	return _get_baked_plant_scene_value(scene_path, property_name, default_value)
 
 
 func _get_baked_plant_scene_value(scene_path:String, property_name:String, fallback):

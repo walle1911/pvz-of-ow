@@ -17,11 +17,18 @@ const ANA_NANO_BOOST := preload("res://scripts/character/effects/ana_nano_boost.
 
 ## 唤醒植物
 func awake_up_plant():
-	var target_plant := plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm] as Plant000Base
-	if not is_instance_valid(target_plant):
+	if not is_instance_valid(plant_cell):
 		return
+	## 种下咖啡豆到动画调用此方法之间，目标植物可能已经死亡释放。
+	## 已释放的 Object 在执行 `as Plant000Base` 时就会报错，因此先验证原始 Variant。
+	var target_value:Variant = plant_cell.plant_in_cell[CharacterRegistry.PlacePlantInCell.Norm]
+	if not is_instance_valid(target_value) or not target_value is Plant000Base:
+		return
+	var target_plant := target_value as Plant000Base
 	if target_plant.is_sleeping:
 		plant_cell.coffee_bean_awake_up()
+	if not is_instance_valid(target_plant):
+		return
 	if not is_nano_boost_target_type(target_plant.plant_type):
 		return
 	_apply_nano_boost(target_plant)

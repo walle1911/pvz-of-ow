@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/test_numerical_registry_consistency.gd" id="1_test"]
+
+[node name="TestNumericalRegistryConsistency" type="Node"]
+script = ExtResource("1_test")

@@ -146,8 +146,8 @@ func _rebuild_head_ribbons() -> void:
 	_clear_dynamic_children(head_front)
 	_clear_dynamic_children(head_core)
 	for ribbon_index in range(head_ribbon_count):
-		var seed := float(ribbon_index) + 1.0
-		var phase := seed * 1.731
+		var ribbon_seed := float(ribbon_index) + 1.0
+		var phase := ribbon_seed * 1.731
 		var is_back := ribbon_index % 2 == 0
 		var body_parent := head_back if is_back else head_front
 		_create_head_ribbon(body_parent, ribbon_index, glow_width * 0.72, 0.13, phase, 0)
@@ -285,5 +285,5 @@ func _get_configuration_hash() -> int:
 	].hash()
 
 
-func _hash(seed:float) -> float:
-	return fposmod(sin(seed * 12.9898) * 43758.5453, 1.0)
+func _hash(hash_seed:float) -> float:
+	return fposmod(sin(hash_seed * 12.9898) * 43758.5453, 1.0)

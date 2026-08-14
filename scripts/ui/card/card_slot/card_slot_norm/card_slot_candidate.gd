@@ -91,6 +91,22 @@ func _init_card_slot_candidate_pages():
 
 	var ordered_plant_cards := _collect_plant_cards()
 	ordered_plant_cards.sort_custom(_sort_card_by_id)
+	## 冒险关只展示本关卡池，数量通常不满一页；此时保持连续排布，
+	## 避免仅有一张原版卡（例如 1-10 的土豆地雷）被单独拆到第二页。
+	if _adventure_card_lock_active():
+		_add_card_pages(grid_container_plant, ordered_plant_cards, all_card_candidate_containers_plant)
+	else:
+		_add_grouped_plant_pages(ordered_plant_cards)
+
+	var ordered_zombie_cards := _collect_zombie_cards()
+	ordered_zombie_cards.sort_custom(_sort_card_by_id)
+	_add_card_pages(grid_container_zombie, ordered_zombie_cards, all_card_candidate_containers_zombie)
+
+	grid_container_plant.queue_free()
+	grid_container_zombie.queue_free()
+
+
+func _add_grouped_plant_pages(ordered_plant_cards: Array[Card]) -> void:
 	var ow_plant_cards:Array[Card] = []
 	var original_plant_cards:Array[Card] = []
 	for card in ordered_plant_cards:
@@ -101,13 +117,6 @@ func _init_card_slot_candidate_pages():
 	## 两类植物从新页面开始，避免按容量切页时把 OW 改版卡和原版卡混在同一页。
 	_add_card_pages(grid_container_plant, ow_plant_cards, all_card_candidate_containers_plant)
 	_add_card_pages(grid_container_plant, original_plant_cards, all_card_candidate_containers_plant)
-
-	var ordered_zombie_cards := _collect_zombie_cards()
-	ordered_zombie_cards.sort_custom(_sort_card_by_id)
-	_add_card_pages(grid_container_zombie, ordered_zombie_cards, all_card_candidate_containers_zombie)
-
-	grid_container_plant.queue_free()
-	grid_container_zombie.queue_free()
 
 
 func _collect_plant_cards() -> Array[Card]:

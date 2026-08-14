@@ -8,6 +8,10 @@ const NumericalStore := preload("res://scripts/resources/numerical_adjustment_st
 const ORIGINAL_START_RANDOM_OFFSET := 40
 ## PvZ1 旗帜波的所有常规入场僵尸会额外向右移动 40 像素。
 const ORIGINAL_FLAG_WAVE_OFFSET := 40
+## OW 植物阵容成型后的后半程压力补偿：前半程仍使用原版点数，
+## 越过中点后再逐波提高，后期关卡最多为原版点数的 1.6 倍。
+const SIMPLE_LATE_GAME_START_PROGRESS := 0.5
+const SIMPLE_LATE_GAME_MAX_POWER_MULTIPLIER := 1.6
 
 #region 波次生成僵尸管理器参数
 ## 出怪倍率
@@ -398,9 +402,41 @@ func calculate_wave_power_limit(wave:int, is_big_wave: bool) -> int:
 	var base_power_limit:int = wave / 3 + 1
 	## 如果是大波，战力上限是原战力上限的2.5倍
 	if is_big_wave:
-		return int(base_power_limit * 2.5) * zombie_multy
+		base_power_limit = int(base_power_limit * 2.5)
+
+	## 仅工坊简易原版模式使用后半程压力补偿。先完成原版的
+	## 波次点数和旗帜波 2.5 倍计算，再只放大结果；后续权重抽取、
+	## 首秀、固定单位和 PutInMissingZombies 仍走原有流程。
+	if zombie_manager.game_para.custom_simple_original_mode:
+		base_power_limit = simple_late_game_power_limit(
+			base_power_limit,
+			wave,
+			zombie_manager.game_para.max_wave,
+			zombie_manager.game_para.simple_late_game_max_power_multiplier
+		)
 
 	return base_power_limit * zombie_multy
+
+
+## 对已由原版公式算出的本波点数做局内后半程补偿。
+## wave 使用 0-based 索引；以首末波为 0..1 归一化，确保 10、20 或更多波都有
+## 完整的前半程发育窗口，并在最终波精确达到最大倍率。
+static func simple_late_game_power_limit(
+	original_power_limit: int,
+	wave: int,
+	wave_count: int,
+	max_multiplier: float = SIMPLE_LATE_GAME_MAX_POWER_MULTIPLIER
+) -> int:
+	var safe_power_limit := maxi(0, original_power_limit)
+	var safe_max_multiplier := clampf(max_multiplier, 1.0, SIMPLE_LATE_GAME_MAX_POWER_MULTIPLIER)
+	if safe_power_limit == 0 or wave_count <= 1 or is_equal_approx(safe_max_multiplier, 1.0):
+		return safe_power_limit
+	var progress := clampf(float(wave + 1) / float(wave_count), 0.0, 1.0)
+	if progress <= SIMPLE_LATE_GAME_START_PROGRESS:
+		return safe_power_limit
+	var late_progress := inverse_lerp(SIMPLE_LATE_GAME_START_PROGRESS, 1.0, progress)
+	var multiplier := lerpf(1.0, safe_max_multiplier, late_progress)
+	return maxi(safe_power_limit, roundi(float(safe_power_limit) * multiplier))
 
 ## 计算当前波僵尸权重上限
 func update_curr_zombie_weight_upper_limit(wave:int):

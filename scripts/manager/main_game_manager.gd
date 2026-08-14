@@ -160,6 +160,7 @@ var boss_normal_flow_completed := false
 var boss_battle_started := false
 var boss_battle_finished := false
 var boss_choice_layer: Control
+var boss_failure_layer: Control
 var active_boss: Zombie000Base
 var target_range_hint_layer: Control
 signal target_range_hint_dismissed
@@ -219,7 +220,8 @@ func _ready() -> void:
 	game_para.init_para()
 	_setup_workshop_return_button()
 	## 多轮游戏并且有存档
-	is_save_game_data_on_init = game_para.game_round != 1 and game_para.save_game_data_main_game != null
+	is_save_game_data_on_init = game_para.save_game_data_main_game != null \
+		and (game_para.game_round != 1 or game_para.resume_boss_checkpoint)
 
 	## 订阅总线事件
 	event_bus_subscribe()
@@ -242,7 +244,10 @@ func _ready() -> void:
 	## 若有存档
 	if is_save_game_data_on_init:
 		load_game_main_game()
-		start_next_round_game()
+		if game_para.resume_boss_checkpoint:
+			_resume_boss_checkpoint()
+		else:
+			start_next_round_game()
 	else:
 
 		## 如果有戴夫对话
@@ -575,7 +580,9 @@ func roof_zombie_go_home(zombie:Zombie000Base):
 
 ## 僵尸进房
 func on_zombie_go_home(zombie:Zombie000Base):
-	re_main_game()
+	## Boss 失败后仍要能回到追加战前的检查点；普通关卡失败继续沿用原有清档逻辑。
+	if not boss_battle_started or boss_battle_finished:
+		re_main_game()
 
 	main_game_progress = E_MainGameProgress.GAME_OVER
 	card_slot_root.visible = false
@@ -595,6 +602,8 @@ func on_zombie_go_home(zombie:Zombie000Base):
 	await get_tree().create_timer(3).timeout
 	SoundManager.play_other_SFX("scream")
 	ui_remind_word.zombie_won_word_appear()
+	if boss_battle_started and not boss_battle_finished:
+		_show_boss_failure_choice()
 
 
 #region 奖杯
@@ -641,7 +650,30 @@ func _begin_boss_choice() -> void:
 	zombie_manager.check_zombie_end_wave_timer.stop()
 	if is_instance_valid(zombie_manager.multi_round_end_wave_timer):
 		zombie_manager.multi_round_end_wave_timer.stop()
+	_save_boss_checkpoint()
 	_show_boss_choice()
+
+
+func _resume_boss_checkpoint() -> void:
+	boss_normal_flow_completed = true
+	main_game_progress = E_MainGameProgress.GAME_OVER
+	card_slot_root.visible = true
+	if game_para.is_day_sun:
+		day_suns_manager.start_day_sun()
+	_show_boss_choice()
+
+
+func _save_boss_checkpoint() -> void:
+	save_game_main_game(true)
+
+
+func _clear_boss_checkpoint() -> void:
+	game_para.resume_boss_checkpoint = false
+	game_para.delete_game_data()
+	var state: Dictionary = Global.global_game_state.curr_all_level_state_data.get(game_para.save_game_name, {})
+	state["HasBossCheckpoint"] = false
+	Global.global_game_state.curr_all_level_state_data[game_para.save_game_name] = state
+	Global.save_service.save_now()
 
 
 func _show_boss_choice() -> void:
@@ -789,6 +821,7 @@ func _dismiss_boss_choice() -> void:
 func _skip_boss_challenge() -> void:
 	boss_battle_finished = true
 	_dismiss_boss_choice()
+	_clear_boss_checkpoint()
 	_finish_main_game_transition()
 
 
@@ -838,7 +871,71 @@ func _start_boss_battle() -> void:
 	active_boss = zombie_manager.create_norm_zombie(boss_type, zombie_parent, zombie_init_para, spawn_position)
 	active_boss.signal_character_death.connect(_on_boss_defeated.bind(active_boss), CONNECT_ONE_SHOT)
 	main_game_progress = E_MainGameProgress.MAIN_GAME
+	SoundManager.play_bgm(bgm_main_game)
 	print("Boss 房开始：", _boss_zombie_name(), "，第 ", lane + 1, " 行")
+
+
+func _show_boss_failure_choice() -> void:
+	if is_instance_valid(boss_failure_layer):
+		return
+	boss_failure_layer = Control.new()
+	boss_failure_layer.name = "BossFailureChoice"
+	boss_failure_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	boss_failure_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_failure_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	boss_failure_layer.z_index = 210
+	canvas_layer_ui.add_child(boss_failure_layer)
+	var shade := ColorRect.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.color = Color(0.0, 0.0, 0.0, 0.72)
+	shade.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_failure_layer.add_child(shade)
+	var panel := TextureRect.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.position = Vector2(-260, -150)
+	panel.size = Vector2(520, 300)
+	panel.texture = BOSS_DIALOG_BACKGROUND
+	panel.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	panel.stretch_mode = TextureRect.STRETCH_SCALE
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	boss_failure_layer.add_child(panel)
+	var title := Label.new()
+	title.position = Vector2(35, 68)
+	title.size = Vector2(450, 42)
+	title.text = "挑 战 失 败"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	title.add_theme_font_size_override("font_size", 28)
+	title.add_theme_color_override("font_color", Color("f3e7ba"))
+	panel.add_child(title)
+	var description := Label.new()
+	description.position = Vector2(45, 118)
+	description.size = Vector2(430, 44)
+	description.text = "要放弃挑战，还是从进入 Boss 房前的存档点继续？"
+	description.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.add_theme_font_override("font", BOSS_DIALOG_FONT)
+	description.add_theme_font_size_override("font_size", 17)
+	description.add_theme_color_override("font_color", Color("e8e1cc"))
+	panel.add_child(description)
+	## 操作按钮固定在弹窗底栏，不受正文和窗口缩放影响。
+	panel.add_child(_boss_dialog_button("放弃挑战", Vector2(73, 205), _abandon_boss_after_failure))
+	panel.add_child(_boss_dialog_button("从存档点继续", Vector2(277, 205), _continue_boss_from_checkpoint))
+
+
+func _continue_boss_from_checkpoint() -> void:
+	game_para.resume_boss_checkpoint = true
+	TreePauseManager.end_tree_pause_clear_all_pause_factors()
+	get_tree().reload_current_scene()
+
+
+func _abandon_boss_after_failure() -> void:
+	boss_battle_finished = true
+	_clear_boss_checkpoint()
+	TreePauseManager.end_tree_pause_clear_all_pause_factors()
+	_finish_main_game_transition()
 
 
 func _release_all_lawn_movers_before_boss() -> void:
@@ -859,6 +956,7 @@ func _on_boss_defeated(boss: Zombie000Base) -> void:
 	if boss_battle_finished or boss != active_boss:
 		return
 	boss_battle_finished = true
+	_clear_boss_checkpoint()
 	active_boss = null
 	var boss_reward := int(game_para.boss_reward_plant_type) as CharacterRegistry.PlantType
 	game_para.reward_plant_types.clear()
@@ -922,6 +1020,10 @@ func _finish_main_game_transition() -> void:
 	## 多轮游戏，重置主游戏数据
 	if game_para.game_round != 1:
 		re_main_game()
+	## 世界终关返回选关时直接展示下一世界；1-10 的 Boss 放弃/跳过/击败均视为已正常通关。
+	if game_para.game_mode == MainSceneRegistry.MainScenes.ChooseLevelAdventure \
+	and game_para.level_id == "adventure_1_10":
+		Global.choose_level_page_override = 1
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap.get(game_para.game_mode, Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.StartMenu]))
 
 #endregion
@@ -952,7 +1054,7 @@ func change_is_mouse_visibel_on_hammer(value:bool):
 ## 读档系统只能从空白场景读档
 
 ## 存档
-func save_game_main_game():
+func save_game_main_game(is_boss_checkpoint := false):
 	var save_game_data_main_game:ResourceSaveGameMainGame = ResourceSaveGameMainGame.new()
 	save_game_data_main_game.curr_game_round = curr_game_round
 	## 植物数据
@@ -977,7 +1079,13 @@ func save_game_main_game():
 		push_error("关卡数据存档失败:%s, 错误代码 %d" % [path, err])
 	else:
 		print("关卡数据存档成功：", path)
-		update_level_state_data_multi_round_data(true)
+		if is_boss_checkpoint:
+			var state: Dictionary = Global.global_game_state.curr_all_level_state_data.get(game_para.save_game_name, {})
+			state["HasBossCheckpoint"] = true
+			Global.global_game_state.curr_all_level_state_data[game_para.save_game_name] = state
+			Global.save_service.save_now()
+		else:
+			update_level_state_data_multi_round_data(true)
 
 
 ## 重置当前主游戏 多轮关卡存档,多轮关卡数据

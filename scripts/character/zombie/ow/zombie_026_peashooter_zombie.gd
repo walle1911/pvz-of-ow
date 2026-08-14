@@ -17,6 +17,7 @@ var _is_peashooter_head_dropped := false
 var _is_raw_potato_poisoned := false
 
 const DAMAGE_MULTIPLIER := 0.5
+const RAW_POTATO_MINE_POISON_DAMAGE := 6000
 
 @export_group("索杰恩远程攻击")
 @export_range(0.1, 30.0, 0.05, "or_greater") var pea_shot_interval := 0.45
@@ -100,7 +101,7 @@ func _on_hp_stage_change_drop_peashooter_head(hp_stage: int) -> void:
 	_is_peashooter_head_dropped = true
 
 ## 啃到未成熟土豆雷后的专属中毒。视觉直接复用魅惑菇已有的成品变色，
-## 死亡沿用血量组件和僵尸原有死亡状态机。
+## 僵直结束后结算固定 6000 点伤害；若仍存活则恢复行动。
 func be_poisoned_by_raw_potato_mine() -> void:
 	if _is_raw_potato_poisoned or is_death:
 		return
@@ -114,9 +115,14 @@ func be_poisoned_by_raw_potato_mine() -> void:
 	body.owner_be_hypno()
 	await get_tree().create_timer(0.8, false).timeout
 	if is_instance_valid(self) and not is_death:
-		## 恢复动画速度后再进入原有死亡状态机；位移仍由中毒/死亡因素锁定。
+		## 先恢复动画速度再结算伤害，死亡时继续使用原有状态机。
 		update_speed_factor(1.0, Character000Base.E_Influence_Speed_Factor.RawPotatoPoison)
-		hp_component.Hp_loss_death()
+		hp_component.Hp_loss(RAW_POTATO_MINE_POISON_DAMAGE)
+		if not is_death:
+			body.set_other_color(BodyCharacter.E_ChangeColors.HypnoColor, Color.WHITE)
+			move_component.update_move_factor(false, MoveComponent.E_MoveFactor.IsCharacter)
+			attack_component.enable_component(ComponentNormBase.E_IsEnableFactor.Character)
+			attack_bullet.enable_component(ComponentNormBase.E_IsEnableFactor.Character)
 
 ## 死亡动画开始时停止头部动画
 func anim_death_start():

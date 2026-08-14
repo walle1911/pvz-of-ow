@@ -5,6 +5,8 @@ const CHAIN_OWNERS_META := &"garlic_mauga_chain_owners"
 const CHAIN_EFFECT_SCENE := preload("res://scripts/fx/plant_effect/plant_effect_garlic_mauga_chain.gd")
 const CAGE_EFFECT_SCENE := preload("res://scripts/fx/plant_effect/plant_effect_garlic_mauga_cage.gd")
 const CAGE_PROCESS_PRIORITY := 100
+const STOMP_BODY_Z_BOOST := 50
+const FLATTENED_BODY_LIFETIME := 2.0
 
 @export_range(0.1, 60.0, 0.1, "suffix:s") var chain_skill_duration := 6.0
 @export_range(0, 10000, 1, "suffix:HP") var chain_health_cost := 200
@@ -28,6 +30,7 @@ var _chain_area_x_ranges:Dictionary[int, Vector2] = {}
 var _chain_ground_bounds := Rect2()
 var _boundary_enforcement_deferred := false
 var _chain_intro_tween:Tween
+var _stomp_body_layer_raised := false
 
 func ready_norm() -> void:
 	super()
@@ -190,6 +193,7 @@ func _play_chain_stomp_intro(
 	## 完整走完 25px 小前摇后才起跳；最终落点仍是原位置前一格。
 	var jump_start:Vector2 = lunge_end
 	global_position = jump_start
+	_raise_stomp_body_layer()
 	var jump_end:Vector2 = landing_global_position
 	_chain_intro_tween = create_tween().set_trans(Tween.TRANS_LINEAR)
 	_chain_intro_tween.tween_method(
@@ -212,7 +216,25 @@ func _play_chain_stomp_intro(
 	global_position = landing_global_position
 	SoundManager.play_character_SFX(&"gargantuar_thump")
 	_stomp_zombies_in_cell(target_cell, landing_x_range, stomp_candidates)
+	_restore_stomp_body_layer_after_flattened_bodies()
 	_begin_chain_skill_after_stomp()
+
+func _raise_stomp_body_layer() -> void:
+	if _stomp_body_layer_raised or not is_instance_valid(body):
+		return
+	body.z_index += STOMP_BODY_Z_BOOST
+	_stomp_body_layer_raised = true
+
+func _restore_stomp_body_layer_after_flattened_bodies() -> void:
+	await get_tree().create_timer(FLATTENED_BODY_LIFETIME, false).timeout
+	_restore_stomp_body_layer()
+
+func _restore_stomp_body_layer() -> void:
+	if not _stomp_body_layer_raised:
+		return
+	if is_instance_valid(body):
+		body.z_index -= STOMP_BODY_Z_BOOST
+	_stomp_body_layer_raised = false
 
 func _apply_intro_health_cost_progress(progress:float) -> void:
 	var expected_cost:int = int(floor(float(chain_health_cost) * clampf(progress, 0.0, 1.0) + 0.0001))
@@ -273,6 +295,7 @@ func _cancel_chain_intro() -> void:
 	if is_instance_valid(_chain_intro_tween):
 		_chain_intro_tween.kill()
 	_chain_intro_tween = null
+	_restore_stomp_body_layer()
 	hp_component.remove_damage_immunity(self)
 	_update_ready_glow()
 
@@ -286,8 +309,8 @@ func _get_current_cage_x_ranges() -> Dictionary[int, Vector2]:
 	var all_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells
 	var first_lane:int = maxi(0, row_col.x - 1)
 	var last_lane:int = mini(all_cells.size() - 1, row_col.x + 1)
-	for lane:int in range(first_lane, last_lane + 1):
-		var lane_cells:Array = all_cells[lane]
+	for lane_index:int in range(first_lane, last_lane + 1):
+		var lane_cells:Array = all_cells[lane_index]
 		var range_min_x:float = INF
 		var range_max_x:float = -INF
 		for column_index:int in selected_column_indices:
@@ -298,12 +321,12 @@ func _get_current_cage_x_ranges() -> Dictionary[int, Vector2]:
 			range_max_x = maxf(range_max_x, cell_rect.end.x)
 		if range_min_x <= range_max_x:
 			var lane_y:float = Global.main_game.zombie_manager \
-				.all_zombie_rows[lane].zombie_create_position.global_position.y
+				.all_zombie_rows[lane_index].zombie_create_position.global_position.y
 			var circle_x_range:Vector2 = _get_cage_hard_x_range_at_y(
 				_get_current_cage_ground_bounds(),
 				lane_y
 			)
-			result[lane] = Vector2(
+			result[lane_index] = Vector2(
 				maxf(range_min_x, circle_x_range.x),
 				minf(range_max_x, circle_x_range.y)
 			)
@@ -352,8 +375,8 @@ func _get_current_cage_ground_bounds() -> Rect2:
 	var last_lane:int = mini(all_cells.size() - 1, row_col.x + 1)
 	var result:= Rect2()
 	var has_bounds := false
-	for lane:int in range(first_lane, last_lane + 1):
-		var lane_cells:Array = all_cells[lane]
+	for lane_index:int in range(first_lane, last_lane + 1):
+		var lane_cells:Array = all_cells[lane_index]
 		for column_index:int in selected_column_indices:
 			if column_index < 0 or column_index >= lane_cells.size():
 				continue
@@ -387,6 +410,7 @@ func _finish_chain_skill() -> void:
 	if not _chain_skill_active:
 		return
 	_chain_skill_active = false
+	_restore_stomp_body_layer()
 	_release_all_chains()
 	_remove_cage_visual()
 	hp_component.remove_damage_immunity(self)
@@ -410,6 +434,7 @@ func _on_character_death_cleanup() -> void:
 	if is_instance_valid(_chain_intro_tween):
 		_chain_intro_tween.kill()
 	_chain_intro_tween = null
+	_restore_stomp_body_layer()
 	hp_component.remove_damage_immunity(self)
 	body.body_light_and_dark_end()
 	_release_all_chains()

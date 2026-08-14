@@ -174,6 +174,10 @@ static func normalize_level(source: Dictionary) -> Dictionary:
 				normalized_once_final.append(zombie_type)
 	result["simpleOnceFinalZombies"] = normalized_once_final
 	result["zombieRefreshSpeedMultiplier"] = float(result.get("zombieRefreshSpeedMultiplier", 1.0))
+	## 旧关卡不补字段，以便正式冒险仍可使用按世界的保守默认值。
+	## 一旦玩家在工坊保存，显式值（包括 1.0）将始终优先。
+	if result.has("simpleLateGamePowerMultiplier"):
+		result["simpleLateGamePowerMultiplier"] = float(result["simpleLateGamePowerMultiplier"])
 	result["openingFirstZombieAdvanceCells"] = clampf(
 		float(result.get("openingFirstZombieAdvanceCells", 0.0)),
 		0.0,
@@ -410,6 +414,10 @@ static func validate_level(level: Dictionary) -> Array[Dictionary]:
 	var refresh_speed := float(level.get("zombieRefreshSpeedMultiplier", 1.0))
 	if refresh_speed < 0.1 or refresh_speed > 5.0:
 		issues.append(issue("error", "僵尸刷新速度倍率应在 0.1～5.0 之间", "zombieRefreshSpeedMultiplier"))
+	if level.has("simpleLateGamePowerMultiplier"):
+		var late_game_power := float(level.get("simpleLateGamePowerMultiplier", 1.0))
+		if late_game_power < 1.0 or late_game_power > 1.6:
+			issues.append(issue("error", "后半程出怪战力倍率应在 1.0～1.6 之间", "simpleLateGamePowerMultiplier"))
 	if (level.get("winConditions", []) as Array).is_empty():
 		issues.append(issue("error", "至少需要一个胜利条件", "winConditions"))
 	if (level.get("loseConditions", []) as Array).is_empty():

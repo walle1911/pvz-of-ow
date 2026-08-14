@@ -3,6 +3,7 @@ extends Node
 const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const Runtime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const AdventureStore := preload("res://scripts/resources/level/adventure_level_store.gd")
+const AdventurePresets := preload("res://scripts/resources/level/adventure_level_presets.gd")
 
 
 func _ready() -> void:
@@ -71,8 +72,98 @@ func _ready() -> void:
 	workshop.call("_delete_simple_zombie", str(base_type))
 	assert((workshop.level["simpleZombiePool"] as Array).has(base_type))
 
+	## 后半程增压必须在简易设置中可见、可保存，并能设为 1.0 完全关闭。
+	workshop.level["simpleLateGamePowerMultiplier"] = 1.4
+	workshop.call("_open_level_settings")
+	await get_tree().process_frame
+	var late_game_power_setting: SpinBox
+	var sun_setting: SpinBox
+	for setting in workshop.quantity_dialog_layer.find_children("*", "SpinBox", true, false):
+		var setting_label = (setting as SpinBox).get_meta("settings_label", null)
+		if setting_label is Label and (setting_label as Label).text == "后半程出怪战力倍率":
+			late_game_power_setting = setting as SpinBox
+		if setting_label is Label and (setting_label as Label).text == "开局阳光":
+			sun_setting = setting as SpinBox
+	assert(late_game_power_setting != null)
+	assert(sun_setting != null)
+	assert(is_equal_approx(late_game_power_setting.value, 1.4))
+	assert(is_equal_approx(late_game_power_setting.min_value, 1.0))
+	assert(is_equal_approx(late_game_power_setting.max_value, 1.6))
+	assert(sun_setting.position.x + sun_setting.size.x <= late_game_power_setting.position.x)
+	late_game_power_setting.value = 1.0
+	var saved_late_game_power := false
+	var found_cancel_button := false
+	for button in workshop.quantity_dialog_layer.find_children("*", "", true, false):
+		if not button is TextureButton:
+			continue
+		var button_label := (button as TextureButton).get_child(0) as Label if (button as TextureButton).get_child_count() > 0 else null
+		if button_label != null and button_label.text == "取消":
+			found_cancel_button = true
+			assert((button as TextureButton).visible)
+			assert(workshop.get_viewport_rect().encloses((button as TextureButton).get_global_rect()))
+		if button_label != null and button_label.text == "确认":
+			assert((button as TextureButton).visible)
+			assert(workshop.get_viewport_rect().encloses((button as TextureButton).get_global_rect()))
+			(button as TextureButton).pressed.emit()
+			saved_late_game_power = true
+			break
+	assert(saved_late_game_power)
+	assert(found_cancel_button)
+	assert(is_equal_approx(float(workshop.level["simpleLateGamePowerMultiplier"]), 1.0))
+
 	workshop.queue_free()
 	await get_tree().process_frame
+
+	## 正式冒险的默认后半程补偿会在新世界开头重置：
+	## 1-1～1-6 不变，第二世界的 2-1～2-3 也不额外加难。
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(10, 9, 10, 1.0) == 10)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(2, 4, 10, 1.4) == 2)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(3, 7, 10, 1.4) == 4)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(10, 9, 10, 1.4) == 14)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(4, 9, 20, 1.6) == 4)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(5, 13, 20, 1.6) == 6)
+	assert(ZombieWaveCreateManager.simple_late_game_power_limit(17, 19, 20, 1.6) == 27)
+	for pressure_case in [
+		["adventure_1_6", 1.0],
+		["adventure_1_7", 1.2],
+		["adventure_1_8", 1.4],
+		["adventure_1_9", 1.6],
+		["adventure_2_1", 1.0],
+		["adventure_2_3", 1.0],
+		["adventure_2_4", 1.1],
+		["adventure_2_8", 1.5],
+		["adventure_2_9", 1.6],
+	]:
+		var pressure_level := Logic.normalize_level(AdventurePresets.build_level(str(pressure_case[0])))
+		var pressure_built := Runtime.build_game_para(pressure_level)
+		assert(pressure_built["ok"], pressure_built["error"])
+		var pressure_para := pressure_built["game_para"] as ResourceLevelData
+		assert(is_equal_approx(
+			pressure_para.simple_late_game_max_power_multiplier,
+			float(pressure_case[1])
+		))
+		assert(is_equal_approx(
+			pressure_para.duplicate_runtime().simple_late_game_max_power_multiplier,
+			float(pressure_case[1])
+		))
+	## 关卡工坊的显式值覆盖默认曲线；1.0 会完全恢复原版点数。
+	var disabled_pressure_level := AdventurePresets.build_level("adventure_1_8")
+	disabled_pressure_level["simpleLateGamePowerMultiplier"] = 1.0
+	var disabled_pressure_built := Runtime.build_game_para(Logic.normalize_level(disabled_pressure_level))
+	assert(disabled_pressure_built["ok"], disabled_pressure_built["error"])
+	assert(is_equal_approx(
+		(disabled_pressure_built["game_para"] as ResourceLevelData).simple_late_game_max_power_multiplier,
+		1.0
+	))
+	var custom_pressure_level := Logic.example_level()
+	custom_pressure_level["editorMode"] = "simple"
+	custom_pressure_level["simpleLateGamePowerMultiplier"] = 1.35
+	var custom_pressure_built := Runtime.build_game_para(Logic.normalize_level(custom_pressure_level))
+	assert(custom_pressure_built["ok"], custom_pressure_built["error"])
+	assert(is_equal_approx(
+		(custom_pressure_built["game_para"] as ResourceLevelData).simple_late_game_max_power_multiplier,
+		1.35
+	))
 
 	## 直接读取关卡工坊当前保存的 1-3：铁桶未出现在 1-1、1-2，
 	## 因而会被自动判定为本关首秀，在中间波强制出现，并于最终波再次补齐。
@@ -81,6 +172,7 @@ func _ready() -> void:
 	var level_1_3_built := Runtime.build_game_para(Logic.normalize_level(level_1_3_loaded["level"]))
 	assert(level_1_3_built["ok"], level_1_3_built["error"])
 	var level_1_3_para := level_1_3_built["game_para"] as ResourceLevelData
+	assert(is_equal_approx(level_1_3_para.simple_late_game_max_power_multiplier, 1.0))
 	assert(int(level_1_3_para.simple_zombie_intro_waves[CharacterRegistry.ZombieType.Z505Bucket]) == 6)
 	level_1_3_para.set_choose_level(MainSceneRegistry.MainScenes.LevelWorkshop, 0, "adventure_1_3_auto_intro_test")
 	Global.game_para = level_1_3_para
@@ -90,6 +182,14 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var level_1_3_creator := level_1_3_scene.get_node("Manager/ZombieManager/ZombieWaveManager/ZombieWaveCreateManager") as ZombieWaveCreateManager
 	assert(level_1_3_creator.simple_wave_plan.size() == 10)
+	## 早期关的最终大波仍是原版 10 点；后期补偿只改最终预算，
+	## 原版 wave/3+1 与大波 2.5 倍的计算顺序不变。
+	assert(level_1_3_creator.calculate_wave_power_limit(9, true) == 10)
+	level_1_3_para.simple_late_game_max_power_multiplier = 1.4
+	assert(level_1_3_creator.calculate_wave_power_limit(4, false) == 2)
+	assert(level_1_3_creator.calculate_wave_power_limit(7, false) == 4)
+	assert(level_1_3_creator.calculate_wave_power_limit(9, true) == 14)
+	level_1_3_para.simple_late_game_max_power_multiplier = 1.0
 	var before_intro: Array[CharacterRegistry.ZombieType] = level_1_3_creator.create_curr_wave_zombie_list(4, false)
 	assert(not before_intro.has(CharacterRegistry.ZombieType.Z505Bucket))
 	var middle_intro: Array[CharacterRegistry.ZombieType] = level_1_3_creator.create_curr_wave_zombie_list(5, false)
