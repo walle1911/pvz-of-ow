@@ -45,6 +45,7 @@
 [ext_resource type="Texture2D" uid="uid://betnalq3q1efs" path="res://assets/image/ui/Character_Card/daotian_card.png" id="40_13hcx"]
 [ext_resource type="Texture2D" uid="uid://cn42noh04u8lc" path="res://assets/image/ui/Character_Card/Torchwood_Baptiste_card.png" id="41_v6elg"]
 [ext_resource type="Texture2D" uid="uid://bjdqpef0ve0pg" path="res://assets/reanim/CherryBomb_rightstem.png" id="41_v7gpl"]
+[ext_resource type="Texture2D" uid="uid://vwxuhluuc7e6" path="res://assets/image/ui/Character_Card/GloomShroom_Moira.png" id="42_a818n"]
 [ext_resource type="Texture2D" uid="uid://dspmy0uy0cacv" path="res://assets/reanim/CherryBomb_right1.png" id="42_dap4d"]
 [ext_resource type="Texture2D" uid="uid://cfdwh0bhgcrlb" path="res://assets/reanim/CherryBomb_righteye11.png" id="43_nq15w"]
 [ext_resource type="Texture2D" uid="uid://d0dmytj04iew5" path="res://assets/reanim/CherryBomb_righteye21.png" id="44_eabf5"]
@@ -573,7 +574,6 @@
 [ext_resource type="Texture2D" uid="uid://lk2nlfgggplg" path="res://assets/image/ui/Character_Card/MelonPult_Ashe.png" id="390_mlr8r"]
 [ext_resource type="Texture2D" uid="uid://drj73i768ti4y" path="res://assets/reanim/Zombie_dolphinrider_outerarm_hand.png" id="391_mlr8r"]
 [ext_resource type="Texture2D" uid="uid://chk8ojme1d2nr" path="res://assets/reanim/Zombie_dolphinrider_outerarm_lower.png" id="392_10mhf"]
-[ext_resource type="Texture2D" path="res://assets/image/ui/Character_Card/GloomShroom_Moira_B.png" id="393_10mhf"]
 [ext_resource type="Texture2D" uid="uid://dso348ywf210h" path="res://assets/reanim/Zombie_dolphinrider_outerarm_upper.png" id="393_bh1la"]
 [ext_resource type="Texture2D" uid="uid://1v0d7xdby02x" path="res://assets/image/ui/Character_Card/SeaShroom_Wuyang.png" id="394_bh1la"]
 [ext_resource type="Texture2D" uid="uid://3vscb61hdc13" path="res://assets/image/ui/Character_Card/MagnetShroom_Sombra.png" id="396_qpl0k"]
@@ -952,7 +952,7 @@ alpha_curve = SubResource("CurveTexture_24dwr")
 anim_offset_min = 1.0
 anim_offset_max = 1.0
 
-[node name="AllCards" type="Control" unique_id=1493789430 node_paths=PackedStringArray("all_plant_card_prefabs", "all_zombie_card_prefabs")]
+[node name="AllCards" type="Control" unique_id=1493789430 node_paths=PackedStringArray("all_zombie_card_prefabs")]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -883.0
@@ -960,91 +960,6 @@ offset_top = 6.0
 offset_right = -883.0
 offset_bottom = 6.0
 script = ExtResource("1_qtbte")
-all_plant_card_prefabs = {
-1: NodePath("PlantCards/Card"),
-2: NodePath("PlantCards/Card2"),
-3: NodePath("PlantCards/Card3"),
-4: NodePath("PlantCards/Card4"),
-6: NodePath("PlantCards/Card6"),
-8: NodePath("PlantCards/Card31"),
-11: NodePath("PlantCards/Card16"),
-13: NodePath("PlantCards/Card20"),
-14: NodePath("PlantCards/Card19"),
-16: NodePath("PlantCards/Card13"),
-18: NodePath("PlantCards/Card5"),
-19: NodePath("PlantCards/Card25"),
-20: NodePath("PlantCards/Card21"),
-21: NodePath("PlantCards/Card10"),
-22: NodePath("PlantCards/Card23"),
-23: NodePath("PlantCards/Card26"),
-24: NodePath("PlantCards/Card8"),
-25: NodePath("PlantCards/Card15"),
-27: NodePath("PlantCards/Card27"),
-31: NodePath("PlantCards/Card28"),
-32: NodePath("PlantCards/Card17"),
-36: NodePath("PlantCards/Card18"),
-37: NodePath("PlantCards/Card24"),
-38: NodePath("PlantCards/Card29"),
-40: NodePath("PlantCards/Card11"),
-41: NodePath("PlantCards/Card7"),
-43: NodePath("PlantCards/Card14"),
-44: NodePath("PlantCards/Card9"),
-48: NodePath("PlantCards/Card30"),
-52: NodePath("PlantCards/Card22"),
-501: NodePath("PlantCards2/Card1"),
-502: NodePath("PlantCards2/Card2"),
-503: NodePath("PlantCards2/Card3"),
-504: NodePath("PlantCards2/CardWallNutOriginal"),
-505: NodePath("PlantCards2/Card4"),
-506: NodePath("PlantCards2/Card5"),
-507: NodePath("PlantCards2/Card6"),
-508: NodePath("PlantCards2/Card7"),
-509: NodePath("PlantCards2/Card8"),
-510: NodePath("PlantCards2/Card9"),
-511: NodePath("PlantCards2/Card10"),
-512: NodePath("PlantCards2/Card11"),
-513: NodePath("PlantCards2/Card12"),
-514: NodePath("PlantCards2/Card13"),
-515: NodePath("PlantCards2/Card14"),
-516: NodePath("PlantCards2/Card15"),
-517: NodePath("PlantCards2/Card16"),
-518: NodePath("PlantCards2/Card17"),
-519: NodePath("PlantCards2/Card18"),
-520: NodePath("PlantCards2/Card19"),
-521: NodePath("PlantCards2/Card20"),
-522: NodePath("PlantCards2/Card21"),
-523: NodePath("PlantCards2/Card22"),
-524: NodePath("PlantCards2/Card23"),
-525: NodePath("PlantCards2/Card24"),
-526: NodePath("PlantCards2/Card25"),
-527: NodePath("PlantCards2/Card26"),
-528: NodePath("PlantCards2/Card27"),
-529: NodePath("PlantCards2/Card28"),
-530: NodePath("PlantCards2/Card29"),
-531: NodePath("PlantCards2/Card30"),
-532: NodePath("PlantCards2/Card31"),
-533: NodePath("PlantCards2/Card32"),
-534: NodePath("PlantCards2/Card33"),
-535: NodePath("PlantCards2/Card35"),
-536: NodePath("PlantCards2/Card36"),
-537: NodePath("PlantCards2/Card37"),
-538: NodePath("PlantCards2/Card38"),
-539: NodePath("PlantCards2/Card39"),
-540: NodePath("PlantCards2/Card40"),
-541: NodePath("PlantCards2/Card41"),
-542: NodePath("PlantCards2/Card42"),
-543: NodePath("PlantCards2/Card43"),
-544: NodePath("PlantCards2/Card44"),
-545: NodePath("PlantCards2/Card45"),
-546: NodePath("PlantCards2/Card46"),
-547: NodePath("PlantCards2/Card47"),
-548: NodePath("PlantCards2/Card48"),
-549: NodePath("PlantCards2/Card34"),
-999: NodePath("PlantCards/Card12"),
-1001: NodePath("PlantCards3/Card"),
-1002: NodePath("PlantCards3/Card2"),
-1003: NodePath("PlantCards3/Card3")
-}
 all_zombie_card_prefabs = {
 1: NodePath("ZombieCards/Card11"),
 2: NodePath("ZombieCards/Card12"),
@@ -1086,91 +1001,6 @@ all_zombie_card_prefabs = {
 525: NodePath("ZombieCards2/Card25"),
 1001: NodePath("ZombieCards2/Card26")
 }
-plant_card_ids = Dictionary[int, int]({
-1: 0,
-2: 1,
-3: 2,
-4: 3,
-6: 4,
-8: 82,
-11: 5,
-13: 6,
-14: 7,
-16: 8,
-18: 9,
-19: 10,
-20: 11,
-21: 12,
-22: 13,
-23: 14,
-24: 15,
-25: 16,
-27: 17,
-31: 18,
-32: 19,
-36: 20,
-37: 21,
-38: 22,
-40: 23,
-41: 24,
-43: 25,
-44: 26,
-48: 27,
-52: 28,
-501: 30,
-502: 31,
-503: 32,
-504: 33,
-505: 34,
-506: 35,
-507: 36,
-508: 37,
-509: 38,
-510: 39,
-511: 40,
-512: 41,
-513: 42,
-514: 43,
-515: 44,
-516: 45,
-517: 46,
-518: 47,
-519: 48,
-520: 49,
-521: 50,
-522: 51,
-523: 52,
-524: 53,
-525: 54,
-526: 55,
-527: 56,
-528: 57,
-529: 58,
-530: 59,
-531: 60,
-532: 61,
-533: 62,
-534: 63,
-535: 64,
-536: 65,
-537: 66,
-538: 67,
-539: 68,
-540: 69,
-541: 70,
-542: 71,
-543: 72,
-544: 73,
-545: 74,
-546: 75,
-547: 76,
-548: 77,
-549: 78,
-999: 29,
-1001: 79,
-1002: 80,
-1003: 81
-})
 zombie_card_ids = Dictionary[int, int]({
 1: 9,
 2: 10,
@@ -1994,7 +1824,7 @@ texture = ExtResource("98_ev02b")
 [node name="card" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant043GloomShroomMoira" unique_id=2125213594]
 position = Vector2(0, -31.67)
 scale = Vector2(0.76, 0.76)
-texture = ExtResource("393_10mhf")
+texture = ExtResource("42_a818n")
 
 [node name="Card9" parent="PlantCards" unique_id=515735195 instance=ExtResource("2_5pqky")]
 layout_mode = 2

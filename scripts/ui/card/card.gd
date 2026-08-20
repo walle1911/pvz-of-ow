@@ -58,23 +58,6 @@ var _normal_coffee_cool_time := 0.0
 const ANA_COFFEE_CARD_TEXTURE := preload("res://assets/image/ui/Character_Card/CoffeeBean_Ana_Card.png")
 const NORMAL_COFFEE_CARD_TEXTURE := preload("res://assets/reanim/Coffeebean_head1.png")
 const MINI_SEED_PACKET_TEXTURE := preload("res://assets/image/ui/ui_card/SeedPacket_Larger.png")
-## 莫伊拉双卡：主卡为形态二，战斗中可切换为隐藏的形态一，两者共享冷却池。
-var _is_moira_dual_card := false
-var _is_moira_form_one := false
-var _moira_mode_toggle:TextureButton
-var _moira_mode_toggle_icon:TextureRect
-var _moira_mode_toggle_sun_mask:ColorRect
-var _moira_mode_toggle_cool_mask:ProgressBar
-var _moira_form_two_preview_root:Node2D
-var _moira_form_one_preview_root:Node2D
-var _moira_toggle_phase_initialized := false
-var _moira_toggle_was_in_battle := false
-var _moira_shared_cool_duration := 0.0
-var _moira_form_one_cool_time := 0.0
-var _moira_form_two_cool_time := 0.0
-## A 为阳光菇形态，B 为忧郁蘑菇形态；不要复用原版阳光菇的卡片美术。
-const MOIRA_FORM_ONE_ICON := preload("res://assets/image/ui/Character_Card/GloomShroom_Moira_A.png")
-const MOIRA_FORM_TWO_ICON := preload("res://assets/image/ui/Character_Card/GloomShroom_Moira_B.png")
 ## 棋盘格正式模式翻地奖励卡：允许绕过 OW 紫卡前置规则。
 var is_chessboard_reveal_reward := false
 ## 棋盘格翻地获得的友军僵尸卡，落地后立即走现有魅惑流程。
@@ -97,16 +80,6 @@ func _ready() -> void:
 		_ana_coffee_cool_time = cool_time
 		_normal_coffee_cool_time = Global.character_registry.get_plant_info(
 			CharacterRegistry.PlantType.P536CoffeeBean,
-			CharacterRegistry.PlantInfoAttribute.CoolTime
-		)
-	_is_moira_dual_card = card_plant_type == CharacterRegistry.PlantType.P043GloomShroomMoira
-	if _is_moira_dual_card:
-		_is_moira_form_one = false
-		if is_instance_valid(character_static) and character_static.get_child_count() > 0:
-			_moira_form_two_preview_root = character_static.get_child(0) as Node2D
-		_moira_form_two_cool_time = cool_time
-		_moira_form_one_cool_time = Global.character_registry.get_plant_info(
-			CharacterRegistry.PlantType.P063MoiraSunPuff,
 			CharacterRegistry.PlantInfoAttribute.CoolTime
 		)
 	_original_cool_time = cool_time
@@ -137,11 +110,6 @@ func card_change_cool_time(new_cool_time:float):
 		var cooldown_scale := new_cool_time / active_base_cool_time if active_base_cool_time > 0.0 else 0.0
 		_ana_coffee_cool_time *= cooldown_scale
 		_normal_coffee_cool_time *= cooldown_scale
-	if _is_moira_dual_card:
-		var active_base_cool_time := _moira_form_one_cool_time if _is_moira_form_one else _moira_form_two_cool_time
-		var cooldown_scale := new_cool_time / active_base_cool_time if active_base_cool_time > 0.0 else 0.0
-		_moira_form_one_cool_time *= cooldown_scale
-		_moira_form_two_cool_time *= cooldown_scale
 	self.cool_time = new_cool_time
 	_cool_mask.value = 0
 
@@ -179,20 +147,15 @@ func card_init_ranked_reward():
 func _process(delta: float) -> void:
 	_ensure_ana_coffee_toggle_in_battle()
 	_sync_ana_coffee_toggle_battle_phase()
-	_ensure_moira_toggle_in_battle()
-	_sync_moira_toggle_battle_phase()
 	if _is_cooling:
 		_cool_timer -= delta
 		_cool_mask.value = _cool_timer
 		_sync_ana_coffee_toggle_cool_mask()
-		_sync_moira_toggle_cool_mask()
 		# 卡片冷却完成
 		if _cool_timer <= 0:
 			_is_cooling = false
 			_sync_ana_coffee_toggle_cool_mask()
-			_sync_moira_toggle_cool_mask()
 			_ana_coffee_shared_cool_duration = 0.0
-			_moira_shared_cool_duration = 0.0
 			_restore_squash_doomfist_card_visual()
 			judge_card_ready()
 
@@ -405,166 +368,10 @@ func is_ana_coffee_mode_active() -> bool:
 	return _is_ana_coffee_dual_card and _is_ana_coffee_mode
 
 
-func _ensure_moira_toggle_in_battle() -> void:
-	if not _is_moira_dual_card or is_instance_valid(_moira_mode_toggle):
-		return
-	if not is_instance_valid(Global.main_game) \
-		or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
-		return
-	_moira_mode_toggle = TextureButton.new()
-	_moira_mode_toggle.name = "MoiraModeToggle"
-	_moira_mode_toggle.position = Vector2(size.x - 19.0, 2.0)
-	_moira_mode_toggle.size = Vector2(18.0, 23.0)
-	_moira_mode_toggle.z_index = 100
-	_moira_mode_toggle.mouse_filter = Control.MOUSE_FILTER_STOP
-	_moira_mode_toggle.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	_moira_mode_toggle.texture_normal = MINI_SEED_PACKET_TEXTURE
-	_moira_mode_toggle.ignore_texture_size = true
-	_moira_mode_toggle.stretch_mode = TextureButton.STRETCH_SCALE
-	_moira_mode_toggle.pressed.connect(_toggle_moira_mode)
-	add_child(_moira_mode_toggle)
-
-	_moira_mode_toggle_icon = TextureRect.new()
-	_moira_mode_toggle_icon.position = Vector2(2.0, 2.0)
-	_moira_mode_toggle_icon.size = Vector2(14.0, 17.0)
-	_moira_mode_toggle_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moira_mode_toggle_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_moira_mode_toggle_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_moira_mode_toggle.add_child(_moira_mode_toggle_icon)
-
-	_moira_mode_toggle_sun_mask = ColorRect.new()
-	_moira_mode_toggle_sun_mask.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_moira_mode_toggle_sun_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moira_mode_toggle_sun_mask.color = Color(0.0, 0.0, 0.0, 0.47)
-	_moira_mode_toggle.add_child(_moira_mode_toggle_sun_mask)
-
-	_moira_mode_toggle_cool_mask = _cool_mask.duplicate() as ProgressBar
-	_moira_mode_toggle_cool_mask.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_moira_mode_toggle_cool_mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_moira_mode_toggle.add_child(_moira_mode_toggle_cool_mask)
-	_update_moira_toggle_visual()
-	_sync_moira_toggle_battle_phase()
-
-
-func _sync_moira_toggle_battle_phase() -> void:
-	if not is_instance_valid(_moira_mode_toggle):
-		return
-	var is_in_battle:bool = is_instance_valid(Global.main_game) \
-		and Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME
-	if _moira_toggle_phase_initialized and _moira_toggle_was_in_battle == is_in_battle:
-		return
-	_moira_toggle_phase_initialized = true
-	_moira_toggle_was_in_battle = is_in_battle
-	_moira_mode_toggle.mouse_filter = Control.MOUSE_FILTER_STOP if is_in_battle else Control.MOUSE_FILTER_IGNORE
-	if not is_in_battle:
-		_moira_mode_toggle_sun_mask.visible = false
-		_moira_mode_toggle_cool_mask.visible = false
-		return
-	_refresh_moira_toggle_sun_mask()
-	_sync_moira_toggle_cool_mask()
-
-
-func _toggle_moira_mode() -> void:
-	if not _is_moira_dual_card or is_being_attacked_by_squash_doomfist:
-		return
-	_cancel_hand_if_this_card_is_selected()
-	_set_moira_form_one(not _is_moira_form_one)
-	SoundManager.play_other_SFX("tap")
-
-
-func _set_moira_form_one(use_form_one: bool) -> void:
-	if not _is_moira_dual_card or _is_moira_form_one == use_form_one:
-		return
-	if use_form_one and not _ensure_moira_form_one_preview():
-		return
-	_is_moira_form_one = use_form_one
-	var next_type := CharacterRegistry.PlantType.P063MoiraSunPuff \
-		if use_form_one else CharacterRegistry.PlantType.P043GloomShroomMoira
-	card_plant_type = next_type
-	plant_condition = Global.character_registry.get_plant_info(
-		next_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource
-	)
-	sun_cost = Global.character_registry.get_plant_info(next_type, CharacterRegistry.PlantInfoAttribute.SunCost)
-	cool_time = _moira_form_one_cool_time if use_form_one else _moira_form_two_cool_time
-	_sync_moira_preview()
-	_update_moira_toggle_visual()
-	if _is_cooling:
-		_cool_mask.max_value = _moira_shared_cool_duration
-		_cool_mask.value = _cool_timer
-	_sync_moira_toggle_cool_mask()
-	_refresh_sun_and_ready_state_after_mode_switch()
-
-
-func _ensure_moira_form_one_preview() -> bool:
-	if is_instance_valid(_moira_form_one_preview_root):
-		return true
-	if not is_instance_valid(_moira_form_two_preview_root):
-		return false
-	_moira_form_one_preview_root = _moira_form_two_preview_root.duplicate() as Node2D
-	if not is_instance_valid(_moira_form_one_preview_root):
-		return false
-	_moira_form_one_preview_root.name = "Plant063MoiraSunPuffCardMode"
-	var form_one_sprite := _moira_form_one_preview_root.get_node_or_null("card") as Sprite2D
-	if not is_instance_valid(form_one_sprite):
-		_moira_form_one_preview_root.queue_free()
-		_moira_form_one_preview_root = null
-		return false
-	form_one_sprite.texture = MOIRA_FORM_ONE_ICON
-	_moira_form_one_preview_root.visible = false
-	character_static.add_child(_moira_form_one_preview_root)
-	return true
-
-
-func _sync_moira_preview() -> void:
-	if is_instance_valid(_moira_form_two_preview_root):
-		_moira_form_two_preview_root.visible = not _is_moira_form_one
-	if is_instance_valid(_moira_form_one_preview_root):
-		_moira_form_one_preview_root.visible = _is_moira_form_one
-		if _is_moira_form_one:
-			character_static.move_child(_moira_form_one_preview_root, 0)
-
-
-func _update_moira_toggle_visual() -> void:
-	if not is_instance_valid(_moira_mode_toggle):
-		return
-	_moira_mode_toggle_icon.texture = MOIRA_FORM_TWO_ICON if _is_moira_form_one else MOIRA_FORM_ONE_ICON
-	_moira_mode_toggle.tooltip_text = "切换为莫伊拉形态二" if _is_moira_form_one else "切换为莫伊拉形态一"
-
-
-func _refresh_moira_toggle_sun_mask(curr_sun_value = null) -> void:
-	if not is_instance_valid(_moira_mode_toggle_sun_mask):
-		return
-	if not is_instance_valid(Global.main_game) \
-		or Global.main_game.main_game_progress != MainGameManager.E_MainGameProgress.MAIN_GAME:
-		_moira_mode_toggle_sun_mask.visible = false
-		return
-	if curr_sun_value == null:
-		curr_sun_value = Global.main_game.card_manager.card_slot_battle.sun_value
-	var toggle_type := CharacterRegistry.PlantType.P043GloomShroomMoira \
-		if _is_moira_form_one else CharacterRegistry.PlantType.P063MoiraSunPuff
-	var toggle_cost = Global.character_registry.get_plant_info(toggle_type, CharacterRegistry.PlantInfoAttribute.SunCost)
-	_moira_mode_toggle_sun_mask.visible = curr_sun_value < toggle_cost
-
-
-func _sync_moira_toggle_cool_mask() -> void:
-	if not is_instance_valid(_moira_mode_toggle_cool_mask):
-		return
-	var should_show:bool = _is_cooling and is_instance_valid(Global.main_game) \
-		and Global.main_game.main_game_progress == MainGameManager.E_MainGameProgress.MAIN_GAME
-	_moira_mode_toggle_cool_mask.visible = should_show
-	if not should_show:
-		_moira_mode_toggle_cool_mask.value = 0.0
-		return
-	_moira_mode_toggle_cool_mask.max_value = maxf(_moira_shared_cool_duration, 0.001)
-	_moira_mode_toggle_cool_mask.value = maxf(_cool_timer, 0.0)
-
-
-## 双形态切换只改变本次种植内容；关卡解锁检查仍按玩家实际选入卡槽的安娜卡判断。
+## 安娜双形态切换只改变本次种植内容；关卡解锁仍按玩家实际选入卡槽的安娜卡判断。
 func get_availability_plant_type() -> CharacterRegistry.PlantType:
 	if _is_ana_coffee_dual_card:
 		return CharacterRegistry.PlantType.P036CoffeeBeanAna
-	if _is_moira_dual_card:
-		return CharacterRegistry.PlantType.P043GloomShroomMoira
 	return card_plant_type
 
 ## 修改阳光时会调用
@@ -572,7 +379,6 @@ func judge_sun_enough(curr_sun_value):
 	# 判断阳光是否足够
 	is_sun_enough = curr_sun_value >= sun_cost
 	_refresh_ana_coffee_toggle_sun_mask(curr_sun_value)
-	_refresh_moira_toggle_sun_mask(curr_sun_value)
 	judge_card_ready()
 
 ## 判断卡片是否可以点击
@@ -595,9 +401,7 @@ func set_card_cool_end():
 	_cool_mask.value = _cool_timer
 	_is_cooling = false
 	_ana_coffee_shared_cool_duration = 0.0
-	_moira_shared_cool_duration = 0.0
 	_sync_ana_coffee_toggle_cool_mask()
-	_sync_moira_toggle_cool_mask()
 	_restore_squash_doomfist_card_visual()
 
 ## 卡片可以点击
@@ -633,14 +437,10 @@ func card_cool():
 	if _is_ana_coffee_dual_card:
 		_ana_coffee_shared_cool_duration = cool_time
 		_cool_mask.max_value = _ana_coffee_shared_cool_duration
-	if _is_moira_dual_card:
-		_moira_shared_cool_duration = cool_time
-		_cool_mask.max_value = _moira_shared_cool_duration
 	_cool_mask.value = cool_time
 	is_can_click = false
 	_is_ready_state = false
 	_sync_ana_coffee_toggle_cool_mask()
-	_sync_moira_toggle_cool_mask()
 
 func start_squash_doomfist_card_attack():
 	is_being_attacked_by_squash_doomfist = true

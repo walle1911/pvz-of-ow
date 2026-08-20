@@ -225,9 +225,6 @@ func _add_character_card(item: Dictionary) -> void:
 	var source: Card
 	if item["kind"] == "plant":
 		source = AllCards.all_plant_card_prefabs.get(item["id"])
-		## 莫伊拉形态一是双卡内部形态，不单独进入选卡池；数值页复用主卡预览。
-		if source == null and int(item["id"]) == int(CharacterRegistry.PlantType.P063MoiraSunPuff):
-			source = AllCards.all_plant_card_prefabs.get(CharacterRegistry.PlantType.P043GloomShroomMoira)
 	else:
 		source = AllCards.all_zombie_card_prefabs.get(item["id"])
 	if source == null:

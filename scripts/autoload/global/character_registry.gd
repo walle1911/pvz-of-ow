@@ -66,8 +66,6 @@ enum PlantType {
 	P044CattailJetpackCat = 44,
 	P048CobCannonEmre = 48,
 	P052BonkChoyRamattra = 52,
-	## 莫伊拉双卡的隐藏形态一；卡池解锁与选卡身份仍使用 P043。
-	P063MoiraSunPuff = 63,
 	P999ImitaterEcho = 999,
 
 	## 后移的原版植物
@@ -689,13 +687,6 @@ const PlantInfo = {
 		PlantInfoAttribute.SunCost: 175,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn"
-		},
-	PlantType.P063MoiraSunPuff: {
-		PlantInfoAttribute.PlantName: "GloomShroom_Moira_Form1",
-		PlantInfoAttribute.CoolTime: 7.5,
-		PlantInfoAttribute.SunCost: 25,
-		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
-		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_063_moira_sun_puff.tscn"
 		},
 	PlantType.P025SeaShroomWuyang: {
 		PlantInfoAttribute.PlantName: "SeaShroom_Wuyang",
