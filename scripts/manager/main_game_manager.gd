@@ -318,9 +318,11 @@ func _show_target_range_hint() -> void:
 	panel.add_child(title)
 
 	var message := Label.new()
-	message.position = Vector2(30, 78)
-	message.size = Vector2(460, 52)
+	message.position = Vector2(30, 72)
+	message.size = Vector2(460, 72)
 	message.text = "点击左上角的阳光图标能刷新冷却值"
+	if game_para.is_day:
+		message.text += "\n蘑菇会在白天睡眠，攻击与战斗产阳光请使用黑夜靶场"
 	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	message.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

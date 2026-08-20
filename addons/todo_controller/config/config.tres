@@ -465,6 +465,8 @@ script_list_meta = {
 "res://tests/test_ana_coffee_card_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
 "res://tests/test_mauga_cage_runtime.gd": [-1, -1],
+"res://tests/test_moira_final_design.gd": [-1, -1],
+"res://tests/test_moira_target_range_runtime.gd": [-1, -1],
 "res://tests/test_numerical_editor_runtime.gd": [-1, -1],
 "res://tests/test_numerical_registry_consistency.gd": [-1, -1],
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],

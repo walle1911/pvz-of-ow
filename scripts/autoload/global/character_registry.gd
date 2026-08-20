@@ -242,8 +242,8 @@ const PlantInfo = {
 		},
 	PlantType.P503CherryBomb: {
 		PlantInfoAttribute.PlantName: "CherryBomb",
-		PlantInfoAttribute.CoolTime: 50.0,
-		PlantInfoAttribute.SunCost: 150,
+		PlantInfoAttribute.CoolTime: 30.0,
+		PlantInfoAttribute.SunCost: 225,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_503_cherry_bomb.tscn"
 		},
@@ -684,7 +684,7 @@ const PlantInfo = {
 	PlantType.P043GloomShroomMoira: {
 		PlantInfoAttribute.PlantName: "GloomShroom_Moira",
 		PlantInfoAttribute.CoolTime: 50.0,
-		PlantInfoAttribute.SunCost: 175,
+		PlantInfoAttribute.SunCost: 150,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/000_common_plant_land.tres",
 		PlantInfoAttribute.PlantScenes : "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn"
 		},

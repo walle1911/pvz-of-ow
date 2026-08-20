@@ -18,7 +18,7 @@
 		52,
 		23,
 		505,
-		14
+		43
 	],
 	"bossConfig": {
 		"enabled": false,
@@ -47,7 +47,7 @@
 	"coverCharacters": [
 		{
 			"kind": "plant",
-			"type": 14
+			"type": 43
 		}
 	],
 	"earlyRefreshDelay": 1.5,
@@ -87,9 +87,9 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071511.0,
-	"rewardPlant": 43,
+	"rewardPlant": 14,
 	"rewardPlants": [
-		43
+		14
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,

@@ -115,6 +115,13 @@ const PLANT_OW_REPLACEMENTS := {
 ## 没有原版槽位的 OW 原创角色，用原版特殊关空出来的教学节点单独引入。
 const OW_BONUS_PLANT_INTROS := {
 	5: [52],
+	## 莫伊拉在进入黑夜前解锁，黑百合改为 2-1 通关奖励。
+	11: [43],
+	12: [14],
+}
+const MAINLINE_REWARD_OVERRIDES := {
+	10: [43],
+	11: [14],
 }
 
 ## 棋盘格线仍保留原来的白天十关与原版卡池，不跟随普通线扩展到后四个世界。
@@ -463,6 +470,12 @@ static func _default_reward_plants(world: int, level_number: int, workshop_mode:
 		return []
 	if workshop_mode == "normal" and next_world > NORMAL_WORLD_COUNT:
 		return []
+	var global_level := _global_level_number(world, level_number)
+	if workshop_mode == "normal" and MAINLINE_REWARD_OVERRIDES.has(global_level):
+		var overridden_rewards: Array[int] = []
+		for plant_type in MAINLINE_REWARD_OVERRIDES[global_level]:
+			overridden_rewards.append(int(plant_type))
+		return overridden_rewards
 	for plant_type in _available_plants(next_world, next_level, workshop_mode):
 		if not current_plants.has(int(plant_type)):
 			return [int(plant_type)]

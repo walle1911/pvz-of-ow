@@ -1811,11 +1811,11 @@ imitater_gray_strength = 0.0
 card_id = 25
 card_plant_type = 43
 cool_time = 50.0
-sun_cost = 175
+sun_cost = 150
 
 [node name="Plant043GloomShroomMoira" type="Node2D" parent="PlantCards/Card14/CardBg/CharacterStatic" index="0" unique_id=2057364492]
 position = Vector2(1, 14)
-scale = Vector2(0.425, 0.425)
+scale = Vector2(0.5, 0.5)
 
 [node name="Shadow" type="Sprite2D" parent="PlantCards/Card14/CardBg/CharacterStatic/Plant043GloomShroomMoira" unique_id=595449863]
 visible = false
