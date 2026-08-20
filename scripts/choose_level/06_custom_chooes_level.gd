@@ -69,6 +69,8 @@ func _build_developer_gift_test_levels() -> void:
 	for definition in DEVELOPER_GIFT_TEST_LEVELS:
 		var source := definition["resource"] as ResourceLevelData
 		var target_range_para := source.duplicate_runtime()
+		## 靶场只沿用测试关卡的初始阳光，不锁定阳光值。
+		target_range_para.is_sun_value_locked = false
 		## 靶场只允许玩家主动放置测试僵尸，绝不启动右侧自然波次。
 		target_range_para.is_target_range = true
 		target_range_para.monster_mode = ConstLevelData.E_MonsterMode.Null
