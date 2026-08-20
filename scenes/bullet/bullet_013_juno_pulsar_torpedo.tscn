@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/bullet/bullet_000_track_base.tscn" id="1_juno"]
+[ext_resource type="Script" path="res://scripts/bullet/bullet_013_juno_pulsar_torpedo.gd" id="2_juno"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_juno"]
+radius = 14.0
+
+[node name="Bullet013JunoPulsarTorpedo" instance=ExtResource("1_juno")]
+script = ExtResource("2_juno")
+attack_value = 85
+speed = 390.0
+max_distance = 2200.0
+default_is_activate_lane = false
+trigger_be_attack_sfx = true
+type_bullet_SFX = 1
+can_attack_zombie_status = 9
+
+[node name="BulletEffect" parent="." index="2"]
+is_bullet_effect = false
+
+[node name="CollisionShape2D" parent="Area2DAttack" index="0"]
+shape = SubResource("CircleShape2D_juno")
+
+[node name="MovementComponent" parent="." index="4"]
+target_pos_corr_value = Vector2(0, -34)
+first_point_time = 0.24
+bullet_speed_r_target_null = 0.35
