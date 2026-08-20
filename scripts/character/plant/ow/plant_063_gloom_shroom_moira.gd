@@ -10,6 +10,10 @@ const MOIRA_FUME_RECOLOR_SHADER: Shader = preload("res://shaders/moira_fume_reco
 @export var yellow_fume_heal_value: int = 45
 @export var normal_fume_color: Color = Color.WHITE
 
+@export_group("Moira Bite Sun")
+## 每次被僵尸啃食时掉落的一颗阳光的价值；0 表示不掉落
+@export_range(0, 10000000, 1) var bite_sun_value: int = 15
+
 @onready var create_sun_component: CreateSunComponent = $CreateSunComponent
 var yellow_fume_material: ShaderMaterial
 
@@ -31,10 +35,9 @@ func ready_norm_signal_connect():
 	super()
 	signal_update_speed.connect(create_sun_component.owner_update_speed)
 
-## 被僵尸啃食一次特殊效果,魅惑\大蒜\我是僵尸生产阳光
+## 每次被僵尸啃食时掉落一颗阳光
 func _be_zombie_eat_once_special(_attack_zombie:Zombie000Base):
-	if is_zombie_mode:
-		create_sun_component._on_be_eat_once()
+	create_sun_component.spawn_sun_with_value(bite_sun_value)
 
 func attack_once():
 	var bullet_fx_particles: Array[GPUParticles2D] = all_bullet_fx_particles[num_attack]

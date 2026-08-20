@@ -20,6 +20,7 @@ func _test_scene_values() -> void:
 	assert(moira.plant_cool_time == -1.0)
 	assert(moira.yellow_fume_chance == 0.3)
 	assert(moira.yellow_fume_heal_value == 35)
+	assert(moira.bite_sun_value == 15)
 	assert(moira.attack_value == 20)
 	assert(moira.attack_cd == 2.0)
 	assert((moira.get_node("HpComponent") as HpComponent).max_hp == 300)

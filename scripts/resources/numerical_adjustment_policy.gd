@@ -167,8 +167,7 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/plant/ow/plant_063_gloom_shroom_moira.gd": {
 		"yellow_fume_chance": "probability", "yellow_fume_heal_value": "non_negative_int",
-		"yellow_fume_alpha_scale": "multiplier", "death_sun_value": "non_negative_int",
-		"death_sun_count": "non_negative_int",
+		"yellow_fume_alpha_scale": "multiplier", "bite_sun_value": "non_negative_int",
 	},
 	"res://scripts/character/plant/ow/plant_066_magnet_shroom_sombra.gd": {
 		"emp_radius": "distance", "emp_duration": "non_negative_seconds",
