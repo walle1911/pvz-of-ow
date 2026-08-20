@@ -272,6 +272,8 @@ attack_value_bullet = 75.0
 attack_cd = 5.0
 attack_bullet_type = 19
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
+critical_chance = 0.2
+critical_damage = 300
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=453602712]
 

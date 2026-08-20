@@ -112,6 +112,8 @@ const SFXCharacterMap := {
 	&"BigChomp": preload("res://assets/audio/SFX/plant/bigchomp.ogg"),
 	## 小喷菇发射子弹
 	&"Puff": preload("res://assets/audio/SFX/plant/puff.ogg"),
+	## 黑百合胆小菇暴击：原创合成的短促狙击爆头音，不复用原有 SFX。
+	&"WidowmakerCriticalHeadshot": preload("res://assets/audio/SFX/plant/widowmaker_critical_headshot.wav"),
 	## 阳光菇长大
 	&"PlantGrow": preload("res://assets/audio/SFX/plant/plantgrow.ogg"),
 	## 大喷菇发射子弹
