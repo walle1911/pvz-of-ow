@@ -85,12 +85,22 @@ func _register_ordered_plant_cards(
 		plant_i += 1
 		var card_para:Dictionary[Card.E_CInitAttr, Variant] = {
 			Card.E_CInitAttr.CardId:plant_i,
-			Card.E_CInitAttr.CoolTime:character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime),
-			Card.E_CInitAttr.SunCost:character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)
+			Card.E_CInitAttr.CoolTime:_get_plant_card_value(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime),
+			Card.E_CInitAttr.SunCost:_get_plant_card_value(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)
 		}
 		init_card(card, card_para)
 		all_plant_card_prefabs[card.card_plant_type] = card
 		plant_card_ids[card.card_plant_type] = plant_i
+
+
+func _get_plant_card_value(
+		plant_type: CharacterRegistry.PlantType,
+		attribute: CharacterRegistry.PlantInfoAttribute) -> Variant:
+	## CharacterRegistry 不是 @tool，编辑器中是 placeholder，不能调用其实例方法。
+	## 运行时仍通过注册表方法读取，以保留开发者数值调整。
+	if Engine.is_editor_hint():
+		return character_registry.PlantInfo[plant_type][attribute]
+	return character_registry.get_plant_info(plant_type, attribute)
 
 
 func _sort_plant_type_by_catalog_order(left, right) -> bool:
