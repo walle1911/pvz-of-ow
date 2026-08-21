@@ -295,6 +295,7 @@ script_list_meta = {
 "res://scripts/fx/plant_effect/plant_effect_tall_nut_sigma_gravity_well.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_effect_vendetta_jalapeno_slash.gd": [-1, -1],
 "res://scripts/fx/plant_effect/plant_start_effect.gd": [-1, -1],
+"res://scripts/fx/zombie_effect/reaper_shadow_step_effect.gd": [-1, -1],
 "res://scripts/garden/Item/garden_item_01_wateringcan.gd": [-1, -1],
 "res://scripts/garden/Item/garden_item_02_fertilizer.gd": [-1, -1],
 "res://scripts/garden/Item/garden_item_03_bugspray.gd": [-1, -1],
@@ -476,6 +477,8 @@ script_list_meta = {
 "res://tests/test_numerical_whitelist_plugin.gd": [-1, -1],
 "res://tests/test_overwatch_streamer_id_library.gd": [-1, -1],
 "res://tests/test_plant_balance_smoke.gd": [-1, -1],
+"res://tests/test_reaper_shadow_step.gd": [-1, -1],
+"res://tests/test_reaper_shadow_step_runtime.gd": [-1, -1],
 "res://tests/test_sigma_gravity_field_runtime.gd": [-1, -1],
 "res://tests/test_user_data_paths.gd": [-1, -1],
 "res://tests/test_wuyang_guided_bullet_runtime.gd": [-1, -1]

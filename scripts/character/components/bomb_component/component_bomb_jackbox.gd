@@ -35,12 +35,9 @@ func _ready() -> void:
 ## 角色速度修改
 func owner_update_speed(speed_product:float):
 	if not jack_bomb_timer.is_stopped():
-		if speed_product == 0:
-			jack_bomb_timer.paused = true
-		else:
-			jack_bomb_timer.paused = false
-
-			jack_bomb_timer.start(jack_bomb_timer.time_left / speed_product)
+		## 原版玩偶匣的开盒时间不受移动速度影响；完全停止时只暂停倒计时。
+		## 不要按 speed_product 重启 Timer，否则场外 2 倍加速会直接将整段倒计时减半。
+		jack_bomb_timer.paused = is_zero_approx(speed_product)
 
 ## 爆炸时间到,发射触发爆炸信号
 func _on_jack_bomb_timer_timeout() -> void:
