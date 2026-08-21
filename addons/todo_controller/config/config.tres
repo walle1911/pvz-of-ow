@@ -12,6 +12,7 @@ script_list_meta = {
 "res://scripts/Almanac/panel_container.gd": [-1, -1],
 "res://scripts/Almanac/plant_page.gd": [-1, -1],
 "res://scripts/Almanac/zombie_page.gd": [-1, -1],
+"res://scripts/__juno_double_jump_test_tmp.gd": [-1, -1],
 "res://scripts/_codex_level_probe.gd": [-1, -1],
 "res://scripts/autoload/event_bus.gd": [-1, -1],
 "res://scripts/autoload/global/bullet_registry.gd": [-1, -1],

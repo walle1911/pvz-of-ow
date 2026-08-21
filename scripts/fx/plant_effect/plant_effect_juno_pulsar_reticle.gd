@@ -105,7 +105,8 @@ func _draw() -> void:
 		var arrow_alpha:= 0.76
 		var arrow_distance:= 29.0
 		if lock_progress < 0.58:
-			arrow_distance = lerpf(48.0, 29.0, ease(lock_progress / 0.58, 0.65))
+			## 配合更长的二段跳上升锁定，从更外圈开始搜索收束。
+			arrow_distance = lerpf(62.0, 29.0, ease(lock_progress / 0.58, 0.65))
 		else:
 			## 完成标记出现时从最内侧 29px 小幅回弹到 32px。
 			arrow_distance = lerpf(29.0, 32.0, ease((lock_progress - 0.58) / 0.42, 0.7))

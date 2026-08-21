@@ -24,10 +24,12 @@ func _physics_process(delta:float) -> void:
 		_trail_positions.push_front(global_position)
 		if _trail_positions.size() > 13:
 			_trail_positions.pop_back()
-	if is_instance_valid(target_enemy) and not target_enemy.is_death:
-		movement_component.reset_track_movement(true, false, target_enemy.hurt_box_component.global_position)
-	else:
-		movement_component.reset_track_movement(false)
+	## 目标在飞行途中被其他效果蛊惑时，其受击层会切换。飞雷应立即消失，
+	## 否则会继续追踪但永远无法再触发命中。
+	if not is_instance_valid(target_enemy) or target_enemy.is_death or target_enemy.is_hypno:
+		queue_free()
+		return
+	movement_component.reset_track_movement(true, false, target_enemy.hurt_box_component.global_position)
 	movement_component.physics_process_bullet_move(delta)
 	queue_redraw()
 	if global_position.distance_to(start_pos) > max_distance:

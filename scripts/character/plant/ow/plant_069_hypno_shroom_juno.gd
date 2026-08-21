@@ -6,23 +6,40 @@ const PULSAR_RETICLE_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plan
 const PULSAR_BURST_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plant_effect_juno_pulsar_burst.gd")
 
 @export_group("朱诺·脉冲飞雷")
-@export_range(0.1, 30.0, 0.1, "suffix:秒") var pulsar_cooldown:= 10.0
-@export_range(0.1, 3.0, 0.05, "suffix:秒") var pulsar_lock_time_near:= 0.5
-@export_range(0.1, 3.0, 0.05, "suffix:秒") var pulsar_lock_time_far:= 1.0
+@export_range(0.1, 120.0, 0.1, "suffix:秒") var pulsar_cooldown:= 40.0
+@export_range(0.1, 3.0, 0.05, "suffix:秒") var pulsar_second_jump_ascent_time:= 0.55
 @export_range(0.05, 1.0, 0.05, "suffix:秒") var pulsar_fire_delay:= 0.18
-@export_range(0.5, 6.0, 0.1, "suffix:秒") var pulsar_targeting_window:= 4.0
 @export_range(1, 12, 1) var pulsar_max_targets:= 12
 @export_range(1, 500, 1, "suffix:伤害") var pulsar_damage:= 85
 @export_range(1, 9, 1, "suffix:列") var pulsar_column_count:= 2
 @export_range(0.05, 3.0, 0.05, "suffix:秒") var pulsar_initial_delay:= 0.6
+@export_group("朱诺·二段跳")
+@export_range(1.0, 60.0, 0.5, "suffix:像素") var pulsar_first_jump_height:= 32.0
+@export_range(0.5, 0.95, 0.01) var pulsar_first_jump_trigger_ratio:= 0.82
+@export_range(0.02, 0.3, 0.01, "suffix:秒") var pulsar_charge_hold_duration:= 0.07
+@export_range(0.05, 0.5, 0.01, "suffix:秒") var pulsar_charge_duration:= 0.12
+@export_range(0.7, 1.0, 0.01) var pulsar_charge_scale_y:= 0.82
+@export_range(1.0, 1.2, 0.01) var pulsar_charge_scale_x:= 1.08
+@export_range(10.0, 120.0, 1.0, "suffix:像素") var pulsar_second_jump_height:= 64.0
+@export_range(0.1, 2.0, 0.05, "suffix:秒") var pulsar_descent_time:= 0.45
+
+enum E_PulsarPhase {
+	Idle,
+	FirstJump,
+	SecondJumpAscent,
+	ApexHold,
+	Descent,
+}
 
 var _pulsar_cooldown_remaining:= 0.0
 var _pulsar_is_targeting:= false
-var _pulsar_targeting_elapsed:= 0.0
-var _pulsar_fire_countdown:= -1.0
+var _pulsar_phase:= E_PulsarPhase.Idle
+var _pulsar_phase_elapsed:= 0.0
+var _pulsar_body_rest_position:= Vector2.ZERO
+var _pulsar_body_rest_scale:= Vector2.ONE
+var _pulsar_bite_invulnerable:= false
 var _pulsar_targets:Array[Zombie000Base] = []
 var _pulsar_lock_elapsed:Dictionary[int, float] = {}
-var _pulsar_lock_duration:Dictionary[int, float] = {}
 var _pulsar_locked:Dictionary[int, bool] = {}
 var _pulsar_reticles:Dictionary[int, Node2D] = {}
 
@@ -31,6 +48,8 @@ func ready_norm_signal_connect():
 	super()
 	signal_character_death.connect(_cleanup_pulsar_targeting)
 	_pulsar_cooldown_remaining = pulsar_initial_delay
+	_pulsar_body_rest_position = body.position
+	_pulsar_body_rest_scale = body.scale
 
 
 func _physics_process(delta:float) -> void:
@@ -41,6 +60,8 @@ func _physics_process(delta:float) -> void:
 			_cancel_pulsar_targeting()
 		return
 	if _pulsar_is_targeting:
+		## 冷却从技能起跳时开始，动作期间也正常流逝，保证两次触发间隔为 40 秒。
+		_pulsar_cooldown_remaining = maxf(_pulsar_cooldown_remaining - delta, 0.0)
 		_update_pulsar_targeting(delta)
 		return
 	_pulsar_cooldown_remaining = maxf(_pulsar_cooldown_remaining - delta, 0.0)
@@ -52,79 +73,182 @@ func _physics_process(delta:float) -> void:
 
 func _begin_pulsar_targeting(candidates:Array[Zombie000Base]) -> void:
 	_pulsar_is_targeting = true
-	_pulsar_targeting_elapsed = 0.0
-	_pulsar_fire_countdown = -1.0
+	## 从一段离地到二段完整落地前，啃咬不会造成伤害或触发蛊惑。
+	_pulsar_bite_invulnerable = true
+	_pulsar_phase = E_PulsarPhase.FirstJump
+	_pulsar_phase_elapsed = 0.0
+	_pulsar_cooldown_remaining = pulsar_cooldown
 	_clear_pulsar_targets()
 	for target:Zombie000Base in candidates:
 		if _pulsar_targets.size() >= pulsar_max_targets:
 			break
-		_add_pulsar_target(target)
+		_pulsar_targets.append(target)
 	_spawn_pulsar_burst(global_position + Vector2(0.0, -48.0), false)
 
 
 func _update_pulsar_targeting(delta:float) -> void:
-	_pulsar_targeting_elapsed += delta
 	_prune_pulsar_targets()
-	_scan_for_new_pulsar_targets()
-	var has_locked_target:= false
-	var all_targets_locked:= not _pulsar_targets.is_empty()
+	## 已经发射后即使目标死亡，也要完整播完下落着地。
+	if _pulsar_targets.is_empty() and _pulsar_phase != E_PulsarPhase.Descent:
+		_cancel_pulsar_targeting()
+		return
+	_pulsar_phase_elapsed += delta
+	match _pulsar_phase:
+		E_PulsarPhase.FirstJump:
+			_update_first_jump()
+		E_PulsarPhase.SecondJumpAscent:
+			_update_second_jump_ascent(delta)
+		E_PulsarPhase.ApexHold:
+			_update_apex_hold()
+		E_PulsarPhase.Descent:
+			_update_descent()
+
+
+func _update_first_jump() -> void:
+	var first_jump_duration:= _get_pulsar_first_jump_duration()
+	var jump_motion:= _get_pulsar_jump_motion()
+	var elapsed:= minf(_pulsar_phase_elapsed, first_jump_duration)
+	var progress:= clampf(elapsed / first_jump_duration, 0.0, 1.0)
+	## 一段与二段使用同一组起跳初速度和重力；一段尚在上升时触发第二次冲量。
+	_set_pulsar_body_height(_get_pulsar_ballistic_height(elapsed, jump_motion))
+	## 前 35% 保持原形，随后快速压下，最后 30% 上升路程保持完整压缩，避免峰值只出现一帧。
+	var charge_progress:= clampf((progress - 0.35) / 0.35, 0.0, 1.0)
+	_set_pulsar_body_scale(Vector2(
+		lerpf(1.0, pulsar_charge_scale_x, charge_progress),
+		lerpf(1.0, pulsar_charge_scale_y, charge_progress)
+	))
+	if _pulsar_phase_elapsed < first_jump_duration:
+		return
+	var phase_overshoot:= maxf(_pulsar_phase_elapsed - first_jump_duration, 0.0)
+	_set_pulsar_body_height(_get_pulsar_first_jump_transition_height())
+	_pulsar_phase = E_PulsarPhase.SecondJumpAscent
+	_pulsar_phase_elapsed = phase_overshoot
 	for target:Zombie000Base in _pulsar_targets:
-		if not is_instance_valid(target) or target.is_death:
+		_add_pulsar_target_lock(target)
+	if phase_overshoot > 0.0:
+		_update_second_jump_ascent(phase_overshoot)
+
+
+func _update_second_jump_ascent(delta:float) -> void:
+	var ascent_time:= maxf(pulsar_second_jump_ascent_time, 0.001)
+	var elapsed:= minf(_pulsar_phase_elapsed, ascent_time)
+	var progress:= clampf(elapsed / ascent_time, 0.0, 1.0)
+	var jump_motion:= _get_pulsar_jump_motion()
+	## 二段立即重置为与一段完全相同的向上初速度，随后受同样的重力自然减速到顶点。
+	_set_pulsar_body_height(
+		_get_pulsar_first_jump_transition_height() + _get_pulsar_ballistic_height(elapsed, jump_motion)
+	)
+	## 二段开始后仍在上升中保持 0.07 秒完整压缩，然后快速弹到小幅拉伸再回正。
+	var release_progress:= clampf(
+		(_pulsar_phase_elapsed - pulsar_charge_hold_duration) / maxf(pulsar_charge_duration, 0.001),
+		0.0,
+		1.0
+	)
+	if release_progress < 0.55:
+		var stretch_progress:= release_progress / 0.55
+		_set_pulsar_body_scale(Vector2(
+			lerpf(pulsar_charge_scale_x, 0.97, stretch_progress),
+			lerpf(pulsar_charge_scale_y, 1.06, stretch_progress)
+		))
+	else:
+		var settle_progress:= (release_progress - 0.55) / 0.45
+		_set_pulsar_body_scale(Vector2(
+			lerpf(0.97, 1.0, settle_progress),
+			lerpf(1.06, 1.0, settle_progress)
+		))
+	for target:Zombie000Base in _pulsar_targets:
+		if not is_instance_valid(target):
 			continue
 		var target_id:= target.get_instance_id()
-		var is_in_range:= _is_zombie_in_pulsar_range(target)
-		if is_in_range and not _pulsar_locked.get(target_id, false):
-			_pulsar_lock_elapsed[target_id] = _pulsar_lock_elapsed.get(target_id, 0.0) + delta
-			if _pulsar_lock_elapsed[target_id] >= _pulsar_lock_duration.get(target_id, pulsar_lock_time_far):
-				_pulsar_locked[target_id] = true
-		var is_locked:bool = _pulsar_locked.get(target_id, false)
-		has_locked_target = has_locked_target or is_locked
-		all_targets_locked = all_targets_locked and is_locked
+		_pulsar_lock_elapsed[target_id] = minf(
+			_pulsar_lock_elapsed.get(target_id, 0.0) + delta,
+			ascent_time
+		)
+		var lock_progress:float = _pulsar_lock_elapsed[target_id] / ascent_time
 		var reticle:= _pulsar_reticles.get(target_id) as Node2D
 		if is_instance_valid(reticle):
-			var duration:float = _pulsar_lock_duration.get(target_id, pulsar_lock_time_far)
-			reticle.call(&"set_lock_progress", _pulsar_lock_elapsed.get(target_id, 0.0) / maxf(duration, 0.001))
-			reticle.call(&"set_tracking_active", is_in_range or is_locked)
-
-	if all_targets_locked and has_locked_target:
-		if _pulsar_fire_countdown < 0.0:
-			_pulsar_fire_countdown = pulsar_fire_delay
-		else:
-			_pulsar_fire_countdown -= delta
-			if _pulsar_fire_countdown <= 0.0:
-				_fire_pulsar_torpedoes()
-	else:
-		_pulsar_fire_countdown = -1.0
-	## 对齐原作最长索敌窗口：超时后释放已完成锁定的目标，未完成者淡出。
-	if _pulsar_targeting_elapsed >= pulsar_targeting_window:
-		if has_locked_target:
-			_fire_pulsar_torpedoes()
-		else:
-			_cancel_pulsar_targeting()
+			reticle.call(&"set_lock_progress", lock_progress)
+			reticle.call(&"set_tracking_active", true)
+	if progress < 1.0:
 		return
+	## 二段跳到达最高点的同一帧，所有有效目标完成锁定。
+	for target:Zombie000Base in _pulsar_targets:
+		if is_instance_valid(target):
+			_pulsar_locked[target.get_instance_id()] = true
+	_set_pulsar_body_scale(Vector2.ONE)
+	var phase_overshoot:= maxf(_pulsar_phase_elapsed - ascent_time, 0.0)
+	_pulsar_phase = E_PulsarPhase.ApexHold
+	_pulsar_phase_elapsed = phase_overshoot
 
-	if _pulsar_targets.is_empty():
-		_cancel_pulsar_targeting()
+
+## x 为两段起跳共用的向上初速度，y 为共用重力。
+## 二段到顶时间就是锁定时间，因此用它反推两个物理量。
+func _get_pulsar_jump_motion() -> Vector2:
+	var ascent_time:= maxf(pulsar_second_jump_ascent_time, 0.001)
+	var second_jump_rise:= maxf(pulsar_second_jump_height - pulsar_first_jump_height, 1.0)
+	var initial_speed:= 2.0 * second_jump_rise / ascent_time
+	var gravity:= initial_speed / ascent_time
+	return Vector2(initial_speed, gravity)
 
 
-func _scan_for_new_pulsar_targets() -> void:
-	if _pulsar_targets.size() >= pulsar_max_targets:
+func _get_pulsar_ballistic_height(elapsed:float, jump_motion:Vector2) -> float:
+	return jump_motion.x * elapsed - 0.5 * jump_motion.y * elapsed * elapsed
+
+
+func _get_pulsar_first_jump_duration() -> float:
+	return maxf(
+		pulsar_second_jump_ascent_time * pulsar_first_jump_trigger_ratio,
+		0.001
+	)
+
+
+func _get_pulsar_first_jump_transition_height() -> float:
+	return _get_pulsar_ballistic_height(
+		_get_pulsar_first_jump_duration(),
+		_get_pulsar_jump_motion()
+	)
+
+
+func _get_pulsar_second_jump_apex_height() -> float:
+	var jump_motion:= _get_pulsar_jump_motion()
+	return _get_pulsar_first_jump_transition_height() + _get_pulsar_ballistic_height(
+		pulsar_second_jump_ascent_time,
+		jump_motion
+	)
+
+
+func _update_apex_hold() -> void:
+	_set_pulsar_body_height(_get_pulsar_second_jump_apex_height())
+	if _pulsar_phase_elapsed < pulsar_fire_delay:
 		return
-	for target:Zombie000Base in _get_zombies_in_pulsar_range():
-		if _pulsar_targets.size() >= pulsar_max_targets:
-			break
-		if not _pulsar_targets.has(target):
-			_add_pulsar_target(target)
+	_fire_pulsar_torpedoes()
+	_pulsar_phase = E_PulsarPhase.Descent
+	_pulsar_phase_elapsed = 0.0
 
 
-func _add_pulsar_target(target:Zombie000Base) -> void:
+func _update_descent() -> void:
+	var progress:= clampf(_pulsar_phase_elapsed / maxf(pulsar_descent_time, 0.001), 0.0, 1.0)
+	_set_pulsar_body_height((1.0 - ease(progress, 1.8)) * _get_pulsar_second_jump_apex_height())
+	if progress < 1.0:
+		return
+	_finish_pulsar_action()
+
+
+func _set_pulsar_body_height(height:float) -> void:
+	if is_instance_valid(body):
+		body.position = _pulsar_body_rest_position + Vector2.UP * height
+
+
+func _set_pulsar_body_scale(scale_factor:Vector2) -> void:
+	if is_instance_valid(body):
+		body.scale = _pulsar_body_rest_scale * scale_factor
+
+
+func _add_pulsar_target_lock(target:Zombie000Base) -> void:
 	if not is_instance_valid(target) or target.is_death or target.is_hypno:
 		return
 	var target_id:= target.get_instance_id()
-	var distance_ratio:= _get_pulsar_target_distance_ratio(target)
-	_pulsar_targets.append(target)
 	_pulsar_lock_elapsed[target_id] = 0.0
-	_pulsar_lock_duration[target_id] = lerpf(pulsar_lock_time_near, pulsar_lock_time_far, distance_ratio)
 	_pulsar_locked[target_id] = false
 	if not is_instance_valid(Global.main_game):
 		return
@@ -137,21 +261,21 @@ func _add_pulsar_target(target:Zombie000Base) -> void:
 func _fire_pulsar_torpedoes() -> void:
 	if not _pulsar_is_targeting:
 		return
-	_pulsar_is_targeting = false
-	_pulsar_targeting_elapsed = 0.0
-	_pulsar_cooldown_remaining = pulsar_cooldown
 	var locked_targets:Array[Zombie000Base] = []
 	for target:Zombie000Base in _pulsar_targets:
 		if not is_instance_valid(target) or target.is_death:
 			continue
 		if _pulsar_locked.get(target.get_instance_id(), false):
 			locked_targets.append(target)
-	var launch_position:= global_position + Vector2(float(direction_x_root) * 5.0, -55.0)
+	## 根节点与碰撞仍留在种植格；发射点单独补上可视身体的跳跃高度。
+	var launch_position:= global_position + Vector2(
+		float(direction_x_root) * 5.0,
+		-55.0 - _get_pulsar_second_jump_apex_height()
+	)
 	_spawn_pulsar_burst(launch_position, true)
 	for target_index in locked_targets.size():
 		_spawn_pulsar_torpedo(locked_targets[target_index], target_index, locked_targets.size(), launch_position)
 	_release_pulsar_reticles()
-	_clear_pulsar_target_data()
 
 
 func _spawn_pulsar_torpedo(
@@ -203,7 +327,6 @@ func _prune_pulsar_targets() -> void:
 			reticle.queue_free()
 		_pulsar_reticles.erase(target_id)
 		_pulsar_lock_elapsed.erase(target_id)
-		_pulsar_lock_duration.erase(target_id)
 		_pulsar_locked.erase(target_id)
 		_pulsar_targets.remove_at(target_index)
 
@@ -225,16 +348,32 @@ func _release_pulsar_reticles() -> void:
 
 func _cancel_pulsar_targeting() -> void:
 	_pulsar_is_targeting = false
-	_pulsar_targeting_elapsed = 0.0
-	_pulsar_fire_countdown = -1.0
-	_pulsar_cooldown_remaining = minf(maxf(pulsar_initial_delay, 0.1), 1.0)
+	_pulsar_bite_invulnerable = false
+	_pulsar_phase = E_PulsarPhase.Idle
+	_pulsar_phase_elapsed = 0.0
+	_set_pulsar_body_height(0.0)
+	_set_pulsar_body_scale(Vector2.ONE)
 	_clear_pulsar_targets()
 
 
 func _cleanup_pulsar_targeting() -> void:
 	_pulsar_is_targeting = false
-	_pulsar_targeting_elapsed = 0.0
+	_pulsar_bite_invulnerable = false
+	_pulsar_phase = E_PulsarPhase.Idle
+	_pulsar_phase_elapsed = 0.0
+	_set_pulsar_body_height(0.0)
+	_set_pulsar_body_scale(Vector2.ONE)
 	_clear_pulsar_targets()
+
+
+func _finish_pulsar_action() -> void:
+	_pulsar_is_targeting = false
+	_pulsar_bite_invulnerable = false
+	_pulsar_phase = E_PulsarPhase.Idle
+	_pulsar_phase_elapsed = 0.0
+	_set_pulsar_body_height(0.0)
+	_set_pulsar_body_scale(Vector2.ONE)
+	_clear_pulsar_target_data()
 
 
 func _clear_pulsar_targets() -> void:
@@ -248,7 +387,6 @@ func _clear_pulsar_targets() -> void:
 func _clear_pulsar_target_data() -> void:
 	_pulsar_targets.clear()
 	_pulsar_lock_elapsed.clear()
-	_pulsar_lock_duration.clear()
 	_pulsar_locked.clear()
 
 
@@ -279,18 +417,6 @@ func _get_zombies_in_pulsar_range() -> Array[Zombie000Base]:
 	return result
 
 
-func _is_zombie_in_pulsar_range(target:Zombie000Base) -> bool:
-	if not is_instance_valid(target) or target.is_death or target.is_hypno:
-		return false
-	if absi(target.lane - lane) > 1:
-		return false
-	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
-		return false
-	var lane_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells[lane]
-	var x_bounds:= _get_pulsar_range_x_bounds(lane_cells)
-	return target.global_position.x >= x_bounds.x and target.global_position.x <= x_bounds.y
-
-
 func _get_pulsar_range_x_bounds(lane_cells:Array) -> Vector2:
 	var furthest_front_column:= clampi(
 		row_col.y + pulsar_column_count * direction_x_root,
@@ -306,22 +432,22 @@ func _get_pulsar_range_x_bounds(lane_cells:Array) -> Vector2:
 		maxf(first_cell.global_position.x + first_cell.size.x, last_cell.global_position.x + last_cell.size.x)
 	)
 
-
-func _get_pulsar_target_distance_ratio(target:Zombie000Base) -> float:
-	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
-		return 1.0
-	var lane_cells:Array = Global.main_game.plant_cell_manager.all_plant_cells[lane]
-	var x_bounds:= _get_pulsar_range_x_bounds(lane_cells)
-	var max_distance:= maxf(
-		maxf(absf(x_bounds.x - global_position.x), absf(x_bounds.y - global_position.x)),
-		1.0
-	)
-	return clampf(absf(target.global_position.x - global_position.x) / max_distance, 0.0, 1.0)
-
-
 ## 被僵尸啃食一次特殊效果,魅惑\大蒜
 func _be_zombie_eat_once_special(attack_zombie:Zombie000Base):
 	hypno_zombie(attack_zombie)
+
+
+## 技能跳跃期间只屏蔽僵尸啃咬，不扩大为其他伤害免疫。
+func be_zombie_eat(attack_value:int, attack_zombie:Zombie000Base):
+	if _pulsar_bite_invulnerable:
+		return
+	super(attack_value, attack_zombie)
+
+
+func be_zombie_eat_once(attack_zombie:Zombie000Base):
+	if _pulsar_bite_invulnerable:
+		return
+	super(attack_zombie)
 
 ## 魅惑僵尸
 func hypno_zombie(zombie:Zombie000Base):
