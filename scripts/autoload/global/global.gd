@@ -31,16 +31,46 @@ const CustomLevelRuntime := preload("res://scripts/resources/level/level_custom_
 func _ready() -> void:
 	## 确保游戏启动时鼠标可见（防止上次异常退出时鼠标被隐藏）
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	## 用户数据、冒险运行时缓存和场景缓存统一交给启动封面分帧/异步加载。
+	## Autoload._ready 在首帧之前执行；这里做重活会导致启动页尚未显示就长时间黑屏。
 
-	## 读取当前用户名
-	var is_have_user := user_manager.load_current_user()
-	if is_have_user and not user_manager.curr_user_name.is_empty():
-		reload_session_for_current_user()
+
+var startup_preferences_initialized := false
+var startup_has_user := false
+var startup_session_initialized := false
+
+
+func initialize_startup_preferences() -> void:
+	if startup_preferences_initialized:
+		return
+
+	startup_has_user = user_manager.load_current_user()
+	await get_tree().process_frame
+	if startup_has_user and not user_manager.curr_user_name.is_empty():
+		## 音频总线必须在启动页播放任何声音前应用，避免加载中途响度突变。
+		config_service.load_and_apply_config()
+	startup_preferences_initialized = true
+
+
+func initialize_startup_session(progress_callback: Callable = Callable()) -> void:
+	if startup_session_initialized:
+		_report_startup_progress(progress_callback, 1.0)
+		return
+
+	_report_startup_progress(progress_callback, 0.04)
+	await initialize_startup_preferences()
+
+	if startup_has_user and not user_manager.curr_user_name.is_empty():
+		save_service.load_global_game_data()
+		_report_startup_progress(progress_callback, 0.12)
 	else:
-		_warm_adventure_runtime_cache()
-	_warm_adventure_scene_cache()
-	## 创建全局数据自动存档计时器（由 SaveService 负责）
+		_report_startup_progress(progress_callback, 0.12)
+	await get_tree().process_frame
+
+	await _warm_adventure_runtime_cache_async(progress_callback, 0.12, 0.96)
 	save_service.start_autosave(60.0)
+	startup_session_initialized = true
+	_report_startup_progress(progress_callback, 1.0)
 
 
 ## 在 `user_manager.curr_user_name` 已更新后，加载该用户下的全局存档与配置（与启动时一致）。
@@ -92,6 +122,45 @@ func _warm_adventure_runtime_cache() -> void:
 		adventure_runtime_cache[mainline_mode] = mode_cache
 
 
+func _warm_adventure_runtime_cache_async(
+		progress_callback: Callable,
+		progress_start: float,
+		progress_end: float) -> void:
+	var presets_by_mode: Dictionary = {}
+	var total_presets := 0
+	for mainline_mode in ["normal", "chessboard"]:
+		var presets := AdventurePresetsRuntime.list_formal_presets(mainline_mode)
+		presets_by_mode[mainline_mode] = presets
+		total_presets += presets.size()
+
+	var completed_presets := 0
+	for mainline_mode in ["normal", "chessboard"]:
+		var mode_cache: Dictionary = {}
+		for preset in presets_by_mode[mainline_mode]:
+			var preset_id := str((preset as Dictionary).get("id", ""))
+			if not preset_id.is_empty():
+				var source := AdventurePresetsRuntime.build_formal_level(preset_id)
+				var built := CustomLevelRuntime.build_game_para(source)
+				if built["ok"]:
+					mode_cache[preset_id] = {
+						"source": source,
+						"game_para": built["game_para"],
+					}
+			completed_presets += 1
+			var ratio := float(completed_presets) / maxf(float(total_presets), 1.0)
+			_report_startup_progress(
+				progress_callback,
+				lerpf(progress_start, progress_end, ratio)
+			)
+			await get_tree().process_frame
+		adventure_runtime_cache[mainline_mode] = mode_cache
+
+
+func _report_startup_progress(progress_callback: Callable, progress: float) -> void:
+	if progress_callback.is_valid():
+		progress_callback.call(clampf(progress, 0.0, 1.0))
+
+
 func refresh_adventure_runtime_cache() -> void:
 	adventure_runtime_cache.clear()
 	_warm_adventure_runtime_cache()
@@ -112,6 +181,15 @@ func cached_adventure_level(mainline_mode: String, preset_id: String) -> Diction
 
 func _warm_adventure_scene_cache() -> void:
 	## 把“开始冒险”和关卡按钮会切换到的场景文件也在启动阶段解析并持有。
+	for scene_path in adventure_scene_cache_paths():
+		var packed_scene := load(scene_path) as PackedScene
+		if packed_scene != null:
+			adventure_scene_cache[scene_path] = packed_scene
+
+
+func adventure_scene_cache_paths() -> PackedStringArray:
+	## 启动封面使用同一份清单做线程加载；其他场景仍可通过 change_scene_to_cached 回退同步加载。
+	var paths := PackedStringArray()
 	for scene_id in [
 		MainSceneRegistry.MainScenes.StartMenu,
 		MainSceneRegistry.MainScenes.ChooseLevelAdventure,
@@ -121,14 +199,14 @@ func _warm_adventure_scene_cache() -> void:
 		MainSceneRegistry.MainScenes.MainGameChessboardFront,
 		MainSceneRegistry.MainScenes.MainGameChessboardPool,
 	]:
-		var scene_path := str(main_scene_registry.MainScenesMap[scene_id])
-		var packed_scene := load(scene_path) as PackedScene
-		if packed_scene != null:
-			adventure_scene_cache[scene_path] = packed_scene
-	for scene_path in ["res://scenes/card_slot/card_slot_norm.tscn"]:
-		var packed_scene := load(scene_path) as PackedScene
-		if packed_scene != null:
-			adventure_scene_cache[scene_path] = packed_scene
+		paths.append(str(main_scene_registry.MainScenesMap[scene_id]))
+	paths.append("res://scenes/card_slot/card_slot_norm.tscn")
+	return paths
+
+
+func cache_adventure_scene(scene_path: String, packed_scene: PackedScene) -> void:
+	if packed_scene != null:
+		adventure_scene_cache[scene_path] = packed_scene
 
 
 func change_scene_to_cached(scene_path: String) -> Error:

@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/card/all_cards.gd" id="1_all_cards"]
+
+[node name="AllCards" type="Control"]
+script = ExtResource("1_all_cards")
+
+[node name="PlantCards" type="GridContainer" parent="."]
+unique_name_in_owner = true
+
+[node name="PlantCards2" type="GridContainer" parent="."]
+unique_name_in_owner = true
+
+[node name="PlantCards3" type="GridContainer" parent="."]
+unique_name_in_owner = true
+
+[node name="ZombieCards" type="GridContainer" parent="."]
+unique_name_in_owner = true
+
+[node name="ZombieCards2" type="GridContainer" parent="."]
+unique_name_in_owner = true

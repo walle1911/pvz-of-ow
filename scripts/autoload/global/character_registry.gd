@@ -12,12 +12,9 @@ var _numerical_adjustments_cache: Dictionary = {}
 
 
 func _ready() -> void:
-	## 角色资源在启动阶段集中预热，避免第一次进入选关或点击关卡时同步加载造成卡顿。
-	for info in PlantInfo.values():
-		_cache_character_scene(info.get(PlantInfoAttribute.PlantScenes, ""))
-		_cache_plant_condition(info.get(PlantInfoAttribute.PlantConditionResource, ""))
-	for info in ZombieInfo.values():
-		_cache_character_scene(info.get(ZombieInfoAttribute.ZombieScenes, ""))
+	## Autoload._ready 发生在启动封面出现之前，这里不能同步预热整个角色库。
+	## 启动封面会在第一帧显示后线程加载这些路径，日常调用仍保留按需加载回退。
+	pass
 
 
 # 定义枚举
@@ -1266,6 +1263,26 @@ func _load_character_scene(scene_value) -> PackedScene:
 	if scene_value is String or scene_value is StringName:
 		return _cache_character_scene(scene_value)
 	return null
+
+
+func character_scene_paths() -> PackedStringArray:
+	var paths := PackedStringArray()
+	for info in PlantInfo.values():
+		var plant_path := str((info as Dictionary).get(PlantInfoAttribute.PlantScenes, ""))
+		if not plant_path.is_empty() and not paths.has(plant_path):
+			paths.append(plant_path)
+	for info in ZombieInfo.values():
+		var zombie_path := str((info as Dictionary).get(ZombieInfoAttribute.ZombieScenes, ""))
+		if not zombie_path.is_empty() and not paths.has(zombie_path):
+			paths.append(zombie_path)
+	return paths
+
+
+func cache_preloaded_character_scene(scene_path: String, packed_scene: PackedScene) -> bool:
+	if packed_scene == null or not character_scene_paths().has(scene_path):
+		return false
+	_character_scene_cache[scene_path] = packed_scene
+	return true
 
 
 func _cache_character_scene(scene_value) -> PackedScene:

@@ -1,0 +1,132 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/start_menu/title_loading_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/image/background/titlescreen.png" id="2_cover"]
+[ext_resource type="Texture2D" path="res://assets/image/main_game_item/LoadBar_dirt.png" id="3_dirt"]
+[ext_resource type="Texture2D" path="res://assets/image/main_game_item/LoadBar_grass.png" id="4_grass"]
+[ext_resource type="Texture2D" path="res://assets/reanim/SodRollCap.png" id="5_sod_roll"]
+[ext_resource type="AudioStream" path="res://assets/audio/sounds/loadingbar_flower.ogg" id="7_flower_sound"]
+[ext_resource type="FontFile" path="res://assets/fonts/方正少儿_GBK.ttf" id="8_font"]
+[ext_resource type="AudioStream" path="res://assets/audio/sounds/loadingbar_zombie.ogg" id="9_zombie_sound"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_button"]
+
+[node name="TitleLoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_script")
+
+[node name="Cover" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_cover")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.04)
+
+[node name="LoadingArea" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Dirt" type="TextureRect" parent="LoadingArea"]
+layout_mode = 0
+offset_left = 353.0
+offset_top = 497.0
+offset_right = 713.0
+offset_bottom = 556.0
+mouse_filter = 2
+texture = ExtResource("3_dirt")
+expand_mode = 1
+
+[node name="GrassClip" type="Control" parent="LoadingArea"]
+clip_contents = true
+layout_mode = 0
+offset_left = 351.0
+offset_top = 476.0
+offset_right = 351.0
+offset_bottom = 513.0
+mouse_filter = 2
+
+[node name="Grass" type="TextureRect" parent="LoadingArea/GrassClip"]
+layout_mode = 0
+offset_right = 352.0
+offset_bottom = 37.0
+mouse_filter = 2
+texture = ExtResource("4_grass")
+expand_mode = 1
+
+[node name="Ornaments" type="Node2D" parent="LoadingArea"]
+
+[node name="GrassRoll" type="TextureRect" parent="LoadingArea"]
+visible = false
+layout_mode = 0
+offset_left = 315.0
+offset_top = 446.0
+offset_right = 387.0
+offset_bottom = 516.0
+mouse_filter = 2
+texture = ExtResource("5_sod_roll")
+expand_mode = 1
+pivot_offset = Vector2(36, 35)
+
+[node name="StatusLabel" type="Label" parent="LoadingArea"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 502.0
+offset_right = 666.0
+offset_bottom = 542.0
+theme_override_colors/font_color = Color(0.88, 0.61, 0.22, 1)
+theme_override_colors/font_shadow_color = Color(0.18, 0.07, 0.015, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("8_font")
+theme_override_font_sizes/font_size = 23
+text = "正在加载……"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnterButton" type="Button" parent="LoadingArea"]
+layout_mode = 0
+offset_left = 329.0
+offset_top = 468.0
+offset_right = 737.0
+offset_bottom = 568.0
+mouse_default_cursor_shape = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_button")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_button")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_button")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_button")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_button")
+
+[node name="LoadingbarFlower" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_flower_sound")
+bus = &"SFX"
+
+[node name="LoadingbarZombie" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_zombie_sound")
+bus = &"SFX"

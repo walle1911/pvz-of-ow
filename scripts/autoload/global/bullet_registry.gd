@@ -52,35 +52,62 @@ enum AttackMode {
 
 	}
 
-@export var BulletTypeMap :Dictionary[BulletType, PackedScene]= {
-	BulletType.Bullet001Pea : preload("res://scenes/bullet/bullet_001_pea.tscn"),
-	BulletType.Bullet002PeaSnow : preload("res://scenes/bullet/bullet_002_pea_snow.tscn"),
-	BulletType.Bullet003Puff : preload("res://scenes/bullet/bullet_003_puff.tscn"),
-	BulletType.Bullet004Fume : preload("res://scenes/bullet/bullet_004_fume.tscn"),
-	BulletType.Bullet005PuffLongTime : preload("res://scenes/bullet/bullet_005_puff_long_time.tscn"),
-	BulletType.Bullet006PeaFire : preload("res://scenes/bullet/bullet_006_pea_fire.tscn"),
-	BulletType.Bullet007Cactus : preload("res://scenes/bullet/bullet_007_cactus.tscn"),
-	BulletType.Bullet008Star : preload("res://scenes/bullet/bullet_008_star.tscn"),
-
-	BulletType.Bullet009Cabbage :preload("res://scenes/bullet/bullet_009_cabbage.tscn"),
-	BulletType.Bullet010Corn :preload("res://scenes/bullet/bullet_010_corn.tscn"),
-	BulletType.Bullet011Butter :preload("res://scenes/bullet/bullet_011_butter.tscn"),
-	BulletType.Bullet012Melon :preload("res://scenes/bullet/bullet_012_melon.tscn"),
-
-	BulletType.Bullet013Basketball :preload("res://scenes/bullet/bullet_013_basketball.tscn"),
-
-	BulletType.Bullet014CattailBullet :preload("res://scenes/bullet/bullet_014_cattail_bullet.tscn"),
-	BulletType.Bullet015WinterMelon :preload("res://scenes/bullet/bullet_015_winter_melon.tscn"),
-
-	BulletType.Bullet016CobCannon :preload("res://scenes/bullet/bullet_016_cob_cannon.tscn"),
-	BulletType.Bullet017SnowFume :preload("res://scenes/bullet/bullet_017_snow_fume.tscn"),
-	BulletType.Bullet018GiantPea :preload("res://scenes/bullet/bullet_018_giant_pea.tscn"),
-	BulletType.Bullet019WidowmakerTracer :preload("res://scenes/bullet/bullet_019_widowmaker_tracer.tscn"),
-	BulletType.Bullet020SojournTracer :preload("res://scenes/bullet/bullet_020_sojourn_tracer.tscn"),
-	BulletType.Bullet021SeaShroomWuyang :preload("res://scenes/bullet/bullet_021_sea_shroom_wuyang.tscn"),
-	BulletType.Bullet022AnranFireWave :preload("res://scenes/bullet/bullet_022_anran_fire_wave.tscn"),
+## Autoload 初始化时只保存路径，避免在启动封面出现前同步加载全部子弹场景。
+const BulletTypePathMap: Dictionary[BulletType, String] = {
+	BulletType.Bullet001Pea: "res://scenes/bullet/bullet_001_pea.tscn",
+	BulletType.Bullet002PeaSnow: "res://scenes/bullet/bullet_002_pea_snow.tscn",
+	BulletType.Bullet003Puff: "res://scenes/bullet/bullet_003_puff.tscn",
+	BulletType.Bullet004Fume: "res://scenes/bullet/bullet_004_fume.tscn",
+	BulletType.Bullet005PuffLongTime: "res://scenes/bullet/bullet_005_puff_long_time.tscn",
+	BulletType.Bullet006PeaFire: "res://scenes/bullet/bullet_006_pea_fire.tscn",
+	BulletType.Bullet007Cactus: "res://scenes/bullet/bullet_007_cactus.tscn",
+	BulletType.Bullet008Star: "res://scenes/bullet/bullet_008_star.tscn",
+	BulletType.Bullet009Cabbage: "res://scenes/bullet/bullet_009_cabbage.tscn",
+	BulletType.Bullet010Corn: "res://scenes/bullet/bullet_010_corn.tscn",
+	BulletType.Bullet011Butter: "res://scenes/bullet/bullet_011_butter.tscn",
+	BulletType.Bullet012Melon: "res://scenes/bullet/bullet_012_melon.tscn",
+	BulletType.Bullet013Basketball: "res://scenes/bullet/bullet_013_basketball.tscn",
+	BulletType.Bullet014CattailBullet: "res://scenes/bullet/bullet_014_cattail_bullet.tscn",
+	BulletType.Bullet015WinterMelon: "res://scenes/bullet/bullet_015_winter_melon.tscn",
+	BulletType.Bullet016CobCannon: "res://scenes/bullet/bullet_016_cob_cannon.tscn",
+	BulletType.Bullet017SnowFume: "res://scenes/bullet/bullet_017_snow_fume.tscn",
+	BulletType.Bullet018GiantPea: "res://scenes/bullet/bullet_018_giant_pea.tscn",
+	BulletType.Bullet019WidowmakerTracer: "res://scenes/bullet/bullet_019_widowmaker_tracer.tscn",
+	BulletType.Bullet020SojournTracer: "res://scenes/bullet/bullet_020_sojourn_tracer.tscn",
+	BulletType.Bullet021SeaShroomWuyang: "res://scenes/bullet/bullet_021_sea_shroom_wuyang.tscn",
+	BulletType.Bullet022AnranFireWave: "res://scenes/bullet/bullet_022_anran_fire_wave.tscn",
 }
+
+var BulletTypeMap: Dictionary[BulletType, PackedScene] = {}
+
+
+func bullet_scene_paths() -> PackedStringArray:
+	var paths := PackedStringArray()
+	for scene_path in BulletTypePathMap.values():
+		paths.append(String(scene_path))
+	return paths
+
+
+func cache_preloaded_bullet_scene(scene_path: String, packed_scene: PackedScene) -> bool:
+	if packed_scene == null:
+		return false
+	for bullet_type in BulletTypePathMap:
+		if BulletTypePathMap[bullet_type] == scene_path:
+			BulletTypeMap[bullet_type] = packed_scene
+			return true
+	return false
+
 
 ## 获取子弹场景方法
 func get_bullet_scenes(bullet_type:BulletType) -> PackedScene:
-	return BulletTypeMap.get(bullet_type)
+	if BulletTypeMap.has(bullet_type):
+		return BulletTypeMap[bullet_type]
+	var scene_path: String = BulletTypePathMap.get(bullet_type, "")
+	if scene_path.is_empty():
+		return null
+	var packed_scene := ResourceLoader.load(scene_path, "PackedScene") as PackedScene
+	if packed_scene != null:
+		BulletTypeMap[bullet_type] = packed_scene
+	else:
+		push_error("无法加载子弹场景：%s" % scene_path)
+	return packed_scene

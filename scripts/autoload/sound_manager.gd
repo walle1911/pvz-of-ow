@@ -24,7 +24,11 @@ func _physics_process(delta: float) -> void:
 		curr_frame_sfx.clear()
 
 #region 播放音乐和音效
-func play_bgm(stream: AudioStream):
+func play_bgm(stream: AudioStream, volume_db: float = 0.0):
+	bgm_play.volume_db = volume_db
+	if bgm_play.playing and bgm_play.stream != null \
+			and bgm_play.stream.resource_path == stream.resource_path:
+		return
 	bgm_play.stream = stream
 	bgm_play.play()
 
@@ -44,12 +48,12 @@ enum TypeBeAttackSFX{
 const SFXBeAttackMap := {
 	TypeBeAttackSFX.Null: null,
 	TypeBeAttackSFX.Plastic: [
-		preload("res://assets/audio/SFX/bullet/plastichit.ogg"),
-		preload("res://assets/audio/SFX/bullet/plastichit2.ogg")
+		"res://assets/audio/SFX/bullet/plastichit.ogg",
+		"res://assets/audio/SFX/bullet/plastichit2.ogg"
 	],
 	TypeBeAttackSFX.Shield: [
-		preload("res://assets/audio/SFX/bullet/shieldhit1.ogg"),
-		preload("res://assets/audio/SFX/bullet/shieldhit2.ogg")
+		"res://assets/audio/SFX/bullet/shieldhit1.ogg",
+		"res://assets/audio/SFX/bullet/shieldhit2.ogg"
 	],
 }
 
@@ -68,28 +72,28 @@ enum TypeBulletSFX{
 const SFXBulletMap := {
 	TypeBulletSFX.Null: null,
 	TypeBulletSFX.Pea: [
-		preload("res://assets/audio/SFX/bullet/splat1.ogg"),
-		preload("res://assets/audio/SFX/bullet/splat2.ogg"),
-		preload("res://assets/audio/SFX/bullet/splat3.ogg")
+		"res://assets/audio/SFX/bullet/splat1.ogg",
+		"res://assets/audio/SFX/bullet/splat2.ogg",
+		"res://assets/audio/SFX/bullet/splat3.ogg"
 	],
 	TypeBulletSFX.PeaFire: [
-		preload("res://assets/audio/SFX/bullet/firepea.ogg"),
+		"res://assets/audio/SFX/bullet/firepea.ogg",
 	],
 	TypeBulletSFX.Corn:[
-		preload("res://assets/audio/SFX/bullet/kernelpult2.ogg"),
-		preload("res://assets/audio/SFX/bullet/kernelpult.ogg")
+		"res://assets/audio/SFX/bullet/kernelpult2.ogg",
+		"res://assets/audio/SFX/bullet/kernelpult.ogg"
 	],
 	TypeBulletSFX.Butter:[
-		preload("res://assets/audio/SFX/bullet/butter.ogg")
+		"res://assets/audio/SFX/bullet/butter.ogg"
 	],
 	TypeBulletSFX.Melon:[
-		preload("res://assets/audio/SFX/bullet/melonimpact.ogg"),
-		preload("res://assets/audio/SFX/bullet/melonimpact2.ogg")
+		"res://assets/audio/SFX/bullet/melonimpact.ogg",
+		"res://assets/audio/SFX/bullet/melonimpact2.ogg"
 	],
 
 	TypeBulletSFX.Bowling: [
-		preload("res://assets/audio/SFX/bullet/bowlingimpact.ogg"),
-		preload("res://assets/audio/SFX/bullet/bowlingimpact2.ogg"),
+		"res://assets/audio/SFX/bullet/bowlingimpact.ogg",
+		"res://assets/audio/SFX/bullet/bowlingimpact2.ogg",
 	],
 
 }
@@ -99,46 +103,46 @@ const SFXCharacterMap := {
 	## -------------------------------植物-------------------------------
 	## 豌豆射手发射字典
 	&"Throw":[
-		preload("res://assets/audio/SFX/plant/throw1.ogg"),
-		preload("res://assets/audio/SFX/plant/throw2.ogg")
+		"res://assets/audio/SFX/plant/throw1.ogg",
+		"res://assets/audio/SFX/plant/throw2.ogg"
 	],
 	## 向日葵发射阳光
-	&"Throw1":preload("res://assets/audio/SFX/plant/throw1.ogg"),
+	&"Throw1":"res://assets/audio/SFX/plant/throw1.ogg",
 	## 樱桃炸弹爆炸
-	&"CherryBomb":preload("res://assets/audio/SFX/plant/cherrybomb.ogg"),
+	&"CherryBomb":"res://assets/audio/SFX/plant/cherrybomb.ogg",
 	## 土豆雷爆炸
-	&"PotatoMine": preload("res://assets/audio/SFX/plant/potato_mine.ogg"),
+	&"PotatoMine": "res://assets/audio/SFX/plant/potato_mine.ogg",
 	## 大嘴花
-	&"BigChomp": preload("res://assets/audio/SFX/plant/bigchomp.ogg"),
+	&"BigChomp": "res://assets/audio/SFX/plant/bigchomp.ogg",
 	## 小喷菇发射子弹
-	&"Puff": preload("res://assets/audio/SFX/plant/puff.ogg"),
+	&"Puff": "res://assets/audio/SFX/plant/puff.ogg",
 	## 黑百合胆小菇暴击：原创合成的短促狙击爆头音，不复用原有 SFX。
-	&"WidowmakerCriticalHeadshot": preload("res://assets/audio/SFX/plant/widowmaker_critical_headshot.wav"),
+	&"WidowmakerCriticalHeadshot": "res://assets/audio/SFX/plant/widowmaker_critical_headshot.wav",
 	## 阳光菇长大
-	&"PlantGrow": preload("res://assets/audio/SFX/plant/plantgrow.ogg"),
+	&"PlantGrow": "res://assets/audio/SFX/plant/plantgrow.ogg",
 	## 大喷菇发射子弹
-	&"Fume": preload("res://assets/audio/SFX/plant/fume.ogg"),
+	&"Fume": "res://assets/audio/SFX/plant/fume.ogg",
 	## 墓碑吞噬者
-	&"GraveBusterChomp":preload("res://assets/audio/SFX/plant/gravebusterchomp.ogg"),
+	&"GraveBusterChomp":"res://assets/audio/SFX/plant/gravebusterchomp.ogg",
 	## 魅惑菇
-	&"MindControlled": preload("res://assets/audio/SFX/plant/mindcontrolled.ogg"),
+	&"MindControlled": "res://assets/audio/SFX/plant/mindcontrolled.ogg",
 	## 寒冰菇
-	&"Frozen": preload("res://assets/audio/SFX/plant/frozen.ogg"),
+	&"Frozen": "res://assets/audio/SFX/plant/frozen.ogg",
 	## 毁灭菇
-	&"DoomShroom": preload("res://assets/audio/SFX/plant/doomshroom.ogg"),
+	&"DoomShroom": "res://assets/audio/SFX/plant/doomshroom.ogg",
 	## 倭瓜发现敌人
 	&"SquashHmm":[
-		preload("res://assets/audio/SFX/plant/squash_hmm2.ogg"),
-		preload("res://assets/audio/SFX/plant/squash_hmm.ogg")
+		"res://assets/audio/SFX/plant/squash_hmm2.ogg",
+		"res://assets/audio/SFX/plant/squash_hmm.ogg"
 	],
 	## 火爆辣椒
-	&"Jalapeno": preload("res://assets/audio/SFX/plant/jalapeno.ogg"),
+	&"Jalapeno": "res://assets/audio/SFX/plant/jalapeno.ogg",
 	## 三叶草
-	&"blover": preload("res://assets/audio/SFX/plant/blover.ogg"),
+	&"blover": "res://assets/audio/SFX/plant/blover.ogg",
 	## 磁力菇
-	&"magnetshroom": preload("res://assets/audio/SFX/plant/magnetshroom.ogg"),
+	&"magnetshroom": "res://assets/audio/SFX/plant/magnetshroom.ogg",
 	## 磁力菇
-	&"coblaunch": preload("res://assets/audio/SFX/plant/coblaunch.ogg"),
+	&"coblaunch": "res://assets/audio/SFX/plant/coblaunch.ogg",
 
 
 
@@ -146,76 +150,76 @@ const SFXCharacterMap := {
 	## -------------------------------僵尸-------------------------------
 	## 通用音效
 	## 掉头
-	&"limbs_pop": preload("res://assets/audio/SFX/zombie/limbs_pop.ogg"),
+	&"limbs_pop": "res://assets/audio/SFX/zombie/limbs_pop.ogg",
 
 	## 啃食
 	&"Chomp":[
-		preload("res://assets/audio/SFX/zombie/chomp.ogg"),
-		preload("res://assets/audio/SFX/zombie/chomp2.ogg"),
-		preload("res://assets/audio/SFX/zombie/chompsoft.ogg")
+		"res://assets/audio/SFX/zombie/chomp.ogg",
+		"res://assets/audio/SFX/zombie/chomp2.ogg",
+		"res://assets/audio/SFX/zombie/chompsoft.ogg"
 	],
 	## 掉头
-	&"Shoop":preload("res://assets/audio/SFX/zombie/shoop.ogg"),
+	&"Shoop":"res://assets/audio/SFX/zombie/shoop.ogg",
 	## 啃食大蒜
 	&"yuck":[
-		preload("res://assets/audio/SFX/zombie/yuck2.ogg"),
-		preload("res://assets/audio/SFX/zombie/yuck.ogg")
+		"res://assets/audio/SFX/zombie/yuck2.ogg",
+		"res://assets/audio/SFX/zombie/yuck.ogg"
 	],
 	## 撑杆跳
-	&"Polevault":preload("res://assets/audio/SFX/zombie/polevault.ogg"),
+	&"Polevault":"res://assets/audio/SFX/zombie/polevault.ogg",
 	## 读报僵尸愤怒
 	&"Rarrgh":[
-		preload("res://assets/audio/SFX/zombie/newspaper_rarrgh.ogg"),
-		preload("res://assets/audio/SFX/zombie/newspaper_rarrgh2.ogg")
+		"res://assets/audio/SFX/zombie/newspaper_rarrgh.ogg",
+		"res://assets/audio/SFX/zombie/newspaper_rarrgh2.ogg"
 	],
 	## 读报僵尸报纸掉落
-	&"Rip":	preload("res://assets/audio/SFX/zombie/newspaper_rip.ogg"),
+	&"Rip":	"res://assets/audio/SFX/zombie/newspaper_rip.ogg",
 	## 舞王入场
-	&"Dancer":preload("res://assets/audio/SFX/zombie/dancer.ogg"),
+	&"Dancer":"res://assets/audio/SFX/zombie/dancer.ogg",
 	## 冰车僵尸入场
-	&"zamboni":preload("res://assets/audio/SFX/zombie/zamboni.ogg"),
+	&"zamboni":"res://assets/audio/SFX/zombie/zamboni.ogg",
 	## 冰车僵尸爆炸\小丑僵尸爆炸
-	&"explosion":preload("res://assets/audio/SFX/zombie/explosion.ogg"),
+	&"explosion":"res://assets/audio/SFX/zombie/explosion.ogg",
 	## 海豚僵尸入场
-	&"dolphin_appears":preload("res://assets/audio/SFX/zombie/dolphin_appears.ogg"),
+	&"dolphin_appears":"res://assets/audio/SFX/zombie/dolphin_appears.ogg",
 	## 海豚僵尸跳跃
-	&"dolphin_before_jumping":preload("res://assets/audio/SFX/zombie/dolphin_before_jumping.ogg"),
+	&"dolphin_before_jumping":"res://assets/audio/SFX/zombie/dolphin_before_jumping.ogg",
 	## 小丑僵尸入场
-	&"jackinthebox":preload("res://assets/audio/SFX/zombie/jackinthebox.ogg"),
+	&"jackinthebox":"res://assets/audio/SFX/zombie/jackinthebox.ogg",
 	## 小丑僵尸爆炸惊讶
 	&"jack_suprise":[
-		preload("res://assets/audio/SFX/zombie/jack_surprise.ogg"),
-		preload("res://assets/audio/SFX/zombie/jack_surprise2.ogg"),
+		"res://assets/audio/SFX/zombie/jack_surprise.ogg",
+		"res://assets/audio/SFX/zombie/jack_surprise2.ogg",
 	],
 	## 小丑僵尸盒子打开
-	&"boing":preload("res://assets/audio/SFX/zombie/boing.ogg"),
+	&"boing":"res://assets/audio/SFX/zombie/boing.ogg",
 	## 气球僵尸入场
-	&"ballooninflate":preload("res://assets/audio/SFX/zombie/ballooninflate.ogg"),
+	&"ballooninflate":"res://assets/audio/SFX/zombie/ballooninflate.ogg",
 	## 气球爆炸
-	&"balloon_pop":preload("res://assets/audio/SFX/zombie/balloon_pop.ogg"),
+	&"balloon_pop":"res://assets/audio/SFX/zombie/balloon_pop.ogg",
 	## 矿工僵尸绝地
-	&"digger_zombie": preload("res://assets/audio/SFX/zombie/digger_zombie.ogg"),
+	&"digger_zombie": "res://assets/audio/SFX/zombie/digger_zombie.ogg",
 	## 跳跳僵尸跳跃
-	&"pogo_zombie": preload("res://assets/audio/SFX/zombie/pogo_zombie.ogg"),
+	&"pogo_zombie": "res://assets/audio/SFX/zombie/pogo_zombie.ogg",
 	## 蹦极僵尸入场
 	&"bungee_scream":[
-		preload("res://assets/audio/SFX/zombie/bungee_scream.ogg"),
-		preload("res://assets/audio/SFX/zombie/bungee_scream2.ogg"),
-		preload("res://assets/audio/SFX/zombie/bungee_scream3.ogg")
+		"res://assets/audio/SFX/zombie/bungee_scream.ogg",
+		"res://assets/audio/SFX/zombie/bungee_scream2.ogg",
+		"res://assets/audio/SFX/zombie/bungee_scream3.ogg"
 	],
 	## 扶梯僵尸放置梯子
-	&"ladder_zombie": preload("res://assets/audio/SFX/zombie/ladder_zombie.ogg"),
+	&"ladder_zombie": "res://assets/audio/SFX/zombie/ladder_zombie.ogg",
 	## 篮球僵尸发射篮球子弹
-	&"basketball": preload("res://assets/audio/SFX/zombie/basketball.ogg"),
+	&"basketball": "res://assets/audio/SFX/zombie/basketball.ogg",
 
 	## 巨人僵尸攻击\倭瓜
-	&"gargantuar_thump": preload("res://assets/audio/SFX/zombie/gargantuar_thump.ogg"),
+	&"gargantuar_thump": "res://assets/audio/SFX/zombie/gargantuar_thump.ogg",
 	## 巨人僵尸死亡
-	&"gargantudeath": preload("res://assets/audio/SFX/zombie/gargantudeath.ogg"),
+	&"gargantudeath": "res://assets/audio/SFX/zombie/gargantudeath.ogg",
 	## 小鬼被抛射
 	&"imp":[
-		preload("res://assets/audio/SFX/zombie/imp.ogg"),
-		preload("res://assets/audio/SFX/zombie/imp2.ogg")
+		"res://assets/audio/SFX/zombie/imp.ogg",
+		"res://assets/audio/SFX/zombie/imp2.ogg"
 	]
 }
 
@@ -223,35 +227,54 @@ const SFXCharacterMap := {
 const SFXCarzyDaveMap := {
 	## 一秒左右
 	&"crazydaveshort" : [
-		preload("res://assets/audio/SFX/carzy/crazydaveshort1.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydaveshort2.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydaveshort3.ogg")
+		"res://assets/audio/SFX/carzy/crazydaveshort1.ogg",
+		"res://assets/audio/SFX/carzy/crazydaveshort2.ogg",
+		"res://assets/audio/SFX/carzy/crazydaveshort3.ogg"
 	],
 	## 两秒左右
 	&"crazydavelong" : [
-		preload("res://assets/audio/SFX/carzy/crazydavelong1.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydavelong2.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydavelong3.ogg")
+		"res://assets/audio/SFX/carzy/crazydavelong1.ogg",
+		"res://assets/audio/SFX/carzy/crazydavelong2.ogg",
+		"res://assets/audio/SFX/carzy/crazydavelong3.ogg"
 	],
 	## 三秒左右
 	&"crazydaveextralong" : [
-		preload("res://assets/audio/SFX/carzy/crazydaveextralong1.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydaveextralong2.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydaveextralong3.ogg")
+		"res://assets/audio/SFX/carzy/crazydaveextralong1.ogg",
+		"res://assets/audio/SFX/carzy/crazydaveextralong2.ogg",
+		"res://assets/audio/SFX/carzy/crazydaveextralong3.ogg"
 	],
 	&"crazydavecrazy" : [
-		preload("res://assets/audio/SFX/carzy/crazydavecrazy.ogg")
+		"res://assets/audio/SFX/carzy/crazydavecrazy.ogg"
 	],
 	&"crazydavescream" : [
-		preload("res://assets/audio/SFX/carzy/crazydavescream2.ogg"),
-		preload("res://assets/audio/SFX/carzy/crazydavescream.ogg")
+		"res://assets/audio/SFX/carzy/crazydavescream2.ogg",
+		"res://assets/audio/SFX/carzy/crazydavescream.ogg"
 	],
 }
 
 ## 音效对象池实现
 var sfx_bullet_pool = []
+var _sfx_stream_cache: Dictionary[String, AudioStream] = {}
+
+
+func _resolve_sfx_stream(source: Variant) -> AudioStream:
+	if source is AudioStream:
+		return source
+	if not (source is String or source is StringName):
+		return null
+	var source_path := String(source)
+	if _sfx_stream_cache.has(source_path):
+		return _sfx_stream_cache[source_path]
+	var stream := ResourceLoader.load(source_path, "AudioStream") as AudioStream
+	if stream == null:
+		push_error("无法加载音效：%s" % source_path)
+		return null
+	_sfx_stream_cache[source_path] = stream
+	return stream
 
 func play_sfx_with_pool(sfx_resource: AudioStream, volume_db:float = 0.0) -> AudioStreamPlayer:
+	if sfx_resource == null:
+		return null
 	if sfx_resource in curr_frame_sfx:
 		return
 	curr_frame_sfx.append(sfx_resource)
@@ -286,35 +309,38 @@ func _on_sfx_finished(player: AudioStreamPlayer):
 
 ## 播放僵尸受击音效
 func play_be_attack_SFX(type_bullet_zombie_sfx:TypeBeAttackSFX):
-	var sfx_array: Array = SFXBeAttackMap[type_bullet_zombie_sfx]
-
-	var sfx_selected = sfx_array.pick_random()
-	play_sfx_with_pool(sfx_selected)
+	var sfx_array: Variant = SFXBeAttackMap.get(type_bullet_zombie_sfx)
+	if not sfx_array is Array or sfx_array.is_empty():
+		return
+	play_sfx_with_pool(_resolve_sfx_stream(sfx_array.pick_random()))
 
 ## 播放子弹攻击音效
 func play_bullet_attack_SFX(type_bullet_sfx:TypeBulletSFX):
-	var sfx_array: Array = SFXBulletMap[type_bullet_sfx]
-
-	var sfx_selected = sfx_array.pick_random()
-	play_sfx_with_pool(sfx_selected)
+	var sfx_array: Variant = SFXBulletMap.get(type_bullet_sfx)
+	if not sfx_array is Array or sfx_array.is_empty():
+		return
+	play_sfx_with_pool(_resolve_sfx_stream(sfx_array.pick_random()))
 
 ## 播放植物\僵尸相关音效
 func play_character_SFX(option:StringName, volume_db:float = 0.0):
-	var sfx_resource:AudioStream
-	if SFXCharacterMap[option] is Array:
-		sfx_resource = SFXCharacterMap[option].pick_random()
-	else:
-		sfx_resource = SFXCharacterMap[option]
+	var source: Variant = SFXCharacterMap.get(option)
+	if source is Array:
+		if source.is_empty():
+			return null
+		source = source.pick_random()
+	var sfx_resource := _resolve_sfx_stream(source)
 	var player: AudioStreamPlayer = play_sfx_with_pool(sfx_resource, volume_db)
 	return player
 
 
 ## 播放戴夫音效
 func play_crazy_dave_SFX(option:StringName):
-	var sfx_array: Array = SFXCarzyDaveMap[option]
-
-	var sfx_selected = sfx_array.pick_random()
-	crazy_dave_player.stream = sfx_selected
+	var sfx_array: Variant = SFXCarzyDaveMap.get(option)
+	if not sfx_array is Array or sfx_array.is_empty():
+		return
+	crazy_dave_player.stream = _resolve_sfx_stream(sfx_array.pick_random())
+	if crazy_dave_player.stream == null:
+		return
 	crazy_dave_player.play()
 
 func play_rain_SFX():
@@ -330,86 +356,87 @@ func stop_rain_SFX():
 const SFXOtherMap := {
 	##-------------------------- 按钮相关 --------------------------
 	## 开始菜单点击
-	&"gravebutton": preload("res://assets/audio/SFX/button/gravebutton.ogg"),
+	&"gravebutton": "res://assets/audio/SFX/button/gravebutton.ogg",
 	## 鼠标进入开始菜单
-	&"bleep":preload("res://assets/audio/SFX/button/bleep.ogg"),
+	&"bleep":"res://assets/audio/SFX/button/bleep.ogg",
 	##
-	&"tap":preload("res://assets/audio/SFX/button/tap.ogg"),
+	&"tap":"res://assets/audio/SFX/button/tap.ogg",
 	## 选项按钮
-	&"buttonclick":preload("res://assets/audio/SFX/button/buttonclick.ogg"),
+	&"buttonclick":"res://assets/audio/SFX/button/buttonclick.ogg",
 	## 暂停
-	&"pause": preload("res://assets/audio/SFX/button/pause.ogg"),
+	&"pause": "res://assets/audio/SFX/button/pause.ogg",
 	## 点击阳光
-	&"points": preload("res://assets/audio/SFX/button/points.ogg"),
+	&"points": "res://assets/audio/SFX/button/points.ogg",
 	## 点击金币
-	&"coin":preload("res://assets/audio/SFX/item/coin.ogg"),
+	&"coin":"res://assets/audio/SFX/item/coin.ogg",
 	## 掉落花园植物
-	&"chime":preload("res://assets/audio/SFX/item/chime.ogg"),
+	&"chime":"res://assets/audio/SFX/item/chime.ogg",
 	##-------------------------- 卡片相关 --------------------------
-	&"buzzer":preload("res://assets/audio/SFX/card_and_shovel/buzzer.ogg"),
-	&"seedlift":preload("res://assets/audio/SFX/card_and_shovel/seedlift.ogg"),
-	&"shovel":preload("res://assets/audio/SFX/card_and_shovel/shovel.ogg"),
-	&"tap2":preload("res://assets/audio/SFX/card_and_shovel/tap2.ogg"),
+	&"buzzer":"res://assets/audio/SFX/card_and_shovel/buzzer.ogg",
+	&"seedlift":"res://assets/audio/SFX/card_and_shovel/seedlift.ogg",
+	&"shovel":"res://assets/audio/SFX/card_and_shovel/shovel.ogg",
+	&"tap2":"res://assets/audio/SFX/card_and_shovel/tap2.ogg",
 
 	##-------------------------- 进度相关 --------------------------
 	## 汽笛音效
-	&"siren": preload("res://assets/audio/SFX/progress/siren.ogg"),
+	&"siren": "res://assets/audio/SFX/progress/siren.ogg",
 	## TODO :这个也是汽笛音效？
-	&"awooga":preload("res://assets/audio/SFX/progress/awooga.ogg"),
+	&"awooga":"res://assets/audio/SFX/progress/awooga.ogg",
 	## 最后一波
-	&"finalwave":preload("res://assets/audio/SFX/progress/finalwave.ogg"),
+	&"finalwave":"res://assets/audio/SFX/progress/finalwave.ogg",
 	## 大波僵尸
-	&"hugewave":preload("res://assets/audio/SFX/progress/hugewave.ogg"),
+	&"hugewave":"res://assets/audio/SFX/progress/hugewave.ogg",
 	## 失败
-	&"losemusic":preload("res://assets/audio/SFX/progress/losemusic.ogg"),
+	&"losemusic":"res://assets/audio/SFX/progress/losemusic.ogg",
 	## 准备安放植物
-	&"readysetplant":preload("res://assets/audio/SFX/progress/readysetplant.ogg"),
+	&"readysetplant":"res://assets/audio/SFX/progress/readysetplant.ogg",
 	## 戴夫尖叫
-	&"scream":preload("res://assets/audio/SFX/progress/scream.ogg"),
+	&"scream":"res://assets/audio/SFX/progress/scream.ogg",
 	## 获胜音效
-	&"winmusic":preload("res://assets/audio/SFX/progress/winmusic.ogg"),
+	&"winmusic":"res://assets/audio/SFX/progress/winmusic.ogg",
 
 
 	##-------------------------- 主游戏场景物品相关 --------------------------
 	## 墓碑生成
-	&"gravestone_rumble":preload("res://assets/audio/SFX/zombie/gravestone_rumble.ogg"),
+	&"gravestone_rumble":"res://assets/audio/SFX/zombie/gravestone_rumble.ogg",
 	## 植物种植音效
-	&"plant1": preload("res://assets/audio/SFX/plant_create/plant.ogg"),
+	&"plant1": "res://assets/audio/SFX/plant_create/plant.ogg",
 	## 植物铲除音效
-	&"plant2":preload("res://assets/audio/SFX/plant_create/plant2.ogg"),
+	&"plant2":"res://assets/audio/SFX/plant_create/plant2.ogg",
 	## 植物种植在水上
-	&"plant_water": preload("res://assets/audio/SFX/plant_create/plant_water.ogg"),
+	&"plant_water": "res://assets/audio/SFX/plant_create/plant_water.ogg",
 	## 僵尸入水音效、水花音效
-	&"zombie_entering_water": preload("res://assets/audio/SFX/zombie/zombie_entering_water.ogg"),
+	&"zombie_entering_water": "res://assets/audio/SFX/zombie/zombie_entering_water.ogg",
 	## -------- 小推车 --------
-	&"lawnmower": preload("res://assets/audio/SFX/item/lawnmower.ogg"),
-	&"pool_cleaner": preload("res://assets/audio/SFX/item/pool_cleaner.ogg"),
+	&"lawnmower": "res://assets/audio/SFX/item/lawnmower.ogg",
+	&"pool_cleaner": "res://assets/audio/SFX/item/pool_cleaner.ogg",
 	## -------- 锤子 --------
-	&"swing": preload("res://assets/audio/SFX/item/swing.ogg"),
-	&"bonk": preload("res://assets/audio/SFX/item/bonk.ogg"),
+	&"swing": "res://assets/audio/SFX/item/swing.ogg",
+	&"bonk": "res://assets/audio/SFX/item/bonk.ogg",
 	## -------- 花园 -----------
-	&"prize": preload("res://assets/audio/SFX/garden/prize.ogg"),
+	&"prize": "res://assets/audio/SFX/garden/prize.ogg",
 	## -------- 僵尸出土 ------------
-	&"dirt_rise": preload("res://assets/audio/SFX/zombie/dirt_rise.ogg"),
+	&"dirt_rise": "res://assets/audio/SFX/zombie/dirt_rise.ogg",
 	## --------- 花瓶破碎     -------------
-	&"vase_breaking": preload("res://assets/audio/SFX/item/vase_breaking.ogg"),
+	&"vase_breaking": "res://assets/audio/SFX/item/vase_breaking.ogg",
 
 
 	##-------------------------- 花园相关 --------------------------
-	&"watering":preload("res://assets/audio/SFX/garden/watering.ogg"),
-	&"fertilizer":preload("res://assets/audio/SFX/garden/fertilizer.ogg"),
-	&"bugspray":preload("res://assets/audio/SFX/garden/bugspray.ogg"),
-	&"phonograph":preload("res://assets/audio/SFX/garden/phonograph.ogg"),
-	&"wakeup": preload("res://assets/audio/SFX/garden/wakeup.ogg"),
+	&"watering":"res://assets/audio/SFX/garden/watering.ogg",
+	&"fertilizer":"res://assets/audio/SFX/garden/fertilizer.ogg",
+	&"bugspray":"res://assets/audio/SFX/garden/bugspray.ogg",
+	&"phonograph":"res://assets/audio/SFX/garden/phonograph.ogg",
+	&"wakeup": "res://assets/audio/SFX/garden/wakeup.ogg",
 
 }
 ## 播放其它相关音效
 func play_other_SFX(option:StringName):
-	var sfx_resource: AudioStream
-	if SFXOtherMap[option] is Array:
-		sfx_resource = SFXOtherMap[option].pick_random()
-	else:
-		sfx_resource = SFXOtherMap[option]
+	var source: Variant = SFXOtherMap.get(option)
+	if source is Array:
+		if source.is_empty():
+			return
+		source = source.pick_random()
+	var sfx_resource := _resolve_sfx_stream(source)
 	play_sfx_with_pool(sfx_resource)
 
 

@@ -27,6 +27,47 @@ func _ready() -> void:
 	## 卡牌预制体只在直接编辑 all_cards 场景时显示。
 	## 作为 @tool 自动加载运行在其他场景编辑器中时，避免其网格渲染到编辑器界面上。
 	visible = Engine.is_editor_hint() and get_tree().edited_scene_root == self
+	_rebuild_card_catalog()
+
+
+func hydrate_from_packed_scene(
+		packed_scene: PackedScene,
+		progress_callback: Callable = Callable()) -> void:
+	## 启动时 Autoload 先使用空壳场景，让封面能够尽快绘制；完整卡牌场景随后在线程中加载。
+	## 保持 Autoload 根节点本身不变，避免破坏 GDScript 对 AllCards 单例的引用。
+	var source_root := packed_scene.instantiate() as Control
+	if source_root == null:
+		push_error("AllCards 完整场景实例化失败")
+		return
+
+	for old_child in get_children():
+		remove_child(old_child)
+		old_child.queue_free()
+
+	var source_children := source_root.get_children()
+	var moved_count := 0
+	for child in source_children:
+		child.owner = null
+		child.reparent(self, false)
+		moved_count += 1
+		if progress_callback.is_valid():
+			progress_callback.call(float(moved_count) / maxf(float(source_children.size()), 1.0))
+		await get_tree().process_frame
+	source_root.free()
+
+	all_plant_cards_parent_node_root = [
+		get_node("PlantCards") as GridContainer,
+		get_node("PlantCards2") as GridContainer,
+		get_node("PlantCards3") as GridContainer,
+	]
+	all_zombie_cards_parent_node_root = [
+		get_node("ZombieCards") as GridContainer,
+		get_node("ZombieCards2") as GridContainer,
+	]
+	_rebuild_card_catalog()
+
+
+func _rebuild_card_catalog() -> void:
 
 	if not Global.has_node("GlobalGameState"):
 		return
