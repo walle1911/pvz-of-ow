@@ -135,7 +135,7 @@ gravity = Vector3(0, 0, 0)
 script = ExtResource("2_47ii7")
 plant_type = 11
 plant_sun_cost = -1
-plant_cool_time = -1.0
+plant_cool_time = 10.0
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 

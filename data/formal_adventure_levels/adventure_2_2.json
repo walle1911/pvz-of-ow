@@ -1,10 +1,10 @@
 {
 	"activeLawnRows": [
-		0,
-		1,
-		2,
-		3,
-		4
+		0.0,
+		1.0,
+		2.0,
+		3.0,
+		4.0
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -18,8 +18,9 @@
 		52,
 		23,
 		505,
+		8,
 		14,
-		43
+		11
 	],
 	"bossConfig": {
 		"enabled": false,
@@ -80,7 +81,7 @@
 		"type": "night_lawn"
 	},
 	"minimumWaveTime": 5.58,
-	"name": "2-2 莫伊拉黄球bug之谜",
+	"name": "2-2 我真没胖",
 	"openingFirstZombieAdvanceCells": 0.0,
 	"plantSelectionEnabled": true,
 	"playerConfig": {
@@ -89,14 +90,15 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071512.0,
-	"rewardPlant": 11,
+	"rewardPlant": 43,
 	"rewardPlants": [
-		11
+		43
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,
 	"simpleFlagCount": 1,
 	"simpleFlagZombieType": 2,
+	"simpleLateGamePowerMultiplier": 1.1,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
 	"simpleZombiePool": [
@@ -1173,5 +1175,5 @@
 		}
 	],
 	"workshopMode": "normal",
-	"zombieRefreshSpeedMultiplier": 1.05
+	"zombieRefreshSpeedMultiplier": 0.95
 }

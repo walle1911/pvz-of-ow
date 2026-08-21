@@ -22,7 +22,7 @@ is_attack = false
 plant_type = 52
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("DetectComponent/FrontArea"), NodePath("DetectComponent/BackArea")]
 
-plant_cool_time = 30.0
+plant_cool_time = 20.0
 plant_sun_cost = 150.0
 [node name="Shadow" parent="." index="0"]
 scale = Vector2(1.25, 0.85)

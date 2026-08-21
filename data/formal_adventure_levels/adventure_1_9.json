@@ -18,6 +18,11 @@
 		52,
 		23
 	],
+	"bossConfig": {
+		"enabled": false,
+		"rewardPlant": -1,
+		"zombieType": 524
+	},
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
 		"mineCount": 11.0,
@@ -81,7 +86,8 @@
 	"randomSeed": 2026071509.0,
 	"rewardPlant": 505,
 	"rewardPlants": [
-		505
+		505,
+		8
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,

@@ -118,7 +118,7 @@ alpha_curve = SubResource("CurveTexture_fdqap")
 
 [node name="Plant043GloomShroomMoira" unique_id=1802928863 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_185k3")]
 script = ExtResource("2_52sk1")
-yellow_fume_chance = 0.5
+yellow_fume_chance = 0.1
 yellow_fume_color = Color(1, 0.95, 0, 1)
 yellow_fume_alpha_scale = 1.45
 yellow_fume_heal_value = 35
@@ -129,8 +129,9 @@ plant_type = 43
 is_sleep_in_day = true
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 
-plant_cool_time = 1.0
-plant_sun_cost = 100
+plant_cool_time = 40.0
+plant_sun_cost = 150
+bite_sun_value = 15
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-39, -67)
 
@@ -313,11 +314,11 @@ parameters/TimeScale/scale = 1.0
 
 [node name="AttackComponent" type="Node2D" parent="." index="10" unique_id=1734960250]
 script = ExtResource("17_fdqap")
-attack_cd = 2.0
+attack_cd = 2.75
 attack_bullet_type = 4
 attack_sfx = &"Fume"
 
-attack_value_bullet = 10
+attack_value_bullet = 13
 [node name="DetectComponent" type="Node2D" parent="AttackComponent" index="0" unique_id=1334402744]
 script = ExtResource("18_xweqa")
 is_lane = false
@@ -827,6 +828,8 @@ process_material = SubResource("ParticleProcessMaterial_52sk1")
 script = ExtResource("20_moira_sun")
 marker_2d_create_sun = NodePath("../Body/BodyCorrect/Marker2DCreateSun")
 
+num_create_sun = 1
+sun_value = 15
 [node name="CreateSunTimer" type="Timer" parent="CreateSunComponent" index="0" unique_id=1312435805]
 one_shot = true
 

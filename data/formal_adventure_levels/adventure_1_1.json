@@ -8,6 +8,11 @@
 	"availablePlants": [
 		1
 	],
+	"bossConfig": {
+		"enabled": false,
+		"rewardPlant": -1,
+		"zombieType": 524
+	},
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
 		"mineCount": 0.0,
@@ -69,16 +74,17 @@
 	"simpleBaseZombieType": 501,
 	"simpleFlagCount": 1,
 	"simpleFlagZombieType": 502,
+	"simpleLateGamePowerMultiplier": 1.0,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
-	"simpleZombieIntroWaves": {
-
-	},
 	"simpleZombiePool": [
 		501
 	],
 	"sodLayoutRows": 3.0,
 	"sodRolloutRows": 0.0,
+	"specialRewardCardLevels": {
+
+	},
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		28.86,
@@ -290,5 +296,5 @@
 		}
 	],
 	"workshopMode": "normal",
-	"zombieRefreshSpeedMultiplier": 1.0
+	"zombieRefreshSpeedMultiplier": 0.95
 }

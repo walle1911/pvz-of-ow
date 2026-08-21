@@ -111,7 +111,7 @@ size = Vector2(1000, 5)
 [node name="Plant008PeaShooterDoubleAnran" unique_id=1076639884 node_paths=PackedStringArray("node2d_detect_in_slope") instance=ExtResource("1_ug5a7")]
 script = ExtResource("2_8obf8")
 plant_type = 8
-plant_sun_cost = -1
+plant_sun_cost = 350
 plant_cool_time = -1.0
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent")]
 

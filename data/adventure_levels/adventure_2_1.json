@@ -18,7 +18,8 @@
 		52,
 		23,
 		505,
-		43
+		8,
+		14
 	],
 	"bossConfig": {
 		"enabled": false,
@@ -47,7 +48,7 @@
 	"coverCharacters": [
 		{
 			"kind": "plant",
-			"type": 43
+			"type": 14
 		}
 	],
 	"earlyRefreshDelay": 1.5,
@@ -87,14 +88,15 @@
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071511.0,
-	"rewardPlant": 14,
+	"rewardPlant": 11,
 	"rewardPlants": [
-		14
+		11
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,
 	"simpleFlagCount": 1,
 	"simpleFlagZombieType": 2,
+	"simpleLateGamePowerMultiplier": 1.1,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 10,
 	"simpleZombiePool": [
@@ -1171,5 +1173,5 @@
 		}
 	],
 	"workshopMode": "normal",
-	"zombieRefreshSpeedMultiplier": 1.0
+	"zombieRefreshSpeedMultiplier": 0.95
 }

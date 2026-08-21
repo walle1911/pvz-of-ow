@@ -90,7 +90,11 @@ func _init_card_slot_candidate_pages():
 	all_card_page.remove_child(grid_container_zombie)
 
 	var ordered_plant_cards := _collect_plant_cards()
-	ordered_plant_cards.sort_custom(_sort_card_by_id)
+	if _adventure_card_lock_active():
+		## available_plant_types 按关卡逐步获得卡片的顺序生成；冒险待选卡槽沿用该顺序。
+		ordered_plant_cards.sort_custom(_sort_adventure_card_by_acquisition_order)
+	else:
+		ordered_plant_cards.sort_custom(_sort_card_by_id)
 	## 冒险关只展示本关卡池，数量通常不满一页；此时保持连续排布，
 	## 避免仅有一张原版卡（例如 1-10 的土豆地雷）被单独拆到第二页。
 	if _adventure_card_lock_active():
@@ -151,6 +155,18 @@ func _collect_zombie_cards() -> Array[Card]:
 
 func _sort_card_by_id(card_a:Card, card_b:Card) -> bool:
 	return card_a.card_id < card_b.card_id
+
+
+func _sort_adventure_card_by_acquisition_order(card_a: Card, card_b: Card) -> bool:
+	var available_plants: Array[CharacterRegistry.PlantType] = Global.main_game.game_para.available_plant_types
+	var order_a: int = available_plants.find(card_a.card_plant_type)
+	var order_b: int = available_plants.find(card_b.card_plant_type)
+	## 限定卡等独立投放卡不一定写入普通卡池，统一接在关卡卡片之后并保持原卡册顺序。
+	if order_a < 0:
+		order_a = available_plants.size() + card_a.card_id
+	if order_b < 0:
+		order_b = available_plants.size() + card_b.card_id
+	return order_a < order_b
 
 
 func _add_card_pages(page_template:GridContainer, ordered_cards:Array[Card], card_candidate_containers:Dictionary[int, CardCandidateContainer]):

@@ -27,14 +27,32 @@
 				}
 			}
 		},
+		"res://scenes/character/plant/plant_008_pea_shooter_double_anran.tscn": {
+			"baked_at": "2026-08-21 16:02:05",
+			"values": {
+				"@registry": {
+					"plant_sun_cost": 350.0
+				}
+			}
+		},
+		"res://scenes/character/plant/plant_011_fume_shroom_roadhog.tscn": {
+			"baked_at": "2026-08-21 16:02:05",
+			"values": {
+				"@registry": {
+					"plant_cool_time": 10.0
+				}
+			}
+		},
 		"res://scenes/character/plant/plant_014_scaredy_shroom_widowmaker.tscn": {
-			"baked_at": "2026-08-01 19:00:00",
+			"baked_at": "2026-08-21 16:02:05",
 			"values": {
 				"@registry": {
 					"plant_sun_cost": 50.0
 				},
 				"AttackComponent": {
-					"attack_value_bullet": 75.0
+					"attack_value_bullet": 75.0,
+					"critical_chance": 0.2,
+					"critical_damage": 150.0
 				}
 			}
 		},
@@ -58,7 +76,7 @@
 			}
 		},
 		"res://scenes/character/plant/plant_036_coffee_bean_ana.tscn": {
-			"baked_at": "2026-08-14 21:51:15",
+			"baked_at": "2026-08-21 16:02:05",
 			"values": {
 				"@registry": {
 					"plant_cool_time": 25.0,
@@ -66,26 +84,40 @@
 				}
 			}
 		},
+		"res://scenes/character/plant/plant_037_garlic_mauga.tscn": {
+			"baked_at": "2026-08-21 16:02:05",
+			"values": {
+				"@registry": {
+					"plant_cool_time": 25.0
+				}
+			}
+		},
 		"res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn": {
-			"baked_at": "2026-08-20 23:08:56",
+			"baked_at": "2026-08-21 16:02:05",
 			"values": {
 				".": {
-					"yellow_fume_chance": 0.5
+					"bite_sun_value": 15.0,
+					"yellow_fume_chance": 0.1
 				},
 				"@registry": {
-					"plant_cool_time": 1.0,
-					"plant_sun_cost": 100.0
+					"plant_cool_time": 40.0,
+					"plant_sun_cost": 150.0
 				},
 				"AttackComponent": {
-					"attack_value_bullet": 10.0
+					"attack_cd": 2.75,
+					"attack_value_bullet": 13.0
+				},
+				"CreateSunComponent": {
+					"num_create_sun": 1.0,
+					"sun_value": 15.0
 				}
 			}
 		},
 		"res://scenes/character/plant/plant_052_bonk_choy_ramattra.tscn": {
-			"baked_at": "2026-08-01 19:00:00",
+			"baked_at": "2026-08-21 16:02:05",
 			"values": {
 				"@registry": {
-					"plant_cool_time": 30.0,
+					"plant_cool_time": 20.0,
 					"plant_sun_cost": 150.0
 				},
 				"HpComponent": {
