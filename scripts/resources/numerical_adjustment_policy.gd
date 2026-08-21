@@ -180,6 +180,9 @@ const SCRIPT_RULES := {
 		"damage_reduction": "probability", "instant_heal": "non_negative_int",
 		"boost_duration": "seconds",
 	},
+	"res://scripts/character/plant/ow/plant_069_hypno_shroom_juno.gd": {
+		"pulsar_damage": "damage", "pulsar_cooldown": "seconds",
+	},
 	"res://scripts/character/plant/ow/plant_031_pumpkin_zarya.gd": {
 		"gravity_trigger_hp_threshold": "non_negative_int",
 		"gravity_hold_duration": "non_negative_seconds",

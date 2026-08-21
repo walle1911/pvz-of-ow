@@ -71,6 +71,8 @@ func _run() -> void:
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_037_garlic_mauga.tscn", ".", "chain_health_cost")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_043_gloom_shroom_moira.tscn", ".", "yellow_fume_chance")
 	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_044_cattail_jetpack_cat.tscn", ".", "critical_knockback_distance")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_013_hypno_shroom_juno.tscn", ".", "pulsar_damage")
+	_assert_exported_tuning(editor, "res://scenes/character/plant/plant_013_hypno_shroom_juno.tscn", ".", "pulsar_cooldown")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "HpComponent", "max_hp")
 	_assert_exported_tuning(editor, "res://scenes/character/zombie/zombie_501_norm.tscn", "AttackComponent", "init_attack_value_per_min")
 	_assert_not_exported_tuning(editor, "res://scenes/character/plant/plant_001_pea_shooter_soldier76.tscn", ".", "is_attack")

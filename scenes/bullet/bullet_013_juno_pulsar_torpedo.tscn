@@ -7,8 +7,9 @@
 radius = 14.0
 
 [node name="Bullet013JunoPulsarTorpedo" instance=ExtResource("1_juno")]
+scale = Vector2(1.2, 1.2)
 script = ExtResource("2_juno")
-attack_value = 85
+attack_value = 80
 speed = 390.0
 max_distance = 2200.0
 default_is_activate_lane = false

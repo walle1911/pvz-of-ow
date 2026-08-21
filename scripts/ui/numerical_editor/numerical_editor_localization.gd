@@ -135,6 +135,7 @@ const PROPERTY_LABELS := {
 	"critical_knockback_distance": "危急治疗击退距离",
 	"critical_chance": "暴击概率", "critical_damage": "暴击伤害",
 	"hp_threshold": "近距离爆发血量阈值", "close_burst_distance": "近距离爆发范围",
+	"pulsar_damage": "脉冲飞雷伤害", "pulsar_cooldown": "脉冲飞雷冷却时间（秒）",
 }
 
 const COMPONENT_NAMES := {
