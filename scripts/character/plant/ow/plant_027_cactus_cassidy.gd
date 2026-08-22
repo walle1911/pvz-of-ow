@@ -87,7 +87,13 @@ func _physics_process(delta:float) -> void:
 		return
 	_charge_elapsed += delta
 	## 索敌窗口从翻滚完成后的蓄力阶段才开始；翻滚前的重叠对象不会进入锁定列表。
+	var had_targets_before_scan:= not _locked_targets.is_empty()
 	_scan_for_new_targets()
+	## 已锁定的敌人全部死亡时先尝试补锁同范围的新目标；仍无目标则结束本次技能，
+	## 避免空目标让“全部锁定”永久为 false、开火倒计时每帧被重置。
+	if had_targets_before_scan and _locked_targets.is_empty():
+		_fire_charged_shots()
+		return
 	_update_flare_charge_scale()
 	_update_target_reticles()
 	if _are_all_targets_locked():
