@@ -833,6 +833,11 @@ func _array_to_text(values: Array) -> String:
 
 
 func _save_changes() -> void:
+	## 编辑器内的数值修改必须直接进入随包角色场景，不留一份只有本机可见的临时覆盖。
+	if OS.has_feature("editor"):
+		if _bake_current_character() and return_to_workshop:
+			_return_to_level_workshop()
+		return
 	if Store.save_data(pending_data):
 		if return_to_workshop:
 			_return_to_level_workshop()
@@ -842,27 +847,28 @@ func _save_changes() -> void:
 		status_label.text = "保存失败，请检查游戏存档目录"
 
 
-func _bake_current_character() -> void:
+func _bake_current_character() -> bool:
 	if not OS.has_feature("editor"):
 		status_label.text = "只有从 Godot 编辑器运行时才能写入 .tscn"
-		return
+		return false
 	if not Store.save_data(pending_data):
 		status_label.text = "烘焙前保存调整失败"
-		return
+		return false
 	var result := SceneBaker.bake_character(selected_scene_path, pending_data)
 	if not result["ok"]:
 		status_label.text = "烘焙失败：%s" % str(result["error"])
-		return
+		return false
 	var baked_record := {selected_scene_path: (pending_data["characters"] as Dictionary)[selected_scene_path]}
 	var manifest_result := SceneBaker.record_baked_characters(baked_record)
 	if not manifest_result["ok"]:
 		status_label.text = "场景已写入，但烘焙清单保存失败：%s" % str(manifest_result["error"])
-		return
+		return false
 	pending_data = (result["remaining_data"] as Dictionary).duplicate(true)
 	if not Store.save_data(pending_data):
 		status_label.text = "场景已写入，但清理临时覆盖失败"
-		return
-	status_label.text = "已将 %d 个数值写入 %s" % [int(result["property_count"]), selected_scene_path.get_file()]
+		return false
+	status_label.text = "已将 %d 个数值烘焙进 %s；玩家包将直接使用" % [int(result["property_count"]), selected_scene_path.get_file()]
+	return true
 
 
 func _reset_current_character() -> void:

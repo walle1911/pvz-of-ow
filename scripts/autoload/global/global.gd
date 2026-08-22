@@ -4,6 +4,7 @@ extends Node
 var choose_level_page_override := -1
 
 const AdventurePresetsRuntime := preload("res://scripts/resources/level/adventure_level_presets.gd")
+const AdventureLevelStoreRuntime := preload("res://scripts/resources/level/adventure_level_store.gd")
 const CustomLevelRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 
 ## 约定：业务/UI 只通过本脚本暴露的引用访问（如 `Global.user_manager`、`Global.save_service`、`Global.config_service`），
@@ -105,6 +106,10 @@ var adventure_scene_cache: Dictionary[String, PackedScene] = {}
 
 
 func _warm_adventure_runtime_cache() -> void:
+	var published_validation := AdventureLevelStoreRuntime.validate_published_snapshots()
+	if not published_validation["ok"]:
+		push_error("拒绝加载未同步的玩家关卡：%s" % str(published_validation["error"]))
+		return
 	## 把正式关卡字典转运行时资源的重活放到启动阶段，选关页和关卡点击只复制缓存。
 	for mainline_mode in ["normal", "chessboard"]:
 		var mode_cache: Dictionary = {}
@@ -123,9 +128,13 @@ func _warm_adventure_runtime_cache() -> void:
 
 
 func _warm_adventure_runtime_cache_async(
-		progress_callback: Callable,
-		progress_start: float,
-		progress_end: float) -> void:
+	progress_callback: Callable,
+	progress_start: float,
+	progress_end: float) -> void:
+	var published_validation := AdventureLevelStoreRuntime.validate_published_snapshots()
+	if not published_validation["ok"]:
+		push_error("拒绝加载未同步的玩家关卡：%s" % str(published_validation["error"]))
+		return
 	var presets_by_mode: Dictionary = {}
 	var total_presets := 0
 	for mainline_mode in ["normal", "chessboard"]:

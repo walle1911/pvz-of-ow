@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/main/chessboard_mode/MainGameChessboardPool.tscn" id="1_chessboard"]
+[ext_resource type="PackedScene" path="res://scenes/main/chessboard_mode/ChessboardPool.tscn" id="1_chessboard"]
 [ext_resource type="Resource" path="res://resources/level_date_resource/mode_chessboard/test/chessboard_pool_test.tres" id="2_test"]
 
 [node name="MainGameChessboardPoolTest" instance=ExtResource("1_chessboard")]

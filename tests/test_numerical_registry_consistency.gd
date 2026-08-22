@@ -4,6 +4,14 @@ const NumericalEditorScript := preload("res://scripts/ui/numerical_editor/numeri
 
 
 func _ready() -> void:
+	assert(Global.character_registry.get_plant_baked_registry_value(
+		CharacterRegistry.PlantType.P006SnowPeaMei,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	) == 175)
+	assert(Global.character_registry.get_plant_baked_registry_value(
+		CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	) == 75)
 	var editor_probe := NumericalEditorScript.new()
 	assert(editor_probe.call(
 		"_plant_registry_default_value",
@@ -14,7 +22,7 @@ func _ready() -> void:
 		"_plant_registry_default_value",
 		CharacterRegistry.PlantType.P052BonkChoyRamattra,
 		CharacterRegistry.PlantInfoAttribute.CoolTime
-	)), 30.0))
+	)), 20.0))
 	var checked_value_count := 0
 	for plant_type in CharacterRegistry.PlantInfo:
 		for attribute in [CharacterRegistry.PlantInfoAttribute.SunCost, CharacterRegistry.PlantInfoAttribute.CoolTime]:

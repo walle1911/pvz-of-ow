@@ -885,23 +885,17 @@ func _get_baked_plant_scene_value(scene_path:String, property_name:String, fallb
 	var cache_key := scene_path + "::" + property_name
 	if _plant_baked_value_cache.has(cache_key):
 		return _plant_baked_value_cache[cache_key]
-	var file := FileAccess.open(scene_path, FileAccess.READ)
-	if file == null:
-		return fallback
 	var value = null
-	var reached_root := false
-	while not file.eof_reached():
-		var line := file.get_line().strip_edges()
-		if line.begins_with("[node "):
-			if reached_root:
-				break
-			reached_root = true
-			continue
-		if reached_root and line.begins_with("["):
-			break
-		if reached_root and line.begins_with(property_name + " ="):
-			value = str_to_var(line.get_slice("=", 1).strip_edges())
-			break
+	## 必须从 PackedScene 的 SceneState 读根节点烘焙值。导出后 .tscn 会被编译/重映射，
+	## FileAccess 逐行读源文本会失败并悄悄回退到注册表旧值，而 ResourceLoader 能正确跟随 remap。
+	var packed_scene := load(scene_path) as PackedScene
+	if packed_scene != null:
+		var scene_state := packed_scene.get_state()
+		if scene_state.get_node_count() > 0:
+			for property_index in scene_state.get_node_property_count(0):
+				if str(scene_state.get_node_property_name(0, property_index)) == property_name:
+					value = scene_state.get_node_property_value(0, property_index)
+					break
 	var result = fallback
 	if property_name == "plant_sun_cost":
 		result = int(value) if value != null and int(value) >= 0 else fallback

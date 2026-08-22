@@ -5,7 +5,8 @@ const Logic := preload("res://addons/pvz_level_editor/level_editor_logic.gd")
 const JsonRuntime := preload("res://scripts/resources/level/level_json_runtime.gd")
 const CustomRuntime := preload("res://scripts/resources/level/level_custom_runtime.gd")
 const UserPaths := preload("res://scripts/resources/user_data_paths.gd")
-## res:// 中的数据只作为随安装包发布的默认模板；导出后该目录不可写。
+## res:// 中的数据是随安装包发布的权威快照。编辑器内保存时同步写入，
+## 确保本地调好的正式关卡真正烘焙进项目；导出后仍只写玩家数据目录。
 const BUNDLED_DEVELOPER_LEVEL_DIR := "res://data/adventure_levels"
 const BUNDLED_FORMAL_LEVEL_DIR := "res://data/formal_adventure_levels"
 ## 玩家在关卡工坊中的覆盖和同步结果必须持久化到统一玩家数据目录。
@@ -16,10 +17,10 @@ static var FORMAL_LEVEL_DIR := UserPaths.path("formal_adventure_levels")
 static func load_developer_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "成品关卡 ID 不合法：%s" % preset_id}
-	var path := _effective_level_path(
-		developer_level_path(preset_id),
-		bundled_developer_level_path(preset_id),
-		UserPaths.read_path("adventure_levels/%s.json" % preset_id)
+	var bundled_path := bundled_developer_level_path(preset_id)
+	## 编辑器以项目内已烘焙快照为权威，不让 user:// 旧覆盖蒙蔽待发布内容。
+	var path := bundled_path if OS.has_feature("editor") and FileAccess.file_exists(bundled_path) else _effective_level_path(
+		developer_level_path(preset_id), bundled_path, UserPaths.read_path("adventure_levels/%s.json" % preset_id)
 	)
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
@@ -30,7 +31,7 @@ static func load_developer_level(preset_id: String) -> Dictionary:
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
 	level["_adventureLevelSource"] = "developer"
-	level["_adventureLevelSourceDir"] = DEVELOPER_LEVEL_DIR
+	level["_adventureLevelSourceDir"] = path.get_base_dir()
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
@@ -45,10 +46,27 @@ static func save_developer_level(source: Dictionary, preset_id: String) -> Dicti
 	var built := CustomRuntime.build_game_para(level)
 	if not built["ok"]:
 		return {"ok": false, "path": developer_level_path(preset_id), "error": str(built["error"])}
+	if OS.has_feature("editor"):
+		var baked_result := _write_level(bundled_developer_level_path(preset_id), level)
+		if not baked_result["ok"]:
+			return {
+				"ok": false,
+				"path": str(baked_result["path"]),
+				"error": "烘焙项目内关卡快照失败：%s" % str(baked_result["error"]),
+			}
 	var path := developer_level_path(preset_id)
 	var write_result := _write_level(path, level)
 	if not write_result["ok"]:
 		return write_result
+	## 1-1～3-10 就是玩家发布线：保存即发布，不再依赖第二次手动同步。
+	if is_published_adventure_preset_id(preset_id) and OS.has_feature("editor"):
+		var baked_formal_result := _write_level(bundled_formal_level_path(preset_id), level)
+		if not baked_formal_result["ok"]:
+			return {
+				"ok": false,
+				"path": str(baked_formal_result["path"]),
+				"error": "烘焙项目正式关卡快照失败：%s" % str(baked_formal_result["error"]),
+			}
 	RewardCardRuntime.invalidate_special_reward_catalog()
 	return {"ok": true, "path": path, "error": ""}
 
@@ -56,10 +74,10 @@ static func save_developer_level(source: Dictionary, preset_id: String) -> Dicti
 static func load_formal_level(preset_id: String) -> Dictionary:
 	if not is_formal_preset_id(preset_id):
 		return {"ok": false, "exists": false, "level": {}, "path": "", "error": "正式关卡 ID 不合法：%s" % preset_id}
-	var path := _effective_level_path(
-		formal_level_path(preset_id),
-		bundled_formal_level_path(preset_id),
-		UserPaths.read_path("formal_adventure_levels/%s.json" % preset_id)
+	## 玩家正式模式始终读取随包权威快照，旧版外部覆盖不得压过新包。
+	var bundled_path := bundled_formal_level_path(preset_id)
+	var path := bundled_path if FileAccess.file_exists(bundled_path) else _effective_level_path(
+		formal_level_path(preset_id), bundled_path, UserPaths.read_path("formal_adventure_levels/%s.json" % preset_id)
 	)
 	if not FileAccess.file_exists(path):
 		return {"ok": false, "exists": false, "level": {}, "path": path, "error": ""}
@@ -70,7 +88,7 @@ static func load_formal_level(preset_id: String) -> Dictionary:
 	level["id"] = preset_id
 	level["formalPresetId"] = preset_id
 	level["_adventureLevelSource"] = "formal"
-	level["_adventureLevelSourceDir"] = FORMAL_LEVEL_DIR
+	level["_adventureLevelSourceDir"] = path.get_base_dir()
 	return {"ok": true, "exists": true, "level": level, "path": path, "error": ""}
 
 
@@ -111,6 +129,14 @@ static func sync_developer_levels_to_formal(preset_ids: Array[String]) -> Dictio
 	var synced: Array[String] = []
 	for source in sources:
 		var preset_id := str(source["id"])
+		if OS.has_feature("editor"):
+			var baked_result := _copy_level_file(str(source["path"]), bundled_formal_level_path(preset_id))
+			if not baked_result["ok"]:
+				return {
+					"ok": false,
+					"synced": synced,
+					"error": "烘焙 %s 到项目正式快照失败：%s" % [preset_id, str(baked_result["error"])],
+				}
 		var write_result := _copy_level_file(str(source["path"]), formal_level_path(preset_id))
 		if not write_result["ok"]:
 			return {"ok": false, "synced": synced, "error": "同步 %s 失败：%s" % [preset_id, str(write_result["error"])]}
@@ -230,3 +256,26 @@ static func is_formal_preset_id(preset_id: String) -> bool:
 	if parts[0] == "chess":
 		return world == 1
 	return false
+
+
+static func is_published_adventure_preset_id(preset_id: String) -> bool:
+	var parts := preset_id.split("_")
+	return parts.size() == 3 and parts[0] == "adventure" \
+		and str(parts[1]).is_valid_int() and int(parts[1]) >= 1 and int(parts[1]) <= 3 \
+		and str(parts[2]).is_valid_int() and int(parts[2]) >= 1 and int(parts[2]) <= 10
+
+
+## 发布前守卫：1-1～3-10 的工坊快照与玩家快照必须逐字节相同。
+static func validate_published_snapshots() -> Dictionary:
+	var mismatches: Array[String] = []
+	for world in range(1, 4):
+		for level_number in range(1, 11):
+			var preset_id := "adventure_%d_%d" % [world, level_number]
+			if not _files_equal(bundled_developer_level_path(preset_id), bundled_formal_level_path(preset_id)):
+				mismatches.append(preset_id)
+	return {
+		"ok": mismatches.is_empty(),
+		"checked": 30,
+		"mismatches": mismatches,
+		"error": "" if mismatches.is_empty() else "工坊/玩家快照不一致：%s" % "、".join(mismatches),
+	}

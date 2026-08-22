@@ -244,8 +244,12 @@ func _test_formal_level_ids() -> void:
 
 
 func _test_formal_sync_status() -> void:
-	_expect(Store.is_developer_level_synced("adventure_1_2"), "内容相同的开发者关卡和正式快照应显示为已同步")
-	_expect(not Store.is_developer_level_synced("adventure_1_1"), "内容不同的开发者关卡和正式快照应显示为未同步")
+	for world in range(1, 4):
+		for level_number in range(1, 11):
+			var preset_id := "adventure_%d_%d" % [world, level_number]
+			_expect(Store.is_published_adventure_preset_id(preset_id), "%s 应属于玩家发布线" % preset_id)
+			_expect(Store.is_developer_level_synced(preset_id), "%s 的工坊数据必须与玩家正式快照完全一致" % preset_id)
+	_expect(not Store.is_published_adventure_preset_id("adventure_4_1"), "4-1 尚未进入玩家发布线")
 	_expect(not Store.is_developer_level_synced("adventure_4_1"), "缺少正式快照的关卡应显示为未同步")
 
 

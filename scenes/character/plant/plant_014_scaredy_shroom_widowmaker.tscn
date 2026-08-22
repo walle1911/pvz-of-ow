@@ -140,7 +140,7 @@ is_sleep_in_day = true
 node_no_change_direction = [NodePath("HpComponent"), NodePath("SleepComponent"), null]
 node2d_detect_in_slope = [NodePath("HurtBoxComponent/HurtBoxDetection"), NodePath("AttackComponent/DetectComponent"), NodePath("ScaredyComponent")]
 
-plant_sun_cost = 50.0
+plant_sun_cost = 75.0
 [node name="BodyCorrect" parent="Body" index="0"]
 position = Vector2(-36, -72)
 

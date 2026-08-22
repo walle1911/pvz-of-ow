@@ -47,7 +47,7 @@
 			"baked_at": "2026-08-22 18:29:46",
 			"values": {
 				"@registry": {
-					"plant_sun_cost": 50.0
+					"plant_sun_cost": 75.0
 				},
 				"AttackComponent": {
 					"attack_value_bullet": 75.0,

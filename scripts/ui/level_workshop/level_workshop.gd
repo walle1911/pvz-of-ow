@@ -896,7 +896,11 @@ func _open_formal_sync_dialog() -> void:
 		var result := FormalLevelStore.sync_developer_levels_to_formal(selected_ids)
 		if result["ok"]:
 			Global.refresh_adventure_runtime_cache()
-			status_label.text = "已同步 %d 个关卡到正式模式。" % (result["synced"] as Array).size()
+			status_label.text = (
+				"已同步并烘焙 %d 个关卡到项目正式快照。"
+				if OS.has_feature("editor") else
+				"已同步 %d 个关卡到正式模式。"
+			) % (result["synced"] as Array).size()
 			_close_formal_sync_dialog()
 		else:
 			status_label.text = "同步失败：%s" % str(result["error"])
@@ -4073,7 +4077,11 @@ func _save_formal_level() -> bool:
 			return false
 		DraftStore.save_autosave(level)
 		_mark_current_level_saved()
-		status_label.text = ("已保存；%s 需要新增奖励植物。" % "、".join(cleared_cleanup)) if not cleared_cleanup.is_empty() else "已保存开发者关卡 %s；同步后才会更新正式模式。" % formal_preset_id
+		status_label.text = ("已保存并发布；%s 需要新增奖励植物。" % "、".join(cleared_cleanup)) if not cleared_cleanup.is_empty() else (
+			"已保存并烘焙 %s；玩家正式模式将使用这份数据。" % formal_preset_id
+			if OS.has_feature("editor") else
+			"已保存 %s 的本机开发者覆盖；玩家正式快照不变。" % formal_preset_id
+		)
 		return true
 	else:
 		status_label.text = "保存关卡模板失败：%s" % str(result["error"])
