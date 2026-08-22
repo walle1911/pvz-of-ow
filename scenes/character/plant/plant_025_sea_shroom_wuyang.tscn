@@ -215,6 +215,7 @@ script = ExtResource("14_x4qhn")
 attack_bullet_type = 21
 markers_2d_bullet = [NodePath("../Body/BodyCorrect/Marker2DBullet")]
 guidance_attack_damage = 20
+guidance_attack_interval = 3.0
 guidance_max_damage = 100
 guidance_growth_distance = 800.0
 guidance_max_scale_multiplier = 2.5
@@ -226,7 +227,10 @@ guidance_initial_turn_multiplier = 0.2
 
 [node name="BulletAttackCdTimer" type="Timer" parent="AttackComponent" index="0" unique_id=77714322]
 
-[node name="DetectComponent" type="Node2D" parent="AttackComponent" index="1" unique_id=1620971212]
+[node name="GuidanceAttackCdTimer" type="Timer" parent="AttackComponent" index="1"]
+one_shot = true
+
+[node name="DetectComponent" type="Node2D" parent="AttackComponent" index="2" unique_id=1620971212]
 script = ExtResource("15_ai3ac")
 
 [node name="Area2D" type="Area2D" parent="AttackComponent/DetectComponent" index="0" unique_id=1830721794]

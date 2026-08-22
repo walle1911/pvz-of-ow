@@ -19,7 +19,14 @@ var zombie_curr_x:float
 func ready_norm_signal_connect():
 	super()
 	hp_stage_change_component.signal_hp_stage_change.connect(hp_stage_zamboni_change)
-	hp_component.signal_hp_component_death.connect(func():ice_road.start_disappear_timer())
+	hp_component.signal_hp_component_death.connect(_on_hp_component_death_start_ice_road_timer)
+
+
+func _on_hp_component_death_start_ice_road_timer() -> void:
+	## 切换场景或清理调试角色时，重挂到背景下的冰道可能先于僵尸被释放。
+	if not is_instance_valid(ice_road) or ice_road.is_queued_for_deletion():
+		return
+	ice_road.start_disappear_timer()
 
 ## 初始化正常出战角色
 func ready_norm():

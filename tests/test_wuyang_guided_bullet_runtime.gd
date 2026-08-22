@@ -2,6 +2,17 @@ extends Node
 
 
 func _ready() -> void:
+	var plant_scene := load("res://scenes/character/plant/plant_025_sea_shroom_wuyang.tscn") as PackedScene
+	assert(plant_scene != null)
+	var plant := plant_scene.instantiate()
+	var attack_component := plant.get_node("AttackComponent") as AttackComponentBulletSeaShroomWuyang
+	assert(attack_component != null)
+	assert(is_equal_approx(attack_component.guidance_attack_interval, 3.0))
+	var guidance_cd_timer := attack_component.get_node("GuidanceAttackCdTimer") as Timer
+	assert(guidance_cd_timer != null)
+	assert(guidance_cd_timer.one_shot)
+	plant.free()
+
 	var bullet_scene := load("res://scenes/bullet/bullet_021_sea_shroom_wuyang.tscn") as PackedScene
 	assert(bullet_scene != null)
 

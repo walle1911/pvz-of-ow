@@ -8,6 +8,8 @@ const GUIDED_BULLET_GROUP := &"wuyang_active_guided_bullet"
 signal signal_guidance_started
 signal signal_guidance_ended
 
+@onready var guidance_attack_cd_timer: Timer = $GuidanceAttackCdTimer
+
 var active_guided_bullet_id := 0
 
 @export_group("无恙射击参数")
@@ -17,6 +19,8 @@ var active_guided_bullet_id := 0
 @export_range(0.05, 60.0, 0.05, "or_greater", "suffix:秒") var direct_attack_interval := 1.5
 ## 制导弹刚发射时的伤害。
 @export_range(1, 100, 1) var guidance_attack_damage := 20
+## 两枚点击制导弹之间的最短发射间隔，限制快速连点的最高攻击频率。
+@export_range(0.05, 60.0, 0.05, "or_greater", "suffix:秒") var guidance_attack_interval := 3.0
 ## 制导弹成长完成后的最大伤害。
 @export_range(1, 100, 1) var guidance_max_damage := 100
 ## 制导弹飞过这段路程后成长到最大体积和伤害。
@@ -39,11 +43,15 @@ func _ready() -> void:
 	attack_value_bullet = direct_attack_damage
 	attack_cd = direct_attack_interval
 	super()
+	guidance_attack_cd_timer.one_shot = true
+	guidance_attack_cd_timer.wait_time = guidance_attack_interval
 
 
-## 点击无恙时调用。整局同时只允许存在一枚由鼠标引导的无恙子弹。
+## 点击无恙时调用。整局同时只允许存在一枚鼠标引导弹，且发射受独立间隔限制。
 func shoot_guided_bullet(mouse_global_position: Vector2) -> bool:
 	if not is_instance_valid(bullets) or markers_2d_bullet.is_empty():
+		return false
+	if not guidance_attack_cd_timer.is_stopped():
 		return false
 	for active_bullet: Node in get_tree().get_nodes_in_group(GUIDED_BULLET_GROUP):
 		if is_instance_valid(active_bullet) and not active_bullet.is_queued_for_deletion():
@@ -88,6 +96,7 @@ func shoot_guided_bullet(mouse_global_position: Vector2) -> bool:
 		CONNECT_ONE_SHOT
 	)
 	signal_guidance_started.emit()
+	guidance_attack_cd_timer.start(maxf(guidance_attack_interval, 0.05))
 	play_throw_sfx()
 	return true
 
