@@ -14,36 +14,51 @@ func _ready() -> void:
 
 func _run() -> void:
 	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
-	var source_dir := "res://data/adventure_levels"
-	var echo_type := int(CharacterRegistry.PlantType.P999ImitaterEcho)
+	var source_dir := AdventureStore.DEVELOPER_LEVEL_DIR
+	var boss_source := AdventurePresets.build_level("adventure_1_10", true)
+	var boss_reward_type := int((boss_source.get("bossConfig", {}) as Dictionary).get("rewardPlant", -1))
+	if boss_reward_type <= 0 \
+	or not RewardCardRuntime.configured_boss_reward_plant_types(source_dir).has(boss_reward_type):
+		_fail("Boss 关额外奖励应进入战利品卡配置表")
+		return
 	var no_boss_reward_states := {
 		"101_0_adventure_1_10": {
 			"IsSuccess": true,
 			"RewardPlants": [int(CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker)],
 		}
 	}
-	if RewardCardRuntime.earned_boss_reward_plant_types(no_boss_reward_states, source_dir).has(echo_type):
-		_fail("仅普通通关或跳过 Boss 不能解锁 Echo")
+	if RewardCardRuntime.earned_boss_reward_plant_types(no_boss_reward_states, source_dir).has(boss_reward_type):
+		_fail("仅普通通关或跳过 Boss 不能解锁 Boss 战利品")
 		return
-	var defeated_sojourn_states := no_boss_reward_states.duplicate(true)
-	defeated_sojourn_states["101_0_adventure_1_10"]["RewardPlants"].append(echo_type)
-	if not RewardCardRuntime.earned_boss_reward_plant_types(defeated_sojourn_states, source_dir).has(echo_type):
-		_fail("击败索杰恩并领取 Boss 奖励后应识别 Echo 解锁")
+	var defeated_boss_states := no_boss_reward_states.duplicate(true)
+	defeated_boss_states["101_0_adventure_1_10"]["RewardPlants"].append(boss_reward_type)
+	if not RewardCardRuntime.earned_boss_reward_plant_types(defeated_boss_states, source_dir).has(boss_reward_type):
+		_fail("击败 Boss 并领取额外奖励后应识别战利品解锁")
 		return
 	var original_level_states := Global.global_game_state.curr_all_level_state_data.duplicate(true)
 	Global.global_game_state.curr_all_level_state_data = no_boss_reward_states
-	var echo_locked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
-	if not echo_locked_result["ok"] \
-	or (echo_locked_result["game_para"] as ResourceLevelData).available_plant_types.has(echo_type as CharacterRegistry.PlantType):
+	var boss_locked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	if not boss_locked_result["ok"] \
+	or (boss_locked_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
 		Global.global_game_state.curr_all_level_state_data = original_level_states
-		_fail("进入后续关卡不能自动解锁 Echo")
+		_fail("仅进入关卡不能自动解锁 Boss 战利品")
 		return
-	Global.global_game_state.curr_all_level_state_data = defeated_sojourn_states
-	var echo_unlocked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	Global.global_game_state.curr_all_level_state_data = defeated_boss_states
+	var replay_first_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_1_1", true))
+	var replay_later_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	var custom_level := Logic.example_level()
+	custom_level["plantSelectionEnabled"] = true
+	custom_level.erase("formalPresetId")
+	var custom_level_result := Runtime.build_game_para(custom_level)
 	Global.global_game_state.curr_all_level_state_data = original_level_states
-	if not echo_unlocked_result["ok"] \
-	or not (echo_unlocked_result["game_para"] as ResourceLevelData).available_plant_types.has(echo_type as CharacterRegistry.PlantType):
-		_fail("击败索杰恩并领取奖励后，后续关卡应显示 Echo")
+	if not replay_first_level_result["ok"] or not replay_later_level_result["ok"] \
+	or not (replay_first_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType) \
+	or not (replay_later_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
+		_fail("已领取的 Boss 战利品应在所有正式关卡重玩中可用")
+		return
+	if not custom_level_result["ok"] \
+	or (custom_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
+		_fail("Boss 战利品不应自动投放到自制关")
 		return
 	if AdventureStore.developer_level_path("adventure_1_1") != UserPaths.path("adventure_levels/adventure_1_1.json") \
 	or AdventureStore.formal_level_path("adventure_1_1") != UserPaths.path("formal_adventure_levels/adventure_1_1.json"):

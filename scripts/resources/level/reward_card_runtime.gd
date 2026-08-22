@@ -82,6 +82,17 @@ static func earned_boss_reward_plant_types(level_states: Dictionary, source_dir:
 	return result
 
 
+static func configured_boss_reward_plant_types(source_dir: String = "") -> Array[int]:
+	var catalog := _special_reward_catalog(source_dir)
+	var boss_rewards: Dictionary = catalog.get("boss_rewards", {}) as Dictionary
+	var result: Array[int] = []
+	for plant_key in boss_rewards.keys():
+		var plant_type := int(plant_key)
+		if plant_type > 0 and not result.has(plant_type):
+			result.append(plant_type)
+	return result
+
+
 static func is_plant_available_in_level(plant_type: int, level_id: String, ordinary_available: bool, source_dir: String = "") -> bool:
 	if not is_plant_limited(plant_type, source_dir):
 		return ordinary_available

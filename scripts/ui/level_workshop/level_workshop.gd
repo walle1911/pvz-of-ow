@@ -135,6 +135,8 @@ var formal_preset_id := ""
 var loaded_source_kind := ""
 var loaded_draft_path := ""
 var locked_available_plant_types: Array[int] = []
+var boss_reward_plant_types: Array[int] = []
+var earned_boss_reward_plant_types: Array[int] = []
 var new_level_button: TextureButton
 var edit_level_button: TextureButton
 var workshop_menu_dialog: MainGameMenuOptionDialog
@@ -1128,10 +1130,21 @@ func _refresh_after_level_replaced() -> void:
 
 func _refresh_locked_available_plants() -> void:
 	locked_available_plant_types.clear()
+	boss_reward_plant_types.clear()
+	earned_boss_reward_plant_types.clear()
 	if not FormalLevelStore.is_formal_preset_id(formal_preset_id):
 		return
 	if _formal_preset_index() < 0:
 		return
+	for plant_type in _formal_boss_reward_plant_types_for_editor():
+		if CharacterRegistry.PlantInfo.has(plant_type) and not boss_reward_plant_types.has(plant_type):
+			boss_reward_plant_types.append(plant_type)
+	for plant_type in RewardCardRuntime.earned_boss_reward_plant_types(
+		Global.global_game_state.curr_all_level_state_data,
+		_limited_card_source_dir()
+	):
+		if boss_reward_plant_types.has(plant_type) and not earned_boss_reward_plant_types.has(plant_type):
+			earned_boss_reward_plant_types.append(plant_type)
 	## 第一关的预设初始卡和后续关卡的前序奖励都属于已有卡，必定可选且不能取消。
 	if _is_first_formal_level():
 		for value in _selected_available_plants():
@@ -1159,6 +1172,27 @@ func _selected_available_plants() -> Array[int]:
 	var result: Array[int] = []
 	for value in level.get("availablePlants", []):
 		var plant_type := int(value)
+		if plant_type > 0 and CharacterRegistry.PlantInfo.has(plant_type) and not result.has(plant_type):
+			result.append(plant_type)
+	return result
+
+
+func _current_boss_reward_plant_type() -> int:
+	var boss_config: Dictionary = level.get("bossConfig", {})
+	if not bool(boss_config.get("enabled", false)):
+		return -1
+	return int(boss_config.get("rewardPlant", -1))
+
+
+func _formal_boss_reward_plant_types_for_editor() -> Array[int]:
+	var result: Array[int] = []
+	for preset in AdventurePresets.list_presets("normal"):
+		var preset_id := str((preset as Dictionary).get("id", ""))
+		var source := level if preset_id == formal_preset_id else AdventurePresets.build_level(preset_id, true)
+		var boss_config: Dictionary = source.get("bossConfig", {})
+		if not bool(boss_config.get("enabled", false)):
+			continue
+		var plant_type := int(boss_config.get("rewardPlant", -1))
 		if plant_type > 0 and CharacterRegistry.PlantInfo.has(plant_type) and not result.has(plant_type):
 			result.append(plant_type)
 	return result
@@ -1944,6 +1978,9 @@ func _make_reward_card(entry: Dictionary) -> Control:
 	var normal_available_mode: bool = Global.level_workshop_edit_mode == "normal"
 	var formal_reward_mode := normal_available_mode and FormalLevelStore.is_formal_preset_id(formal_preset_id)
 	var is_current_reward := formal_reward_mode and _formal_reward_plants().has(type_id)
+	var is_current_boss_reward := formal_reward_mode and _current_boss_reward_plant_type() == type_id
+	var is_boss_reward := formal_reward_mode and boss_reward_plant_types.has(type_id)
+	var is_earned_boss_reward := is_boss_reward and earned_boss_reward_plant_types.has(type_id)
 	var special_reward_levels := _special_reward_card_levels(type_id)
 	var limited_card := is_plant and RewardCardRuntime.is_plant_limited(type_id, _limited_card_source_dir())
 	var limited_target := limited_card and RewardCardRuntime.is_plant_allowed_in_level(
@@ -1952,14 +1989,19 @@ func _make_reward_card(entry: Dictionary) -> Control:
 		_limited_card_source_dir()
 	)
 	var limited_unavailable := limited_card and not limited_target and not is_current_reward
-	var selected := (_selected_available_plants().has(type_id) or is_current_reward) if normal_available_mode else \
+	var selected := (_selected_available_plants().has(type_id) or is_current_reward or is_current_boss_reward or is_earned_boss_reward) if normal_available_mode else \
 		(level["chessboardConfig"].get("plantCardPool" if is_plant else "zombieCardPool", []) as Array).has(type_id)
 	var locked: bool = normal_available_mode and locked_available_plant_types.has(type_id)
-	if limited_unavailable:
+	if limited_unavailable and not is_boss_reward:
 		selected = false
 		locked = false
 	card.modulate = Color.WHITE if selected else UNSELECTED_CARD_MODULATE
-	if limited_unavailable:
+	if is_current_boss_reward:
+		card.tooltip_text = "本关 Boss 额外奖励；点击打开 Boss 设置"
+	elif is_boss_reward:
+		card.tooltip_text = "已领取的 Boss 战利品；在所有正式关卡重玩中可用" if is_earned_boss_reward else \
+			"尚未领取的 Boss 战利品；击败对应 Boss 后全局解锁"
+	elif limited_unavailable:
 		card.tooltip_text = "限定卡不在本关投放，不能加入本关卡池"
 	elif locked:
 		card.tooltip_text = "此前已获得的植物；本关必定可选且不能取消"
@@ -1981,11 +2023,21 @@ func _make_reward_card(entry: Dictionary) -> Control:
 		button.pressed.connect(_toggle_reward_card.bind(type_id, is_plant))
 		button.gui_input.connect(_on_workshop_card_gui_input.bind("plant" if is_plant else "zombie", type_id))
 	holder.add_child(card)
-	if is_current_reward:
+	if is_current_boss_reward or is_earned_boss_reward:
+		_add_card_state_glow(holder, Color("8d65c7"), 0.88)
+	elif is_current_reward:
 		_add_card_state_glow(holder, Color("ffd34e"), 0.95)
 	elif locked:
 		_add_card_state_glow(holder, Color("69a956"))
-	if is_current_reward:
+	if is_boss_reward:
+		_add_card_state_badge(
+			holder,
+			"B奖" if is_current_boss_reward else "Boss",
+			Color("8d65c7") if is_current_boss_reward or is_earned_boss_reward else Color("5a4a70"),
+			Vector2(20, 0),
+			"CardStateBadgeBoss"
+		)
+	elif is_current_reward:
 		_add_card_state_badge(holder, "奖", Color("e69a16"), Vector2(20, 0), "CardStateBadge")
 		if not special_reward_levels.is_empty():
 			_add_card_state_badge(holder, "限", Color("8d65c7"), Vector2(20, 24), "CardStateBadgeLimited")
@@ -2090,6 +2142,15 @@ func _on_card_context_menu_pressed(item_id: int) -> void:
 
 func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	if Global.level_workshop_edit_mode == "normal":
+		if is_plant and FormalLevelStore.is_formal_preset_id(formal_preset_id) \
+		and _current_boss_reward_plant_type() == type_id:
+			_open_boss_settings_window()
+			return
+		if is_plant and FormalLevelStore.is_formal_preset_id(formal_preset_id) \
+		and boss_reward_plant_types.has(type_id):
+			status_label.text = ("这是已领取的 Boss 战利品卡，所有正式关卡重玩时自动可用" \
+				if earned_boss_reward_plant_types.has(type_id) else "这是尚未领取的 Boss 战利品卡，不能当作普通奖励添加")
+			return
 		if is_plant and _is_limited_card_unavailable_here(type_id):
 			status_label.text = "限定卡仅在指定关卡投放，不能加入本关卡池"
 			return
@@ -3198,6 +3259,7 @@ func _open_boss_settings_window() -> void:
 		if enabled.button_pressed:
 			_remove_boss_from_normal_flow(boss_zombie)
 		_changed("已%s Boss 关%s" % ["启用" if enabled.button_pressed else "关闭", "：%s" % _zombie_name(str(boss_zombie)) if enabled.button_pressed else ""])
+		_refresh_locked_available_plants()
 		_refresh_card_page()
 		_refresh_wave()
 		window.queue_free()
