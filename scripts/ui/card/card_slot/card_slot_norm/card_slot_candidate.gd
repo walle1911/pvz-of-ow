@@ -46,16 +46,11 @@ var all_show_page_imitater:Array[GridContainer] =[]
 
 func _ready() -> void:
 	_init_card_slot_candidate_pages()
-	_init_card_slot_candidate_imitater()
-	if _adventure_card_lock_active():
-		imitater_bg.visible = false
-
+	## 动态模仿规则由普通卡册中的 Echo 承担：它实时记录上一张成功种植的植物。
+	## 右下角这套弹出全卡册的入口是 PVZ1 交互，保留旧节点供场景兼容但永久停用。
+	imitater_bg.visible = false
+	all_imitater_card.visible = false
 	_init_card_page()
-
-	curr_page_imitater = 0
-	all_card_page_array_imitater[0].visible = true
-
-	card_imitater.signal_card_click.connect(imitater_card_slot_appear)
 
 ## 初始化卡片页面，计算可以显示的页面
 func _init_card_page():

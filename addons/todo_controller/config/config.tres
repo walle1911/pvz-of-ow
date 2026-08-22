@@ -470,6 +470,7 @@ script_list_meta = {
 "res://tests/pvz_level_editor/test_special_reward_card_workshop.gd": [-1, -1],
 "res://tests/test_ana_coffee_card_runtime.gd": [-1, -1],
 "res://tests/test_developer_menu_runtime.gd": [-1, -1],
+"res://tests/test_echo_imitater_runtime.gd": [-1, -1],
 "res://tests/test_juno_pulsar_target_count_runtime.gd": [-1, -1],
 "res://tests/test_mauga_cage_runtime.gd": [-1, -1],
 "res://tests/test_moira_final_design.gd": [-1, -1],

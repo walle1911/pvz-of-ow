@@ -666,6 +666,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ImitaterBG" type="TextureRect" parent="CardSlotCandidate" unique_id=2002950870]
+visible = false
 layout_mode = 0
 offset_left = 460.0
 offset_top = 412.0

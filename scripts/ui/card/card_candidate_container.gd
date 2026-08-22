@@ -10,6 +10,8 @@ func _ready() -> void:
 	super()
 	card_id = card.card_id
 	sun_cost = card.sun_cost
+	if card.is_echo_imitater_card() and not card.has_echo_imitater_target():
+		cost.text = "???"
 	var character_static_node = card.character_static.duplicate()
 	card_bg.add_child(character_static_node)
 

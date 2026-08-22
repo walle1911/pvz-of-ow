@@ -665,7 +665,8 @@ const PlantInfo = {
 		},
 	PlantType.P999ImitaterEcho:{
 		PlantInfoAttribute.PlantName: "Imitater_Echo",
-		PlantInfoAttribute.CoolTime: 50.0,
+		## 模仿者没有固定费用与冷却；战斗中均由上一张成功种植的普通植物覆盖。
+		PlantInfoAttribute.CoolTime: 0.0,
 		PlantInfoAttribute.SunCost: 0,
 		PlantInfoAttribute.PlantConditionResource:"res://resources/character_resource/plant_condition/999_imitater.tres",
 		PlantInfoAttribute.PlantScenes :  "res://scenes/character/plant/plant_999_imitater_echo.tscn"

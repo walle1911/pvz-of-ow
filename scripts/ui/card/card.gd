@@ -19,6 +19,9 @@ var _is_ready_state := false
 ## 开局选择卡片时 是否被选中
 var is_choosed_pre_card := false
 var card_candidate_container:CardCandidateContainer
+## Echo 实时记录上一张成功种植的普通植物，费用和下一次使用的冷却继承该目标。
+## Null 表示本轮尚未种植过可复制植物，此时 Echo 可携带但不能使用。
+var echo_imitater_target_plant_type: CharacterRegistry.PlantType = CharacterRegistry.PlantType.Null
 #endregion
 ## 模仿者材质
 const IMITATER = preload("res://shader_material/imitater.tres")
@@ -76,6 +79,8 @@ func _ready() -> void:
 	if _is_ana_coffee_dual_card and is_instance_valid(character_static) and character_static.get_child_count() > 0:
 		_ana_coffee_preview_root = character_static.get_child(0) as Node2D
 	_apply_developer_plant_card_values()
+	if is_echo_imitater_card() and not has_echo_imitater_target():
+		_show_echo_variable_cost()
 	if _is_ana_coffee_dual_card:
 		_ana_coffee_cool_time = cool_time
 		_normal_coffee_cool_time = Global.character_registry.get_plant_info(
@@ -98,6 +103,83 @@ func _apply_developer_plant_card_values() -> void:
 		return
 	cool_time = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.CoolTime)
 	sun_cost = Global.character_registry.get_plant_info(card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost)
+
+
+func is_echo_imitater_card() -> bool:
+	return card_plant_type == CharacterRegistry.PlantType.P999ImitaterEcho
+
+
+func has_echo_imitater_target() -> bool:
+	return is_echo_imitater_card() \
+		and echo_imitater_target_plant_type != CharacterRegistry.PlantType.Null
+
+
+func bind_echo_imitater_target(target_plant_type: CharacterRegistry.PlantType) -> bool:
+	if not is_echo_imitater_card() \
+	or target_plant_type == CharacterRegistry.PlantType.Null \
+	or target_plant_type == CharacterRegistry.PlantType.P999ImitaterEcho \
+	or target_plant_type == CharacterRegistry.PlantType.P1499Imitater \
+	or not Global.character_registry.PlantInfo.has(target_plant_type):
+		return false
+
+	var active_cooldown_max := _cool_mask.max_value if _is_cooling else 0.0
+	echo_imitater_target_plant_type = target_plant_type
+	plant_condition = Global.character_registry.get_plant_info(
+		target_plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	is_purple_card = plant_condition != null and plant_condition.is_purple_card
+	curr_card_gb = E_CardBg.CB03Gray
+	card_bg.texture = CradBgMap[curr_card_gb]
+
+	cool_time = Global.character_registry.get_plant_info(
+		target_plant_type,
+		CharacterRegistry.PlantInfoAttribute.CoolTime
+	)
+	sun_cost = Global.character_registry.get_plant_info(
+		target_plant_type,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	)
+	## 已经开始的冷却属于上一次实际复制的植物；实时换目标只影响下一次使用。
+	if _is_cooling:
+		_cool_mask.max_value = active_cooldown_max
+		_cool_mask.value = _cool_timer
+	_original_cool_time = cool_time
+	return true
+
+
+func clear_echo_imitater_target() -> void:
+	if not is_echo_imitater_card():
+		return
+	echo_imitater_target_plant_type = CharacterRegistry.PlantType.Null
+	plant_condition = Global.character_registry.get_plant_info(
+		card_plant_type,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	)
+	is_purple_card = false
+	curr_card_gb = E_CardBg.CB03Gray
+	card_bg.texture = CradBgMap[curr_card_gb]
+	cool_time = Global.character_registry.get_plant_info(
+		card_plant_type,
+		CharacterRegistry.PlantInfoAttribute.CoolTime
+	)
+	sun_cost = Global.character_registry.get_plant_info(
+		card_plant_type,
+		CharacterRegistry.PlantInfoAttribute.SunCost
+	)
+	_original_cool_time = cool_time
+	_show_echo_variable_cost()
+
+
+func get_gameplay_plant_type() -> CharacterRegistry.PlantType:
+	if has_echo_imitater_target():
+		return echo_imitater_target_plant_type
+	return card_plant_type
+
+
+func _show_echo_variable_cost() -> void:
+	if is_instance_valid(cost):
+		cost.text = "???"
 
 ## 设置卡片为图鉴卡片
 func set_almanac_card():
@@ -383,13 +465,16 @@ func judge_sun_enough(curr_sun_value):
 
 ## 判断卡片是否可以点击
 func judge_card_ready():
+	if is_echo_imitater_card() and not has_echo_imitater_target():
+		card_not_can_click()
+		return
 	# 阳光充足 且 卡片冷却完成
 	if is_sun_enough and not _is_cooling:
 		if not _is_reward_card_allowed_in_current_level():
 			card_not_can_click()
 			return
 		## 紫卡并且不能种植
-		if is_purple_card and not is_chessboard_reveal_reward and not plant_condition.judge_purple_card_can_plant(Global.main_game.plant_cell_manager.all_plant_cells, card_plant_type):
+		if is_purple_card and not is_chessboard_reveal_reward and not plant_condition.judge_purple_card_can_plant(Global.main_game.plant_cell_manager.all_plant_cells, get_gameplay_plant_type()):
 			card_not_can_click()
 		else:
 			card_ready()
@@ -434,6 +519,7 @@ func card_cool():
 	_is_cooling = true
 	_cool_mask.visible = true
 	_cool_timer = cool_time
+	_cool_mask.max_value = cool_time
 	if _is_ana_coffee_dual_card:
 		_ana_coffee_shared_cool_duration = cool_time
 		_cool_mask.max_value = _ana_coffee_shared_cool_duration

@@ -1905,7 +1905,7 @@ imitater_gray_strength = 0.0
 card_id = 29
 card_plant_type = 999
 curr_card_gb = 2
-cool_time = 50.0
+cool_time = 0.0
 sun_cost = 0
 
 [node name="CardBg" parent="PlantCards/Card12" index="0"]

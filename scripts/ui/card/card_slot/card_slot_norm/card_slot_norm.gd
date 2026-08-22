@@ -56,20 +56,15 @@ func _on_re_card_button_pressed() -> void:
 	var previous_director_page := card_slot_battle.director_current_page
 	for card_type_data:Dictionary in Global.global_game_state.selected_cards:
 		if card_type_data.has("plant_type"):
+			## 旧存档中的 PVZ1 灰色模仿卡入口已经停用，不再从隐藏界面恢复。
+			if card_type_data.get("is_imitater", false):
+				continue
 			if director_pages_enabled:
 				card_slot_battle.show_director_card_page(0)
 			var plant_type:CharacterRegistry.PlantType = card_type_data["plant_type"]
-			## 如果是模仿者
-			if card_type_data.get("is_imitater", false):
-				## 未选择模仿者时
-				if not card_slot_candidate.card_imitater.is_be_choosed_imitater:
-					var plant_imitater_container := _get_candidate_plant_container(plant_type, true)
-					if plant_imitater_container != null:
-						plant_imitater_container.card._on_button_pressed()
-			else:
-				var plant_container := _get_candidate_plant_container(plant_type)
-				if plant_container != null and not plant_container.card.is_choosed_pre_card:
-					plant_container.card._on_button_pressed()
+			var plant_container := _get_candidate_plant_container(plant_type)
+			if plant_container != null and not plant_container.card.is_choosed_pre_card:
+				plant_container.card._on_button_pressed()
 
 		elif card_type_data.has("zombie_type"):
 			if director_pages_enabled:
@@ -222,6 +217,7 @@ func _on_card_click(card:Card):
 		for i in range(card_idx, card_slot_battle.curr_cards.size()):
 			move_card_to(card_slot_battle.curr_cards[i], card_slot_battle.cards_placeholder[i])
 		move_card_to(card, card.card_candidate_container)
+		card.clear_echo_imitater_target()
 
 	## 如果没被选取，放在最后一位；达到当前关卡上限则拒绝选择。
 	else:
@@ -239,6 +235,9 @@ func _on_director_card_click(card: Card) -> void:
 	if not card.is_choosed_pre_card and card_page != card_slot_battle.director_current_page:
 		SoundManager.play_other_SFX("buzzer")
 		return
+	if not card.is_choosed_pre_card and card_slot_battle.director_page_is_full(card):
+		SoundManager.play_other_SFX("buzzer")
+		return
 	SoundManager.play_other_SFX("tap")
 	if card.is_choosed_pre_card:
 		card.is_choosed_pre_card = false
@@ -250,10 +249,8 @@ func _on_director_card_click(card: Card) -> void:
 		for i in range(maxi(page_index, 0), page_cards.size()):
 			move_card_to(page_cards[i], card_slot_battle.cards_placeholder[i])
 		await move_card_to(card, card.card_candidate_container)
+		card.clear_echo_imitater_target()
 	else:
-		if card_slot_battle.director_page_is_full(card):
-			SoundManager.play_other_SFX("buzzer")
-			return
 		var placeholder_index := card_slot_battle.director_placeholder_index_for_new_card(card)
 		if placeholder_index >= card_slot_battle.cards_placeholder.size():
 			var new_placeholder := card_slot_battle.add_card_placeholder()

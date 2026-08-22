@@ -207,6 +207,8 @@ func start_next_game_card_slot_battle_update():
 	_remove_invalid_curr_cards()
 	for i in range(curr_cards.size()):
 		var card:Card = curr_cards[i]
+		if card.is_echo_imitater_card():
+			card.clear_echo_imitater_target()
 		## 卡牌冷却结束,可以点击
 		card.set_card_cool_end()
 		card.card_ready()
@@ -221,6 +223,24 @@ func card_use_end(card:Card):
 	## 减少阳光，卡片冷却
 	sun_value = sun_value - card.sun_cost
 	card.card_cool()
+	_update_echo_imitater_targets_from_used_card(card)
+
+
+func _update_echo_imitater_targets_from_used_card(used_card:Card) -> void:
+	## Echo 只记录刚刚成功使用的普通植物卡；模仿卡和僵尸卡不能递归成为目标。
+	if not is_instance_valid(used_card) \
+	or used_card.card_plant_type == CharacterRegistry.PlantType.Null \
+	or used_card.is_imitater \
+	or used_card.is_echo_imitater_card() \
+	or used_card.card_plant_type == CharacterRegistry.PlantType.P1499Imitater:
+		return
+	var target_plant_type := used_card.get_gameplay_plant_type()
+	for echo_card:Card in curr_cards:
+		if not is_instance_valid(echo_card) or not echo_card.is_echo_imitater_card():
+			continue
+		if echo_card.bind_echo_imitater_target(target_plant_type):
+			if is_instance_valid(Global.main_game):
+				echo_card.judge_sun_enough(sun_value)
 
 func _on_card_ready(card:Card):
 	_try_squash_doomfist_attack_card(card)
@@ -297,8 +317,9 @@ func update_card_purple_sun_cost():
 	await get_tree().process_frame
 	_remove_invalid_curr_cards()
 	for card:Card in curr_cards:
-		if card.is_purple_card and Global.main_game.plant_cell_manager.curr_plant_num.has(card.card_plant_type):
-			card.sun_cost = Global.character_registry.get_plant_info(card.card_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost) + 50 * Global.main_game.plant_cell_manager.curr_plant_num[card.card_plant_type]
+		var gameplay_plant_type := card.get_gameplay_plant_type()
+		if card.is_purple_card and Global.main_game.plant_cell_manager.curr_plant_num.has(gameplay_plant_type):
+			card.sun_cost = Global.character_registry.get_plant_info(gameplay_plant_type, CharacterRegistry.PlantInfoAttribute.SunCost) + 50 * Global.main_game.plant_cell_manager.curr_plant_num[gameplay_plant_type]
 			card.judge_sun_enough(sun_value)
 
 func _remove_invalid_curr_cards() -> void:
