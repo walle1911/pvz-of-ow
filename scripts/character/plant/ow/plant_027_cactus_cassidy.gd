@@ -29,6 +29,7 @@ const TRAPPED_SHORT_ROLL_DISTANCE:= 22.0
 @export_range(0.25, 3.0, 0.25, "suffix:圈") var backstep_roll_turns:= 1.0
 @export_range(0.1, 5.0, 0.05, "suffix:秒") var trapped_flashbang_stun_time:= 1.25
 @export_range(1.0, 1000.0, 1.0, "suffix:像素") var trapped_flashbang_front_range:= 520.0
+@export_range(0.1, 10.0, 0.1, "suffix:秒") var trapped_return_delay:= 5.0
 
 var _skill_has_triggered:= false
 var _skill_is_pending_rise:= false
@@ -56,11 +57,14 @@ var _tumbleweed_move_tween:Tween
 var _tumbleweed_bob_tween:Tween
 var _backstep_tween:Tween
 var _trapped_burst_tween:Tween
+var _trapped_return_tween:Tween
 var _backstep_body_position:= Vector2.ZERO
 var _backstep_body_rotation:= 0.0
 var _backstep_body_scale:= Vector2.ONE
 var _backstep_roll_pivot:= Vector2.ZERO
 var _backstep_roll_direction:= -1.0
+var _trapped_original_position:= Vector2.ZERO
+var _trapped_has_displaced:= false
 
 
 func ready_norm_signal_connect():
@@ -301,6 +305,8 @@ func _start_trapped_short_roll() -> void:
 		return
 	if is_instance_valid(_backstep_tween):
 		_backstep_tween.kill()
+	_trapped_original_position = position
+	_trapped_has_displaced = true
 	_prepare_backstep_roll()
 	## 植物根节点仍留在原格容器中；最多只偏移格子宽度的四分之一。
 	var max_local_offset:= maxf(plant_cell.size.x * 0.25, 0.0)
@@ -332,6 +338,37 @@ func _finish_trapped_fan_burst() -> void:
 	_skill_rise_finished = false
 	if not is_death:
 		attack_component.update_is_attack_factors(true, AttackComponentBase.E_IsAttackFactors.Character)
+		_schedule_trapped_return()
+
+
+func _schedule_trapped_return() -> void:
+	if not _trapped_has_displaced or is_death:
+		return
+	if is_instance_valid(_trapped_return_tween):
+		_trapped_return_tween.kill()
+	_trapped_return_tween = create_tween()
+	_trapped_return_tween.tween_interval(trapped_return_delay)
+	_trapped_return_tween.tween_callback(_start_trapped_return)
+
+
+func _start_trapped_return() -> void:
+	_trapped_return_tween = null
+	if not _trapped_has_displaced or is_death:
+		return
+	_trapped_return_tween = create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_trapped_return_tween.tween_property(
+		self,
+		^"position",
+		_trapped_original_position,
+		backstep_duration
+	)
+	_trapped_return_tween.tween_callback(_finish_trapped_return)
+
+
+func _finish_trapped_return() -> void:
+	position = _trapped_original_position
+	_trapped_has_displaced = false
+	_trapped_return_tween = null
 
 
 func _throw_flashbang(stun_time:= trapped_flashbang_stun_time) -> void:
@@ -887,6 +924,10 @@ func _cleanup_charge_after_death() -> void:
 	if is_instance_valid(_trapped_burst_tween):
 		_trapped_burst_tween.kill()
 	_trapped_burst_tween = null
+	if is_instance_valid(_trapped_return_tween):
+		_trapped_return_tween.kill()
+	_trapped_return_tween = null
+	_trapped_has_displaced = false
 	_set_skill_invulnerable(false)
 	_skill_is_pending_rise = false
 	_skill_roll_finished = false
