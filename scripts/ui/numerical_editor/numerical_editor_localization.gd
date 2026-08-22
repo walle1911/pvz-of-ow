@@ -114,7 +114,7 @@ const PROPERTY_LABELS := {
 	"direct_attack_damage": "直射攻击伤害", "direct_attack_interval": "直射攻击间隔",
 	"baby_grow_time": "小D.Va成长时间", "center_lane_damage": "中心行爆炸伤害", "edge_lane_damage": "相邻行爆炸伤害",
 	"baby_scale": "小D.Va体型倍率", "baby_launch_height": "小D.Va弹射高度",
-	"downpour_immobilize_time": "千针雨定身时间", "guidance_attack_damage": "引导攻击伤害",
+	"downpour_immobilize_time": "千针雨定身时间", "guidance_max_damage": "引导最大伤害",
 	"downpour_preview_time": "千针雨预警时间", "guidance_attack_interval": "引导攻击间隔",
 	"giant_pea_knockback_distance": "巨型豌豆击退距离", "tire_bomb_damage": "轮胎爆炸伤害",
 	"charge_time": "基准蓄力时间", "charge_reference_hp": "基准蓄力血量", "lock_speed_multiplier": "锁定速度倍率", "skill_trigger_hp": "技能触发血量",

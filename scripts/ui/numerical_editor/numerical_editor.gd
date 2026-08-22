@@ -42,7 +42,7 @@ const BASIC_PARAMETER_PROPERTIES := {
 	"plant_food_attack_value": 18,
 	"bullet_attack_values": 19,
 	"direct_attack_damage": 20,
-	"guidance_attack_damage": 21,
+	"guidance_max_damage": 21,
 	"giant_pea_attack_value": 22,
 	"downpour_damage": 23,
 	"tire_bomb_damage": 25,

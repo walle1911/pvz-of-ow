@@ -52,7 +52,7 @@ const SCRIPT_RULES := {
 	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_sea_shroom_wuyang.gd": {
 		"direct_attack_damage": "damage", "direct_attack_interval": "seconds",
-		"guidance_attack_damage": "damage", "guidance_attack_interval": "seconds",
+		"guidance_max_damage": "damage", "guidance_attack_interval": "seconds",
 	},
 	"res://scripts/character/components/attack_behavior_component/component_attack_bullet_fume_shroom_roadhog.gd": {
 		"hp_threshold": "non_negative_int", "close_burst_distance": "distance",
