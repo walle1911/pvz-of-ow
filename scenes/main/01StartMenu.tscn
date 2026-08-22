@@ -3069,7 +3069,7 @@ bbcode_enabled = true
 text = "[center][color=#ffffff]部分创意来源[/color]
 [color=#ffff9f]Hokiiiii[/color][color=#ffffff]；[/color][color=#ffff9f]我69岁激素砍人[/color][color=#ffffff]；[/color][color=#ffff9f]海绵宝宝
 蟹黄大豆[/color][color=#ffffff]；[/color][color=#ffff9f]以及评论区的各位[/color][color=#ffffff]。
-部分ui素材来自[/color][color=#ffff9f]小鱿鱼万事屋[/color][color=#ffffff]小程序。[/color][/center]"
+部分ui素材来自[/color][color=#ffff9f]小鱿万事屋[/color][color=#ffffff]小程序。[/color][/center]"
 scroll_active = false
 
 [node name="ProducerInfoDialog" parent="." unique_id=634571610 instance=ExtResource("57_ry5e1")]
