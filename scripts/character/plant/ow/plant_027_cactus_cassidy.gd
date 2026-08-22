@@ -258,14 +258,20 @@ func _try_roll_for_charge() -> bool:
 func _can_roll_into_cell(target_cell:PlantCell) -> bool:
 	if not is_instance_valid(target_cell):
 		return false
-	## 后退只进入完整空格，避免覆盖花盆、睡莲或其他位置的植物。
-	if target_cell.get_curr_plant_num() > 0:
-		return false
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
 		plant_type,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
 	)
-	return is_instance_valid(plant_condition) and plant_condition.judge_is_can_plant(target_cell, plant_type)
+	if not is_instance_valid(plant_condition):
+		return false
+	## 保留 Down 层的睡莲/花盆作为落脚底座；其他任何占位仍视为堵塞。
+	## judge_is_can_plant 会继续确认本植物的占位层为空，且底座已将地形切换为可站立状态。
+	for place in target_cell.plant_in_cell:
+		if place == CharacterRegistry.PlacePlantInCell.Down:
+			continue
+		if is_instance_valid(target_cell.plant_in_cell[place]):
+			return false
+	return plant_condition.judge_is_can_plant(target_cell, plant_type)
 
 
 func _can_roll_into_water(target_cell:PlantCell) -> bool:
@@ -277,7 +283,8 @@ func _can_roll_into_water(target_cell:PlantCell) -> bool:
 
 
 func _move_to_roll_cell(target_cell:PlantCell) -> void:
-	var falls_into_water:= bool(target_cell.curr_condition & 8 or target_cell.curr_condition & 16)
+	## 8 是未承载的水面；16 是已有睡莲的安全落脚面。
+	var falls_into_water:= bool(target_cell.curr_condition & 8)
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
 		plant_type,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
