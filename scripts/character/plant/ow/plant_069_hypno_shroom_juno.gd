@@ -291,7 +291,9 @@ func _spawn_pulsar_torpedo(
 		return
 	mark_bullet_recording_source(bullet)
 	var spread_center:= (float(target_count) - 1.0) * 0.5
-	var spread_offset:= (float(target_index) - spread_center) * 0.13
+	## 飞雷会先沿这个扇面短暂出膛；相邻角度必须足够大，密集目标下才能看清
+	## 每个锁定框确实各自发射了一颗。
+	var spread_offset:= (float(target_index) - spread_center) * 0.28
 	var launch_direction:= Vector2(0.15 * float(direction_x_root), -1.0).rotated(spread_offset).normalized()
 	var final_damage:= maxi(1, int(round(float(pulsar_damage) * get_attack_damage_multiplier())))
 	var bullet_paras:Dictionary[Bullet000NormBase.E_InitParasAttr, Variant] = {

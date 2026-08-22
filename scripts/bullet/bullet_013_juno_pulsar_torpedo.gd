@@ -2,9 +2,13 @@ extends Bullet000TrackBase
 
 const IMPACT_EFFECT_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plant_effect_juno_pulsar_burst.gd")
 
+@export_range(0.0, 0.5, 0.01, "suffix:秒") var launch_fan_duration:= 0.18
+
 var _visual_time:= 0.0
 var _trail_sample_elapsed:= 0.0
 var _trail_positions:Array[Vector2] = []
+var _launch_fan_elapsed:= 0.0
+var _has_started_homing:= false
 
 
 func _ready() -> void:
@@ -29,7 +33,21 @@ func _physics_process(delta:float) -> void:
 	if not is_instance_valid(target_enemy) or target_enemy.is_death or target_enemy.is_hypno:
 		queue_free()
 		return
-	movement_component.reset_track_movement(true, false, target_enemy.hurt_box_component.global_position)
+	## 多目标从同一点齐射时先保持各自出膛方向，避免立即追踪后在密集敌群前
+	## 两两重叠，看起来像只发射了锁定数量的一半。
+	if _launch_fan_elapsed < launch_fan_duration:
+		_launch_fan_elapsed += delta
+		global_position += direction * speed * delta
+		queue_redraw()
+		if global_position.distance_to(start_pos) > max_distance:
+			queue_free()
+		return
+	movement_component.reset_track_movement(
+		true,
+		not _has_started_homing,
+		target_enemy.hurt_box_component.global_position
+	)
+	_has_started_homing = true
 	movement_component.physics_process_bullet_move(delta)
 	queue_redraw()
 	if global_position.distance_to(start_pos) > max_distance:
