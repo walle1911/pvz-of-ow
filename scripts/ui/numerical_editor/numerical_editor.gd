@@ -300,8 +300,7 @@ func _build_detail_page() -> void:
 
 	detail_page.add_child(_index_texture_button("返回选卡" if return_to_workshop else "返回卡片", Vector2(16, 568), _back_from_detail))
 	detail_page.add_child(_small_texture_button("恢复默认", Vector2(470, 568), _reset_current_character))
-	if OS.has_feature("editor"):
-		detail_page.add_child(_index_texture_button("烘焙到 .tscn", Vector2(735, 568), _bake_current_character))
+	## 运行时数值页不再暴露项目文件写入入口；批量烘焙仍由编辑器插件负责。
 	detail_page.add_child(_close_texture_button("保存并返回" if return_to_workshop else "保存", Vector2(930 if return_to_workshop else 955, 568), _save_changes))
 
 

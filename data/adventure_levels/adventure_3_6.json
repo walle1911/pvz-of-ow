@@ -1,11 +1,11 @@
 {
 	"activeLawnRows": [
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0,
-		5.0
+		0,
+		1,
+		2,
+		3,
+		4,
+		5
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -19,6 +19,7 @@
 		52,
 		23,
 		505,
+		8,
 		14,
 		11,
 		43,
@@ -36,6 +37,11 @@
 		38,
 		22
 	],
+	"bossConfig": {
+		"enabled": false,
+		"rewardPlant": -1,
+		"zombieType": 524
+	},
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
 		"mineCount": 8.0,
@@ -111,7 +117,7 @@
 	"plantSelectionEnabled": true,
 	"playerConfig": {
 		"cooldownMultiplier": 1.0,
-		"initialSun": 50,
+		"initialSun": 75,
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071526.0,
@@ -123,21 +129,20 @@
 	"simpleBaseZombieType": 1,
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 2,
+	"simpleLateGamePowerMultiplier": 1.3,
 	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 20,
-	"simpleZombieIntroWaves": {
-		"13": 10,
-		"515": 11
-	},
 	"simpleZombiePool": [
 		1,
 		13,
 		3,
-		511,
 		515
 	],
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
+	"specialRewardCardLevels": {
+
+	},
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		25.36,
@@ -229,32 +234,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_0_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_0_515_4",
+					"id": "simple_0_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -363,32 +343,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_1_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_1_515_4",
+					"id": "simple_1_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -497,32 +452,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_2_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_2_515_4",
+					"id": "simple_2_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -631,32 +561,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_3_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_3_515_4",
+					"id": "simple_3_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -765,32 +670,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_4_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_4_515_4",
+					"id": "simple_4_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -899,32 +779,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_5_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_5_515_4",
+					"id": "simple_5_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1033,32 +888,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_6_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_6_515_4",
+					"id": "simple_6_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1167,32 +997,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_7_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_7_515_4",
+					"id": "simple_7_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1301,32 +1106,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_8_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_8_515_4",
+					"id": "simple_8_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1435,32 +1215,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_9_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_9_515_4",
+					"id": "simple_9_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1569,32 +1324,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_10_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_10_515_4",
+					"id": "simple_10_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1703,32 +1433,7 @@
 					"fixedInterval": 2.0,
 					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "simple_11_511_3",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						1,
-						1,
-						1,
-						1,
-						1,
-						1
-					],
-					"maxAlive": 8,
-					"randomInterval": {
-						"max": 1.8,
-						"min": 0.8
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 0.0,
-					"zombieType": "511"
-				},
-				{
-					"count": 1,
-					"fixedInterval": 2.0,
-					"fixedLane": 1,
-					"healthMultiplier": 1.0,
-					"id": "simple_11_515_4",
+					"id": "simple_11_515_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
@@ -1759,5 +1464,5 @@
 		}
 	],
 	"workshopMode": "normal",
-	"zombieRefreshSpeedMultiplier": 1.0
+	"zombieRefreshSpeedMultiplier": 1.05
 }

@@ -1,11 +1,11 @@
 {
 	"activeLawnRows": [
-		0,
-		1,
-		2,
-		3,
-		4,
-		5
+		0.0,
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0
 	],
 	"allowNoFlag": false,
 	"availablePlants": [
@@ -13,28 +13,33 @@
 		2,
 		3,
 		4,
-		52,
-		6,
-		36,
 		18,
-		505,
+		36,
+		6,
+		52,
 		23,
+		505,
+		8,
 		14,
 		11,
 		43,
 		13,
-		40,
 		32,
-		24,
+		37,
 		27,
 		16,
 		21,
 		517,
 		25,
 		44,
-		19,
+		24,
 		20
 	],
+	"bossConfig": {
+		"enabled": false,
+		"rewardPlant": -1,
+		"zombieType": 524
+	},
 	"chessboardConfig": {
 		"enemyZombieProbability": 0.35,
 		"mineCount": 0.0,
@@ -104,7 +109,7 @@
 	"plantSelectionEnabled": true,
 	"playerConfig": {
 		"cooldownMultiplier": 1.0,
-		"initialSun": 50,
+		"initialSun": 75,
 		"sunDropSpeed": 1.0
 	},
 	"randomSeed": 2026071524.0,
@@ -114,24 +119,23 @@
 	],
 	"schemaVersion": 1.0,
 	"simpleBaseZombieType": 1,
-	"simpleFlagCount": 1,
+	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 2,
-	"simpleZombieIntroWaves": {
-		"3": 4,
-		"5": 10,
-		"511": 1,
-		"512": 7
-	},
+	"simpleLateGamePowerMultiplier": 1.1,
+	"simpleOnceFinalZombies": [],
+	"simpleWaveCount": 20,
 	"simpleZombiePool": [
 		1,
 		3,
 		5,
-		511,
-		512
+		512,
+		508
 	],
-	"simpleWaveCount": 10,
 	"sodLayoutRows": 5.0,
 	"sodRolloutRows": 0.0,
+	"specialRewardCardLevels": {
+
+	},
 	"strictOriginalTiming": true,
 	"waveIntervalRange": [
 		25.64,
@@ -141,57 +145,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_01",
-			"name": "第 1 波",
+			"name": "第 1 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 1.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_01_group_01",
+					"id": "simple_0_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_0_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "3"
 				},
 				{
-					"count": 3.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_01_group_02",
+					"id": "simple_0_5_2",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_0_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_0_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -200,57 +279,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_02",
-			"name": "第 2 波",
+			"name": "第 2 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 4.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_02_group_01",
+					"id": "simple_1_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "1"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_02_group_02",
+					"id": "simple_1_3_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "511"
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_1_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_1_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_1_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -259,32 +413,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_03",
-			"name": "第 3 波",
+			"name": "第 3 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 5.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_03_group_01",
+					"id": "simple_2_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_2_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_2_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_2_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_2_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -293,82 +547,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_04",
-			"name": "第 4 波",
+			"name": "第 4 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 1.0,
-					"fixedInterval": 0.87,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_04_group_01",
+					"id": "simple_3_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_3_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_3_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "5"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_04_group_02",
+					"id": "simple_3_512_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "512"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_04_group_03",
+					"id": "simple_3_508_4",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
-					"zombieType": "511"
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -377,57 +681,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_05",
-			"name": "第 5 波",
+			"name": "第 5 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 2.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_05_group_01",
+					"id": "simple_4_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "1"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.87,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_05_group_02",
+					"id": "simple_4_3_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_4_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
 					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_4_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_4_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -436,82 +815,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_06",
-			"name": "第 6 波",
+			"name": "第 6 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 3.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_06_group_01",
+					"id": "simple_5_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
-					"zombieType": "511"
+					"zombieType": "1"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_06_group_02",
+					"id": "simple_5_3_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
+					"startDelay": 0.0,
 					"zombieType": "3"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_06_group_03",
+					"id": "simple_5_5_2",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_5_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_5_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -520,82 +949,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_07",
-			"name": "第 7 波",
+			"name": "第 7 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 1.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_07_group_01",
+					"id": "simple_6_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_6_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "3"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_07_group_02",
+					"id": "simple_6_5_2",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "5"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.87,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_07_group_03",
+					"id": "simple_6_512_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
-					"zombieType": "5"
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_6_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -604,82 +1083,132 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_08",
-			"name": "第 8 波",
+			"name": "第 8 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 2.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_08_group_01",
+					"id": "simple_7_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_7_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "3"
 				},
 				{
-					"count": 2.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_08_group_02",
+					"id": "simple_7_5_2",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "5"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_08_group_03",
+					"id": "simple_7_512_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
-					"zombieType": "511"
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_7_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
@@ -688,220 +1217,538 @@
 		{
 			"duration": 28.0,
 			"id": "adventure_3_4_wave_09",
-			"name": "第 9 波",
+			"name": "第 9 个波间间隔",
 			"spawnGroups": [
 				{
-					"count": 1.0,
-					"fixedInterval": 0.87,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_09_group_01",
+					"id": "simple_8_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_8_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_8_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
 					"startDelay": 0.0,
 					"zombieType": "5"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_09_group_02",
+					"id": "simple_8_512_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
-					"zombieType": "3"
+					"startDelay": 0.0,
+					"zombieType": "512"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_09_group_03",
+					"id": "simple_8_508_4",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
-					"zombieType": "1"
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "interval",
 			"startTime": 224.0
 		},
 		{
-			"duration": 28.0,
+			"duration": 10.0,
 			"id": "adventure_3_4_wave_10",
-			"name": "第 10 波（大波）",
+			"name": "第 1 波",
 			"spawnGroups": [
 				{
-					"count": 6.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_10_group_02",
+					"id": "simple_9_1_0",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.35,
+					"startDelay": 0.0,
 					"zombieType": "1"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.87,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_10_group_03",
+					"id": "simple_9_3_1",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 0.7,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_9_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
 					"zombieType": "5"
 				},
 				{
-					"count": 2.0,
-					"fixedInterval": 0.63,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_10_group_04",
+					"id": "simple_9_512_3",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 1.05,
-					"zombieType": "511"
-				},
-				{
-					"count": 1.0,
-					"fixedInterval": 0.79,
-					"fixedLane": 1.0,
-					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_10_group_05",
-					"intervalMode": "fixed",
-					"laneRule": "random",
-					"laneWeights": [
-						0.0,
-						0.0,
-						1.0,
-						1.0,
-						0.0,
-						0.0
-					],
-					"maxAlive": 47.0,
-					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
-					},
-					"speedMultiplier": 1.0,
-					"startDelay": 1.4,
+					"startDelay": 0.0,
 					"zombieType": "512"
 				},
 				{
-					"count": 1.0,
-					"fixedInterval": 0.71,
-					"fixedLane": 1.0,
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
 					"healthMultiplier": 1.0,
-					"id": "adventure_3_4_wave_10_group_06",
+					"id": "simple_9_508_4",
 					"intervalMode": "fixed",
 					"laneRule": "random",
 					"laneWeights": [
-						1.0,
-						1.0,
-						0.0,
-						0.0,
-						1.0,
-						1.0
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
 					],
-					"maxAlive": 47.0,
+					"maxAlive": 8,
 					"randomInterval": {
-						"max": 1.2,
-						"min": 0.5
+						"max": 1.8,
+						"min": 0.8
 					},
 					"speedMultiplier": 1.0,
-					"startDelay": 1.75,
-					"zombieType": "3"
+					"startDelay": 0.0,
+					"zombieType": "508"
 				}
 			],
 			"stageType": "flag",
 			"startTime": 252.0
+		},
+		{
+			"duration": 28.0,
+			"id": "interval_1",
+			"name": "第 10 个波间间隔",
+			"spawnGroups": [
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_10_1_0",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_10_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_10_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_10_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_10_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
+				}
+			],
+			"stageType": "interval",
+			"startTime": 262.0
+		},
+		{
+			"duration": 10.0,
+			"id": "wave_1",
+			"name": "第 2 波",
+			"spawnGroups": [
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_11_1_0",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "1"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_11_3_1",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "3"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_11_5_2",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "5"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_11_512_3",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "512"
+				},
+				{
+					"count": 1,
+					"fixedInterval": 2.0,
+					"fixedLane": 1,
+					"healthMultiplier": 1.0,
+					"id": "simple_11_508_4",
+					"intervalMode": "fixed",
+					"laneRule": "random",
+					"laneWeights": [
+						1,
+						1,
+						1,
+						1,
+						1,
+						1
+					],
+					"maxAlive": 8,
+					"randomInterval": {
+						"max": 1.8,
+						"min": 0.8
+					},
+					"speedMultiplier": 1.0,
+					"startDelay": 0.0,
+					"zombieType": "508"
+				}
+			],
+			"stageType": "flag",
+			"startTime": 290.0
 		}
 	],
 	"winConditions": [
