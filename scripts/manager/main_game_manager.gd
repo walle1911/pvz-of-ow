@@ -235,8 +235,17 @@ func _ready() -> void:
 	SoundManager.play_bgm(bgm_choose_card)
 	## 连接子节点信号
 	signal_connect()
+	## CardManager 初始化时就会根据预选列表实例化卡片，因此检查点卡组必须先恢复。
+	var original_prechosen_plants := game_para.pre_choosed_card_list_plant.duplicate()
+	var original_prechosen_zombies := game_para.pre_choosed_card_list_zombie.duplicate()
+	if is_save_game_data_on_init:
+		_restore_saved_card_selection()
 	## 初始化子管理器
 	init_manager()
+	## 只让恢复卡组影响本次卡槽实例，避免污染缓存中的关卡预设卡配置。
+	if is_save_game_data_on_init:
+		game_para.pre_choosed_card_list_plant = original_prechosen_plants
+		game_para.pre_choosed_card_list_zombie = original_prechosen_zombies
 	## 初始化游戏背景音乐
 	_init_game_BGM()
 	if game_para.is_target_range:
@@ -247,7 +256,7 @@ func _ready() -> void:
 	if is_save_game_data_on_init:
 		load_game_main_game()
 		if game_para.resume_boss_checkpoint:
-			_resume_boss_checkpoint()
+			await _resume_boss_checkpoint()
 		else:
 			start_next_round_game()
 	else:
@@ -662,6 +671,9 @@ func _resume_boss_checkpoint() -> void:
 	boss_normal_flow_completed = true
 	main_game_progress = E_MainGameProgress.GAME_OVER
 	card_slot_root.visible = true
+	## 新场景中的战斗卡槽初始仍挂在选卡界面下；先执行正常的战斗布局流程，
+	## 否则即使根节点可见，卡片也会留在屏幕外且铲子不会出现。
+	await card_manager.card_slot_update_main_game()
 	if game_para.is_day_sun:
 		day_suns_manager.start_day_sun()
 	_show_boss_choice()
@@ -1116,6 +1128,38 @@ func load_game_main_game():
 		day_suns_manager.curr_sun_sum_value = save_game_data_main_game.day_sun_curr_sun_sum_value
 		## 植物卡槽数据
 		card_manager.load_game_data_card_manager(save_game_data_main_game.card_manager_data)
+
+
+## 在 CardManager 创建卡槽前，把检查点记录的实际出战卡恢复为本次场景的预选卡。
+## 旧存档没有这两个字段时保留关卡原预选卡，继续兼容既有存档。
+func _restore_saved_card_selection() -> void:
+	if game_para.save_game_data_main_game == null:
+		return
+	var card_data:Dictionary = game_para.save_game_data_main_game.card_manager_data
+	var saved_plants:Array = card_data.get("selected_plant_types", [])
+	var saved_zombies:Array = card_data.get("selected_zombie_types", [])
+	## 修复前创建的 Boss 检查点没有卡组字段；可选卡关卡回退到全局记录的上次选卡。
+	if not card_data.has("selected_plant_types") \
+	or not card_data.has("selected_zombie_types"):
+		if not game_para.resume_boss_checkpoint \
+		or not game_para.can_choosed_card \
+		or Global.global_game_state.selected_cards.is_empty():
+			return
+		saved_plants = []
+		saved_zombies = []
+		for selected_card:Dictionary in Global.global_game_state.selected_cards:
+			saved_plants.append(int(selected_card.get("plant_type", CharacterRegistry.PlantType.Null)))
+			saved_zombies.append(int(selected_card.get("zombie_type", CharacterRegistry.ZombieType.Null)))
+	if saved_plants.size() != saved_zombies.size():
+		push_warning("Boss 检查点卡组数据长度不一致，保留关卡原预选卡")
+		return
+	var restored_plants:Array[CharacterRegistry.PlantType] = []
+	var restored_zombies:Array[CharacterRegistry.ZombieType] = []
+	for index in saved_plants.size():
+		restored_plants.append(int(saved_plants[index]) as CharacterRegistry.PlantType)
+		restored_zombies.append(int(saved_zombies[index]) as CharacterRegistry.ZombieType)
+	game_para.pre_choosed_card_list_plant = restored_plants
+	game_para.pre_choosed_card_list_zombie = restored_zombies
 
 #endregion
 #region 更新全局关卡数据

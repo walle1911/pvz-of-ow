@@ -238,6 +238,17 @@ func get_save_game_data_card_manager()->Dictionary:
 	match self.card_mode:
 		ConstLevelData.E_CardMode.Norm:
 			save_game_data_card_manager["curr_sun_value"] = card_slot_battle.sun_value
+			## Boss 检查点会重新实例化整张主游戏场景，必须一并保存本局实际出战卡。
+			## 两个数组按相同下标对齐，Null 表示该位置属于另一种角色类型。
+			var selected_plant_types:Array[int] = []
+			var selected_zombie_types:Array[int] = []
+			for card:Card in card_slot_battle.curr_cards:
+				if not is_instance_valid(card):
+					continue
+				selected_plant_types.append(int(card.card_plant_type))
+				selected_zombie_types.append(int(card.card_zombie_type))
+			save_game_data_card_manager["selected_plant_types"] = selected_plant_types
+			save_game_data_card_manager["selected_zombie_types"] = selected_zombie_types
 	return save_game_data_card_manager
 
 func load_game_data_card_manager(save_game_data_card_manager:Dictionary):
