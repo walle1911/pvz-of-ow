@@ -142,7 +142,7 @@ func _shoot_bullet():
 		play_throw_sfx()
 
 
-## 录制导演关卡用此弱引用让在途子弹跟随发射者的冻结归属。
+## 记录子弹发射者；导演关卡用它继承分幕，Echo 用它识别僵尸子弹的致死来源。
 func _mark_bullet_source_for_recording(bullet: Bullet000Base) -> void:
 	var current_node: Node = self
 	while is_instance_valid(current_node):

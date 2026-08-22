@@ -150,7 +150,18 @@ func _attack_zombie(zombie:Zombie000Base):
 func _attack_plant(plant:Plant000Base):
 	plant = get_first_be_hit_plant_in_cell(plant)
 	## 攻击敌人
-	plant.be_attacked_bullet(attack_value, bullet_mode, true, trigger_be_attack_sfx)
+	var source_zombie_type := get_attack_source_zombie_type()
+	if bullet_camp == CharacterRegistry.CharacterType.Zombie \
+	and source_zombie_type != CharacterRegistry.ZombieType.Null:
+		plant.be_attacked_bullet_from_zombie(
+			attack_value,
+			bullet_mode,
+			true,
+			trigger_be_attack_sfx,
+			source_zombie_type
+		)
+	else:
+		plant.be_attacked_bullet(attack_value, bullet_mode, true, trigger_be_attack_sfx)
 
 
 ## 直线子弹先对壳类进行攻击

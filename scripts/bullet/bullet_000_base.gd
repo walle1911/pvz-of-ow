@@ -11,3 +11,8 @@ class_name Bullet000Base
 @export var bullet_camp:CharacterRegistry.CharacterType = CharacterRegistry.CharacterType.Plant
 ## 只叠加蓝光不升级类型（三线射手等特殊植物使用）
 @export var is_glow_upgrade_only: bool = false
+
+
+## 僵尸子弹即使在发射者先死亡后才命中，也能保留其角色类型作为致死来源。
+func get_attack_source_zombie_type() -> CharacterRegistry.ZombieType:
+	return get_meta(&"attack_source_zombie_type", CharacterRegistry.ZombieType.Null)

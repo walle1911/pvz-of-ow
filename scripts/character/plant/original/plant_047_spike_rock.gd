@@ -33,3 +33,5 @@ func _attack_once():
 func be_flattened_from_enemy(character:Character000Base):
 	character.be_caltrop()
 	hp_component.Hp_loss(int(hp_component.max_hp/9.0),BulletRegistry.AttackMode.Norm, true)
+	if character is Zombie000Base:
+		try_echo_copy_killing_zombie(character)

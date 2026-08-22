@@ -78,7 +78,19 @@ func _ready() -> void:
 
 	for target:Character000Base in _targets:
 		if is_instance_valid(target) and not target.is_death:
-			target.be_attacked_bullet(attack_value, bullet_mode, true, true)
+			var source_zombie_type := get_attack_source_zombie_type()
+			if target is Plant000Base \
+			and bullet_camp == CharacterRegistry.CharacterType.Zombie \
+			and source_zombie_type != CharacterRegistry.ZombieType.Null:
+				(target as Plant000Base).be_attacked_bullet_from_zombie(
+					attack_value,
+					bullet_mode,
+					true,
+					true,
+					source_zombie_type
+				)
+			else:
+				target.be_attacked_bullet(attack_value, bullet_mode, true, true)
 	_start_dissolve()
 
 

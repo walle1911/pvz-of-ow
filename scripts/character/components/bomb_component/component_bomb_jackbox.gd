@@ -72,7 +72,10 @@ func _bomb_all_enemy():
 			var character:Character000Base = area.owner
 			if character.lane >= owner.lane -1 and character.lane <= owner.lane + 1:
 				## 角色死亡直接消失
-				character.character_death_disappear()
+				if character is Plant000Base and owner is Zombie000Base:
+					(character as Plant000Base).be_killed_by_zombie(owner)
+				else:
+					character.character_death_disappear()
 		elif area.owner is ScaryPot:
 			var pot:ScaryPot = area.owner
 			if pot.lane >= owner.lane -1 and pot.lane <= owner.lane + 1:

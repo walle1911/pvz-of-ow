@@ -65,7 +65,11 @@ script/source = "extends Node2D
 
 
 func activate_it():
-	reparent(owner.get_parent())
+	var old_parent := get_parent()
+	if not is_instance_valid(old_parent) or not is_instance_valid(old_parent.get_parent()):
+		queue_free()
+		return
+	reparent(old_parent.get_parent())
 	gpu_particles_2d.emitting = true
 	gpu_particles_2d_2.emitting = true
 

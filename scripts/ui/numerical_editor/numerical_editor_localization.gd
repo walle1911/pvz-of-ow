@@ -81,6 +81,7 @@ const PROPERTY_LABELS := {
 	"idle_status": "待机状态编号", "idle_status_max": "待机状态最大编号", "imitater_gray_strength": "模仿者灰度强度",
 	"imitater_whiteness": "模仿者泛白强度", "imitater_zombie_brightness": "模仿僵尸亮度", "imitater_zombie_contrast": "模仿僵尸对比度",
 	"imitater_zombie_gray_strength": "模仿僵尸灰度强度", "imitater_zombie_whiteness": "模仿僵尸泛白强度",
+	"echo_killer_copy_window_seconds": "Echo 变身后复制击杀者窗口（秒）",
 	"init_attack_value_per_min": "啃食伤害", "is_activate_umbrella": "启用叶子保护伞", "is_auto_bomb_in_death": "死亡时自动爆炸",
 	"is_bite": "处于咬合状态", "is_bullet": "启用子弹攻击", "is_caltrop": "作为地刺", "is_can_ladder": "允许搭梯",
 	"is_charge": "启用蓄力", "is_cherry_bomb": "作为樱桃炸弹", "is_chewing": "处于咀嚼状态", "is_dectection": "启用检测",

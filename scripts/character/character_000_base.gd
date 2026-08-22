@@ -80,13 +80,15 @@ var is_can_death_language:=true
 signal signal_update_speed(speed_factor_product:float)
 
 
-## 录制导演关卡：角色发出的任何普通或技能子弹都继承角色的编组。
-## 同时保存弱引用与组号；即使角色随后死亡，子弹仍能保持原编组。
+## 角色发出的任何普通或技能子弹都保存来源；导演关卡同时用它继承编组。
+## 僵尸子弹额外固化发射者类型，使在途子弹仍可作为 Echo 的致死来源。
 func mark_bullet_recording_source(bullet: Node) -> void:
 	if not is_instance_valid(bullet):
 		return
 	bullet.set_meta(&"recording_source_character_ref", weakref(self))
 	bullet.set_meta(&"recording_freeze_group", int(get_meta(&"recording_freeze_group", -1)))
+	if self is Zombie000Base:
+		bullet.set_meta(&"attack_source_zombie_type", (self as Zombie000Base).zombie_type)
 
 @export_group("动画状态")
 @export var is_death:=false

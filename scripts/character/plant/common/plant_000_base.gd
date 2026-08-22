@@ -1,6 +1,8 @@
 extends Character000Base
 class_name Plant000Base
 
+const ECHO_KILLER_COPY_PRE_READY_KEY := &"echo_killer_copy"
+
 @onready var sleep_component: SleepComponent = %SleepComponent
 @onready var blink_component: BlinkComponent = %BlinkComponent
 ## 花园组件
@@ -32,6 +34,15 @@ var is_death_free:= true
 var is_imitater_material:=false
 ## 攻击伤害倍率来源。key 为来源实例 ID，value 为倍率。
 var attack_damage_multiplier_sources:Dictionary[int, float] = {}
+## Echo 成功变身后的短暂亡语：只记录带有明确僵尸来源的致死攻击。
+var _echo_killer_copy_deadline_msec := -1
+var _echo_killer_copy_triggered := false
+var _echo_killer_copy_effect:Node2D
+var _echo_killer_copy_tint_color := Color(0.72, 0.88, 1.0, 1.0)
+var _echo_killer_copy_whiteness := 0.62
+var _echo_killer_copy_gray_strength := 0.0
+var _echo_killer_copy_brightness := 0.08
+var _echo_killer_copy_contrast := 0.95
 #endregion
 
 #region 植物动画
@@ -100,6 +111,27 @@ func init_plant(plant_init_para:Dictionary):
 			garden_date_init = plant_init_para[E_PInitAttr.GardenDate]
 			## 是否为水族馆背景，动画变化
 			is_garden_aquarium = garden_date_init["curr_garden_bg_type"] == GardenManager.E_GardenBgType.Aquarium
+
+
+## 在节点进入场景树前挂载 Echo 的限时亡语状态和备用变身特效。
+func apply_common_pre_ready_data(data:Dictionary) -> void:
+	var echo_config:Variant = data.get(ECHO_KILLER_COPY_PRE_READY_KEY)
+	if not echo_config is Dictionary:
+		return
+	var config:Dictionary = echo_config
+	var window_seconds := maxf(float(config.get(&"window_seconds", 0.0)), 0.0)
+	if window_seconds <= 0.0:
+		return
+	_echo_killer_copy_deadline_msec = Time.get_ticks_msec() + int(window_seconds * 1000.0)
+	_echo_killer_copy_tint_color = config.get(&"tint_color", _echo_killer_copy_tint_color)
+	_echo_killer_copy_whiteness = float(config.get(&"whiteness", _echo_killer_copy_whiteness))
+	_echo_killer_copy_gray_strength = float(config.get(&"gray_strength", _echo_killer_copy_gray_strength))
+	_echo_killer_copy_brightness = float(config.get(&"brightness", _echo_killer_copy_brightness))
+	_echo_killer_copy_contrast = float(config.get(&"contrast", _echo_killer_copy_contrast))
+	var effect:Variant = config.get(&"effect")
+	if effect is Node2D:
+		_echo_killer_copy_effect = effect
+		add_child(_echo_killer_copy_effect)
 
 ## 初始化正常出战角色信号连接
 func ready_norm_signal_connect():
@@ -170,18 +202,145 @@ func be_bungi()->Node2D:
 ## 被僵尸啃食
 ## attack_value:伤害
 ## attack_zombie:攻击的僵尸
-func be_zombie_eat(attack_value:int, _attack_zombie:Zombie000Base):
+func be_zombie_eat(attack_value:int, attack_zombie:Zombie000Base):
+	var was_alive := not is_death and not hp_component.is_death
 	hp_component.Hp_loss(attack_value,BulletRegistry.AttackMode.Penetration, true, false)
+	if was_alive and (is_death or hp_component.is_death):
+		_try_echo_copy_killing_zombie(attack_zombie)
 
 ## 被僵尸啃食一次发光
 func be_zombie_eat_once(attack_zombie:Zombie000Base):
+	var was_alive := not is_death and not hp_component.is_death
 	body.body_light()
 	_be_zombie_eat_once_special(attack_zombie)
+	if was_alive and (is_death or hp_component.is_death):
+		_try_echo_copy_killing_zombie(attack_zombie)
 
 
 ## 被僵尸啃食一次特殊效果,魅惑\大蒜\我是僵尸生产阳光
 func _be_zombie_eat_once_special(_attack_zombie:Zombie000Base):
 	pass
+
+
+## 僵尸子弹保留发射者类型；只有这次命中确实致死时才触发 Echo 亡语。
+func be_attacked_bullet_from_zombie(
+	attack_value:int,
+	bullet_mode:BulletRegistry.AttackMode,
+	is_drop:bool,
+	trigger_be_attack_SFX:bool,
+	attack_zombie_type:CharacterRegistry.ZombieType
+) -> void:
+	var was_alive := not is_death and not hp_component.is_death
+	be_attacked_bullet(attack_value, bullet_mode, is_drop, trigger_be_attack_SFX)
+	if was_alive and (is_death or hp_component.is_death):
+		_try_echo_copy_killing_zombie_type(attack_zombie_type)
+
+
+## 带有明确僵尸来源的强制死亡（例如玩偶匣爆炸）。
+func be_killed_by_zombie(attack_zombie:Zombie000Base) -> void:
+	var was_alive := not is_death and not hp_component.is_death
+	character_death_disappear()
+	if was_alive and (is_death or hp_component.is_death):
+		_try_echo_copy_killing_zombie(attack_zombie)
+
+
+## 被僵尸碾压致死也属于带有明确攻击者的死亡。
+func be_flattened_from_enemy(character:Character000Base):
+	var was_alive := not is_death and not hp_component.is_death
+	super(character)
+	if was_alive and (is_death or hp_component.is_death) and character is Zombie000Base:
+		_try_echo_copy_killing_zombie(character)
+
+
+## 给少数自行结算碾压伤害的植物复用（例如地刺王）。
+func try_echo_copy_killing_zombie(attack_zombie:Zombie000Base) -> void:
+	if is_death or hp_component.is_death:
+		_try_echo_copy_killing_zombie(attack_zombie)
+
+
+func _try_echo_copy_killing_zombie(attack_zombie:Zombie000Base) -> void:
+	if not is_instance_valid(attack_zombie):
+		return
+	_try_echo_copy_killing_zombie_type(attack_zombie.zombie_type)
+
+
+func _try_echo_copy_killing_zombie_type(attack_zombie_type:CharacterRegistry.ZombieType) -> void:
+	if _echo_killer_copy_triggered \
+	or _echo_killer_copy_deadline_msec < 0 \
+	or Time.get_ticks_msec() >= _echo_killer_copy_deadline_msec \
+	or attack_zombie_type == CharacterRegistry.ZombieType.Null:
+		return
+	_echo_killer_copy_triggered = true
+	_activate_echo_killer_copy_effect()
+	_create_echo_imitater_zombie(attack_zombie_type)
+
+
+func _activate_echo_killer_copy_effect() -> void:
+	if not is_instance_valid(_echo_killer_copy_effect):
+		return
+	_echo_killer_copy_effect.visible = true
+	if _echo_killer_copy_effect.has_method(&"activate_it"):
+		_echo_killer_copy_effect.activate_it()
+
+
+func _create_echo_imitater_zombie(zombie_type:CharacterRegistry.ZombieType) -> void:
+	if not is_instance_valid(plant_cell) \
+	or not is_instance_valid(Global.main_game) \
+	or not is_instance_valid(Global.main_game.zombie_manager):
+		return
+	var lane_index := plant_cell.row_col.x
+	if lane_index < 0 or lane_index >= Global.main_game.zombie_manager.all_zombie_rows.size():
+		return
+	var zombie_parent:ZombieRow = Global.main_game.zombie_manager.all_zombie_rows[lane_index]
+	var zombie_init_para:Dictionary = {
+		Zombie000Base.E_ZInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsNorm,
+		Zombie000Base.E_ZInitAttr.Lane:lane_index,
+	}
+	var init_zombie_special := GlobalUtils.get_special_zombie_callable(zombie_type, plant_cell)
+	var recording_stage:Variant = null
+	if has_meta(&"recording_freeze_group"):
+		recording_stage = get_meta(&"recording_freeze_group")
+	## 导演模式会在僵尸创建信号发出时立即按分幕决定显隐。
+	## 因此复制体必须在 add_child() 和创建信号之前继承 Echo 植物的分幕。
+	var prepare_zombie := Callable(self, &"_prepare_echo_imitater_zombie").bind(
+		init_zombie_special,
+		recording_stage
+	)
+	var zombie:Zombie000Base = Global.main_game.zombie_manager.create_norm_zombie(
+		zombie_type,
+		zombie_parent,
+		zombie_init_para,
+		Vector2(global_position.x, zombie_parent.zombie_create_position.global_position.y),
+		prepare_zombie
+	)
+	_apply_echo_imitater_zombie_effects(zombie)
+
+
+func _prepare_echo_imitater_zombie(
+	zombie:Zombie000Base,
+	init_zombie_special:Callable,
+	recording_stage:Variant
+) -> void:
+	if not init_zombie_special.is_null():
+		init_zombie_special.call(zombie)
+	if recording_stage != null:
+		zombie.set_meta(&"recording_freeze_group", int(recording_stage))
+
+
+func _apply_echo_imitater_zombie_effects(zombie:Zombie000Base) -> void:
+	if not is_instance_valid(zombie):
+		return
+	zombie.be_hypno()
+	if not is_instance_valid(zombie.body):
+		return
+	zombie.body.imitater_update_material()
+	if zombie.body.material is ShaderMaterial:
+		var mat:ShaderMaterial = zombie.body.material
+		mat.set_shader_parameter(&"tint_color", _echo_killer_copy_tint_color)
+		mat.set_shader_parameter(&"whiteness", _echo_killer_copy_whiteness)
+		mat.set_shader_parameter(&"gray_strength", _echo_killer_copy_gray_strength)
+		mat.set_shader_parameter(&"brightness", _echo_killer_copy_brightness)
+		mat.set_shader_parameter(&"contrast", _echo_killer_copy_contrast)
 
 ## 植物死亡
 func character_death():

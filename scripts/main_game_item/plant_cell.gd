@@ -150,9 +150,9 @@ func plant_be_flattened():
 
 #region 植物(僵尸)种植(死亡)
 ## 模仿者创建植物
-func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho):
+func imitater_create_plant(plant_type:CharacterRegistry.PlantType, is_plant_start_effect:=true, imitater_variant:=CharacterRegistry.PlantType.P999ImitaterEcho, pre_ready_data:Dictionary = {}):
 	await get_tree().process_frame
-	var plant = create_plant(plant_type, false, is_plant_start_effect, true, false, imitater_variant)
+	var plant = create_plant(plant_type, false, is_plant_start_effect, true, false, imitater_variant, pre_ready_data)
 	return plant
 ## 新植物种植
 ##[is_imitater:bool] 植物是否为模仿者
@@ -197,6 +197,7 @@ func create_plant(plant_type:CharacterRegistry.PlantType, is_imitater:=false, is
 		plant = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantScenes).instantiate()
 
 	## 少数由玩法生成的植物需要在进入场景树、执行 _ready() 之前设置初始状态。
+	plant.apply_common_pre_ready_data(pre_ready_data)
 	if not pre_ready_data.is_empty() and plant.has_method("apply_pre_ready_data"):
 		plant.apply_pre_ready_data(pre_ready_data)
 
