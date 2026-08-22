@@ -219,6 +219,25 @@ func _try_roll_for_charge() -> bool:
 				side_cells.append(side_cell)
 		if not side_cells.is_empty():
 			target_cell = side_cells.pick_random()
+
+	## 所有正常落脚格都被堵住时，才允许按原来的后退、侧移顺序滚入空水格。
+	if target_cell == null and back_column >= 0 and back_column < lane_cells.size():
+		var back_water_cell := lane_cells[back_column] as PlantCell
+		if _can_roll_into_water(back_water_cell):
+			target_cell = back_water_cell
+	if target_cell == null:
+		var water_side_cells:Array[PlantCell] = []
+		for target_lane in [row_col.x - 1, row_col.x + 1]:
+			if target_lane < 0 or target_lane >= all_plant_cells.size():
+				continue
+			var target_lane_cells:Array = all_plant_cells[target_lane]
+			if row_col.y < 0 or row_col.y >= target_lane_cells.size():
+				continue
+			var side_water_cell := target_lane_cells[row_col.y] as PlantCell
+			if _can_roll_into_water(side_water_cell):
+				water_side_cells.append(side_water_cell)
+		if not water_side_cells.is_empty():
+			target_cell = water_side_cells.pick_random()
 	if target_cell == null:
 		return false
 
@@ -239,7 +258,16 @@ func _can_roll_into_cell(target_cell:PlantCell) -> bool:
 	return is_instance_valid(plant_condition) and plant_condition.judge_is_can_plant(target_cell, plant_type)
 
 
+func _can_roll_into_water(target_cell:PlantCell) -> bool:
+	if not is_instance_valid(target_cell):
+		return false
+	if not (target_cell.curr_condition & 8 or target_cell.curr_condition & 16):
+		return false
+	return target_cell.get_curr_plant_num() == 0
+
+
 func _move_to_roll_cell(target_cell:PlantCell) -> void:
+	var falls_into_water:= bool(target_cell.curr_condition & 8 or target_cell.curr_condition & 16)
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(
 		plant_type,
 		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
@@ -264,7 +292,7 @@ func _move_to_roll_cell(target_cell:PlantCell) -> void:
 	_backstep_tween.tween_property(self, ^"global_position", target_parent.global_position, backstep_duration)
 	_backstep_tween.tween_method(_update_backstep_roll_visual, 0.0, 1.0, backstep_duration)
 	_backstep_tween.chain()
-	_backstep_tween.tween_callback(_finish_backstep_roll)
+	_backstep_tween.tween_callback(_finish_backstep_roll.bind(target_cell, falls_into_water))
 
 
 func _start_trapped_short_roll() -> void:
@@ -456,11 +484,19 @@ func _update_backstep_roll_visual(progress:float) -> void:
 	body.position = _backstep_body_position + original_pivot_vector - transformed_pivot_vector
 
 
-func _finish_backstep_roll() -> void:
+func _finish_backstep_roll(target_cell:PlantCell, falls_into_water:bool) -> void:
 	body.position = _backstep_body_position
 	body.rotation = _backstep_body_rotation
 	body.scale = _backstep_body_scale
 	position = Vector2.ZERO
+	if falls_into_water and not is_death and is_instance_valid(target_cell):
+		var splash:Splash = SceneRegistry.SPLASH.instantiate()
+		target_cell.add_child(splash)
+		splash.global_position = Vector2(global_position.x, target_cell.global_position.y + target_cell.size.y)
+		splash.z_as_relative = z_as_relative
+		splash.z_index = z_index
+		character_death()
+		return
 	_skill_roll_finished = true
 	_start_forced_rise_after_roll()
 

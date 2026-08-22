@@ -150,9 +150,14 @@ func _get_facing_threat_direction(zombie:Zombie000Base) -> int:
 func _get_random_escape_cell(threat_dir:int) -> PlantCell:
 	if _is_recording_5757_scene():
 		var downward_cell := _get_cell_by_offset(Vector2i(1, 0))
-		return downward_cell if is_instance_valid(downward_cell) and _can_escape_to_cell(downward_cell) else null
+		if is_instance_valid(downward_cell) and _can_escape_to_cell(downward_cell):
+			return downward_cell
+		return downward_cell if _can_escape_into_water(downward_cell) else null
 	if smart_escape_route_enabled:
-		return _get_smart_escape_cell(threat_dir)
+		var smart_target:= _get_smart_escape_cell(threat_dir)
+		if is_instance_valid(smart_target):
+			return smart_target
+		return _get_forced_water_escape_cell(threat_dir)
 
 	var candidate_offsets := SIDE_CELL_OFFSETS.duplicate()
 	candidate_offsets.shuffle()
@@ -163,6 +168,20 @@ func _get_random_escape_cell(threat_dir:int) -> PlantCell:
 			continue
 		var target_cell := _get_cell_by_offset(offset)
 		if is_instance_valid(target_cell) and _can_escape_to_cell(target_cell):
+			return target_cell
+	return _get_forced_water_escape_cell(threat_dir)
+
+## 正常落脚格全部不可用时，才把空水格加入候选；仍不朝正在啃咬自己的威胁移动。
+func _get_forced_water_escape_cell(threat_dir:int) -> PlantCell:
+	var candidate_offsets := SIDE_CELL_OFFSETS.duplicate()
+	candidate_offsets.shuffle()
+	for offset:Vector2i in candidate_offsets:
+		if threat_dir == 1 and offset == FRONT_CELL_OFFSET:
+			continue
+		if threat_dir == -1 and offset == BACK_CELL_OFFSET:
+			continue
+		var target_cell:= _get_cell_by_offset(offset)
+		if _can_escape_into_water(target_cell):
 			return target_cell
 	return null
 
@@ -254,6 +273,15 @@ func _can_escape_to_cell(target_cell:PlantCell) -> bool:
 		return false
 	return not _cell_has_zombie(target_cell)
 
+func _can_escape_into_water(target_cell:PlantCell) -> bool:
+	if not is_instance_valid(target_cell) or target_cell == plant_cell:
+		return false
+	if not (target_cell.curr_condition & 8 or target_cell.curr_condition & 16):
+		return false
+	if target_cell.get_curr_plant_num() > 0:
+		return false
+	return not _cell_has_zombie(target_cell)
+
 func _cell_has_zombie(target_cell:PlantCell) -> bool:
 	if target_cell.row_col.x < 0 or target_cell.row_col.x >= Global.main_game.zombie_manager.all_zombies_2d.size():
 		return false
@@ -266,6 +294,7 @@ func _cell_has_zombie(target_cell:PlantCell) -> bool:
 	return false
 
 func _move_to_plant_cell(target_cell:PlantCell):
+	var falls_into_water:= bool(target_cell.curr_condition & 8 or target_cell.curr_condition & 16)
 	var plant_condition:ResourcePlantCondition = Global.character_registry.get_plant_info(plant_type, CharacterRegistry.PlantInfoAttribute.PlantConditionResource)
 	var place := plant_condition.place_plant_in_cell
 	var old_cell := plant_cell
@@ -284,4 +313,15 @@ func _move_to_plant_cell(target_cell:PlantCell):
 		_escape_tween.kill()
 	_escape_tween = create_tween()
 	_escape_tween.tween_property(self, ^"global_position", target_parent.global_position, escape_move_time)
-	_escape_tween.tween_callback(func(): position = Vector2.ZERO)
+	_escape_tween.tween_callback(_finish_escape_move.bind(target_cell, falls_into_water))
+
+func _finish_escape_move(target_cell:PlantCell, falls_into_water:bool) -> void:
+	position = Vector2.ZERO
+	if not falls_into_water or is_death or not is_instance_valid(target_cell):
+		return
+	var splash:Splash = SceneRegistry.SPLASH.instantiate()
+	target_cell.add_child(splash)
+	splash.global_position = Vector2(global_position.x, target_cell.global_position.y + target_cell.size.y)
+	splash.z_as_relative = z_as_relative
+	splash.z_index = z_index
+	character_death()

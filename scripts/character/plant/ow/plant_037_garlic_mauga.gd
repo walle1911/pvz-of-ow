@@ -31,6 +31,7 @@ var _chain_ground_bounds := Rect2()
 var _boundary_enforcement_deferred := false
 var _chain_intro_tween:Tween
 var _stomp_body_layer_raised := false
+var _submerged_after_stomp := false
 
 func ready_norm() -> void:
 	super()
@@ -116,6 +117,35 @@ func _begin_chain_skill_after_stomp() -> void:
 	_chain_ground_bounds = _get_current_cage_ground_bounds()
 	_create_cage_visual()
 	_chain_new_zombies_in_area()
+	if plant_cell.curr_condition & 8 or plant_cell.curr_condition & 16:
+		_submerge_after_stomp()
+
+## 水面落点沿用窝瓜的水花和退场表现，但保留根节点继续维持完整的笼中斗时长。
+func _submerge_after_stomp() -> void:
+	if _submerged_after_stomp or not is_instance_valid(plant_cell):
+		return
+	_submerged_after_stomp = true
+	var splash:Splash = SceneRegistry.SPLASH.instantiate()
+	plant_cell.add_child(splash)
+	splash.global_position = Vector2(global_position.x, plant_cell.global_position.y + plant_cell.size.y)
+	splash.z_as_relative = z_as_relative
+	splash.z_index = z_index
+
+	body.visible = false
+	shadow.visible = false
+	hp_component.visible = false
+	hurt_box_component.disable_component(ComponentNormBase.E_IsEnableFactor.Character)
+	area_2d_mouse.visible = false
+	area_2d_mouse.input_pickable = false
+
+	## 本体已经落水，立即释放格子；笼子和锁链仍由这个不可见控制节点维护。
+	var place:= _get_mauga_plant_place()
+	var free_callback:= plant_cell.one_plant_free.bind(self)
+	if signal_character_death.is_connected(free_callback):
+		signal_character_death.disconnect(free_callback)
+	if plant_cell.plant_in_cell.get(place) == self:
+		plant_cell.plant_in_cell[place] = null
+	plant_cell.one_plant_free(self)
 func _get_forward_plant_cell() -> PlantCell:
 	if not is_instance_valid(Global.main_game) or not is_instance_valid(plant_cell):
 		return null
@@ -414,6 +444,9 @@ func _finish_chain_skill() -> void:
 	_release_all_chains()
 	_remove_cage_visual()
 	hp_component.remove_damage_immunity(self)
+	if _submerged_after_stomp:
+		character_death()
+		return
 	if _pending_skill_cost_death:
 		_pending_skill_cost_death = false
 		hp_component.set_death_hp(0)
