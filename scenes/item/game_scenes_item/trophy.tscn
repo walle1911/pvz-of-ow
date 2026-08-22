@@ -140,9 +140,21 @@ text = "点击继续游戏"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="RewardContinueButton" type="Button" parent="RewardScreen"]
+z_index = 2
+offset_left = -180.0
+offset_top = 45.0
+offset_right = 180.0
+offset_bottom = 180.0
+mouse_default_cursor_shape = 2
+tooltip_text = "点击继续游戏"
+focus_mode = 0
+flat = true
+
 [node name="Winmusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_qvwtp")
 bus = &"SFX"
 
 [connection signal="mouse_entered" from="TrophyButton" to="." method="_on_trophy_button_mouse_entered"]
 [connection signal="pressed" from="TrophyButton" to="." method="_on_trophy_button_pressed"]
+[connection signal="pressed" from="RewardScreen/RewardContinueButton" to="." method="_on_reward_continue_pressed"]

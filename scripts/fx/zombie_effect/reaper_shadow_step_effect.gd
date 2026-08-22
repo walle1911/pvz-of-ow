@@ -39,7 +39,6 @@ func configure(mode:EffectMode, duration:float) -> void:
 
 func _process(delta:float) -> void:
 	elapsed += delta
-	var progress := clampf(elapsed / effect_duration, 0.0, 1.0)
 	if effect_mode == EffectMode.COUNTDOWN and is_instance_valid(_countdown_label):
 		var seconds_left := maxf(effect_duration - elapsed, 0.0)
 		_countdown_label.text = str(int(ceil(seconds_left)))
@@ -118,13 +117,13 @@ func _draw_smoke(progress:float, envelope:float, reverse:bool, amount_scale:floa
 		_draw_smoke_puff(pos, puff_scale, particle_alpha, float(particle[&"rotation"]) + elapsed * 0.22)
 
 
-func _draw_smoke_puff(pos:Vector2, puff_scale:float, alpha:float, rotation:float) -> void:
+func _draw_smoke_puff(pos:Vector2, puff_scale:float, alpha:float, puff_rotation:float) -> void:
 	if _shared_smoke_texture == null:
 		return
 	## 原版是黑色主体、暗靛紫边缘的厚重烟团，不是红雾或发光粒子。
-	draw_set_transform(pos, rotation, Vector2.ONE * puff_scale * 1.28)
+	draw_set_transform(pos, puff_rotation, Vector2.ONE * puff_scale * 1.28)
 	draw_texture(_shared_smoke_texture, Vector2(-32, -32), SHADOW_INDIGO * Color(1, 1, 1, alpha * 0.48))
-	draw_set_transform(pos, -rotation * 0.7, Vector2.ONE * puff_scale)
+	draw_set_transform(pos, -puff_rotation * 0.7, Vector2.ONE * puff_scale)
 	draw_texture(_shared_smoke_texture, Vector2(-32, -32), SMOKE_BLACK * Color(1, 1, 1, alpha * 0.74))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 

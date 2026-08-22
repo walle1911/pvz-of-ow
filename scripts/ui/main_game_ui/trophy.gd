@@ -14,6 +14,7 @@ class_name Trophy
 @onready var reward_flash: Sprite2D = $RewardScreen/RewardFlash
 @onready var reward_title: Label = $RewardScreen/Title
 @onready var reward_description: Label = $RewardScreen/Description
+@onready var reward_continue_button: Button = $RewardScreen/RewardContinueButton
 
 var reward_cards: Array[Card] = []
 var reward_is_being_collected := false
@@ -109,7 +110,7 @@ func _show_reward_plants(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 			progress_bar.visible = false
 		var card_button := reward_card.get_node_or_null("Button") as Button
 		if card_button != null:
-			card_button.pressed.connect(_on_reward_card_pressed, CONNECT_ONE_SHOT)
+			card_button.pressed.connect(_on_reward_continue_pressed, CONNECT_ONE_SHOT)
 
 	SoundManager.play_other_SFX("prize")
 	var reveal := create_tween().set_parallel(true)
@@ -160,10 +161,11 @@ func _update_reward_copy(plant_types: Array[CharacterRegistry.PlantType]) -> voi
 	reward_description.add_theme_font_size_override("font_size", description_font_size)
 
 
-func _on_reward_card_pressed() -> void:
+func _on_reward_continue_pressed() -> void:
 	if reward_is_being_collected or reward_cards.is_empty():
 		return
 	reward_is_being_collected = true
+	reward_continue_button.disabled = true
 	for reward_card in reward_cards:
 		var card_button := reward_card.get_node_or_null("Button") as Button
 		if card_button != null:
