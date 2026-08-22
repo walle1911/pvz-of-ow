@@ -52,7 +52,7 @@
 	"coverCharacters": [
 		{
 			"kind": "plant",
-			"type": 11
+			"type": 43
 		}
 	],
 	"earlyRefreshDelay": 1.5,
