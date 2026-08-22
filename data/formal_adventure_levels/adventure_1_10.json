@@ -22,7 +22,7 @@
 	],
 	"bossConfig": {
 		"enabled": true,
-		"rewardPlant": 548,
+		"rewardPlant": 999,
 		"zombieType": 26
 	},
 	"chessboardConfig": {

@@ -177,6 +177,12 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			if RewardCardRuntime.is_plant_limited(int(plant_type), special_reward_source_dir):
 				continue
 			game_para.available_plant_types.append(plant_type)
+		## 开发者选关可以直接跳到任意关卡，因此 2-1 起按已经完成 1-10 的
+		## Boss 挑战处理，默认提供其 Echo 战利品，但不伪造或写入玩家存档。
+		if adventure_level_source == "developer" \
+		and _is_after_first_world_boss(game_para.level_id) \
+		and not game_para.available_plant_types.has(CharacterRegistry.PlantType.P999ImitaterEcho):
+			game_para.available_plant_types.append(CharacterRegistry.PlantType.P999ImitaterEcho)
 		## 仅目标关卡主动投放已获得的限定卡。
 		for limited_plant_type in RewardCardRuntime.limited_plant_types_for_level(game_para.level_id, special_reward_source_dir):
 			var plant_type := limited_plant_type as CharacterRegistry.PlantType
@@ -223,6 +229,11 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 	_apply_map(game_para, str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn")))
 	_apply_chessboard_config(game_para, level)
 	return {"ok": true, "game_para": game_para, "level": level, "error": ""}
+
+
+static func _is_after_first_world_boss(level_id: String) -> bool:
+	var parts := level_id.split("_")
+	return parts.size() == 3 and parts[0] == "adventure" and int(parts[1]) > 1
 
 
 static func _formal_adventure_card_limit(formal_preset_id: String) -> int:
