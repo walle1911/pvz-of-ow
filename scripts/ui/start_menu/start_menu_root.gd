@@ -12,8 +12,13 @@ const BUFF_BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.gdshader")
 const PRODUCER_NAME_COLOR := Color(1.0, 1.0, 0.62352943, 1.0)
 const PRODUCER_INFO_TEXT_Y := 88.0
+const CREDITS_DIALOG_WIDTH := 390.0
+const CREDITS_DIALOG_BUTTON_WIDTH := 160.0
 
 @onready var dialog: Dialog = $Dialog
+@onready var modal_input_blocker: Control = $ModalInputBlocker
+@onready var option_dialog: StartMenuOptionDialog = $StartMenuOptionDialog
+@onready var help_dialog: Dialog = $Dialog_Help
 @onready var producer_info_dialog: Dialog = $ProducerInfoDialog
 @onready var producer_info_text: RichTextLabel = $ProducerInfoDialog/InfoText
 @onready var producer_name_label_1: Label = $WoodSign/CreditSign/TextLine1/ProducerNameLabel1
@@ -132,6 +137,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		_apply_editor_menu_preview()
 		return
+	_apply_credits_dialog_frame_layout()
+	_setup_modal_input_blocking()
 	_apply_developer_mode(Global.return_to_developer_mode)
 	Global.return_to_developer_mode = false
 	$Cloud/AnimationPlayer.play("Idle")
@@ -160,6 +167,45 @@ func _hide_unavailable_start_menu_items() -> void:
 	## 礼盒稍后由开发者模式状态统一控制；普通模式始终不可见、不可点击。
 	gift_button.hide()
 	gift_button.process_mode = Node.PROCESS_MODE_DISABLED
+
+
+func _apply_credits_dialog_frame_layout() -> void:
+	## 实例子节点覆盖可能被 Godot 在重新保存继承场景时清除；运行时固定外框尺寸兜底。
+	## 文本节点的位置和尺寸仍由 01StartMenu.tscn 控制，方便在 Inspector 中手动微调。
+	for credits_dialog: Dialog in [help_dialog, producer_info_dialog]:
+		credits_dialog.offset_left = -CREDITS_DIALOG_WIDTH * 0.5
+		credits_dialog.offset_right = CREDITS_DIALOG_WIDTH * 0.5
+		var panel := credits_dialog.get_node("Panel") as Control
+		panel.offset_left = 0.0
+		panel.offset_right = CREDITS_DIALOG_WIDTH
+		var return_button := credits_dialog.get_node("PVZButton") as Control
+		return_button.offset_left = (CREDITS_DIALOG_WIDTH - CREDITS_DIALOG_BUTTON_WIDTH) * 0.5
+		return_button.offset_right = return_button.offset_left + CREDITS_DIALOG_BUTTON_WIDTH
+
+
+func _setup_modal_input_blocking() -> void:
+	for modal: Control in [option_dialog, help_dialog, producer_info_dialog, dialog]:
+		modal.visibility_changed.connect(_sync_modal_input_blocker)
+	_sync_modal_input_blocker()
+
+
+func _show_modal_input_blocker() -> void:
+	## 先于弹窗的短延迟启用，避免快速连续点击在同一时刻打开多个弹窗。
+	modal_input_blocker.visible = true
+	modal_input_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+
+
+func _sync_modal_input_blocker() -> void:
+	var has_visible_modal := (
+		option_dialog.visible
+		or help_dialog.visible
+		or producer_info_dialog.visible
+		or dialog.visible
+	)
+	modal_input_blocker.visible = has_visible_modal
+	modal_input_blocker.mouse_filter = (
+		Control.MOUSE_FILTER_STOP if has_visible_modal else Control.MOUSE_FILTER_IGNORE
+	)
 
 
 func _play_overwatch_logo_intro() -> void:
@@ -570,6 +616,7 @@ var garden_need_water:=true
 
 ## 功能未实现
 func _unrealized():
+	_show_modal_input_blocker()
 	dialog.appear_dialog()
 
 ## 开始游戏
@@ -634,11 +681,13 @@ func _on_level_workshop_button_pressed() -> void:
 
 #region 选项
 func _on_option_button_1_pressed() -> void:
-	$StartMenuOptionDialog.appear_menu()
+	_show_modal_input_blocker()
+	option_dialog.appear_menu()
 
 
 func _on_option_button_2_pressed() -> void:
-	$Dialog_Help.appear_dialog()
+	_show_modal_input_blocker()
+	help_dialog.appear_dialog()
 
 
 func _on_acknowledgements_button_mouse_entered() -> void:
@@ -668,6 +717,7 @@ func _on_producer_name_label_2_pressed() -> void:
 
 
 func _show_producer_info(info: String, line_separation: int = 0, vertical_offset: float = 0.0) -> void:
+	_show_modal_input_blocker()
 	producer_info_text.text = info
 	producer_info_text.position.y = PRODUCER_INFO_TEXT_Y + vertical_offset
 	if line_separation > 0:

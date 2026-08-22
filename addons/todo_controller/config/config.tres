@@ -455,6 +455,7 @@ script_list_meta = {
 "res://scripts/ui/start_menu/adventure_mode_dialog.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_option_dialog.gd": [-1, -1],
 "res://scripts/ui/start_menu/start_menu_root.gd": [-1, -1],
+"res://scripts/ui/start_menu/title_loading_screen.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/canvas_layer_control.gd": [-1, -1],
 "res://scripts/ui/ui_main_game_menu/main_game_menu_option_dialog.gd": [-1, -1],
 "res://scripts/util/image_combiner.gd": [-1, -1],

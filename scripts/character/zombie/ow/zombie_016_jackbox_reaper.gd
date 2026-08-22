@@ -16,6 +16,7 @@ const OUTSIDE_BATTLEFIELD_SPEED := 2.0
 @export var shadow_step_landing_jitter := Vector2(-8.0, 8.0)
 
 var _shadow_step_started := false
+var _shadow_step_fuse_active := false
 var _reference_total_fuse := 0.0
 var _reference_spawn_global_position := Vector2.ZERO
 var _body_modulate_before_step := Color.WHITE
@@ -79,6 +80,15 @@ func _begin_shadow_step() -> void:
 	))
 
 	_play_shadow_step(target_position)
+
+
+func _strigger_bomb() -> void:
+	## 暗影步期间只接受“落地后引信”的 timeout。即使旧 Timer 信号已经排进
+	## 消息队列，也不能在下沉或重构过程中提前切进开匣动画。
+	if _shadow_step_started and not _shadow_step_fuse_active:
+		return
+	_shadow_step_fuse_active = false
+	super()
 
 
 func _play_shadow_step(target_position:Vector2) -> void:
@@ -145,7 +155,10 @@ func _play_shadow_step(target_position:Vector2) -> void:
 
 	move_component.update_move_factor(false, MoveComponent.E_MoveFactor.IsCharacter)
 	attack_component.enable_component(ComponentNormBase.E_IsEnableFactor.Character)
-	bomb_component_jackbox.jack_bomb_timer.start(shadow_step_fuse)
+	if not bomb_component_jackbox.is_enabling:
+		return
+	_shadow_step_fuse_active = true
+	bomb_component_jackbox.start_bomb_timer(shadow_step_fuse)
 	var countdown_fx:Node2D = ShadowStepEffect.new()
 	add_child(countdown_fx)
 	countdown_fx.z_index = 4

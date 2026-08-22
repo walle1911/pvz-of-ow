@@ -22,6 +22,9 @@ func _run() -> void:
 	if not await _test_reaper_scene_integration():
 		get_tree().quit(1)
 		return
+	if not await _test_jackbox_pop_order():
+		get_tree().quit(1)
+		return
 	if not await _test_effect_lifecycle():
 		get_tree().quit(1)
 		return
@@ -86,7 +89,36 @@ func _test_reaper_scene_integration() -> bool:
 		reaper.queue_free()
 		return false
 	destination_effect.queue_free()
+	## 模拟死亡/失去匣子与 timeout 同帧：迟到信号不得把角色切进开匣动画。
+	reaper.bomb_component_jackbox.signal_trigger_bomb.connect(
+		Callable(reaper, "_strigger_bomb")
+	)
+	reaper.bomb_component_jackbox.disable_component(ComponentNormBase.E_IsEnableFactor.Death)
+	reaper.bomb_component_jackbox.call("_on_jack_bomb_timer_timeout")
+	reaper.call("_strigger_bomb")
+	if reaper.is_pop:
+		push_error("爆炸组件禁用后，迟到的 timeout 仍触发了开匣动画")
+		reaper.queue_free()
+		return false
 	reaper.queue_free()
+	await get_tree().process_frame
+	return true
+
+
+func _test_jackbox_pop_order() -> bool:
+	var scene := load("res://scenes/character/zombie/zombie_516_jackbox.tscn") as PackedScene
+	var jackbox := scene.instantiate() as Zombie016Jackbox
+	jackbox.character_init_type = Character000Base.E_CharacterInitType.IsShow
+	add_child(jackbox)
+	await get_tree().process_frame
+	set_meta(&"original_jackbox_bomb_triggered", false)
+	jackbox.bomb_component_jackbox.signal_bomb_once.connect(
+		func(): set_meta(&"original_jackbox_bomb_triggered", true)
+	)
+	jackbox.finish_jackbox_pop()
+	if not bool(get_meta(&"original_jackbox_bomb_triggered")):
+		push_error("玩偶匣开匣收尾没有按先爆炸、后删除的顺序执行")
+		return false
 	await get_tree().process_frame
 	return true
 
