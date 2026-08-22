@@ -158,11 +158,7 @@ func _play_shadow_step(target_position:Vector2) -> void:
 	if not bomb_component_jackbox.is_enabling:
 		return
 	_shadow_step_fuse_active = true
-	bomb_component_jackbox.start_bomb_timer(shadow_step_fuse)
-	var countdown_fx:Node2D = ShadowStepEffect.new()
-	add_child(countdown_fx)
-	countdown_fx.z_index = 4
-	countdown_fx.configure(ShadowStepEffect.EffectMode.COUNTDOWN, shadow_step_fuse)
+	bomb_component_jackbox.jack_bomb_timer.start(shadow_step_fuse)
 
 
 func _teleport_to(target_position:Vector2) -> void:

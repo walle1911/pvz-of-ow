@@ -7,7 +7,6 @@ enum EffectMode {
 	DEPARTURE,
 	DESTINATION,
 	ARRIVAL,
-	COUNTDOWN,
 }
 
 const VOID_BLACK := Color(0.003, 0.004, 0.012, 0.96)
@@ -21,7 +20,6 @@ static var _shared_smoke_texture:GradientTexture2D
 var effect_mode := EffectMode.DEPARTURE
 var effect_duration := 0.8
 var elapsed := 0.0
-var _countdown_label:Label
 var _smoke_particles:Array[Dictionary] = []
 var _shards:Array[Dictionary] = []
 var _tendrils:Array[Dictionary] = []
@@ -33,19 +31,10 @@ func configure(mode:EffectMode, duration:float) -> void:
 	elapsed = 0.0
 	_ensure_smoke_texture()
 	_build_particles()
-	if effect_mode == EffectMode.COUNTDOWN:
-		_create_countdown_label()
 	queue_redraw()
 
 func _process(delta:float) -> void:
 	elapsed += delta
-	if effect_mode == EffectMode.COUNTDOWN and is_instance_valid(_countdown_label):
-		var seconds_left := maxf(effect_duration - elapsed, 0.0)
-		_countdown_label.text = str(int(ceil(seconds_left)))
-		var urgency := 1.0 - seconds_left / effect_duration
-		var beat := 1.0 + sin(elapsed * TAU * lerpf(1.5, 4.2, urgency)) * 0.07
-		_countdown_label.scale = Vector2.ONE * beat
-		_countdown_label.pivot_offset = _countdown_label.size * 0.5
 	queue_redraw()
 	if elapsed >= effect_duration:
 		queue_free()
@@ -60,8 +49,6 @@ func _draw() -> void:
 			_draw_destination(progress)
 		EffectMode.ARRIVAL:
 			_draw_shadow_step(progress, true)
-		EffectMode.COUNTDOWN:
-			_draw_countdown(progress)
 
 
 func _draw_shadow_step(progress:float, arriving:bool) -> void:
@@ -91,12 +78,6 @@ func _draw_destination(progress:float) -> void:
 	var envelope := appear * disappear
 	_draw_ground_stain(29.0, 0.13 * envelope)
 	## 传送前目的地只显示贴地暗影，不绘制任何可能被看成人形的纵向烟雾。
-
-
-func _draw_countdown(_progress:float) -> void:
-	## 暗影步在重构完成后立即散去。五秒阶段仅由数字表达爆炸倒计时，
-	## 不让一团持续跟随角色的烟雾破坏原版“出现后恢复实体”的节奏。
-	pass
 
 
 func _draw_smoke(progress:float, envelope:float, reverse:bool, amount_scale:float) -> void:
@@ -233,7 +214,7 @@ func _build_particles() -> void:
 	_tendrils.clear()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(get_instance_id()) * 7919 + int(effect_mode) * 104729
-	var smoke_count := 26 if effect_mode != EffectMode.COUNTDOWN else 0
+	var smoke_count := 26
 	for i in range(smoke_count):
 		_smoke_particles.append({
 			&"height": rng.randf_range(0.0, 1.0),
@@ -283,17 +264,3 @@ func _ensure_smoke_texture() -> void:
 	_shared_smoke_texture.fill = GradientTexture2D.FILL_RADIAL
 	_shared_smoke_texture.fill_from = Vector2(0.5, 0.5)
 	_shared_smoke_texture.fill_to = Vector2(1.0, 0.5)
-
-
-func _create_countdown_label() -> void:
-	_countdown_label = Label.new()
-	_countdown_label.position = Vector2(-28, -184)
-	_countdown_label.size = Vector2(56, 42)
-	_countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_countdown_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_countdown_label.add_theme_font_size_override(&"font_size", 27)
-	_countdown_label.add_theme_color_override(&"font_color", WISP_VIOLET * Color(1, 1, 1, 0.94))
-	_countdown_label.add_theme_color_override(&"font_shadow_color", Color(0.01, 0.0, 0.0, 0.98))
-	_countdown_label.add_theme_constant_override(&"shadow_offset_x", 2)
-	_countdown_label.add_theme_constant_override(&"shadow_offset_y", 2)
-	add_child(_countdown_label)

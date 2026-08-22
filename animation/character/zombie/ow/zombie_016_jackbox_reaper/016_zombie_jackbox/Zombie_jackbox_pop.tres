@@ -1731,6 +1731,6 @@ tracks/141/keys = {
 "method": &"sfx_jack_suprise"
 }, {
 "args": [],
-"method": &"finish_jackbox_pop"
+"method": &"character_death_disappear"
 }]
 }

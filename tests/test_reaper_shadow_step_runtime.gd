@@ -81,7 +81,7 @@ func _run() -> void:
 		func(): set_meta(&"reaper_bomb_triggered", true)
 	)
 	## 缩短本测试余下的等待，但仍走真实 Timer -> 开匣动画 -> bomb_once 全链路。
-	reaper.bomb_component_jackbox.start_bomb_timer(0.1)
+	reaper.bomb_component_jackbox.jack_bomb_timer.start(0.1)
 	await get_tree().create_timer(2.0).timeout
 	if not bool(get_meta(&"reaper_bomb_triggered")):
 		var debug_state := "freed"
