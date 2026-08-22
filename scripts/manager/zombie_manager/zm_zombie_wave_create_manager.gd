@@ -256,7 +256,8 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 				print(special_base_weight)
 			## 如果没有冰道
 			if GlobalUtils.sum_arr(special_base_weight) == 0:
-				zombie_type = CharacterRegistry.ZombieType.Z513Zamboni
+				## 雪橇车队需要冰道；OW 自然波次统一由死怨制冰车补齐前置冰道。
+				zombie_type = resolve_bobsled_spawn_type(zombie_type, false)
 				lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType])
 			else:
 				lane = zombie_choose_row_system.select_spawn_row(Global.character_registry.ZombieInfo[zombie_type][CharacterRegistry.ZombieInfoAttribute.ZombieRowType], special_base_weight)
@@ -280,6 +281,15 @@ func create_curr_wave_all_zombies(wave:int, is_big_wave:bool):
 		wave_all_zombies.append(zombie)
 
 	return wave_all_zombies
+
+
+static func resolve_bobsled_spawn_type(
+	zombie_type: CharacterRegistry.ZombieType,
+	has_ice_road: bool
+) -> CharacterRegistry.ZombieType:
+	if zombie_type == CharacterRegistry.ZombieType.Z514Bobsled and not has_ice_road:
+		return CharacterRegistry.ZombieType.Z013ZomboniShion
+	return zombie_type
 
 
 func create_custom_timeline_zombie(event: Dictionary) -> Zombie000Base:

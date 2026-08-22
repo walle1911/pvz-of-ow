@@ -1882,6 +1882,8 @@ func _make_zombie_card(zombie_type: int) -> Control:
 		else "当前基础僵尸，固定参与刷怪" if required_simple_zombie
 		else "该僵尸只能用于泳池或雾夜地图" if pool_map_required
 		else "简易自然波次暂不支持该僵尸" if not simple_supported
+		else "选择雪橇车队（会同步选择死怨制造冰道）" \
+			if _is_simple_mode() and zombie_type == int(CharacterRegistry.ZombieType.Z514Bobsled)
 		else "选择%s（在旗帜波按蹦极机制登场）" % _zombie_name(str(zombie_type)) \
 			if _is_simple_mode() and zombie_type == int(CharacterRegistry.ZombieType.Z521Bungi)
 		else ("选择%s" if _is_simple_mode() else "设置%s的数量") % _zombie_name(str(zombie_type))
@@ -2621,9 +2623,14 @@ func _select_simple_zombie(zombie_key: String) -> void:
 		_delete_simple_zombie(zombie_key)
 		return
 	simple_pool.append(zombie_type)
-	level["simpleZombiePool"] = simple_pool
+	var dependencies_added := zombie_type == int(CharacterRegistry.ZombieType.Z514Bobsled) \
+		and not simple_pool.has(int(CharacterRegistry.ZombieType.Z013ZomboniShion))
+	level["simpleZombiePool"] = CustomRuntime.with_simple_zombie_dependencies(simple_pool)
 	_sync_all_simple_stage_type_pools()
-	_changed("已将%s加入本关允许僵尸表" % _zombie_name(zombie_key))
+	_changed(
+		"已将雪橇车队加入，并同步选择其冰道前置死怨" if dependencies_added \
+		else "已将%s加入本关允许僵尸表" % _zombie_name(zombie_key)
+	)
 	_refresh_card_page()
 	_refresh_wave()
 
@@ -2683,6 +2690,12 @@ func _delete_simple_zombie(zombie_key: String) -> void:
 		return
 	var simple_pool := _simple_zombie_pool()
 	if not simple_pool.has(zombie_type):
+		return
+	if zombie_type == int(CharacterRegistry.ZombieType.Z013ZomboniShion) \
+	and simple_pool.has(int(CharacterRegistry.ZombieType.Z514Bobsled)):
+		status_label.text = "雪橇车队依赖死怨制造冰道；请先取消雪橇车队"
+		_refresh_card_page()
+		_refresh_wave()
 		return
 	simple_pool.erase(zombie_type)
 	level["simpleZombiePool"] = simple_pool
@@ -3641,6 +3654,7 @@ func _sanitize_simple_allowed_pool() -> void:
 	for boss_type in once_final:
 		if int(boss_type) > 0 and not filtered_pool.has(int(boss_type)):
 			filtered_pool.append(int(boss_type))
+	filtered_pool = CustomRuntime.with_simple_zombie_dependencies(filtered_pool)
 	if not filtered_pool.has(required_zombie):
 		filtered_pool.push_front(required_zombie)
 	level["simpleZombiePool"] = filtered_pool
@@ -3648,11 +3662,7 @@ func _sanitize_simple_allowed_pool() -> void:
 
 
 func _simple_zombie_pool() -> Array[int]:
-	var result: Array[int] = []
-	for value in level.get("simpleZombiePool", []):
-		var zombie_type := int(value)
-		if zombie_type > 0 and not result.has(zombie_type):
-			result.append(zombie_type)
+	var result := CustomRuntime.with_simple_zombie_dependencies(level.get("simpleZombiePool", []))
 	var required_zombie := _simple_base_zombie_type()
 	if not result.has(required_zombie):
 		result.push_front(required_zombie)

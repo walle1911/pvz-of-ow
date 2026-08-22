@@ -41,6 +41,18 @@ func _run() -> void:
 	assert(idle_source_button.self_modulate == Color.WHITE)
 	assert((workshop.new_level_button.get_node("Label") as Label).text == "自制关卡")
 	assert((workshop.reward_mode_button.get_child(0) as Label).text == "植物卡片")
+	var bobsled_type := int(CharacterRegistry.ZombieType.Z514Bobsled)
+	var shion_type := int(CharacterRegistry.ZombieType.Z013ZomboniShion)
+	workshop.level = Logic.example_level()
+	workshop.level["mapConfig"] = {"type": "pool", "rows": 6, "columns": 9}
+	workshop.level["simpleZombiePool"] = [int(CharacterRegistry.ZombieType.Z001NormTalon)]
+	workshop.selected_wave = 0
+	workshop.call("_select_simple_zombie", str(bobsled_type))
+	assert((workshop.level["simpleZombiePool"] as Array).has(bobsled_type))
+	assert((workshop.level["simpleZombiePool"] as Array).has(shion_type))
+	workshop.call("_delete_simple_zombie", str(shion_type))
+	assert((workshop.level["simpleZombiePool"] as Array).has(shion_type))
+	print("BOBSLED_SHION_WORKSHOP_OK")
 	workshop.call("_load_preset_for_edit", "adventure_2_1")
 	assert(workshop.background_sprite.texture == workshop.NIGHT_LAWN)
 	assert((workshop.reward_mode_button.get_child(0) as Label).text == "植物卡片")

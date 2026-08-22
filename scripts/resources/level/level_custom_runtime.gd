@@ -15,6 +15,9 @@ const ZOMBIE_TYPE_IDS := {
 	"gargantuar": 524,
 }
 
+const SIMPLE_BOBSLED_ZOMBIE_TYPE := CharacterRegistry.ZombieType.Z514Bobsled
+const SIMPLE_BOBSLED_ICE_MAKER_TYPE := CharacterRegistry.ZombieType.Z013ZomboniShion
+
 ## 把工坊 JSON 转为主游戏现有的 ResourceLevelData，并生成逐阶段的相对刷怪计划。
 static func build_game_para(source: Dictionary) -> Dictionary:
 	var prepared_source := source.duplicate(true)
@@ -263,6 +266,7 @@ static func _simple_allowed_zombie_types(
 		for stage in stages:
 			for entry in (stage as Dictionary).get("spawnGroups", []):
 				source_values.append((entry as Dictionary).get("zombieType", "501"))
+	source_values = with_simple_zombie_dependencies(source_values)
 	for value in source_values:
 		var zombie_type := _zombie_type_id(value) as CharacterRegistry.ZombieType
 		if zombie_type == CharacterRegistry.ZombieType.Z521Bungi:
@@ -274,6 +278,20 @@ static func _simple_allowed_zombie_types(
 		if not types.has(zombie_type):
 			types.append(zombie_type)
 	return types
+
+
+## 简易自然波次中的雪橇车队依赖冰道。把死怨作为明确的制冰车前置加入
+## 允许池，使工坊展示、开场预览和实际随机池保持一致；同时兼容尚未保存依赖的旧关卡。
+static func with_simple_zombie_dependencies(values: Array) -> Array[int]:
+	var result: Array[int] = []
+	for value in values:
+		var zombie_type := _zombie_type_id(value)
+		if zombie_type > 0 and not result.has(zombie_type):
+			result.append(zombie_type)
+	if result.has(int(SIMPLE_BOBSLED_ZOMBIE_TYPE)) \
+	and not result.has(int(SIMPLE_BOBSLED_ICE_MAKER_TYPE)):
+		result.append(int(SIMPLE_BOBSLED_ICE_MAKER_TYPE))
+	return result
 
 
 static func _contains_zombie_type(values: Array, expected: CharacterRegistry.ZombieType) -> bool:

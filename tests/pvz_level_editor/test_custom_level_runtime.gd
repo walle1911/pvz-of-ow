@@ -8,6 +8,27 @@ const FormalStore := preload("res://scripts/resources/level/adventure_level_stor
 func _ready() -> void:
 	## 1-1 只有中间三行草皮；刷怪权重必须同步屏蔽上下两条未铺草皮行。
 	assert(ZombieChooseRowSystem.mask_inactive_rows([1, 1, 1, 1, 1], [1, 2, 3]) == [0.0, 1.0, 1.0, 1.0, 0.0])
+	var bobsled_dependency_level := Logic.example_level()
+	bobsled_dependency_level["editorMode"] = "simple"
+	bobsled_dependency_level["mapConfig"] = {"type": "pool", "rows": 6, "columns": 9}
+	bobsled_dependency_level["simpleZombiePool"] = [
+		int(CharacterRegistry.ZombieType.Z001NormTalon),
+		int(CharacterRegistry.ZombieType.Z514Bobsled),
+	]
+	var bobsled_dependency_built := Runtime.build_game_para(bobsled_dependency_level)
+	assert(bobsled_dependency_built["ok"], bobsled_dependency_built["error"])
+	var bobsled_dependency_para := bobsled_dependency_built["game_para"] as ResourceLevelData
+	assert(bobsled_dependency_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z514Bobsled))
+	assert(bobsled_dependency_para.zombie_refresh_types.has(CharacterRegistry.ZombieType.Z013ZomboniShion))
+	assert(ZombieWaveCreateManager.resolve_bobsled_spawn_type(
+		CharacterRegistry.ZombieType.Z514Bobsled,
+		false
+	) == CharacterRegistry.ZombieType.Z013ZomboniShion)
+	assert(ZombieWaveCreateManager.resolve_bobsled_spawn_type(
+		CharacterRegistry.ZombieType.Z514Bobsled,
+		true
+	) == CharacterRegistry.ZombieType.Z514Bobsled)
+	print("BOBSLED_SHION_RUNTIME_OK")
 	var example := Logic.example_level()
 	example["rewardPlants"] = [
 		int(CharacterRegistry.PlantType.P001PeaShooterSoldier76),
