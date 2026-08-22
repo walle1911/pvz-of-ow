@@ -156,8 +156,9 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			game_para.reward_plant_types.append(reward_plant as CharacterRegistry.PlantType)
 	game_para.reward_plant_type = int(game_para.reward_plant_types[0]) if not game_para.reward_plant_types.is_empty() else -1
 	game_para.special_reward_card_levels = Logic.special_reward_card_levels(level)
+	var adventure_level_source := str(level.get("_adventureLevelSource", ""))
 	var special_reward_source_dir := ""
-	match str(level.get("_adventureLevelSource", "")):
+	match adventure_level_source:
 		"formal":
 			special_reward_source_dir = str(level.get("_adventureLevelSourceDir", UserPaths.path("formal_adventure_levels")))
 		"developer":
@@ -183,14 +184,19 @@ static func build_game_para(source: Dictionary) -> Dictionary:
 			and Global.global_game_state.curr_plant.has(plant_type) \
 			and not game_para.available_plant_types.has(plant_type):
 				game_para.available_plant_types.append(plant_type)
-		## Boss 战利品卡在击败并领取后永久进入所有正式冒险关卡（含重玩）。
-		## 它不污染关卡的 availablePlants，也不自动投放到自制关。
-		if not str(level.get("formalPresetId", "")).is_empty():
-			for earned_boss_reward_type in RewardCardRuntime.earned_boss_reward_plant_types(
-				Global.global_game_state.curr_all_level_state_data,
-				special_reward_source_dir
+		## 正式冒险尊重玩家的长期成长：后来正式通关实际领取的奖励卡，
+		## 重玩任意早期正式关卡时仍可选用。开发者关卡和工坊试玩继续严格使用
+		## 当前关卡配置的时间点卡池，不接受后来奖励回灌。
+		if adventure_level_source == "formal" \
+		and not bool(level.get("_runtimePlaytest", false)) \
+		and not str(level.get("formalPresetId", "")).is_empty():
+			for earned_reward_type in RewardCardRuntime.earned_formal_reward_plant_types(
+				Global.global_game_state.curr_all_level_state_data
 			):
-				var plant_type := earned_boss_reward_type as CharacterRegistry.PlantType
+				## 限定卡仍遵循指定关卡投放规则，不能借“正式已领取”绕过。
+				if RewardCardRuntime.is_plant_limited(earned_reward_type, special_reward_source_dir):
+					continue
+				var plant_type := earned_reward_type as CharacterRegistry.PlantType
 				if CharacterRegistry.PlantInfo.has(plant_type) \
 				and not game_para.available_plant_types.has(plant_type):
 					game_para.available_plant_types.append(plant_type)

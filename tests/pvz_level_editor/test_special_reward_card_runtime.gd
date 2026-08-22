@@ -15,10 +15,11 @@ func _ready() -> void:
 func _run() -> void:
 	var plant_type := int(CharacterRegistry.PlantType.P505PotatoMine)
 	var source_dir := AdventureStore.DEVELOPER_LEVEL_DIR
-	var boss_source := AdventurePresets.build_level("adventure_1_10", true)
+	var formal_source_dir := AdventureStore.FORMAL_LEVEL_DIR
+	var boss_source := AdventurePresets.build_formal_level("adventure_1_10")
 	var boss_reward_type := int((boss_source.get("bossConfig", {}) as Dictionary).get("rewardPlant", -1))
 	if boss_reward_type <= 0 \
-	or not RewardCardRuntime.configured_boss_reward_plant_types(source_dir).has(boss_reward_type):
+	or not RewardCardRuntime.configured_boss_reward_plant_types(formal_source_dir).has(boss_reward_type):
 		_fail("Boss 关额外奖励应进入战利品卡配置表")
 		return
 	var no_boss_reward_states := {
@@ -27,25 +28,48 @@ func _run() -> void:
 			"RewardPlants": [int(CharacterRegistry.PlantType.P014ScaredyShroomWidowmaker)],
 		}
 	}
-	if RewardCardRuntime.earned_boss_reward_plant_types(no_boss_reward_states, source_dir).has(boss_reward_type):
+	if RewardCardRuntime.earned_boss_reward_plant_types(no_boss_reward_states, formal_source_dir).has(boss_reward_type):
 		_fail("仅普通通关或跳过 Boss 不能解锁 Boss 战利品")
 		return
 	var defeated_boss_states := no_boss_reward_states.duplicate(true)
 	defeated_boss_states["101_0_adventure_1_10"]["RewardPlants"].append(boss_reward_type)
-	if not RewardCardRuntime.earned_boss_reward_plant_types(defeated_boss_states, source_dir).has(boss_reward_type):
+	if not RewardCardRuntime.earned_boss_reward_plant_types(defeated_boss_states, formal_source_dir).has(boss_reward_type):
 		_fail("击败 Boss 并领取额外奖励后应识别战利品解锁")
+		return
+	var later_ordinary_reward := int(CharacterRegistry.PlantType.P003CherryBombJunkrat)
+	defeated_boss_states["101_0_adventure_1_2"] = {
+		"IsSuccess": true,
+		"RewardPlants": [later_ordinary_reward],
+	}
+	defeated_boss_states["105_0_adventure_1_3"] = {
+		"IsSuccess": true,
+		"RewardPlants": [int(CharacterRegistry.PlantType.P004WallNutBrigitte)],
+	}
+	defeated_boss_states["106_0_trial_adventure_1_4"] = {
+		"IsSuccess": true,
+		"RewardPlants": [int(CharacterRegistry.PlantType.P006SnowPeaMei)],
+	}
+	var earned_formal_rewards := RewardCardRuntime.earned_formal_reward_plant_types(defeated_boss_states)
+	if not earned_formal_rewards.has(later_ordinary_reward) \
+	or earned_formal_rewards.has(int(CharacterRegistry.PlantType.P004WallNutBrigitte)) \
+	or earned_formal_rewards.has(int(CharacterRegistry.PlantType.P006SnowPeaMei)):
+		_fail("正式奖励汇总必须排除开发者关卡和工坊试玩存档")
 		return
 	var original_level_states := Global.global_game_state.curr_all_level_state_data.duplicate(true)
 	Global.global_game_state.curr_all_level_state_data = no_boss_reward_states
-	var boss_locked_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	var boss_locked_result := Runtime.build_game_para(AdventurePresets.build_formal_level("adventure_2_1"))
 	if not boss_locked_result["ok"] \
 	or (boss_locked_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
 		Global.global_game_state.curr_all_level_state_data = original_level_states
 		_fail("仅进入关卡不能自动解锁 Boss 战利品")
 		return
 	Global.global_game_state.curr_all_level_state_data = defeated_boss_states
-	var replay_first_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_1_1", true))
-	var replay_later_level_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_2_1", true))
+	var replay_first_level_result := Runtime.build_game_para(AdventurePresets.build_formal_level("adventure_1_1"))
+	var replay_later_level_result := Runtime.build_game_para(AdventurePresets.build_formal_level("adventure_2_1"))
+	var developer_replay_result := Runtime.build_game_para(AdventurePresets.build_level("adventure_1_1", true))
+	var formal_playtest_source := AdventurePresets.build_formal_level("adventure_1_1")
+	formal_playtest_source["_runtimePlaytest"] = true
+	var formal_playtest_result := Runtime.build_game_para(formal_playtest_source)
 	var custom_level := Logic.example_level()
 	custom_level["plantSelectionEnabled"] = true
 	custom_level.erase("formalPresetId")
@@ -53,8 +77,19 @@ func _run() -> void:
 	Global.global_game_state.curr_all_level_state_data = original_level_states
 	if not replay_first_level_result["ok"] or not replay_later_level_result["ok"] \
 	or not (replay_first_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType) \
-	or not (replay_later_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
-		_fail("已领取的 Boss 战利品应在所有正式关卡重玩中可用")
+	or not (replay_later_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType) \
+	or not (replay_first_level_result["game_para"] as ResourceLevelData).available_plant_types.has(later_ordinary_reward as CharacterRegistry.PlantType):
+		_fail("已领取的普通奖励和 Boss 战利品应在所有正式关卡重玩中可用")
+		return
+	if not developer_replay_result["ok"] \
+	or (developer_replay_result["game_para"] as ResourceLevelData).available_plant_types.has(later_ordinary_reward as CharacterRegistry.PlantType) \
+	or (developer_replay_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
+		_fail("开发者关卡重玩不能使用当前关卡之后获得的奖励卡")
+		return
+	if not formal_playtest_result["ok"] \
+	or (formal_playtest_result["game_para"] as ResourceLevelData).available_plant_types.has(later_ordinary_reward as CharacterRegistry.PlantType) \
+	or (formal_playtest_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):
+		_fail("试玩不能使用当前关卡之后获得的奖励卡")
 		return
 	if not custom_level_result["ok"] \
 	or (custom_level_result["game_para"] as ResourceLevelData).available_plant_types.has(boss_reward_type as CharacterRegistry.PlantType):

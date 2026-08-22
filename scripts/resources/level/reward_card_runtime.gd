@@ -93,10 +93,34 @@ static func configured_boss_reward_plant_types(source_dir: String = "") -> Array
 	return result
 
 
+## 正式冒险重玩使用玩家已经实际领取的全部普通奖励卡。
+## 只读取正式冒险选关存档，开发者关卡、工坊试玩和自制关的奖励不会回灌。
+static func earned_formal_reward_plant_types(level_states: Dictionary) -> Array[int]:
+	var result: Array[int] = []
+	var formal_state_prefix := str(MainSceneRegistry.MainScenes.ChooseLevelAdventure) + "_"
+	for raw_state_key in level_states.keys():
+		if not str(raw_state_key).begins_with(formal_state_prefix):
+			continue
+		var state = level_states[raw_state_key]
+		if not (state is Dictionary) or not bool((state as Dictionary).get("IsSuccess", false)):
+			continue
+		var rewards = (state as Dictionary).get("RewardPlants", [])
+		if rewards is Array:
+			for reward_value in rewards:
+				_append_unique_positive_plant(result, int(reward_value))
+		_append_unique_positive_plant(result, int((state as Dictionary).get("RewardPlant", -1)))
+	return result
+
+
 static func is_plant_available_in_level(plant_type: int, level_id: String, ordinary_available: bool, source_dir: String = "") -> bool:
 	if not is_plant_limited(plant_type, source_dir):
 		return ordinary_available
 	return is_plant_allowed_in_level(plant_type, level_id, source_dir)
+
+
+static func _append_unique_positive_plant(result: Array[int], plant_type: int) -> void:
+	if plant_type > 0 and not result.has(plant_type):
+		result.append(plant_type)
 
 
 static func _special_reward_catalog(source_dir: String) -> Dictionary:

@@ -4115,7 +4115,10 @@ func _playtest() -> void:
 	## 以当前界面模式为权威，避免旧草稿或正式关卡覆盖中的 editorMode 与按钮状态不同步。
 	level["editorMode"] = "simple" if _is_simple_mode() else "advanced"
 	DraftStore.save_autosave(level)
-	var built := CustomRuntime.build_game_para(level)
+	var playtest_level := level.duplicate(true)
+	## 试玩永远按当前关卡时间点卡池验证，不继承正式存档中后来领取的卡。
+	playtest_level["_runtimePlaytest"] = true
+	var built := CustomRuntime.build_game_para(playtest_level)
 	if not built["ok"]:
 		status_label.text = "无法试玩：%s" % built["error"]
 		return

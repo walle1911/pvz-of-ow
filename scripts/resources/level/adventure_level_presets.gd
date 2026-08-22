@@ -270,7 +270,11 @@ static func build_formal_level(preset_id: String) -> Dictionary:
 	if stored["exists"]:
 		push_error("正式关卡快照无法载入：%s" % str(stored["error"]))
 	## 兼容尚未生成快照的项目副本，避免正式模式出现空关卡。
-	return build_level(preset_id)
+	var fallback := build_level(preset_id)
+	if not fallback.is_empty():
+		fallback["_adventureLevelSource"] = "formal"
+		fallback["_adventureLevelSourceDir"] = FormalLevelStore.FORMAL_LEVEL_DIR
+	return fallback
 
 
 static func build_level(preset_id: String, use_developer_override := false) -> Dictionary:
