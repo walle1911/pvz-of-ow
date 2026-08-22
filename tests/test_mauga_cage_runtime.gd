@@ -91,12 +91,31 @@ func _run() -> void:
 		2,
 		forward_landing_x
 	)
+	var underground_venture:= _spawn_zombie(
+		main_game,
+		2,
+		forward_landing_x,
+		CharacterRegistry.ZombieType.Z018DiggerZombieVenture
+	)
+	var underwater_snorkle:= _spawn_zombie(
+		main_game,
+		2,
+		forward_landing_x,
+		CharacterRegistry.ZombieType.Z512Snorkle
+	)
+	underground_venture.curr_be_attack_status = Zombie000Base.E_BeAttackStatusZombie.IsDownGround
+	underwater_snorkle.curr_be_attack_status = Zombie000Base.E_BeAttackStatusZombie.IsDownPool
 	var stomp_visual_parent:= stomp_victim.get_parent()
 	var flattened_body_count_before:= _count_flattened_body_copies(stomp_visual_parent)
 	if not is_instance_valid(trapped):
 		_fail("failed to create trapped zombie")
 		return
-	var explicit_candidates:Array[Zombie000Base] = [trapped, stomp_victim]
+	var explicit_candidates:Array[Zombie000Base] = [
+		trapped,
+		stomp_victim,
+		underground_venture,
+		underwater_snorkle,
+	]
 	var hp_before_cast:int = mauga.hp_component.curr_hp
 	mauga.call("_activate_chain_skill", explicit_candidates)
 	if not bool(mauga.get("_chain_intro_active")) or bool(mauga.get("_chain_skill_active")):
@@ -118,6 +137,12 @@ func _run() -> void:
 	if is_instance_valid(stomp_victim):
 		_fail("the zombie in the landing cell was not removed by the stomp execution")
 		return
+	if not is_instance_valid(underground_venture):
+		_fail("Cage Fight stomp affected underground Venture")
+		return
+	if not is_instance_valid(underwater_snorkle):
+		_fail("Cage Fight stomp affected the submerged Snorkel Zombie")
+		return
 	if _count_flattened_body_copies(stomp_visual_parent) <= flattened_body_count_before:
 		_fail("the stomp execution did not leave the squash-style flattened body visual")
 		return
@@ -134,6 +159,17 @@ func _run() -> void:
 	cage_bounds = mauga.call("_get_current_cage_ground_bounds")
 	cage_x_ranges = mauga.call("_get_current_cage_x_ranges")
 	trapped_lane_range = cage_x_ranges[1]
+	var immune_lane_range:Vector2 = cage_x_ranges[2]
+	var immune_ground_x:float = (immune_lane_range.x + immune_lane_range.y) * 0.5
+	_set_ground_x(underground_venture, immune_ground_x)
+	_set_ground_x(underwater_snorkle, immune_ground_x)
+	mauga.call("_chain_new_zombies_in_area")
+	if _is_chained(mauga, underground_venture):
+		_fail("Cage Fight chained underground Venture")
+		return
+	if _is_chained(mauga, underwater_snorkle):
+		_fail("Cage Fight chained the submerged Snorkel Zombie")
+		return
 	_set_ground_x(trapped, (trapped_lane_range.x + trapped_lane_range.y) * 0.5)
 	mauga.call("_chain_new_zombies_in_area")
 	if not _is_chained(mauga, trapped):
@@ -311,6 +347,17 @@ func _run() -> void:
 		if save_error != OK:
 			_fail("failed to save visual QA screenshot")
 			return
+	trapped.curr_be_attack_status = Zombie000Base.E_BeAttackStatusZombie.IsDownPool
+	mauga.call("_process", 0.0)
+	if _is_chained(mauga, trapped):
+		_fail("Cage Fight did not release a chained zombie after it submerged")
+		return
+	trapped.curr_be_attack_status = Zombie000Base.E_BeAttackStatusZombie.IsNorm
+	_set_ground_x(trapped, (trapped_lane_range.x + trapped_lane_range.y) * 0.5)
+	mauga.call("_chain_new_zombies_in_area")
+	if not _is_chained(mauga, trapped):
+		_fail("Cage Fight did not recapture a surfaced zombie inside the cage")
+		return
 	mauga.call("_finish_chain_skill")
 	await get_tree().process_frame
 	if _is_chained(mauga, trapped) or trapped.has_meta(&"garlic_mauga_chain_owners"):

@@ -7,6 +7,10 @@ const CAGE_EFFECT_SCENE := preload("res://scripts/fx/plant_effect/plant_effect_g
 const CAGE_PROCESS_PRIORITY := 100
 const STOMP_BODY_Z_BOOST := 50
 const FLATTENED_BODY_LIFETIME := 2.0
+const CAGE_UNTARGETABLE_ZOMBIE_STATUS := (
+	Zombie000Base.E_BeAttackStatusZombie.IsDownPool
+	| Zombie000Base.E_BeAttackStatusZombie.IsDownGround
+)
 
 @export_range(0.1, 60.0, 0.1, "suffix:s") var chain_skill_duration := 6.0
 @export_range(0, 10000, 1, "suffix:HP") var chain_health_cost := 200
@@ -55,7 +59,7 @@ func _process(delta:float) -> void:
 	_chain_new_zombies_in_area()
 	for target_id:int in _chained_zombies.keys().duplicate():
 		var zombie:Zombie000Base = _chained_zombies.get(target_id)
-		if not is_instance_valid(zombie) or zombie.is_death or zombie.is_hypno:
+		if not _can_cage_target(zombie):
 			_release_chain_target(target_id)
 		else:
 			_update_chain_target_leash(target_id, zombie)
@@ -312,7 +316,7 @@ func _stomp_zombies_in_cell(
 			lane_zombies.append(candidate)
 	for zombie:Zombie000Base in lane_zombies:
 		if (
-			is_instance_valid(zombie)
+			_can_cage_target(zombie)
 			and zombie.lane == target_cell.row_col.x
 			and zombie.shadow.global_position.x >= landing_x_range.x
 			and zombie.shadow.global_position.x <= landing_x_range.y
@@ -479,7 +483,7 @@ func _chain_new_zombies_in_area() -> void:
 			_attach_chain_target(zombie)
 
 func _attach_chain_target(zombie:Zombie000Base) -> void:
-	if not is_instance_valid(zombie) or zombie.is_death or zombie.is_hypno:
+	if not _can_cage_target(zombie):
 		return
 	var target_id:int = zombie.get_instance_id()
 	if _chained_zombies.has(target_id):
@@ -507,7 +511,7 @@ func _get_zombies_in_x_ranges(x_ranges:Dictionary[int, Vector2]) -> Array[Zombie
 		else _get_current_cage_ground_bounds()
 	## 使用完整存活列表快照，避免僵尸换行时短暂离开按行缓存而漏检。
 	for zombie:Zombie000Base in Global.main_game.zombie_manager.all_zombies_1d.duplicate():
-		if not is_instance_valid(zombie) or zombie.is_death or zombie.is_hypno:
+		if not _can_cage_target(zombie):
 			continue
 		if not x_ranges.has(zombie.lane):
 			continue
@@ -534,6 +538,15 @@ func _get_zombies_in_x_ranges(x_ranges:Dictionary[int, Vector2]) -> Array[Zombie
 		if zombie_x >= x_range.x and zombie_x <= x_range.y:
 			result.append(zombie)
 	return result
+
+func _can_cage_target(zombie:Zombie000Base) -> bool:
+	return (
+		is_instance_valid(zombie)
+		and not zombie.is_death
+		and not zombie.is_hypno
+		## 地下的探奇和水下的潜水僵尸不与地表力场接触，不能被踩踏或锁链捕获。
+		and (zombie.curr_be_attack_status & CAGE_UNTARGETABLE_ZOMBIE_STATUS) == 0
+	)
 
 func _create_cage_visual() -> void:
 	_remove_cage_visual()
@@ -631,8 +644,10 @@ func _enforce_chain_boundaries_after_movement() -> void:
 	## SceneTree Tween 在普通节点处理之后仍可能改坐标；绘制前再以同一条墙线兜底一次。
 	for target_id:int in _chained_zombies.keys().duplicate():
 		var zombie:Zombie000Base = _chained_zombies.get(target_id)
-		if is_instance_valid(zombie) and not zombie.is_death and not zombie.is_hypno:
+		if _can_cage_target(zombie):
 			_update_chain_target_leash(target_id, zombie)
+		else:
+			_release_chain_target(target_id)
 
 func _release_chain_target(target_id:int) -> void:
 	if not _chained_zombies.has(target_id):
