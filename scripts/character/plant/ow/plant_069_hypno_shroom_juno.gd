@@ -6,12 +6,12 @@ const PULSAR_RETICLE_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plan
 const PULSAR_BURST_SCRIPT:Script = preload("res://scripts/fx/plant_effect/plant_effect_juno_pulsar_burst.gd")
 
 @export_group("朱诺·脉冲飞雷")
-@export_range(0.1, 120.0, 0.1, "suffix:秒") var pulsar_cooldown:= 15.0
+@export_range(0.1, 120.0, 0.1, "suffix:秒") var pulsar_cooldown:= 5.0
 @export_range(0.1, 3.0, 0.05, "suffix:秒") var pulsar_second_jump_ascent_time:= 0.55
 @export_range(0.05, 1.0, 0.05, "suffix:秒") var pulsar_fire_delay:= 0.18
 @export_range(1, 12, 1) var pulsar_max_targets:= 12
 @export_range(1, 500, 1, "suffix:伤害") var pulsar_damage:= 80
-@export_range(1, 9, 1, "suffix:列") var pulsar_column_count:= 2
+@export_range(1, 9, 1, "suffix:列") var pulsar_column_count:= 4
 @export_range(0.05, 3.0, 0.05, "suffix:秒") var pulsar_initial_delay:= 0.6
 @export_group("朱诺·二段跳")
 @export_range(1.0, 60.0, 0.5, "suffix:像素") var pulsar_first_jump_height:= 32.0

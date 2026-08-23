@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://blge6mwmus5fv" path="res://assets/image/ui/ui_main_game_menu/btn_dialog_back_2.png" id="9_dialog_button"]
 [ext_resource type="Theme" uid="uid://em12la0rqibq" path="res://data/PVZ_theme.tres" id="10_pvz_theme"]
 [ext_resource type="Script" uid="uid://3j46ottso760" path="res://scripts/ui/main_game_ui/main_game_menu_button.gd" id="11_menu_button"]
+[ext_resource type="PackedScene" uid="uid://bq5t78cjcpj7y" path="res://scenes/main_game_bg/pool.tscn" id="12_pool_preview"]
 
 [node name="LevelWorkshop" type="Control" unique_id=738736573]
 layout_mode = 3
@@ -26,6 +27,11 @@ z_index = -100
 position = Vector2(-334, 0)
 texture = ExtResource("2_background")
 centered = false
+
+[node name="PoolPreview" parent="." instance=ExtResource("12_pool_preview")]
+visible = false
+z_index = -50
+position = Vector2(-334, 0)
 
 [node name="AlmanacDrawer" type="Control" parent="." unique_id=645526292]
 z_index = 100
@@ -446,6 +452,16 @@ anchors_preset = 0
 offset_left = 746.0
 offset_top = 180.0
 offset_right = 1026.0
+offset_bottom = 580.0
+mouse_filter = 2
+
+[node name="PlantPreviewPanel" type="Control" parent="."]
+z_index = 50
+y_sort_enabled = true
+anchors_preset = 0
+offset_left = 500.0
+offset_top = 80.0
+offset_right = 1066.0
 offset_bottom = 580.0
 mouse_filter = 2
 

@@ -47,6 +47,16 @@ const HISTORY_LIMIT := 80
 const PREVIEW_MAX_ZOMBIES := 20
 ## 按界面实际分界线收窄到约 47%，右侧完整留给马路预览。
 const DRAWER_WIDTH := 500.0
+## 植物卡片页多露出一列 80px 草坪；离开该页时仍回到原有的道路预览取景。
+const PLANT_CATALOG_LAWN_OFFSET := 414.0
+const PLANT_PREVIEW_CELL_ORIGIN := Vector2(42.0, 86.0)
+const PLANT_PREVIEW_CELL_STEP := Vector2(80.0, 96.0)
+const PLANT_PREVIEW_COLUMNS := 7
+const PLANT_PREVIEW_ROWS := 5
+## 相对 PlantPreviewPanel 顶部的植物根部基准，和 MainGame02Back 的六行 PlantArea2dPosition 对齐。
+const POOL_PREVIEW_ROW_Y := [76.0, 167.0, 276.0, 354.0, 434.0, 514.0]
+const POOL_PREVIEW_WATER_ROWS := [2, 3]
+const POOL_MAP_TYPES := ["pool", "fog"]
 const TIMELINE_SCALE := 1.25
 const CARDS_PER_PAGE := 24
 ## 仅用于旧草稿兼容和阶段内刷怪计划；不再控制动态阶段何时推进。
@@ -83,9 +93,11 @@ var history: Array[String] = []
 var future: Array[String] = []
 var preview_zombies: Array[Node2D] = []
 var preview_zombie_keys: Dictionary = {}
+var preview_plants: Array[Node2D] = []
 
 var sidebar_content: Control
 var preview_root: Control
+var plant_preview_root: Control
 var road_hint: Label
 var road_title: Label
 var stage_heading: Label
@@ -127,6 +139,7 @@ var catalog_mode := CatalogMode.SPAWN_ZOMBIES
 var reward_card_order: Array[Dictionary] = []
 var plant_card_prefabs: Dictionary = {}
 var background_sprite: Sprite2D
+var pool_preview: Node2D
 var drawer_paper: TextureRect
 var reward_mode_button: TextureButton
 var background_normal_x := -334.0
@@ -222,6 +235,7 @@ func _process(_delta: float) -> void:
 
 func _exit_tree() -> void:
 	_end_timeline_mode()
+	_clear_preview_plants()
 
 
 func _apply_font() -> void:
@@ -234,7 +248,9 @@ func _apply_font() -> void:
 func _build_scene() -> void:
 	background_sprite = get_node("BackgroundSprite") as Sprite2D
 	background_normal_x = background_sprite.position.x
+	pool_preview = get_node("PoolPreview") as Node2D
 	preview_root = get_node("ShowZombiePanel") as Control
+	plant_preview_root = get_node("PlantPreviewPanel") as Control
 
 	_build_drawer()
 	_build_road_overlay()
@@ -251,6 +267,15 @@ func _refresh_map_preview() -> void:
 		"fog": FOG_LAWN,
 		"roof": ROOF_LAWN,
 	}.get(map_type, FRONT_LAWN)
+	_refresh_pool_preview()
+
+
+func _refresh_pool_preview() -> void:
+	if not is_instance_valid(pool_preview) or not is_instance_valid(background_sprite):
+		return
+	var map_type := str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn"))
+	pool_preview.visible = POOL_MAP_TYPES.has(map_type)
+	pool_preview.position = background_sprite.position
 
 
 func _build_drawer() -> void:
@@ -984,10 +1009,16 @@ func _load_preset_for_edit(preset_id: String) -> void:
 	catalog_mode = previous_catalog_mode
 	_update_catalog_background(catalog_mode == CatalogMode.REWARD_CARDS)
 	_refresh_map_preview()
-	background_sprite.position.x = background_normal_x + 334.0 if catalog_mode == CatalogMode.REWARD_CARDS else background_normal_x
+	background_sprite.position.x = background_normal_x + PLANT_CATALOG_LAWN_OFFSET if catalog_mode == CatalogMode.REWARD_CARDS else background_normal_x
+	_refresh_pool_preview()
+	plant_preview_root.visible = catalog_mode == CatalogMode.REWARD_CARDS
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
 	_ensure_locked_plants_selected()
+	if catalog_mode == CatalogMode.REWARD_CARDS:
+		_refresh_plant_preview()
+	else:
+		_clear_preview_plants()
 	_force_random_lane_rules()
 	_sanitize_simple_allowed_pool()
 	_refresh_zombie_catalog()
@@ -1116,6 +1147,9 @@ func _refresh_after_level_replaced() -> void:
 	_update_catalog_background(false)
 	_refresh_map_preview()
 	background_sprite.position.x = background_normal_x
+	_refresh_pool_preview()
+	plant_preview_root.visible = false
+	_clear_preview_plants()
 	_update_catalog_button_label()
 	_refresh_locked_available_plants()
 	_ensure_locked_plants_selected()
@@ -2193,6 +2227,7 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 		level["plantSelectionEnabled"] = true
 		_changed("本关可选植物 %d 张" % selected.size())
 		_refresh_card_page()
+		_refresh_plant_preview()
 		return
 	var pool_key := "plantCardPool" if is_plant else "zombieCardPool"
 	var pool: Array = level["chessboardConfig"].get(pool_key, [])
@@ -2203,6 +2238,7 @@ func _toggle_reward_card(type_id: int, is_plant: bool) -> void:
 	level["chessboardConfig"][pool_key] = pool
 	_changed("奖励植物 %d 张" % (level["chessboardConfig"]["plantCardPool"] as Array).size())
 	_refresh_card_page()
+	_refresh_plant_preview()
 
 
 func _limited_card_source_dir() -> String:
@@ -2479,10 +2515,18 @@ func _toggle_reward_catalog() -> void:
 	road_title.visible = not show_rewards
 	road_hint.visible = not show_rewards
 	preview_root.visible = not show_rewards
+	plant_preview_root.visible = show_rewards
 	_update_timeline_catalog_visibility()
-	## 奖励池编辑时把草坪主体移入右侧可视区，退出后恢复道路预览视角。
-	var target_x := background_normal_x + 334.0 if show_rewards else background_normal_x
-	create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT).tween_property(background_sprite, "position:x", target_x, 0.3)
+	## 奖励池编辑时把草坪主体右移一列进入可视区，退出后恢复道路预览视角。
+	var target_x := background_normal_x + PLANT_CATALOG_LAWN_OFFSET if show_rewards else background_normal_x
+	var background_tween := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	background_tween.tween_property(background_sprite, "position:x", target_x, 0.3)
+	if is_instance_valid(pool_preview):
+		background_tween.parallel().tween_property(pool_preview, "position:x", target_x, 0.3)
+	if show_rewards:
+		_refresh_plant_preview()
+	else:
+		_clear_preview_plants()
 	if show_rewards:
 		if Global.level_workshop_edit_mode == "normal" and FormalLevelStore.is_formal_preset_id(formal_preset_id):
 			status_label.text = "此前已有的植物必定选择且不能取消；可点击多张新卡添加本关奖励"
@@ -2505,7 +2549,13 @@ func _restore_catalog_view() -> void:
 	road_title.visible = not show_rewards
 	road_hint.visible = not show_rewards
 	preview_root.visible = not show_rewards
-	background_sprite.position.x = background_normal_x + 334.0 if show_rewards else background_normal_x
+	plant_preview_root.visible = show_rewards
+	background_sprite.position.x = background_normal_x + PLANT_CATALOG_LAWN_OFFSET if show_rewards else background_normal_x
+	_refresh_pool_preview()
+	if show_rewards:
+		_refresh_plant_preview()
+	else:
+		_clear_preview_plants()
 	_update_timeline_editability()
 	_update_timeline_catalog_visibility()
 
@@ -2827,6 +2877,119 @@ func _refresh_road_zombies() -> void:
 			index += 1
 		if index >= PREVIEW_MAX_ZOMBIES:
 			break
+
+
+func _refresh_plant_preview() -> void:
+	_clear_preview_plants()
+	if catalog_mode != CatalogMode.REWARD_CARDS or not is_instance_valid(plant_preview_root):
+		return
+	## 只展示已获得的锁定卡与已领取 Boss 战利品；本关新设的金色奖励尚未获得，不应提前种到草坪上。
+	var plant_types: Array[int] = locked_available_plant_types.duplicate()
+	for plant_type in earned_boss_reward_plant_types:
+		if not plant_types.has(plant_type):
+			plant_types.append(plant_type)
+	if plant_types.is_empty():
+		return
+	var preview_slots := _plant_preview_slots()
+	var occupied_slot_ids: Dictionary = {}
+	var start_cell := int(level.get("randomSeed", 1)) + _formal_preset_index() * 7
+	for index in plant_types.size():
+		var plant_type := plant_types[index]
+		## 土豆地雷属于 1-10 的专用卡，不在其他关卡的草坪陈列中出现。
+		if plant_type == int(CharacterRegistry.PlantType.P505PotatoMine) and formal_preset_id != "adventure_1_10":
+			continue
+		var water_plant := _is_water_only_preview_plant(plant_type)
+		var slot := _take_plant_preview_slot(preview_slots, occupied_slot_ids, water_plant, start_cell + index * 11)
+		if slot.is_empty():
+			continue
+		var plant := _create_show_plant(plant_type)
+		if plant == null:
+			continue
+		var row := int(slot["row"])
+		var position := slot["position"] as Vector2
+		## 无法直接种在水中的陆地植物，进入水路预览时必须由睡莲承托。
+		if bool(slot["is_water"]) and not water_plant:
+			var lily_pad := _create_show_plant(int(CharacterRegistry.PlantType.P517LilyPad))
+			if lily_pad != null:
+				lily_pad.position = position
+				lily_pad.z_index = row * 2
+				## 正式种植时睡莲会把 Norm/Shell 容器按 plant_up_position 上移；预览需复现同一层级关系。
+				if lily_pad is Plant000DownBase:
+					position -= (lily_pad as Plant000DownBase).plant_up_position
+		plant.position = position
+		plant.z_index = row * 2 + 1
+
+
+func _plant_preview_slots() -> Array[Dictionary]:
+	var map_type := str((level.get("mapConfig", {}) as Dictionary).get("type", "front_lawn"))
+	var is_pool_map := POOL_MAP_TYPES.has(map_type)
+	var row_y: Array = POOL_PREVIEW_ROW_Y if is_pool_map else []
+	if not is_pool_map:
+		for row in PLANT_PREVIEW_ROWS:
+			row_y.append(PLANT_PREVIEW_CELL_ORIGIN.y + row * PLANT_PREVIEW_CELL_STEP.y)
+	var slots: Array[Dictionary] = []
+	for row in row_y.size():
+		for column in PLANT_PREVIEW_COLUMNS:
+			slots.append({
+				"id": row * PLANT_PREVIEW_COLUMNS + column,
+				"row": row,
+				"is_water": is_pool_map and POOL_PREVIEW_WATER_ROWS.has(row),
+				"position": Vector2(PLANT_PREVIEW_CELL_ORIGIN.x + column * PLANT_PREVIEW_CELL_STEP.x, row_y[row]),
+			})
+	return slots
+
+
+func _take_plant_preview_slot(slots: Array[Dictionary], occupied_slot_ids: Dictionary, water_only: bool, seed: int) -> Dictionary:
+	var candidates: Array[Dictionary] = []
+	for slot in slots:
+		if water_only and not bool(slot["is_water"]):
+			continue
+		candidates.append(slot)
+	if candidates.is_empty():
+		return {}
+	for offset in candidates.size():
+		var slot := candidates[posmod(seed + offset, candidates.size())]
+		var slot_id := int(slot["id"])
+		if not occupied_slot_ids.has(slot_id):
+			occupied_slot_ids[slot_id] = true
+			return slot
+	return {}
+
+
+func _is_water_only_preview_plant(plant_type: int) -> bool:
+	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
+	if registry == null or not CharacterRegistry.PlantInfo.has(plant_type):
+		return false
+	var condition := registry.get_plant_info(
+		plant_type as CharacterRegistry.PlantType,
+		CharacterRegistry.PlantInfoAttribute.PlantConditionResource
+	) as ResourcePlantCondition
+	if condition == null:
+		return false
+	const GRASS_CONDITION := 2
+	const WATER_CONDITION := 8
+	return bool(condition.plant_condition & WATER_CONDITION) and not bool(condition.plant_condition & GRASS_CONDITION)
+
+
+func _create_show_plant(plant_type: int) -> Node2D:
+	var registry := get_node_or_null("/root/Global/Registry/CharacterRegistry") as CharacterRegistry
+	if registry == null or not CharacterRegistry.PlantInfo.has(plant_type):
+		return null
+	var plant_scene: PackedScene = registry.get_plant_info(
+		plant_type as CharacterRegistry.PlantType,
+		CharacterRegistry.PlantInfoAttribute.PlantScenes
+	)
+	if plant_scene == null:
+		return null
+	var preview := plant_scene.instantiate() as Plant000Base
+	if preview == null:
+		return null
+	preview.init_plant({
+		Plant000Base.E_PInitAttr.CharacterInitType: Character000Base.E_CharacterInitType.IsShow,
+	})
+	plant_preview_root.add_child(preview)
+	preview_plants.append(preview)
+	return preview
 
 
 func _on_preview_hit_layer_input(event: InputEvent) -> void:
@@ -4165,6 +4328,15 @@ func _clear_preview_zombies() -> void:
 			zombie.queue_free()
 	preview_zombies.clear()
 	preview_zombie_keys.clear()
+
+
+func _clear_preview_plants() -> void:
+	for plant in preview_plants:
+		if is_instance_valid(plant):
+			if plant.get_parent() != null:
+				plant.get_parent().remove_child(plant)
+			plant.queue_free()
+	preview_plants.clear()
 
 
 func _clear(parent: Node) -> void:
