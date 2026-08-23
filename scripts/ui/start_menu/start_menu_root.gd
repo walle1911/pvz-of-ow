@@ -8,6 +8,9 @@ const OPTION_NORMAL_TEXTURE := preload("res://assets/image/ui/ui_start_menu/Sele
 const OPTION_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_Options2.png")
 const DEVELOPER_IMPORT_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImport.png")
 const DEVELOPER_IMPORT_HOVER_TEXTURE := preload("res://assets/image/ui/ui_start_menu/SelectorScreen_DeveloperImportHighlight.png")
+const UI_BUTTON_BACKGROUND := preload("res://assets/image/ui/ui_main_game_menu/UI_BG/button_BG.png")
+const UI_THEME := preload("res://data/PVZ_theme.tres")
+const UI_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const BUFF_BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.gdshader")
 const PRODUCER_NAME_COLOR := Color(1.0, 1.0, 0.62352943, 1.0)
@@ -59,6 +62,7 @@ const CREDITS_DIALOG_BUTTON_WIDTH := 160.0
 
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
+var level_workshop_notice: Control
 var developer_button_hover_tweens: Dictionary = {}
 var mode_dialog_context := "adventure"
 var flight_formation_start_position := Vector2.ZERO
@@ -646,10 +650,111 @@ func _on_button_2_pressed() -> void:
 	Global.game_para = null
 	Global.developer_level_adjustments_active = false
 	if developer_mode:
-		Global.level_workshop_edit_mode = "normal"
-		get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+		_show_level_workshop_notice()
 		return
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.ChooseLevelMiniGame])
+
+
+func _show_level_workshop_notice() -> void:
+	if is_instance_valid(level_workshop_notice):
+		return
+	## 使用既有主题、字体和按钮底图；操作区固定在弹窗底部，不会被长说明文本挤出。
+	level_workshop_notice = Control.new()
+	level_workshop_notice.name = "LevelWorkshopNotice"
+	level_workshop_notice.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	level_workshop_notice.mouse_filter = Control.MOUSE_FILTER_STOP
+	level_workshop_notice.theme = UI_THEME
+	level_workshop_notice.z_index = 100
+	add_child(level_workshop_notice)
+
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.52)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	level_workshop_notice.add_child(dim)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left = -330.0
+	panel.offset_top = -220.0
+	panel.offset_right = 330.0
+	panel.offset_bottom = 220.0
+	panel.theme_type_variation = &"PanelDialogBG"
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	level_workshop_notice.add_child(panel)
+
+	var title := Label.new()
+	title.position = Vector2(50.0, 34.0)
+	title.size = Vector2(560.0, 42.0)
+	title.text = "关卡工坊说明"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", UI_FONT)
+	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_color_override("font_color", Color("f7eccb"))
+	panel.add_child(title)
+
+	var content := RichTextLabel.new()
+	content.position = Vector2(66.0, 92.0)
+	content.size = Vector2(528.0, 224.0)
+	content.bbcode_enabled = true
+	content.fit_content = false
+	content.scroll_active = true
+	content.add_theme_font_override("normal_font", UI_FONT)
+	content.add_theme_font_size_override("normal_font_size", 18)
+	content.add_theme_color_override("default_color", Color("f4f0dc"))
+	content.add_theme_constant_override("line_separation", 7)
+	content.text = "[center]进阶编辑模式仍在持续完善；若想快速搭建关卡，建议优先使用简易编辑模式。[/center]\n\n[b]简易编辑模式[/b]：系统会根据你选定的僵尸阵容，自动计算并分配各波次的出怪组合。可通过“刷怪次数”控制整体压力，并通过“后期刷怪曲线”调节后期波次的强度爬升。\n\n[b]进阶编辑模式[/b]：可逐波手动设置登场僵尸，并细致编排每一波的刷怪节奏，适合需要高度自定义关卡流程与难度节奏的设计。"
+	panel.add_child(content)
+
+	var footer := Control.new()
+	footer.position = Vector2(0.0, 342.0)
+	footer.size = Vector2(660.0, 74.0)
+	footer.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.add_child(footer)
+	footer.add_child(_make_level_workshop_notice_button("取消", Vector2(165.0, 14.0), func(): _close_level_workshop_notice()))
+	footer.add_child(_make_level_workshop_notice_button("确认进入", Vector2(350.0, 14.0), _enter_level_workshop))
+
+
+func _make_level_workshop_notice_button(text: String, position_value: Vector2, callback: Callable) -> Button:
+	var button := Button.new()
+	button.position = position_value
+	button.size = Vector2(145.0, 46.0)
+	button.flat = true
+	button.tooltip_text = text
+	button.pressed.connect(callback)
+	var background := NinePatchRect.new()
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.texture = UI_BUTTON_BACKGROUND
+	background.patch_margin_left = 16
+	background.patch_margin_top = 16
+	background.patch_margin_right = 16
+	background.patch_margin_bottom = 20
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_child(background)
+	var label := Label.new()
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.text = text
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_override("font", UI_FONT)
+	label.add_theme_font_size_override("font_size", 19)
+	label.add_theme_color_override("font_color", Color("2d331e"))
+	button.add_child(label)
+	return button
+
+
+func _close_level_workshop_notice() -> void:
+	if is_instance_valid(level_workshop_notice):
+		level_workshop_notice.queue_free()
+	level_workshop_notice = null
+
+
+func _enter_level_workshop() -> void:
+	_close_level_workshop_notice()
+	Global.level_workshop_edit_mode = "normal"
+	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
 
 ## 解密模式
 func _on_button_3_pressed() -> void:

@@ -2993,6 +2993,9 @@ func _create_show_plant(plant_type: int) -> Node2D:
 
 
 func _on_preview_hit_layer_input(event: InputEvent) -> void:
+	## 简易模式的马路仅用于展示允许出现的僵尸；实体不提供编辑入口。
+	if _is_simple_mode():
+		return
 	if event is InputEventMouseMotion:
 		var hovered_zombie := _preview_zombie_at((event as InputEventMouseMotion).position)
 		preview_hit_layer.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if hovered_zombie != null else Control.CURSOR_ARROW
