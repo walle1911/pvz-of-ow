@@ -1978,7 +1978,7 @@ text = "开
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Pachimari" type="TextureRect" parent="BG_Right/Menu" unique_id=1083042060]
+[node name="Pachimari" type="TextureButton" parent="BG_Right/Menu" unique_id=1083042060]
 layout_mode = 0
 offset_left = 404.92
 offset_top = 365.9
@@ -1986,8 +1986,11 @@ offset_right = 498.92
 offset_bottom = 462.90042
 rotation = 0.13788101
 scale = Vector2(1.08, 1.08)
-texture = ExtResource("37_bwc1h")
-expand_mode = 1
+tooltip_text = "开发者的话"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("37_bwc1h")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="Flower" type="Control" parent="BG_Right" unique_id=321955551]
 layout_mode = 1

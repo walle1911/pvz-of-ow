@@ -13,10 +13,12 @@ const UI_THEME := preload("res://data/PVZ_theme.tres")
 const UI_FONT := preload("res://assets/fonts/方正少儿_GBK.ttf")
 const BUFF_BEAM_SCENE := preload("res://scenes/effects/BuffBeam2D.tscn")
 const PHARAH_WEAPON_GLOW_SHADER := preload("res://shaders/ui/pharah_weapon_glow.gdshader")
+const PACHIMARI_HOVER_GLOW_SHADER := preload("res://shaders/ui/pachimari_hover_glow.gdshader")
 const PRODUCER_NAME_COLOR := Color(1.0, 1.0, 0.62352943, 1.0)
 const PRODUCER_INFO_TEXT_Y := 88.0
 const CREDITS_DIALOG_WIDTH := 390.0
 const CREDITS_DIALOG_BUTTON_WIDTH := 160.0
+const DEVELOPER_NOTICE_REPOSITORY_URL := "https://github.com/walle1911/pvz-of-ow"
 
 @onready var dialog: Dialog = $Dialog
 @onready var modal_input_blocker: Control = $ModalInputBlocker
@@ -39,6 +41,7 @@ const CREDITS_DIALOG_BUTTON_WIDTH := 160.0
 @onready var developer_button_4: TextureButton = $BG_Right/Menu/DeveloperMenu/Button4
 @onready var level_workshop_button: TextureButton = $BG_Right/Menu/LevelWorkshopButton
 @onready var developer_mode_label: Label = $BG_Right/Menu/LevelWorkshopButton/Label
+@onready var pachimari: TextureButton = $BG_Right/Menu/Pachimari
 @onready var adventure_mode_dialog = $AdventureModeDialog
 @onready var option_button: TextureButton = $BG_Right/Option/TextureButton
 @onready var help_button: TextureButton = $BG_Right/Option/TextureButton2
@@ -63,6 +66,8 @@ const CREDITS_DIALOG_BUTTON_WIDTH := 160.0
 var developer_mode := false
 var normal_level_workshop_texture: Texture2D
 var level_workshop_notice: Control
+var developer_notice: Control
+var pachimari_hover_glow: TextureRect
 var developer_button_hover_tweens: Dictionary = {}
 var mode_dialog_context := "adventure"
 var flight_formation_start_position := Vector2.ZERO
@@ -143,6 +148,9 @@ func _ready() -> void:
 		return
 	_apply_credits_dialog_frame_layout()
 	_setup_modal_input_blocking()
+	_setup_pachimari_hover()
+	if not pachimari.pressed.is_connected(_show_developer_notice):
+		pachimari.pressed.connect(_show_developer_notice)
 	_apply_developer_mode(Global.return_to_developer_mode)
 	Global.return_to_developer_mode = false
 	$Cloud/AnimationPlayer.play("Idle")
@@ -162,6 +170,31 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	adventure_mode_dialog.normal_mode_selected.connect(_start_normal_adventure)
 	adventure_mode_dialog.chessboard_mode_selected.connect(_start_chessboard_adventure)
+
+
+func _setup_pachimari_hover() -> void:
+	if is_instance_valid(pachimari_hover_glow):
+		return
+	pachimari_hover_glow = TextureRect.new()
+	pachimari_hover_glow.name = "HoverGlow"
+	pachimari_hover_glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	pachimari_hover_glow.texture = pachimari.texture_normal
+	pachimari_hover_glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pachimari_hover_glow.stretch_mode = TextureRect.STRETCH_SCALE
+	pachimari_hover_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pachimari_hover_glow.visible = false
+	var glow_material := ShaderMaterial.new()
+	glow_material.shader = PACHIMARI_HOVER_GLOW_SHADER
+	pachimari_hover_glow.material = glow_material
+	pachimari.add_child(pachimari_hover_glow)
+	pachimari.mouse_entered.connect(_set_pachimari_hovered.bind(true))
+	pachimari.mouse_exited.connect(_set_pachimari_hovered.bind(false))
+
+
+func _set_pachimari_hovered(hovered: bool) -> void:
+	if is_instance_valid(pachimari_hover_glow):
+		pachimari_hover_glow.visible = hovered
+	pachimari.self_modulate = Color(1.04, 1.02, 1.04, 1.0) if hovered else Color.WHITE
 
 
 func _hide_unavailable_start_menu_items() -> void:
@@ -755,6 +788,81 @@ func _enter_level_workshop() -> void:
 	_close_level_workshop_notice()
 	Global.level_workshop_edit_mode = "normal"
 	get_tree().change_scene_to_file(Global.main_scene_registry.MainScenesMap[MainSceneRegistry.MainScenes.LevelWorkshop])
+
+
+func _show_developer_notice() -> void:
+	if is_instance_valid(developer_notice):
+		return
+	developer_notice = Control.new()
+	developer_notice.name = "DeveloperNotice"
+	developer_notice.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	developer_notice.mouse_filter = Control.MOUSE_FILTER_STOP
+	developer_notice.theme = UI_THEME
+	developer_notice.z_index = 102
+	add_child(developer_notice)
+
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.52)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	developer_notice.add_child(dim)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left = -380.0
+	panel.offset_top = -280.0
+	panel.offset_right = 380.0
+	panel.offset_bottom = 280.0
+	panel.theme_type_variation = &"PanelDialogBG"
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	developer_notice.add_child(panel)
+
+	var title := Label.new()
+	title.position = Vector2(50.0, 26.0)
+	title.size = Vector2(660.0, 42.0)
+	title.text = "开发者的话"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", UI_FONT)
+	title.add_theme_font_size_override("font_size", 30)
+	title.add_theme_color_override("font_color", Color("f7eccb"))
+	panel.add_child(title)
+
+	var content := RichTextLabel.new()
+	content.position = Vector2(62.0, 80.0)
+	content.size = Vector2(636.0, 378.0)
+	content.bbcode_enabled = true
+	content.selection_enabled = true
+	content.scroll_active = true
+	content.add_theme_font_override("normal_font", UI_FONT)
+	content.add_theme_font_size_override("normal_font_size", 18)
+	content.add_theme_color_override("default_color", Color("f4f0dc"))
+	content.add_theme_constant_override("line_separation", 7)
+	content.text = "[color=#ffff9f][url=%s]代码仓库：%s[/url][/color]\n[font_size=8]　[/font_size]\n在《守望先锋》中，玩家苦策划用脚填数值久已（虽然我也是用脚填的）；但在《植物大战僵尸版守望先锋》中，你可以踢掉我这个半吊子策划。\n[font_size=8]　[/font_size]\n如果你对数值或关卡有意见，欢迎进入开发者模式自由调整；如果你对游戏机制感兴趣，项目的全部代码都已开源。后续我也会制作几期面向0游戏开发经验玩家的 PVZ 改版制作教学。\n[font_size=8]　[/font_size]\n特别感谢[color=#ffff9f]无敌霹雳大战锤[/color]提供美术素材与创意支持，以及b站大佬：[color=#ffff9f]睡觉做大梦_zzz[/color] 开源的godot版植物大战僵尸的原始素材，没有他们的帮助该项目落地时间会无限期延长。项目仍在持续制作中；由于是单人开发项目，受时间和精力所限，难免会有考虑不周之处，还请谅解。\n[font_size=8]　[/font_size]\n目前，小游戏、解谜模式和生存模式已完成基础功能与框架搭建，但尚未针对游戏体验进行充分优化，后续会逐步更新和完善。（迫于学业压力开发进程可能会有点慢，大家见谅，有任何问题可以给我的邮箱留言，社交账号可能不会经常查看。walle1911@outlook.com）\n[font_size=8]　[/font_size]\n[p align=right]——瓦尔泽亚[/p]" % [DEVELOPER_NOTICE_REPOSITORY_URL, DEVELOPER_NOTICE_REPOSITORY_URL]
+	content.meta_clicked.connect(_on_developer_notice_repository_clicked)
+	content.call_deferred("scroll_to_line", 0)
+	panel.add_child(content)
+
+	var footer := Control.new()
+	footer.position = Vector2(0.0, 476.0)
+	footer.size = Vector2(760.0, 70.0)
+	footer.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.add_child(footer)
+	footer.add_child(_make_level_workshop_notice_button("关闭", Vector2(307.5, 10.0), _close_developer_notice))
+
+
+func _on_developer_notice_repository_clicked(meta: Variant) -> void:
+	var url := str(meta)
+	if url != DEVELOPER_NOTICE_REPOSITORY_URL:
+		return
+	DisplayServer.clipboard_set(url)
+	OS.shell_open(url)
+
+
+func _close_developer_notice() -> void:
+	if is_instance_valid(developer_notice):
+		developer_notice.queue_free()
+	developer_notice = null
 
 ## 解密模式
 func _on_button_3_pressed() -> void:
