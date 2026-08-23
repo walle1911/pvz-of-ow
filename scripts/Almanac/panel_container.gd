@@ -115,6 +115,9 @@ func create_plant(curr_plant_type:CharacterRegistry.PlantType):
 	var new_show_plant:Plant000Base = plant_scene.instantiate()
 	var plant_init_para:Dictionary = {Plant000Base.E_PInitAttr.CharacterInitType:Character000Base.E_CharacterInitType.IsShow}
 	new_show_plant.init_plant(plant_init_para)
+	## 角色的背部部件（如斩仇的剑）会使用相对 z_index；抬高展示根节点，
+	## 既保持其在角色本体后方，又不会落到 CharacterBg 贴图之后。
+	new_show_plant.z_index = 1
 	character_bg.add_child(new_show_plant)
 	new_show_plant.position = Vector2(100,120)
 

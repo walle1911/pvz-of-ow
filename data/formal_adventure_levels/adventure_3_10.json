@@ -131,9 +131,7 @@
 	"simpleFlagCount": 2,
 	"simpleFlagZombieType": 2,
 	"simpleLateGamePowerMultiplier": 1.6,
-	"simpleOnceFinalZombies": [
-		20
-	],
+	"simpleOnceFinalZombies": [],
 	"simpleWaveCount": 20,
 	"simpleZombiePool": [
 		1,

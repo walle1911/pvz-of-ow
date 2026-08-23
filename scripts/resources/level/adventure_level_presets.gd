@@ -649,9 +649,6 @@ static func _level_once_final_bosses(world: int, level_number: int, workshop_mod
 	## 1-10：豌豆射手僵尸
 	if world == 1 and level_number == 10:
 		result.append(26)
-	## 3-10：温斯顿雪人
-	elif world == 3 and level_number == 10:
-		result.append(20)
 	## 5-10：Bob 巨人（也在 BOSS_ZOMBIES，这里再写一次保证必进列表）
 	elif world == 5 and level_number == 10:
 		result.append(25)

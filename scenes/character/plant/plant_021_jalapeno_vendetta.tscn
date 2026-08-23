@@ -158,7 +158,6 @@ position = Vector2(10, 70)
 
 [node name="sword" type="Sprite2D" parent="Body/BodyCorrect/Jalapeno_body/SwordPivot" index="0" unique_id=1592551326]
 z_index = -1
-z_as_relative = false
 position = Vector2(24.330906, -29.317245)
 scale = Vector2(0.8125962, 0.80479366)
 texture = ExtResource("11_gv813")
